@@ -1,0 +1,197 @@
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I10-1}, to={A-I10-2}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I10-1}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I10-2}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-360}, to={A-I1-361}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-340}, to={A-I1-341}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-538}, to={A-I1-539}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-538}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I9-4}, to={A-I9-7}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I9-7}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I15-309+}, to={A-I15-309}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-330}, to={A-I1-338}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-338}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-341}, to={A-I1-343}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-341}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-343}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-2909}, to={A-I11-136}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-339}, to={A-I1-340}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-339}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-340}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-329}, to={A-I1-330}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-329}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-330}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-2391+}, to={A-I1-2391}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-2391}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-104}, to={A-I7-117}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-104}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I15-1}, to={A-I1-309}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-1}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-360}, to={A-I1-1701}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1701}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-549}, to={A-I1-564}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-564}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-169}, to={A-I7-187}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-187}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3659+}, to={A-I1-3659}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3659}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I8-4}, to={A-I1-346}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I13-69+}, to={A-I13-88}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I13-88}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-382}, to={A-I1-461}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-461}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I11-136}, to={A-I11-147}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-136}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-147}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-920}, to={A-I8-31}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I8-31}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-626+}, to={A-I1-3007}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3007}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I9-11+}, to={A-I9-12}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I9-12}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I7-29+}, to={A-I7-85}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I7-29+}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-137}, to={A-I7-169}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-169}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I14-4+}, to={A-I14-11}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I14-4+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I14-11}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I3-96}, to={A-I4-96}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I4-96}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-780}, to={A-I1-3115}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3115}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I11-101}, to={I4-31+}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-101}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I12-13+}, to={A-I12-40}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I12-40}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-1187}, to={A-I1-1203}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1203}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-324}, to={A-I1-328}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-324}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-328}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3317+}, to={A-I1-3317}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3317}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-2897}, to={A-I1-2901}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-2901}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-2807+}, to={A-I1-2877}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I3-2}, to={A-I4-2}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I4-2}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-155-1-A-I1-196}, to={A-I2-100}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I2-100}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3201+}, to={A-I1-3235}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-3201+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3235}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I15-309}, to={A-I15-368}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-309}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-368}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I2-115+}, to={A-I2-119}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I2-119}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I11-100+}, to={A-I11-100}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I11-100+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-100}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-1332+}, to={A-I1-1439}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-1332+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1439}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-117}, to={A-I7-137}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-117}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-137}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I13-45+}, to={A-I15-300}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-300}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I9-3+}, to={A-I9-4}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I9-4}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I15-109+}, to={A-I15-200}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I15-109+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-200}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3473+}, to={A-I1-3550}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3550}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-85}, to={A-I7-103}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-85}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-103}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-1165}, to={A-I1-1187}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1187}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I8-1}, to={A-I8-4}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I8-1}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I8-4}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-2421+}, to={A-I1-2709}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-2709}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I3-93}, to={A-I3-2}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I3-2}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-1165+}, to={A-I1-1165}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-1165+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1165}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-438+}, to={A-I1-443}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-438+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-443}
+intersection found: intersection I1-854+
+intersection found: intersection A-I13-26
+intersection found: intersection A-I1-535
+intersection found: intersection I1-579+
+intersection found: intersection A-I1-2771
+intersection found: intersection A-I3-1
+intersection found: intersection A-I1-2897
+intersection found: intersection A-I1-1204
+intersection found: intersection A-I1-1593
+intersection found: intersection A-I1-2877
+intersection found: intersection I3-96+
+intersection found: intersection A-I1-323
+intersection found: intersection A-I1-1083
+intersection found: intersection A-I0-1
+intersection found: intersection I1-846+
+intersection found: intersection A-I1-549
+intersection found: intersection A-I0-10
+intersection found: intersection I1-881+
+intersection found: intersection I1-1454+
+intersection found: intersection A-I1-361
+intersection found: intersection I1-435+
+intersection found: intersection A-I0-16
+intersection found: intersection A-I1-2902
+intersection found: intersection A-I1-1
+intersection found: intersection A-I1-1829
+intersection found: intersection I1-672+
+intersection found: intersection I1-155+
+intersection found: intersection A-I6-4
+intersection found: intersection A-I1-307
+intersection found: intersection A-I1-3430
+intersection found: intersection A-I15-100
+intersection found: intersection I1-1304+
+intersection found: intersection A-I3-93
+intersection found: intersection I1-1630+
+intersection found: intersection I1-1593+
+intersection found: intersection A-I1-100
+intersection found: intersection I1-384+
+intersection found: intersection A-I1-101
+intersection found: intersection A-I1-2230
+intersection found: intersection I1-1304+-1-A-I1-353
+intersection found: intersection I1-2343+
+intersection found: intersection I3-93+
+intersection found: intersection A-I1-199
+intersection found: intersection I3-83+
+intersection found: intersection I13-3+
+intersection found: intersection A-I1-672
+intersection found: intersection I1-3320+
+intersection found: intersection A-I1-1552
+intersection found: intersection A-I1-920
+intersection found: intersection A-I1-407
+intersection found: intersection I1-993+
+intersection found: intersection A-I0-9
+intersection found: intersection I1-2004+
+intersection found: intersection I1-1332+
+intersection found: intersection A-I1-971
+intersection found: intersection A-I1-970
+intersection found: intersection A-I1-408
+intersection found: intersection A-I1-539
+intersection found: intersection I1-222+
+intersection found: intersection A-I1-1614
+intersection found: intersection A-I1-304
+intersection found: intersection I1-956+
+intersection found: intersection A-I1-375
+intersection found: intersection A-I3-96
+intersection found: intersection I1-2908+
+merging intersection A-I3-96
+ with intersection A-I0-16
+ dist: 17,497
+merging intersection at [52,5215149, 13,3799367]
+ with intersection A-I1-2902
+ dist: 3,436
+merging intersection at [52,5215149, 13,3799367]
+ with intersection I3-96+
+ dist: 9,751

@@ -1,0 +1,1521 @@
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I10-1}, to={A-I10-2}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I10-1}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I10-2}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-360}, to={A-I1-361}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-340}, to={A-I1-341}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-538}, to={A-I1-539}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-538}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I9-4}, to={A-I9-7}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I9-7}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I15-309+}, to={A-I15-309}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-330}, to={A-I1-338}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-338}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-341}, to={A-I1-343}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-341}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-343}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-2909}, to={A-I11-136}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-339}, to={A-I1-340}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-339}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-340}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-329}, to={A-I1-330}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-329}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-330}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-2391+}, to={A-I1-2391}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-2391}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-104}, to={A-I7-117}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-104}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I15-1}, to={A-I1-309}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-1}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-360}, to={A-I1-1701}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1701}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-549}, to={A-I1-564}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-564}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-169}, to={A-I7-187}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-187}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3659+}, to={A-I1-3659}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3659}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I8-4}, to={A-I1-346}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I13-69+}, to={A-I13-88}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I13-88}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-382}, to={A-I1-461}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-461}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I11-136}, to={A-I11-147}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-136}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-147}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-920}, to={A-I8-31}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I8-31}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-626+}, to={A-I1-3007}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3007}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I9-11+}, to={A-I9-12}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I9-12}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I7-29+}, to={A-I7-85}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I7-29+}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-137}, to={A-I7-169}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-169}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I14-4+}, to={A-I14-11}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I14-4+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I14-11}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I3-96}, to={A-I4-96}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I4-96}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-780}, to={A-I1-3115}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3115}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I11-101}, to={I4-31+}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-101}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I12-13+}, to={A-I12-40}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I12-40}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-1187}, to={A-I1-1203}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1203}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-324}, to={A-I1-328}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-324}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-328}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3317+}, to={A-I1-3317}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3317}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-2897}, to={A-I1-2901}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-2901}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-2807+}, to={A-I1-2877}]
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I3-2}, to={A-I4-2}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I4-2}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-155-1-A-I1-196}, to={A-I2-100}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I2-100}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3201+}, to={A-I1-3235}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-3201+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3235}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I15-309}, to={A-I15-368}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-309}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-368}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I2-115+}, to={A-I2-119}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I2-119}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I11-100+}, to={A-I11-100}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I11-100+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I11-100}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-1332+}, to={A-I1-1439}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-1332+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1439}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-117}, to={A-I7-137}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-117}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-137}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I13-45+}, to={A-I15-300}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-300}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I9-3+}, to={A-I9-4}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I9-4}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I15-109+}, to={A-I15-200}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I15-109+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I15-200}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-3473+}, to={A-I1-3550}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-3550}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I7-85}, to={A-I7-103}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-85}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I7-103}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I1-1165}, to={A-I1-1187}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1187}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I8-1}, to={A-I8-4}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I8-1}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I8-4}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-2421+}, to={A-I1-2709}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-2709}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={A-I3-93}, to={A-I3-2}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I3-2}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-1165+}, to={A-I1-1165}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-1165+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-1165}
+INFO [agg2graph.roadgen.aggfilter]: hiding connection: AggConnection [from={I1-438+}, to={A-I1-443}]
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {I1-438+}
+INFO [agg2graph.roadgen.aggfilter]: hiding node: {A-I1-443}
+intersection found: intersection I1-854+
+intersection found: intersection A-I13-26
+intersection found: intersection A-I1-535
+intersection found: intersection I1-579+
+intersection found: intersection A-I1-2771
+intersection found: intersection A-I3-1
+intersection found: intersection A-I1-2897
+intersection found: intersection A-I1-1204
+intersection found: intersection A-I1-1593
+intersection found: intersection A-I1-2877
+intersection found: intersection I3-96+
+intersection found: intersection A-I1-323
+intersection found: intersection A-I1-1083
+intersection found: intersection I1-846+
+intersection found: intersection A-I0-1
+intersection found: intersection A-I1-549
+intersection found: intersection A-I0-10
+intersection found: intersection I1-881+
+intersection found: intersection I1-1454+
+intersection found: intersection A-I1-361
+intersection found: intersection I1-435+
+intersection found: intersection A-I0-16
+intersection found: intersection A-I1-2902
+intersection found: intersection A-I1-1
+intersection found: intersection I1-672+
+intersection found: intersection A-I1-1829
+intersection found: intersection I1-155+
+intersection found: intersection A-I6-4
+intersection found: intersection A-I1-307
+intersection found: intersection A-I1-3430
+intersection found: intersection A-I15-100
+intersection found: intersection I1-1304+
+intersection found: intersection A-I3-93
+intersection found: intersection I1-1630+
+intersection found: intersection I1-1593+
+intersection found: intersection A-I1-100
+intersection found: intersection A-I1-101
+intersection found: intersection I1-384+
+intersection found: intersection A-I1-2230
+intersection found: intersection I1-1304+-1-A-I1-353
+intersection found: intersection I1-2343+
+intersection found: intersection I3-93+
+intersection found: intersection A-I1-199
+intersection found: intersection I3-83+
+intersection found: intersection I13-3+
+intersection found: intersection A-I1-672
+intersection found: intersection I1-3320+
+intersection found: intersection A-I1-1552
+intersection found: intersection A-I1-920
+intersection found: intersection A-I1-407
+intersection found: intersection I1-993+
+intersection found: intersection A-I0-9
+intersection found: intersection I1-2004+
+intersection found: intersection I1-1332+
+intersection found: intersection A-I1-971
+intersection found: intersection A-I1-970
+intersection found: intersection A-I1-408
+intersection found: intersection A-I1-539
+intersection found: intersection I1-222+
+intersection found: intersection A-I1-1614
+intersection found: intersection A-I1-304
+intersection found: intersection I1-956+
+intersection found: intersection A-I1-375
+intersection found: intersection A-I3-96
+intersection found: intersection I1-2908+
+merging intersection A-I3-96
+ with intersection A-I0-16
+ dist: 17.49726680636936
+merging intersection at [52,5215149, 13,3799367]
+ with intersection A-I1-2902
+ dist: 3.4363856283829306
+merging intersection at [52,5215149, 13,3799367]
+ with intersection I3-96+
+ dist: 9.7510003676543
+merging intersection at [52,5215149, 13,3799367]
+ with intersection A-I3-93
+ dist: 12.087813405498531
+merging intersection I1-1454+
+ with intersection I1-1304+
+ dist: 6.540619483007765
+merging intersection I1-881+
+ with intersection A-I1-307
+ dist: 5.229123046199869
+merging intersection A-I1-2230
+ with intersection I1-2343+
+ dist: 24.63295236427266
+merging intersection at [52,5186042, 13,3759315]
+ with intersection I1-2004+
+ dist: 2.0303350666692253
+merging intersection at [52,5186042, 13,3759315]
+ with intersection A-I1-1829
+ dist: 27.13319960238603
+merging intersection at [52,5186042, 13,3759315]
+ with intersection A-I1-2771
+ dist: 15.286947594826948
+merging intersection I3-93+
+ with intersection at [52,5215034, 13,3799537]
+ dist: 10.399559316652043
+merging intersection I1-155+
+ with intersection A-I0-10
+ dist: 15.194821134850011
+merging intersection I1-1593+
+ with intersection A-I1-1593
+ dist: 11.267742571043023
+merging intersection at [52,5180387, 13,3750751]
+ with intersection I1-854+
+ dist: 26.3841237772753
+merging intersection at [52,5180387, 13,3750751]
+ with intersection A-I1-1552
+ dist: 4.871806622551314
+merging intersection A-I1-100
+ with intersection A-I1-101
+ dist: 1.7647086966579457
+merging intersection I1-846+
+ with intersection A-I1-323
+ dist: 7.8117767542091725
+merging intersection A-I1-199
+ with intersection I13-3+
+ dist: 8.68111525441977
+merging intersection at [52,5232727, 13,3706297]
+ with intersection A-I1-535
+ dist: 20.30556706872328
+merging intersection I1-579+
+ with intersection at [52,5232727, 13,3706297]
+ dist: 12.347859509106632
+merging intersection I1-672+
+ with intersection A-I1-672
+ dist: 24.158494973425793
+merging intersection A-I1-970
+ with intersection A-I1-304
+ dist: 14.782584633276183
+merging intersection A-I1-2877
+ with intersection at [52,5177961, 13,3744519]
+ dist: 18.768224695244243
+merging intersection at [52,5178420, 13,3769237]
+ with intersection A-I1-920
+ dist: 4.741668557867222
+merging intersection I1-956+
+ with intersection at [52,5178378, 13,3768893]
+ dist: 8.84748248556048
+road from intersection at [52,5218239, 13,3756857]
+ to intersection I1-384+
+ via [AggNode [lat=52.52182388305664, lon=13.375685691833496]]
+road from intersection I1-384+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I1-384+}, {A-I1-116}]
+road from intersection I1-222+
+ to intersection at [52,5218239, 13,3756857]
+ via [{I1-222+}, {I1-222+-1-A-I1-65}, {A-I1-65}, {A-I1-65-1-A-I1-100}]
+road from intersection at [52,5218239, 13,3756857]
+ to intersection I1-384+
+ via [AggNode [lat=52.52182388305664, lon=13.375685691833496]]
+road from intersection I1-222+
+ to intersection I1-1332+
+ via [{I1-222+}, {A-I1-707}, {A-I1-716}, {A-I1-344}]
+road from intersection I1-1332+
+ to intersection at [52,5177196, 13,3745104]
+ via [{I1-1332+}, {A-I1-345}, {A-I1-746}, {A-I1-753}, {I1-3118+}, {A-I1-780}, {I1-3170+}, {A-I1-823}, {I1-3183+}, {A-I1-837}, {I1-3191+}, {I1-3193+}]
+road from intersection A-I1-971
+ to intersection A-I1-407
+ via [{A-I1-971}, {I1-3318+}, {I1-3318+-1-A-I1-407}, {I1-3318+-2-A-I1-407}, {I1-3318+-3-A-I1-407}]
+road from intersection A-I1-407
+ to intersection I1-993+
+ via [{A-I1-407}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection I1-993+
+ to intersection A-I1-408
+ via [{I1-993+}, {A-I1-407-1-A-I1-408}, {I1-992+}, {I15-307+}, {I15-309+}]
+road from intersection A-I1-408
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I1-408}, {I1-991+}, {A-I1-524}, {I1-990+}, {A-I1-529}]
+road from intersection I1-993+
+ to intersection A-I1-408
+ via [{I1-993+}, {A-I1-407-1-A-I1-408}, {I1-992+}, {I15-307+}, {I15-309+}]
+road from intersection A-I1-408
+ to intersection I1-435+
+ via [{A-I1-408}, {I1-446+}, {I1-446+-1-A-I1-409}, {I13-41+}, {I13-45+}, {A-I1-409}, {I13-57+}, {A-I1-409-1-I1-435+}, {I13-64+}, {I13-65+}, {I1-490+}, {I13-67+}, {I13-69+}]
+road from intersection I1-993+
+ to intersection I1-3320+
+ via [{I1-993+}, {A-I1-2905}, {I1-3319+}]
+road from intersection I1-3320+
+ to intersection I1-2908+
+ via [{I1-3320+}]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection I1-222+
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575], {I1-665+}]
+road from intersection I1-222+
+ to intersection at [52,5218239, 13,3756857]
+ via [{I1-222+}, {I1-222+-1-A-I1-65}, {A-I1-65}, {A-I1-65-1-A-I1-100}]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection I1-222+
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575], {I1-665+}]
+road from intersection I1-222+
+ to intersection I1-1332+
+ via [{I1-222+}, {A-I1-707}, {A-I1-716}, {A-I1-344}]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection at [52,5204328, 13,3709552]
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575]]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection I1-222+
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575], {I1-665+}]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection at [52,5204328, 13,3709552]
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575]]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection at [52,5204328, 13,3709552]
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575]]
+road from intersection I1-384+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I1-384+}, {A-I1-116}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection I1-384+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I1-384+}, {A-I1-116}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5223646, 13,3779019]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844]]
+road from intersection I1-384+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I1-384+}, {A-I1-116}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection A-I1-407
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I1-155}, {I2-101+}, {A-I1-155-1-A-I1-196}, {I2-109+}, {I2-115+}, {A-I1-196}, {I2-115+}, {I2-109+}, {A-I1-196-1-A-I1-407}]
+road from intersection I1-1630+
+ to intersection at [52,5185356, 13,3759397]
+ via [{I1-1630+}, {I1-1975+}, {I1-2421+}, {I1-2394+}, {I1-2379+}, {I1-2394+}, {I1-2391+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection I1-1630+
+ to intersection at [52,5185356, 13,3759397]
+ via [{I1-1630+}, {I1-1975+}, {I1-2421+}, {I1-2394+}, {I1-2379+}, {I1-2394+}, {I1-2391+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection A-I1-375
+ to intersection I1-435+
+ via [{A-I1-375}, {I1-1093+}, {I1-1099+}, {I1-3440+}, {I1-3446+}, {A-I1-376}, {I1-1106+}, {I1-3473+}]
+road from intersection I1-435+
+ to intersection I1-384+
+ via [{I1-435+}, {I1-1106+}, {I1-1123+}, {I1-490+}, {I1-1123+}, {I1-1126+}, {A-I1-377}, {I1-1141+}, {I15-226+}, {I1-1136+}, {I1-438+}, {A-I1-382}]
+road from intersection A-I1-1
+ to intersection at [52,5204328, 13,3709552]
+ via [{A-I1-1}, {I1-635+}, {I1-626+}, {I1-216+}, {I1-3025+}]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection I1-222+
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575], {I1-665+}]
+road from intersection A-I1-1
+ to intersection at [52,5204328, 13,3709552]
+ via [{A-I1-1}, {I1-635+}, {I1-626+}, {I1-216+}, {I1-3025+}]
+road from intersection at [52,5204328, 13,3709552]
+ to intersection at [52,5204328, 13,3709552]
+ via [AggNode [lat=52.52043275072832, lon=13.370955241743575]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection A-I1-1614
+ to intersection at [52,5185356, 13,3759397]
+ via [{A-I1-1614}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection A-I1-1614
+ to intersection I1-1304+-1-A-I1-353
+ via [{A-I1-1614}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection A-I1-2897
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection A-I0-9
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I0-9}, {A-I0-9-1-A-I1-2909}, {A-I1-2909}, {A-I1-2910}, {A-I1-2910-1-A-I1-2912}, {A-I1-2912}, {A-I1-2912-1-I1-579+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection A-I0-9
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I0-9}, {A-I0-9-1-A-I1-2909}, {A-I1-2909}, {A-I1-2910}, {A-I1-2910-1-A-I1-2912}, {A-I1-2912}, {A-I1-2912-1-I1-579+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I13-26
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I14-2+}, {I14-3+}]
+road from intersection A-I0-9
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I0-9}, {A-I0-9-1-A-I1-2909}, {A-I1-2909}, {A-I1-2910}, {A-I1-2910-1-A-I1-2912}, {A-I1-2912}, {A-I1-2912-1-I1-579+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection A-I0-9
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I0-9}, {A-I0-9-1-A-I1-2909}, {A-I1-2909}, {A-I1-2910}, {A-I1-2910-1-A-I1-2912}, {A-I1-2912}, {A-I1-2912-1-I1-579+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection A-I0-9
+ to intersection I3-83+
+ via [{A-I0-9}, {A-I3-45}, {A-I3-45-1-I3-83+}, {A-I3-45-2-I3-83+}]
+road from intersection I3-83+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I3-83+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection I1-1304+-1-A-I1-353
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015]]
+road from intersection I1-1304+-1-A-I1-353
+ to intersection I1-1630+
+ via [{I1-1304+-1-A-I1-353}, {I15-101+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection I1-1332+
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1446+}]
+road from intersection I1-1332+
+ to intersection at [52,5177196, 13,3745104]
+ via [{I1-1332+}, {A-I1-345}, {A-I1-746}, {A-I1-753}, {I1-3118+}, {A-I1-780}, {I1-3170+}, {A-I1-823}, {I1-3183+}, {A-I1-837}, {I1-3191+}, {I1-3193+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5193223, 13,3736368]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-3659+}, {I1-3651+}, {A-I1-1304}, {I1-3651+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection I1-1304+-1-A-I1-353
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015]]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5193223, 13,3736368]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-3659+}, {I1-3651+}, {A-I1-1304}, {I1-3651+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5193223, 13,3736368]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-3659+}, {I1-3651+}, {A-I1-1304}, {I1-3651+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection I1-1332+
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1446+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5193223, 13,3736368]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-3659+}, {I1-3651+}, {A-I1-1304}, {I1-3651+}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5193223, 13,3736368]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-3659+}, {I1-3651+}, {A-I1-1304}, {I1-3651+}]
+road from intersection I1-1304+-1-A-I1-353
+ to intersection I1-1630+
+ via [{I1-1304+-1-A-I1-353}, {I15-101+}]
+road from intersection I1-1630+
+ to intersection A-I6-4
+ via [{I1-1630+}, {A-I1-353}, {A-I1-360}, {A-I5-100}, {A-I5-110}, {I7-10+}, {I7-1+}, {A-I5-124}]
+road from intersection I1-1304+-1-A-I1-353
+ to intersection I1-1630+
+ via [{I1-1304+-1-A-I1-353}, {I15-101+}]
+road from intersection I1-1630+
+ to intersection A-I15-100
+ via [{I1-1630+}, {I15-101+}]
+road from intersection I1-1304+-1-A-I1-353
+ to intersection I1-1630+
+ via [{I1-1304+-1-A-I1-353}, {I15-101+}]
+road from intersection I1-1630+
+ to intersection at [52,5185356, 13,3759397]
+ via [{I1-1630+}, {I1-1975+}, {I1-2421+}, {I1-2394+}, {I1-2379+}, {I1-2394+}, {I1-2391+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection I1-2908+
+ to intersection A-I0-9
+ via [{I1-2908+}, {A-I0-6}]
+road from intersection A-I0-9
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I0-9}, {A-I0-9-1-A-I1-2909}, {A-I1-2909}, {A-I1-2910}, {A-I1-2910-1-A-I1-2912}, {A-I1-2912}, {A-I1-2912-1-I1-579+}]
+road from intersection I1-2908+
+ to intersection A-I0-9
+ via [{I1-2908+}, {A-I0-6}]
+road from intersection A-I0-9
+ to intersection I3-83+
+ via [{A-I0-9}, {A-I3-45}, {A-I3-45-1-I3-83+}, {A-I3-45-2-I3-83+}]
+road from intersection I1-3320+
+ to intersection I1-2908+
+ via [{I1-3320+}]
+road from intersection I1-2908+
+ to intersection A-I0-9
+ via [{I1-2908+}, {A-I0-6}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection I3-83+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I3-83+}]
+road from intersection A-I0-1
+ to intersection I1-2908+
+ via [{A-I0-1}]
+road from intersection I1-2908+
+ to intersection A-I0-9
+ via [{I1-2908+}, {A-I0-6}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I13-26
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I14-2+}, {I14-3+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I13-26
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I14-2+}, {I14-3+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection A-I1-408
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I1-408}, {I1-991+}, {A-I1-524}, {I1-990+}, {A-I1-529}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection A-I1-408
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I1-408}, {I1-991+}, {A-I1-524}, {I1-990+}, {A-I1-529}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I13-26
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I14-2+}, {I14-3+}]
+road from intersection A-I1-408
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I1-408}, {I1-991+}, {A-I1-524}, {I1-990+}, {A-I1-529}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection A-I1-408
+ to intersection at [52,5233057, 13,3707031]
+ via [{A-I1-408}, {I1-991+}, {A-I1-524}, {I1-990+}, {A-I1-529}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection A-I1-408
+ to intersection I1-435+
+ via [{A-I1-408}, {I1-446+}, {I1-446+-1-A-I1-409}, {I13-41+}, {I13-45+}, {A-I1-409}, {I13-57+}, {A-I1-409-1-I1-435+}, {I13-64+}, {I13-65+}, {I1-490+}, {I13-67+}, {I13-69+}]
+road from intersection I1-435+
+ to intersection I1-384+
+ via [{I1-435+}, {I1-1106+}, {I1-1123+}, {I1-490+}, {I1-1123+}, {I1-1126+}, {A-I1-377}, {I1-1141+}, {I15-226+}, {I1-1136+}, {I1-438+}, {A-I1-382}]
+road from intersection I3-83+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I3-83+}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection I3-83+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I3-83+}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5223646, 13,3779019]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844]]
+road from intersection I3-83+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I3-83+}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection A-I1-407
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I1-155}, {I2-101+}, {A-I1-155-1-A-I1-196}, {I2-109+}, {I2-115+}, {A-I1-196}, {I2-115+}, {I2-109+}, {A-I1-196-1-A-I1-407}]
+road from intersection A-I3-1
+ to intersection I1-3320+
+ via [{A-I3-1}, {I4-1+}, {I4-13+}, {A-I3-17}, {I12-1+}, {I4-31+}, {I12-13+}, {I4-45+}]
+road from intersection I1-3320+
+ to intersection I1-2908+
+ via [{I1-3320+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection A-I1-1
+ to intersection at [52,5204328, 13,3709552]
+ via [{A-I1-1}, {I1-635+}, {I1-626+}, {I1-216+}, {I1-3025+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I13-26
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I14-2+}, {I14-3+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I1-1
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}, {A-I1-205}, {I1-582+}, {I1-582+-1-I1-622+}, {I1-622+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection A-I13-26
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I14-2+}, {I14-3+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5233057, 13,3707031]
+ to intersection at [52,5233057, 13,3707031]
+ via [AggNode [lat=52.52330574420776, lon=13.370703066338208], {I1-582+}, {I13-1+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}]
+road from intersection at [52,5171585, 13,3773732]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51715850830078, lon=13.377373218536377], {I9-1+}, {I9-3+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection A-I1-407
+ to intersection I1-993+
+ via [{A-I1-407}]
+road from intersection I1-993+
+ to intersection A-I1-408
+ via [{I1-993+}, {A-I1-407-1-A-I1-408}, {I1-992+}, {I15-307+}, {I15-309+}]
+road from intersection A-I1-407
+ to intersection I1-993+
+ via [{A-I1-407}]
+road from intersection I1-993+
+ to intersection I1-3320+
+ via [{I1-993+}, {A-I1-2905}, {I1-3319+}]
+road from intersection A-I1-1614
+ to intersection at [52,5185356, 13,3759397]
+ via [{A-I1-1614}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {I1-2230+}, {I1-2230+}]
+road from intersection A-I1-1614
+ to intersection at [52,5185356, 13,3759397]
+ via [{A-I1-1614}]
+road from intersection at [52,5185356, 13,3759397]
+ to intersection at [52,5185356, 13,3759397]
+ via [AggNode [lat=52.51853555263203, lon=13.375939715037735], {dup-I1-2004+}]
+road from intersection A-I1-1614
+ to intersection I1-1304+-1-A-I1-353
+ via [{A-I1-1614}]
+road from intersection I1-1304+-1-A-I1-353
+ to intersection I1-1630+
+ via [{I1-1304+-1-A-I1-353}, {I15-101+}]
+road from intersection A-I1-1204
+ to intersection at [52,5193223, 13,3736368]
+ via [{A-I1-1204}, {I1-3551+}, {I1-3570+}, {A-I1-1223}, {A-I1-1225}, {I1-3574+}, {A-I1-1228}, {I1-3587+}, {A-I1-1240}, {I1-3599+}, {A-I1-346}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection I1-1304+-1-A-I1-353
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015]]
+road from intersection A-I1-1204
+ to intersection at [52,5193223, 13,3736368]
+ via [{A-I1-1204}, {I1-3551+}, {I1-3570+}, {A-I1-1223}, {A-I1-1225}, {I1-3574+}, {A-I1-1228}, {I1-3587+}, {A-I1-1240}, {I1-3599+}, {A-I1-346}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1454+-1-A-I1-1552}]
+road from intersection A-I1-1204
+ to intersection at [52,5193223, 13,3736368]
+ via [{A-I1-1204}, {I1-3551+}, {I1-3570+}, {A-I1-1223}, {A-I1-1225}, {I1-3574+}, {A-I1-1228}, {I1-3587+}, {A-I1-1240}, {I1-3599+}, {A-I1-346}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection I1-1332+
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-1446+}]
+road from intersection A-I1-1204
+ to intersection at [52,5193223, 13,3736368]
+ via [{A-I1-1204}, {I1-3551+}, {I1-3570+}, {A-I1-1223}, {A-I1-1225}, {I1-3574+}, {A-I1-1228}, {I1-3587+}, {A-I1-1240}, {I1-3599+}, {A-I1-346}]
+road from intersection at [52,5193223, 13,3736368]
+ to intersection at [52,5193223, 13,3736368]
+ via [AggNode [lat=52.519322323281955, lon=13.373636784461015], {I1-3659+}, {I1-3651+}, {A-I1-1304}, {I1-3651+}]
+road from intersection at [52,5171585, 13,3773732]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51715850830078, lon=13.377373218536377], {I9-1+}, {I9-3+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5171585, 13,3773732]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51715850830078, lon=13.377373218536377], {I9-1+}, {I9-3+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5171585, 13,3773732]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51715850830078, lon=13.377373218536377], {I9-1+}, {I9-3+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5171585, 13,3773732]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51715850830078, lon=13.377373218536377], {I9-1+}, {I9-3+}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection A-I1-1614
+ to intersection at [52,5185356, 13,3759397]
+ via [{A-I1-1614}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection A-I1-1614
+ to intersection I1-1304+-1-A-I1-353
+ via [{A-I1-1614}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2798+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection A-I1-1614
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {A-I1-1598}, {A-I1-1601}, {A-I1-1607}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-2807+}, {I1-2803+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1590+}]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection A-I1-2897
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection I1-1332+
+ to intersection at [52,5177196, 13,3745104]
+ via [{I1-1332+}, {A-I1-345}, {A-I1-746}, {A-I1-753}, {I1-3118+}, {A-I1-780}, {I1-3170+}, {A-I1-823}, {I1-3183+}, {A-I1-837}, {I1-3191+}, {I1-3193+}]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection I1-1332+
+ to intersection at [52,5177196, 13,3745104]
+ via [{I1-1332+}, {A-I1-345}, {A-I1-746}, {A-I1-753}, {I1-3118+}, {A-I1-780}, {I1-3170+}, {A-I1-823}, {I1-3183+}, {A-I1-837}, {I1-3191+}, {I1-3193+}]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection A-I1-2897
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection at [52,5177196, 13,3745104]
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection at [52,5177196, 13,3745104]
+ to intersection A-I1-2897
+ via [AggNode [lat=52.517719551435036, lon=13.374510426030033]]
+road from intersection I1-435+
+ to intersection I1-384+
+ via [{I1-435+}, {I1-1106+}, {I1-1123+}, {I1-490+}, {I1-1123+}, {I1-1126+}, {A-I1-377}, {I1-1141+}, {I15-226+}, {I1-1136+}, {I1-438+}, {A-I1-382}]
+road from intersection I1-384+
+ to intersection at [52,5223646, 13,3779019]
+ via [{I1-384+}, {A-I1-116}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I4-95+}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512]]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {I3-96+}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection at [52,5215065, 13,3798770]
+ to intersection I3-83+
+ via [AggNode [lat=52.521506471651314, lon=13.379876958114512], {A-I1-2903}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5223646, 13,3779019]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844]]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5215065, 13,3798770]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I0-13}, {A-I0-14}, {A-I0-15}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5223646, 13,3779019]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844]]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5223646, 13,3779019]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844]]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection at [52,5223646, 13,3779019]
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844]]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection A-I1-407
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I1-155}, {I2-101+}, {A-I1-155-1-A-I1-196}, {I2-109+}, {I2-115+}, {A-I1-196}, {I2-115+}, {I2-109+}, {A-I1-196-1-A-I1-407}]
+road from intersection at [52,5223646, 13,3779019]
+ to intersection A-I1-407
+ via [AggNode [lat=52.52236459224783, lon=13.37790187279844], {A-I1-155}, {I2-101+}, {A-I1-155-1-A-I1-196}, {I2-109+}, {I2-115+}, {A-I1-196}, {I2-115+}, {I2-109+}, {A-I1-196-1-A-I1-407}]
+road from intersection A-I1-407
+ to intersection I1-993+
+ via [{A-I1-407}]
+merging road from intersection at [52,5180602, 13,3750680]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51806016604556, lon=13.375068045239823], {I1-1742+}, {A-I1-862}] with road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5180602, 13,3750680]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-2772+}, {A-I1-309}, {A-I1-311}]
+merging road from intersection at [52,5178655, 13,3768423]
+ to intersection at [52,5171585, 13,3773732]
+ via [AggNode [lat=52.51786552012838, lon=13.376842280585448], {I1-3303+}, {A-I1-956}, {I1-3303+}, {I1-3309+}, {A-I1-962}, {I1-3309+}, {I1-3315+}, {A-I1-968}, {I1-3315+}, {I1-3317+}] with road from intersection at [52,5171585, 13,3773732]
+ to intersection at [52,5178655, 13,3768423]
+ via [AggNode [lat=52.51715850830078, lon=13.377373218536377], {I9-1+}, {I9-3+}]

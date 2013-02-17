@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Layer: de/fub/utilsmodule/layer.xml
+OpenIDE-Module-Localizing-Bundle: de/fub/utilsmodule/Bundle.properties
