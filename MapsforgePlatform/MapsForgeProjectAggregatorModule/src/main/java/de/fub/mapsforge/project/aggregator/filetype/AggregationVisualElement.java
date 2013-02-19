@@ -11,6 +11,7 @@ import de.fub.mapsforge.project.aggregator.factories.LayerNodeFactory;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapsforge.project.models.ModelSynchronizer;
 import de.fub.mapsforge.project.utils.LayerTableCellRender;
 import geofiletypeapi.GeoUtil;
 import java.awt.Image;
@@ -34,6 +35,8 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -87,6 +90,8 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private JPopupMenu processMenu;
     private Image defaulImage;
     private final RequestProcessor requestProcessor = new RequestProcessor();
+    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+    private final ViewUpdater viewUpdater = new ViewUpdater();
 
     /**
      * Creates new form AggregationVisualElement
@@ -100,6 +105,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());
         explorerManager.setRootContext(new AbstractNode(Children.create(nodeFactory, true)));
         aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationVisualElement.this, aggregator));
+        modelSynchronizerClient = aggregator.create(viewUpdater);
         initGuiComponents();
     }
 
@@ -374,13 +380,19 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                     }
                 }
             });
-        } else if (Aggregator.PROP_NAME_DATAOBJECT.equals(evt.getPropertyName())) {
-            setUpToolbar();
         }
     }
 
     @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
+    }
+
+    private class ViewUpdater implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            setUpToolbar();
+        }
     }
 }

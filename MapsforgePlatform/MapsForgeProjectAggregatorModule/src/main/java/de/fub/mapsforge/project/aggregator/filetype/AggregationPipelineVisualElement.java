@@ -6,14 +6,15 @@ package de.fub.mapsforge.project.aggregator.filetype;
 
 import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import de.fub.mapsforge.project.models.ModelSynchronizer;
+import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -26,18 +27,13 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
-import org.netbeans.spi.palette.DragAndDropHandler;
-import org.netbeans.spi.palette.PaletteActions;
-import org.netbeans.spi.palette.PaletteFactory;
+import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.awt.UndoRedo;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
-import org.openide.util.datatransfer.ExTransferable;
-import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.windows.TopComponent;
 
 @MultiViewElement.Registration(
@@ -48,13 +44,18 @@ import org.openide.windows.TopComponent;
         preferredID = "AggregationPipelineVisual",
         position = 2000)
 @Messages("LBL_AggregationBuilder_PIPELINE=Pipeline")
-public final class AggregationPipelineVisualElement extends JPanel implements MultiViewElement, PropertyChangeListener, ChangeListener {
+public final class AggregationPipelineVisualElement extends JPanel implements MultiViewElement, PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
     private Aggregator aggregator;
     private JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;
-    private Lookup lookup = null;
+    private AbstractLookup lookup = null;
+    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+    private final GraphUpdater graphUpdater = new GraphUpdater();
+    private final ModelUpdater modelUpdater = new ModelUpdater();
+    private final InstanceContent content = new InstanceContent();
+    private final SaveModelCookie savemodel = new SaveModelCookie();
 
     public AggregationPipelineVisualElement(Lookup lkp) {
         AggregatorNode node = lkp.lookup(AggregatorNode.class);
@@ -63,17 +64,26 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
             aggregator = node.getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
-        lookup = new ProxyLookup(aggregator.getDataObject().getLookup(),
-                Lookups.singleton(PaletteFactory.createPalette(
-                new AbstractNode(Children.create(new CategoryNodeFactory(), true)),
-                new EmptyPaletteAction(), null, new PaletteDragAndDropHandler())));
-        aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationPipelineVisualElement.this, aggregator));
+        initLookup();
         initComponents();
-        graphPanel1.removeChangeListener(AggregationPipelineVisualElement.this);
-        graphPanel1.setAggregator(aggregator);
-        graphPanel1.addChangeListener(AggregationPipelineVisualElement.this);
+        aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationPipelineVisualElement.this, aggregator));
+        modelSynchronizerClient = aggregator.create(graphUpdater);
+        updateGraph();
         for (Action action : getActions()) {
             toolbar.add(new JButton(action));
+        }
+    }
+
+    private void initLookup() {
+        lookup = new AbstractLookup(content);
+        content.add(AggregateUtils.getProcessPalette());
+    }
+
+    private void updateGraph() {
+        if (graphPanel1 != null) {
+            graphPanel1.removeChangeListener(modelUpdater);
+            graphPanel1.setAggregator(aggregator);
+            graphPanel1.addChangeListener(modelUpdater);
         }
     }
 
@@ -175,68 +185,71 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
                     topComponent.setIcon(aggregator.getAggregatorState().getImage());
                 }
             });
-        } else if (Aggregator.PROP_NAME_DATAOBJECT.equals(evt.getPropertyName())) {
+        }
+    }
+
+    private class SaveModelCookie extends AbstractSavable {
+
+        @Override
+        protected String findDisplayName() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        protected void handleSave() throws IOException {
             if (aggregator != null) {
-                graphPanel1.removeChangeListener(AggregationPipelineVisualElement.this);
-                graphPanel1.setAggregator(aggregator);
-                graphPanel1.addChangeListener(AggregationPipelineVisualElement.this);
-            }
-        }
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private static class PaletteDragAndDropHandler extends DragAndDropHandler {
-
-        private static final Logger LOG = Logger.getLogger(PaletteDragAndDropHandler.class.getName());
-
-        public PaletteDragAndDropHandler() {
-        }
-
-        @Override
-        public void customize(ExTransferable et, Lookup lkp) {
-            final AbstractAggregationProcess process = lkp.lookup(AbstractAggregationProcess.class);
-            if (process != null) {
-                et.put(new ExTransferable.Single(AbstractAggregationProcess.PROCESS_FLAVOR) {
-                    @Override
-                    protected Object getData() throws IOException, UnsupportedFlavorException {
-                        return process;
+                aggregator.getDescriptor().getPipeline().getList().clear();
+                List<AbstractAggregationProcess<?, ?>> pipeline = graphPanel1.collectPipeline();
+                for (AbstractAggregationProcess<?, ?> process : pipeline) {
+                    if (process.getDescriptor() != null) {
+                        if (process.getDescriptor().getJavatype() == null
+                                || process.getDescriptor().getDisplayName() == null
+                                || process.getDescriptor().getDescription() == null) {
+                            process.setDescriptor(new ProcessDescriptor(process));
+                        }
+                        aggregator.getDescriptor().getPipeline().getList().add(process.getDescriptor());
                     }
-                });
+                }
+                aggregator.getDataObject().save();
             }
 
-            LOG.log(Level.FINE, "drag and drop handler: cusomize");
+            modelSynchronizerClient.modelChanged();
+        }
+
+        AggregationPipelineVisualElement getTopComponent() {
+            return AggregationPipelineVisualElement.this;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof SaveModelCookie) {
+                SaveModelCookie m = (SaveModelCookie) obj;
+                return getTopComponent() == m.getTopComponent();
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return AggregationPipelineVisualElement.this.hashCode();
         }
     }
 
-    private static class EmptyPaletteAction extends PaletteActions {
+    private class ModelUpdater implements ChangeListener {
 
         @Override
-        public Action[] getImportActions() {
-            return null;
+        public void stateChanged(ChangeEvent e) {
+            if (getLookup().lookup(SaveModelCookie.class) == null) {
+                content.add(savemodel);
+            }
         }
+    }
+
+    private class GraphUpdater implements ChangeListener {
 
         @Override
-        public Action[] getCustomPaletteActions() {
-            return null;
-        }
-
-        @Override
-        public Action[] getCustomCategoryActions(Lookup lkp) {
-            return null;
-        }
-
-        @Override
-        public Action[] getCustomItemActions(Lookup lkp) {
-            return null;
-        }
-
-        @Override
-        public Action getPreferredAction(Lookup lkp) {
-            return null;
+        public void stateChanged(ChangeEvent e) {
+            updateGraph();
         }
     }
 }

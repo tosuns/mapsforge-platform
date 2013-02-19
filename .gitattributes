@@ -299,6 +299,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforg
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/wizards/datasource/DatasourceWizardPanel1.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/factories/AggregatorNodeFactory.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/factories/AggregatorSubFolderFactory.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/factories/CategoryNodeFactory.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/factories/LayerNodeFactory.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/factories/ProcessNodeFactory.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/factories/SourceChildFactory.java -text
@@ -310,7 +311,6 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforg
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/filetype/AggregationVisualElement.form -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/filetype/AggregationVisualElement.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/filetype/AggregatorDataObject.java -text
-MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/filetype/CategoryNodeFactory.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/filetype/package-info.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/graph/GraphPanel.form -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/graph/GraphPanel.java -text
@@ -340,6 +340,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforg
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/xml/adapter/XmlPropertiesAdapter.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/models/Aggregator.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/models/AggregatorSource.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/models/ModelSynchronizer.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/utils/AggregateUtils.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/utils/LayerTableCellRender.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/nbm/manifest.mf -text
@@ -359,6 +360,11 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layersIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layerview.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/AggregationProcess.xml -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/CleanProcess.xml -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/DatasourceProcess.xml -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/OSMExportProcess.xml -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/RoadNetworkProcess.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/processFolderIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/processIconError.png -text

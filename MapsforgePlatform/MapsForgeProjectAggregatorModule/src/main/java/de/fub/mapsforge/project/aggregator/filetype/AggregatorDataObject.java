@@ -122,9 +122,7 @@ public class AggregatorDataObject extends MultiDataObject {
     public AggregatorDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/aggregationbuilder+xml", true);
-
         pf.addFileChangeListener(FileUtil.weakFileChangeListener(fileChangeListener, pf));
-        DataEditorSupport editorSupport = getLookup().lookup(DataEditorSupport.class);
     }
 
     public synchronized AggregatorDescriptor getAggregator() throws IOException, JAXBException {
@@ -154,8 +152,6 @@ public class AggregatorDataObject extends MultiDataObject {
             @Override
             public void run() {
                 try {
-                    AggregatorDescriptor oldAggregator = aggregator;
-                    aggregator = null;
 
                     File file = FileUtil.toFile(getPrimaryFile());
                     if (file != null) {
@@ -163,7 +159,7 @@ public class AggregatorDataObject extends MultiDataObject {
                         javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
                         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
                         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                        marshaller.marshal(oldAggregator, file);
+                        marshaller.marshal(aggregator, file);
                         FileUtil.refreshFor(file);
                     }
                 } catch (JAXBException ex) {

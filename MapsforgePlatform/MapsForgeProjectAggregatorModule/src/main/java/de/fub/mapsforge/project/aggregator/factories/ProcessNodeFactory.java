@@ -6,12 +6,12 @@ package de.fub.mapsforge.project.aggregator.factories;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import de.fub.mapsforge.project.models.ModelSynchronizer;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -20,10 +20,17 @@ import org.openide.util.WeakListeners;
 public class ProcessNodeFactory extends ChildFactory<AbstractAggregationProcess<?, ?>> {
 
     private final Aggregator aggregator;
+    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
     public ProcessNodeFactory(Aggregator aggregator) {
         assert aggregator != null;
         this.aggregator = aggregator;
+        modelSynchronizerClient = aggregator.create(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                refresh(true);
+            }
+        });
     }
 
     @Override

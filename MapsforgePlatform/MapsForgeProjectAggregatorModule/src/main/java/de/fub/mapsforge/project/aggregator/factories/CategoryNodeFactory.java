@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.aggregator.filetype;
+package de.fub.mapsforge.project.aggregator.factories;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import java.util.List;
@@ -17,7 +17,7 @@ import org.openide.util.NbBundle;
  *
  * @author Serdar
  */
-class CategoryNodeFactory extends ChildFactory<String> {
+public class CategoryNodeFactory extends ChildFactory<String> {
 
     public CategoryNodeFactory() {
     }

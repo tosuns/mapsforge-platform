@@ -9,6 +9,7 @@ import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -124,5 +125,17 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
     @Override
     public JComponent getSettingsView() {
         return null;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor desc = null;
+        try {
+            desc = AggregateUtils.getProcessDescriptor(getClass());
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return desc;
     }
 }

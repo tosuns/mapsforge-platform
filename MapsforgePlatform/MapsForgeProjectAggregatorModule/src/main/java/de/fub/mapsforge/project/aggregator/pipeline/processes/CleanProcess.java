@@ -23,12 +23,14 @@ import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Color;
 import java.awt.Image;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -166,5 +168,17 @@ public class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, L
     @Override
     public JComponent getSettingsView() {
         return null;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor desc = null;
+        try {
+            desc = AggregateUtils.getProcessDescriptor(getClass());
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return desc;
     }
 }

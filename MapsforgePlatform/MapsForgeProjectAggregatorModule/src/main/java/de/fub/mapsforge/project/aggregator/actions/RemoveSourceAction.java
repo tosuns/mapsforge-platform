@@ -15,10 +15,10 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
-    category = "Aggregator",
-id = "de.fub.mapsforge.project.aggregator.actions.RemoveSourceAction")
+        category = "Aggregator",
+        id = "de.fub.mapsforge.project.aggregator.actions.RemoveSourceAction")
 @ActionRegistration(
-    displayName = "#CTL_RemoveSourceAction")
+        displayName = "#CTL_RemoveSourceAction")
 @ActionReference(path = "Projects/org-mapsforge-project/Aggregator/Source/Actions", position = 0)
 @Messages("CTL_RemoveSourceAction=Remove")
 public final class RemoveSourceAction implements ActionListener {
@@ -33,6 +33,6 @@ public final class RemoveSourceAction implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         List<Source> datasources = context.getAggregator().getDescriptor().getDatasources();
         datasources.remove(context.getSource());
-        context.getAggregator().getDataObject().saveFromEditor();
+        context.getAggregator().getDataObject().save();
     }
 }

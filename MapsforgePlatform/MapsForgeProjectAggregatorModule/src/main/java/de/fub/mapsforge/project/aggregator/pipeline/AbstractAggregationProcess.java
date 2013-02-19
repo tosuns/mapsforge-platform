@@ -30,7 +30,7 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
     public static final String PROP_NAME_PROCESS_DESCRIPTOR = "process.descriptor";
     protected State processState = State.OK;
     protected Aggregator aggregator;
-    protected ProcessDescriptor descriptor = new ProcessDescriptor();
+    protected ProcessDescriptor descriptor;
     protected ArrayList<AbstractLayer<?>> layers = new ArrayList<AbstractLayer<?>>();
     protected final Set<ProcessListener> processListenerSet = new HashSet<ProcessListener>();
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -53,6 +53,9 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
     }
 
     public ProcessDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = createProcessDescriptor();
+        }
         return descriptor;
     }
 
@@ -82,9 +85,6 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
     public void setDescriptor(ProcessDescriptor descriptor) {
         Object oldValue = this.descriptor;
         this.descriptor = descriptor;
-        if (descriptor != null) {
-            descriptor.addPropertyChangeListener(AbstractAggregationProcess.this);
-        }
         pcs.firePropertyChange(PROP_NAME_PROCESS_DESCRIPTOR, oldValue, this.descriptor);
     }
 
@@ -126,6 +126,8 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
     public void propertyChange(PropertyChangeEvent evt) {
         pcs.firePropertyChange(evt);
     }
+
+    protected abstract ProcessDescriptor createProcessDescriptor();
 
     protected abstract void start();
 

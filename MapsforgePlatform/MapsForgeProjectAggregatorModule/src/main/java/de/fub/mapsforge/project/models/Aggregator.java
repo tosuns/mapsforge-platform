@@ -16,7 +16,6 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -31,6 +30,8 @@ import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -42,29 +43,45 @@ import org.openide.util.NbBundle;
  *
  * @author Serdar
  */
-public class Aggregator implements ChangeListener, PropertyChangeListener {
+public class Aggregator extends ModelSynchronizer {
 
     private static final Logger LOG = Logger.getLogger(Aggregator.class.getName());
     public static final String PROP_NAME_AGGREGATOR_STATE = "aggregator.state";
-    public static final String PROP_NAME_DATAOBJECT = "aggregator.dataobject";
     private final AggregatorDataObject dataObject;
     private AggregatorState aggregatorState = AggregatorState.INACTIVE;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private AggregateProcessPipeline pipeline = new AggregateProcessPipeline(this);
     private AggContainer aggContainer;
+    private ModelSynchronizerClient dataObjectModelSynchonizerClient;
 
     public Aggregator(AggregatorDataObject dataObject) {
         assert dataObject != null;
         this.dataObject = dataObject;
-        this.dataObject.addChangeListener(Aggregator.this);
         init();
     }
 
     private void init() {
-        AggregatorDescriptor descriptor = getDescriptor();
+        // a dummy client to differenciate File change from the file system
+        dataObjectModelSynchonizerClient = super.create(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // do nothing
+            }
+        });
 
+
+        this.dataObject.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                dataObjectModelSynchonizerClient.modelChanged();
+            }
+        });
+        setUpPipeline();
+    }
+
+    private void setUpPipeline() {
+        AggregatorDescriptor descriptor = getDescriptor();
         if (descriptor != null) {
-            descriptor.addPropertyChangeListener(Aggregator.this);
             File sourceFolder = null;
             if (descriptor.getCacheFolderPath() == null) {
                 FileObject parent = this.dataObject.getPrimaryFile().getParent();
@@ -209,16 +226,10 @@ public class Aggregator implements ChangeListener, PropertyChangeListener {
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
-        if (getDescriptor() != null) {
-            getDescriptor().addPropertyChangeListener(listener);
-        }
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
-        if (getDescriptor() != null) {
-            getDescriptor().removePropertyChangeListener(listener);
-        }
     }
 
     public synchronized AbstractAggregationProcess createProcess(ProcessDescriptor processDescriptor) {
@@ -239,20 +250,6 @@ public class Aggregator implements ChangeListener, PropertyChangeListener {
             }
         }
         return aggregateProcess;
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        if (getDescriptor() != null) {
-            getDescriptor().removePropertyChangeListener(this);
-        }
-        init();
-        pcs.firePropertyChange(PROP_NAME_DATAOBJECT, null, getDataObject());
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        getDataObject().save();
     }
 
     public enum AggregatorState {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process xmlns="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
+         description="Road Generation process" name="Road Generator" class="de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess">
+    <properties>
+        <section name="Road Generator">
+            <propertyset description="Settings" name="Aggragation Filter Settings">
+                <property type="java.lang.Double" name="minEdgeWeight" value="2.0"/>
+            </propertyset>
+            <propertyset description="Settings" name="Road Object Merger Settings">
+                <property type="java.lang.Double" name="maxIntersectionMerge" value="30.0"/>
+                <property type="java.lang.Double" name="maxRoadMergeDistance" value="50.0"/>
+            </propertyset>
+            <propertyset description="Settings" name="Road Type Classifier Settings">
+                <property type="java.lang.Double" name="minWeightPrimary" value="4.0"/>
+                <property type="java.lang.Double" name="minWeightSecondary" value="2.0"/>
+                <property type="java.lang.Double" name="minWidthPrimary" value="4.0"/>
+                <property type="java.lang.Double" name="minWidthSecondary" value="2.0"/>
+            </propertyset>
+            <propertyset description="Settings" name="Road Network Filter Settings">
+                <property type="java.lang.Boolean" name="removeBorderRoads" value="true"/>
+                <property type="java.lang.Double" name="minBorderRoadLength" value="150.0"/>
+                <property type="java.lang.Boolean" name="removeIsolatedRoads" value="true"/>
+                <property type="java.lang.Double" name="minIsolatedRoadLength" value="500.0"/>
+            </propertyset>
+        </section>
+    </properties>
+</process>

@@ -11,8 +11,6 @@ import java.awt.Point;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -47,12 +45,11 @@ import org.openide.util.Exceptions;
  */
 public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, String> {
 
-    public static final String PROP_NAME_PIPELINE = "processGraph.pipeline";
     private LayerWidget backgroundLayer = null;
     private LayerWidget mainLayer = null;
     private LayerWidget connectionLayer = null;
     private LayerWidget interactionLayer = null;
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private final ChangeSupport pcs = new ChangeSupport(this);
     public static int edgeCount = 0;
 
     public ProcessGraph() {
@@ -69,12 +66,12 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         getActions().addAction(ActionFactory.createAcceptAction(new AcceptProviderImpl()));
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
+    public void addChangeListener(ChangeListener listener) {
+        pcs.addChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(listener);
+    public void removeChangeListener(ChangeListener listener) {
+        pcs.removeChangeListener(listener);
     }
 
     public void clearGraph() {
@@ -132,7 +129,6 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         ConnectionWidget edgeWidget = (ConnectionWidget) findWidget(edge);
         edgeWidget.setSourceAnchor(sourceAnchor);
         validate();
-
     }
 
     @Override
@@ -146,7 +142,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
 
     private Class<?> getInputType(AbstractAggregationProcess target) {
         Class<?> targetInputType = null;
-        List<Class<?>> targetInputTypes = getTargetInputTypes(target);
+        List<Class<?>> targetInputTypes = getInputTypes(target);
 
         if (!targetInputTypes.isEmpty()) {
             if (targetInputTypes.size() == 2) {
@@ -164,7 +160,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         return targetInputType;
     }
 
-    private List<Class<?>> getTargetInputTypes(AbstractAggregationProcess target) {
+    private List<Class<?>> getInputTypes(AbstractAggregationProcess target) {
         ArrayList<Class<?>> resultList = new ArrayList<Class<?>>();
         Class<? extends AbstractAggregationProcess> aClass = target.getClass();
         Method[] declaredMethods = aClass.getDeclaredMethods();
@@ -179,9 +175,9 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         return resultList;
     }
 
-    private Class<?> getSourceOutputType(AbstractAggregationProcess source) {
+    private Class<?> getOutputType(AbstractAggregationProcess source) {
         Class<?> sourceOutputType = null;
-        List<Class<?>> sourceOutputTypes = getSourceOutputTypes(source);
+        List<Class<?>> sourceOutputTypes = getOutputTypes(source);
 
         if (!sourceOutputTypes.isEmpty()) {
             if (sourceOutputTypes.size() == 2) {
@@ -199,7 +195,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         return sourceOutputType;
     }
 
-    private List<Class<?>> getSourceOutputTypes(AbstractAggregationProcess source) {
+    private List<Class<?>> getOutputTypes(AbstractAggregationProcess source) {
         ArrayList<Class<?>> resultList = new ArrayList<Class<?>>();
         Class<? extends AbstractAggregationProcess> aClass = source.getClass();
         Method[] declaredMethods = aClass.getDeclaredMethods();
@@ -212,17 +208,20 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     }
 
     void updateAggregatorPipeline() {
+        pcs.fireChange();
+    }
+
+    public List<AbstractAggregationProcess<?, ?>> collectPipeline() {
         List<AbstractAggregationProcess<?, ?>> pipeLine = new ArrayList<AbstractAggregationProcess<?, ?>>();
         Collection<AbstractAggregationProcess<?, ?>> nodes = getNodes();
-
         for (AbstractAggregationProcess<?, ?> process : nodes) {
             Class<?> inputType = getInputType(process);
             if (inputType != null && inputType.isAssignableFrom(Void.class)) {
                 pipeLine = collectPipelineUnits(process);
-                pcs.firePropertyChange(PROP_NAME_PIPELINE, nodes, pipeLine);
                 break;
             }
         }
+        return pipeLine;
     }
 
     private List<AbstractAggregationProcess<?, ?>> collectPipelineUnits(AbstractAggregationProcess<?, ?> process) {
@@ -290,7 +289,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
 
                 if (targetInputType != null && !targetInputType.equals(Void.TYPE)) {
 
-                    Class<?> sourceOutputType = getSourceOutputType(source);
+                    Class<?> sourceOutputType = getOutputType(source);
                     // check whether source output type and
                     // target input type are assignable
                     if (sourceOutputType != null

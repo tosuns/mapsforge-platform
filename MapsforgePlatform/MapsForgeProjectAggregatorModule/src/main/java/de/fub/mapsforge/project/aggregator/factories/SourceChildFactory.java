@@ -7,8 +7,11 @@ package de.fub.mapsforge.project.aggregator.factories;
 import de.fub.mapsforge.project.aggregator.factories.nodes.SourceNode;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapsforge.project.models.ModelSynchronizer;
 import java.net.URISyntaxException;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -21,9 +24,17 @@ import org.openide.util.Exceptions;
 public class SourceChildFactory extends ChildFactory<Source> {
 
     private final Aggregator aggregator;
+    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
     public SourceChildFactory(Aggregator aggregator) {
+        assert aggregator != null;
         this.aggregator = aggregator;
+        modelSynchronizerClient = aggregator.create(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                refresh(true);
+            }
+        });
     }
 
     @Override

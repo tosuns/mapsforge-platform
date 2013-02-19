@@ -5,15 +5,11 @@
 package de.fub.mapsforge.project.aggregator.xml;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -22,16 +18,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "process")
 @XmlAccessorType(XmlAccessType.PROPERTY)
-public class ProcessDescriptor implements ChangeListener {
+public class ProcessDescriptor {
 
-    @XmlTransient
-    public static final String PROP_NAME_DISPLAY_NAME = "displayName";
-    @XmlTransient
-    public static final String PROP_NAME_DESCRIPTION = "description";
-    @XmlTransient
-    public static final String PROP_NAME_JAVATYPE = "javatype";
-    @XmlTransient
-    public static final String PROP_NAME_PROPERTIES = "properties";
     private String javatype;
     private String displayName;
     private String description;
@@ -59,7 +47,6 @@ public class ProcessDescriptor implements ChangeListener {
     public void setJavatype(String javatype) {
         Object oldValue = this.javatype;
         this.javatype = javatype;
-        pcs.firePropertyChange(PROP_NAME_JAVATYPE, oldValue, this.javatype);
     }
 
     @XmlAttribute(name = "name")
@@ -70,7 +57,6 @@ public class ProcessDescriptor implements ChangeListener {
     public void setDisplayName(String displayName) {
         Object oldValue = this.displayName;
         this.displayName = displayName;
-        pcs.firePropertyChange(PROP_NAME_DISPLAY_NAME, oldValue, this.displayName);
     }
 
     @XmlAttribute(name = "description")
@@ -81,7 +67,6 @@ public class ProcessDescriptor implements ChangeListener {
     public void setDescription(String description) {
         Object oldValue = this.displayName;
         this.description = description;
-        pcs.firePropertyChange(PROP_NAME_DESCRIPTION, oldValue, this.description);
     }
 
     @XmlElement(name = "properties", required = true)
@@ -92,27 +77,10 @@ public class ProcessDescriptor implements ChangeListener {
     public void setProperties(Properties properties) {
         Object oldValue = this.properties;
         this.properties = properties;
-        if (properties != null) {
-            properties.addChangeListener(ProcessDescriptor.this);
-        }
-        pcs.firePropertyChange(PROP_NAME_PROPERTIES, oldValue, this.properties);
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(listener);
     }
 
     @Override
     public String toString() {
         return "Process{" + "javatype=" + javatype + ", displayName=" + displayName + ", description=" + description + '}';
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        pcs.firePropertyChange(PROP_NAME_PROPERTIES, null, getProperties());
     }
 }
