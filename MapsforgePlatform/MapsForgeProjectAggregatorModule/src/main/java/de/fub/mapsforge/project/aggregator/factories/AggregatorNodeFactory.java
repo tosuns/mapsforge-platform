@@ -14,8 +14,11 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -36,13 +39,14 @@ public class AggregatorNodeFactory extends ChildFactory<AggregatorDataObject> im
         ArrayList<AggregatorDataObject> list = new ArrayList<AggregatorDataObject>();
         for (FileObject fileObject : dataObject.getPrimaryFile().getChildren()) {
             try {
-                if ("agg".equalsIgnoreCase(fileObject.getExt())) {
+                if (fileObject.isData() && "agg".equalsIgnoreCase(fileObject.getExt())) {
                     DataObject db = DataObject.find(fileObject);
                     if (db instanceof AggregatorDataObject) {
                         list.add((AggregatorDataObject) db);
                     }
                 }
-            } catch (Exception ex) {
+            } catch (DataObjectNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
         toPopulate.addAll(list);
@@ -51,7 +55,7 @@ public class AggregatorNodeFactory extends ChildFactory<AggregatorDataObject> im
 
     @Override
     protected Node createNodeForKey(AggregatorDataObject aggregatorDataObject) {
-        return aggregatorDataObject.getNodeDelegate();
+        return new FilterNode(aggregatorDataObject.getNodeDelegate());
     }
 
     @Override

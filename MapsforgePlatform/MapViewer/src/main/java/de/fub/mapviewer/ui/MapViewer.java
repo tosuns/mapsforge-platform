@@ -17,7 +17,8 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
  */
 public class MapViewer extends JMapViewer {
 
-    private final ProxyTileCache proxTileCache;
+    private static final long serialVersionUID = 1L;
+    private transient final ProxyTileCache proxTileCache;
 
     public MapViewer() {
         this(new ProxyTileCache(new PersistentTileCache()), Runtime.getRuntime().availableProcessors() * 4);

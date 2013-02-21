@@ -21,7 +21,8 @@ import org.openide.util.NbBundle;
     "CLT_Merge_Dialog_Error_Message_File_exists=The specified file path already exists! Specify another path."})
 public class MergeForm extends javax.swing.JPanel implements DocumentListener {
 
-    private DialogDescriptor descriptor;
+    private static final long serialVersionUID = 1L;
+    private transient DialogDescriptor descriptor;
     private final FileObject parentFolder;
 
     /**

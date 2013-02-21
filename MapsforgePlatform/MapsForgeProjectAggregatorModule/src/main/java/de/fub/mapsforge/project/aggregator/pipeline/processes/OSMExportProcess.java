@@ -67,17 +67,7 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
             if (roadNetwork != null) {
 
                 FileChooserBuilder builder = new FileChooserBuilder(OSMExportProcess.class);
-                builder.setTitle(Bundle.CLT_OSM_Export_Title()).addFileFilter(new FileFilter() {
-                    @Override
-                    public boolean accept(File f) {
-                        return f.getName().endsWith("xml");
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "Osm Xml File";
-                    }
-                });
+                builder.setTitle(Bundle.CLT_OSM_Export_Title()).addFileFilter(new OsmXmlFileFilter());
                 JFileChooser fileChooser = builder.createFileChooser();
                 int showSaveDialog = fileChooser.showSaveDialog(null);
 
@@ -137,5 +127,21 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
         }
 
         return desc;
+    }
+
+    private static class OsmXmlFileFilter extends FileFilter {
+
+        public OsmXmlFileFilter() {
+        }
+
+        @Override
+        public boolean accept(File f) {
+            return f.getName().endsWith("xml");
+        }
+
+        @Override
+        public String getDescription() {
+            return "Osm Xml File";
+        }
     }
 }

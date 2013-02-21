@@ -17,7 +17,8 @@ import org.openide.util.NbPreferences;
 final class CachePanel extends javax.swing.JPanel {
 
     private final static String DEFAULT_DIRECTORY = "default.directory";
-    private final CacheOptionsPanelController controller;
+    private static final long serialVersionUID = 1L;
+    private transient final CacheOptionsPanelController controller;
     private final Preferences preferences;
 
     CachePanel(CacheOptionsPanelController controller) {

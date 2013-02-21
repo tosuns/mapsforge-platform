@@ -70,7 +70,7 @@ public final class AggregatorVisualPanel2 extends JPanel implements ExplorerMana
         setLayout(new java.awt.BorderLayout());
 
         outlineView1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        outlineView1.setPreferredSize(new java.awt.Dimension(400, 400));
+        outlineView1.setPreferredSize(new java.awt.Dimension(200, 400));
         add(outlineView1, java.awt.BorderLayout.CENTER);
 
         jPanel1.setMinimumSize(new java.awt.Dimension(200, 0));
@@ -78,6 +78,7 @@ public final class AggregatorVisualPanel2 extends JPanel implements ExplorerMana
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AggregatorVisualPanel2.class, "AggregatorVisualPanel2.jLabel1.text")); // NOI18N
 
+        templateDescription.setEditable(false);
         templateDescription.setColumns(20);
         templateDescription.setRows(5);
         jScrollPane1.setViewportView(templateDescription);
@@ -98,11 +99,10 @@ public final class AggregatorVisualPanel2 extends JPanel implements ExplorerMana
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
         );
 
         add(jPanel1, java.awt.BorderLayout.EAST);

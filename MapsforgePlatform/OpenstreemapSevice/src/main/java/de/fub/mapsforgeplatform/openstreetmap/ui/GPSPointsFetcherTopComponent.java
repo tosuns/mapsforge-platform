@@ -31,11 +31,11 @@ import org.openide.windows.TopComponent;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd = "-//de.fub.mapsforgeplatform.openstreetmap.ui//GPSPointsFetcher//EN",
-autostore = false)
+        dtd = "-//de.fub.mapsforgeplatform.openstreetmap.ui//GPSPointsFetcher//EN",
+        autostore = false)
 //@TopComponent.Description(
 //    preferredID = "GPSPointsFetcherTopComponent",
-////iconBase="SET/PATH/TO/ICON/HERE", 
+////iconBase="SET/PATH/TO/ICON/HERE",
 //persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 //@TopComponent.Registration(mode = "explorer", openAtStartup = true)
 //@ActionID(category = "Window", id = "de.fub.mapsforgeplatform.openstreetmap.ui.GPSPointsFetcherTopComponent")
@@ -290,7 +290,7 @@ public final class GPSPointsFetcherTopComponent extends TopComponent implements 
     }
 
     void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
+//        String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
 

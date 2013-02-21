@@ -5,32 +5,32 @@
 package de.fub.mapsforge.project.aggregator.xml;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import java.beans.PropertyChangeSupport;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Serdar
  */
+@XmlRootElement(name = "process")
 @XmlType(name = "process")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class ProcessDescriptor {
 
-    private String javatype;
+    private String javaType;
     private String displayName;
     private String description;
     private Properties properties = new Properties();
-    private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public ProcessDescriptor() {
     }
 
     public ProcessDescriptor(String javatype, String displayName, String description) {
-        this.javatype = javatype;
+        this.javaType = javatype;
         this.displayName = displayName;
         this.description = description;
     }
@@ -40,13 +40,12 @@ public class ProcessDescriptor {
     }
 
     @XmlAttribute(name = "class")
-    public String getJavatype() {
-        return javatype;
+    public String getJavaType() {
+        return javaType;
     }
 
-    public void setJavatype(String javatype) {
-        Object oldValue = this.javatype;
-        this.javatype = javatype;
+    public void setJavaType(String javatype) {
+        this.javaType = javatype;
     }
 
     @XmlAttribute(name = "name")
@@ -55,7 +54,6 @@ public class ProcessDescriptor {
     }
 
     public void setDisplayName(String displayName) {
-        Object oldValue = this.displayName;
         this.displayName = displayName;
     }
 
@@ -65,7 +63,6 @@ public class ProcessDescriptor {
     }
 
     public void setDescription(String description) {
-        Object oldValue = this.displayName;
         this.description = description;
     }
 
@@ -75,12 +72,11 @@ public class ProcessDescriptor {
     }
 
     public void setProperties(Properties properties) {
-        Object oldValue = this.properties;
         this.properties = properties;
     }
 
     @Override
     public String toString() {
-        return "Process{" + "javatype=" + javatype + ", displayName=" + displayName + ", description=" + description + '}';
+        return "Process{" + "javatype=" + javaType + ", displayName=" + displayName + ", description=" + description + '}';
     }
 }

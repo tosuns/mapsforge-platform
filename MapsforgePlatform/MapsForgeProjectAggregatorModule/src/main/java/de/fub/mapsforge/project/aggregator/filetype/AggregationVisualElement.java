@@ -70,28 +70,29 @@ import org.openide.windows.TopComponent;
 @NbBundle.Messages("LBL_AggregationBuilder_VISUAL=Map")
 public class AggregationVisualElement extends javax.swing.JPanel implements MultiViewElement, PropertyChangeListener, ExplorerManager.Provider {
 
+    private static final long serialVersionUID = 1L;
     @StaticResource
     private static final String LAYER_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/layersIcon.png";
     @StaticResource
     private static final String LAYERVIEW_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/layerview.png";
     @StaticResource
     private static final String PROCESS_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png";
-    private static final long serialVersionUID = 1L;
-    private Aggregator aggregator;
-    private JToolBar toolbar = new JToolBar();
+    private transient final RequestProcessor requestProcessor = new RequestProcessor();
+    private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+    private transient final ViewUpdater viewUpdater = new ViewUpdater();
+    private transient final LayerNodeFactory nodeFactory = new LayerNodeFactory();
+    private transient final Lookup lookup;
     private transient MultiViewElementCallback callback;
+    private transient Aggregator aggregator;
+    private transient Image defaulImage;
+    private JToolBar toolbar = new JToolBar();
     private JToggleButton layerViewButton;
     private ExplorerManager explorerManager = new ExplorerManager();
-    private Lookup lookup;
-    private final LayerNodeFactory nodeFactory = new LayerNodeFactory();
     private JButton layersButton;
     private JButton processButton;
+    private JButton statisticsDataButton;
     private JPopupMenu layersMenu;
     private JPopupMenu processMenu;
-    private Image defaulImage;
-    private final RequestProcessor requestProcessor = new RequestProcessor();
-    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
-    private final ViewUpdater viewUpdater = new ViewUpdater();
 
     /**
      * Creates new form AggregationVisualElement
@@ -119,6 +120,9 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         jSplitPane1.setDividerLocation(Integer.MAX_VALUE);
     }
 
+    /**
+     * initializes and sets up the deop down menu of the Layer visiblity menu.
+     */
     private void initPopupMenu() {
         nodeFactory.clear();
         aggComponent.clear();
@@ -129,17 +133,16 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 nodeFactory.add(layer);
                 final JCheckBoxMenuItem jCheckBoxMenuItem = new JCheckBoxMenuItem(layer.getName());
                 jCheckBoxMenuItem.setState(layer.isVisible());
-                jCheckBoxMenuItem.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        layer.setVisible(jCheckBoxMenuItem.getState());
-                    }
-                });
+                jCheckBoxMenuItem.addActionListener(new LayerActionListener(layer, jCheckBoxMenuItem));
                 layersMenu.add(jCheckBoxMenuItem);
             }
         }
     }
 
+    /**
+     * initializes and sets up the drop down menu of the process run toolbar
+     * button.
+     */
     private void initProcessPopupMenu() {
         Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
         for (final AbstractAggregationProcess<?, ?> process : processes) {
@@ -161,9 +164,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         }
     }
 
-    @NbBundle.Messages({"CLT_Information_Message=Task still running!", "CLT_Process_Button_Tooltip=Run pipline"})
+    @NbBundle.Messages({"CLT_Information_Message=Task still running!",
+        "CLT_Process_Button_Tooltip=Run pipline",
+        "CLT_Show_Hide_Layers=Shows/Hides Layers",
+        "CLT_Show_Hide_Layer_View=Shows/Hides Layer View"})
     private void setUpToolbar() {
-
+        // set up process drop down button
         if (processMenu == null) {
             processMenu = new JPopupMenu();
             initProcessPopupMenu();
@@ -192,10 +198,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             initProcessPopupMenu();
         }
 
+        // set up layer show/hide drop down button
         if (layersMenu == null) {
             layersMenu = new JPopupMenu();
             initPopupMenu();
             layersButton = DropDownButtonFactory.createDropDownButton(ImageUtilities.loadImageIcon(LAYER_ICON_PATH, true), layersMenu);
+            layersButton.setToolTipText(Bundle.CLT_Show_Hide_Layers());
             layersButton.addActionListener(new ActionListener() {
                 private boolean allVisible = true;
 
@@ -217,10 +225,11 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             initPopupMenu();
         }
 
+        // set up layer view button
         if (layerViewButton == null) {
-
             layerViewButton = new JToggleButton(ImageUtilities.loadImageIcon(LAYERVIEW_ICON_PATH, true));
             layerViewButton.setSelected(false);
+            layerViewButton.setToolTipText(Bundle.CLT_Show_Hide_Layer_View());
             layerViewButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -393,6 +402,22 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         @Override
         public void stateChanged(ChangeEvent e) {
             setUpToolbar();
+        }
+    }
+
+    private static class LayerActionListener implements ActionListener {
+
+        private final AbstractLayer<?> layer;
+        private final JCheckBoxMenuItem jCheckBoxMenuItem;
+
+        public LayerActionListener(AbstractLayer<?> layer, JCheckBoxMenuItem jCheckBoxMenuItem) {
+            this.layer = layer;
+            this.jCheckBoxMenuItem = jCheckBoxMenuItem;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            layer.setVisible(jCheckBoxMenuItem.getState());
         }
     }
 }

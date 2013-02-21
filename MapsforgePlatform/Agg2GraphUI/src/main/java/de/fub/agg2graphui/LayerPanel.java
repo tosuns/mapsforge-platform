@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 public class LayerPanel extends javax.swing.JPanel implements LayerListener {
 
     private static final long serialVersionUID = 1L;
-    private AbstractLayer<?> layer;
+    private transient AbstractLayer<?> layer;
 
     /**
      * Creates new form LayerPanel

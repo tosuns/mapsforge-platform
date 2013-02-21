@@ -54,7 +54,7 @@ public class AggregatorWizardPanel2 implements WizardDescriptor.Panel<WizardDesc
     @Override
     public boolean isValid() {
         // If it is always OK to press Next or Finish, then:
-        return component.getExplorerManager().getSelectedNodes().length == 1;
+        return getComponent().getExplorerManager().getSelectedNodes().length == 1;
         // If it depends on some condition (form filled out...) and
         // this condition changes (last form field filled in...) then
         // use ChangeSupport to implement add/removeChangeListener below.
@@ -74,7 +74,7 @@ public class AggregatorWizardPanel2 implements WizardDescriptor.Panel<WizardDesc
     @Override
     public void readSettings(WizardDescriptor wiz) {
         this.wiz = wiz;
-        Object property = wiz.getProperty(AggregatorWizardAction.PROP_NAME_TEMPLATE);
+        Object property = this.wiz.getProperty(AggregatorWizardAction.PROP_NAME_TEMPLATE);
         if (property instanceof DataObject) {
             try {
                 getComponent().getExplorerManager().setSelectedNodes(new Node[]{new AggregatorVisualPanel2.FileObjectWrapperNode((DataObject) property)});

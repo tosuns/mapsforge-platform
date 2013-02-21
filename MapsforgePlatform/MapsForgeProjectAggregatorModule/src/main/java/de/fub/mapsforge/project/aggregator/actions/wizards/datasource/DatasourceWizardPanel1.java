@@ -26,13 +26,11 @@ public class DatasourceWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
      */
     private DatasourceVisualPanel1 component;
     private final PropertyChangeListener listener = new PropertyChangeListener() {
-
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             cs.fireChange();
         }
     };
-            
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -58,7 +56,7 @@ public class DatasourceWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
 
     @Override
     public boolean isValid() {
-        return component.getExplorerManager().getSelectedNodes().length > 0;
+        return getComponent().getExplorerManager().getSelectedNodes().length > 0;
     }
 
     @Override
@@ -76,12 +74,12 @@ public class DatasourceWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
         Object property = wiz.getProperty(DATASOURCE_FILE_OBJECT);
         if (property instanceof DataObject) {
             DataObject object = (DataObject) property;
-            component.getExplorerManager().setRootContext(new FilterNode(object.getNodeDelegate(), new FilterNode.Children(object.getNodeDelegate())));
+            getComponent().getExplorerManager().setRootContext(new FilterNode(object.getNodeDelegate(), new FilterNode.Children(object.getNodeDelegate())));
         }
     }
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty(SELECTED_NODES, component.getExplorerManager().getSelectedNodes());
+        wiz.putProperty(SELECTED_NODES, getComponent().getExplorerManager().getSelectedNodes());
     }
 }

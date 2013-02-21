@@ -10,8 +10,6 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
 import org.openide.explorer.view.Visualizer;
 import org.openide.nodes.Node;

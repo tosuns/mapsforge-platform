@@ -12,7 +12,6 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 import javax.swing.Action;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;

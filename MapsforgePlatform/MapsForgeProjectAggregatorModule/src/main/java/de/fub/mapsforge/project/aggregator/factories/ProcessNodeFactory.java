@@ -40,7 +40,7 @@ public class ProcessNodeFactory extends ChildFactory<AbstractAggregationProcess<
     }
 
     @Override
-    protected Node createNodeForKey(AbstractAggregationProcess<?, ?> orocess) {
-        return orocess.getNodeDelegate();
+    protected Node createNodeForKey(AbstractAggregationProcess<?, ?> process) {
+        return process.getNodeDelegate();
     }
 }

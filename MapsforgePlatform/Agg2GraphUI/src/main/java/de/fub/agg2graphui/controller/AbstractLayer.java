@@ -16,7 +16,6 @@ import de.fub.agg2graphui.layers.LayerListener;
 import de.fub.agg2graphui.layers.Line;
 import de.fub.agg2graphui.layers.Point;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -276,7 +275,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     public void paintLayer(Graphics g, Rectangle rectangle) {
         Graphics2D g2d = (Graphics2D) g.create();
         try {
-            Font labelFont = new Font(Font.SERIF, Font.PLAIN, 24);
+//            Font labelFont = new Font(Font.SERIF, Font.PLAIN, 24);
             // queue draw operations
             setDrawnPointsCounter(0);
 
@@ -289,8 +288,8 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
 
                     drawDrawables(drawables, g2d, rectangle);
 
-                    labelFont = labelFont.deriveFont((float) (12 - 2 * Math.log(getDrawnPointsCounter())));
-                    Polygon arrowHead = createArrow();
+//                    labelFont = labelFont.deriveFont((float) (12 - 2 * Math.log(getDrawnPointsCounter())));
+//                    Polygon arrowHead = createArrow();
                     for (Drawable drawObject : getDrawables()) {
                         // set color
                         if (drawObject == null) {

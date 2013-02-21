@@ -15,7 +15,8 @@ import org.openide.util.ChangeSupport;
  */
 public class ObservableArrayList<T> extends ArrayList<T> implements ObservableList<T> {
 
-    private final ChangeSupport csp = new ChangeSupport(this);
+    private static final long serialVersionUID = 1L;
+    private transient final ChangeSupport csp = new ChangeSupport(this);
 
     @Override
     public boolean add(T e) {

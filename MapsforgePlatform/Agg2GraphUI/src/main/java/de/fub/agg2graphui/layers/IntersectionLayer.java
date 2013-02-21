@@ -31,7 +31,7 @@ public class IntersectionLayer extends AbstractLayer<Intersection> {
     protected void drawDrawables(List<Drawable> drawables, Graphics2D graphics, Rectangle rectangle) {
         // render intersections
         RenderingOptions intersectionRo = getOptions().getCopy();
-        intersectionRo.setStrokeBaseWidthFactor(getLayerManager().getSize().width / 50);
+        intersectionRo.setStrokeBaseWidthFactor(getLayerManager().getSize().width / 50f);
         for (Intersection intersection : getItemList()) {
             if (intersection.isVisible()) {
                 drawPoint(intersection, intersectionRo);

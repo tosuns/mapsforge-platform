@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JComponent;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
@@ -108,21 +109,13 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
                                 marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                                 marshaller.marshal(aggregator, outputStream);
 
-                            } catch (Exception ex) {
-                                if (outputStream != null) {
-                                    try {
-                                        outputStream.close();
-                                    } catch (IOException ee) {
-                                        Exceptions.printStackTrace(ee);
-                                    }
+                            } catch (IOException ex) {
+                                if (outputStream != null && fileName != null && aggregatorFolder != null) {
+                                    handleExceptionOfOutputStream(outputStream, fileName, aggregatorFolder);
                                 }
-                                FileObject fileObject = aggregatorFolder.getPrimaryFile().getFileObject(fileName);
-                                if (fileObject != null) {
-                                    try {
-                                        fileObject.delete();
-                                    } catch (IOException ex1) {
-                                        Exceptions.printStackTrace(ex1);
-                                    }
+                            } catch (JAXBException ex) {
+                                if (outputStream != null && fileName != null && aggregatorFolder != null) {
+                                    handleExceptionOfOutputStream(outputStream, fileName, aggregatorFolder);
                                 }
                             } finally {
                                 if (outputStream != null) {
@@ -137,6 +130,24 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
                         }
                     }
                 });
+            }
+        }
+    }
+
+    private void handleExceptionOfOutputStream(OutputStream outputStream, String fileName, DataObject aggregatorFolder) {
+        if (outputStream != null) {
+            try {
+                outputStream.close();
+            } catch (IOException ee) {
+                Exceptions.printStackTrace(ee);
+            }
+        }
+        FileObject fileObject = aggregatorFolder.getPrimaryFile().getFileObject(fileName);
+        if (fileObject != null) {
+            try {
+                fileObject.delete();
+            } catch (IOException ex1) {
+                Exceptions.printStackTrace(ex1);
             }
         }
     }
@@ -164,7 +175,7 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
 
     private void addGPXFile(FileObject fileObject, AggregatorDescriptor aggregator) {
         if (fileObject.isData()) {
-            if (fileObject.getExt() != null && "gpx".equalsIgnoreCase(fileObject.getExt().toLowerCase())) {
+            if (fileObject.getExt() != null && "gpx".equalsIgnoreCase(fileObject.getExt().toLowerCase(Locale.getDefault()))) {
                 File file = FileUtil.toFile(fileObject);
                 if (file != null) {
                     Source source = new Source();

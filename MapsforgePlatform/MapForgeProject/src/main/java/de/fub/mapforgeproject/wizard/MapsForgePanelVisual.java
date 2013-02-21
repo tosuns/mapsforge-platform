@@ -18,7 +18,8 @@ import org.openide.filesystems.FileUtil;
 public class MapsForgePanelVisual extends JPanel implements DocumentListener {
 
     public static final String PROP_PROJECT_NAME = "projectName";
-    private MapsForgeWizardPanel panel;
+    private static final long serialVersionUID = 1L;
+    private transient final MapsForgeWizardPanel panel;
 
     public MapsForgePanelVisual(MapsForgeWizardPanel panel) {
         initComponents();

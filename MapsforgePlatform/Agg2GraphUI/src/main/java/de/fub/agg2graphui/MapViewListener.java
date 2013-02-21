@@ -47,11 +47,7 @@ public class MapViewListener extends MouseAdapter implements ComponentListener {
     @Override
     public void componentResized(ComponentEvent e) {
         this.aggTopComponent.updateBoundingBox();
-        try {
-            this.aggTopComponent.updateLonLat(new Point(e.getComponent().getWidth() / 2, e.getComponent().getHeight() / 2));
-        } catch (Exception ex) {
-            this.aggTopComponent.updateLonLat(lastPoint);
-        }
+        this.aggTopComponent.updateLonLat(new Point(e.getComponent().getWidth() / 2, e.getComponent().getHeight() / 2));
     }
 
     @Override

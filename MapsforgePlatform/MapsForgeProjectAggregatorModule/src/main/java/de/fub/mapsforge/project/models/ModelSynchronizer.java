@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.models;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.ChangeEvent;

@@ -29,9 +29,9 @@ import org.openide.util.ChangeSupport;
 public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
 
     private static final long serialVersionUID = 1L;
-    private final ProcessGraph graph = new ProcessGraph();
-    private Aggregator aggregator = null;
-    private final ChangeSupport cs = new ChangeSupport(this);
+    private transient final ProcessGraph graph = new ProcessGraph();
+    private transient Aggregator aggregator = null;
+    private transient final ChangeSupport cs = new ChangeSupport(this);
 
     /**
      * Creates new form GraphPanel
@@ -39,11 +39,7 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
     public GraphPanel() {
         initComponents();
         jScrollPane1.setViewportView(graph.createView());
-        jScrollPane1.setDropTarget(new DropTarget(this, new DropTargetAdapter() {
-            @Override
-            public void drop(DropTargetDropEvent dtde) {
-            }
-        }));
+        jScrollPane1.setDropTarget(new DropTarget(this, new DropHandler()));
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -150,4 +146,14 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    static class DropHandler extends DropTargetAdapter {
+
+        public DropHandler() {
+        }
+
+        @Override
+        public void drop(DropTargetDropEvent dtde) {
+        }
+    }
 }

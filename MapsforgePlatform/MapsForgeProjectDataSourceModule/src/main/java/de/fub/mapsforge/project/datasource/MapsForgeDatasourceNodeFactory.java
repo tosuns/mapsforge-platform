@@ -68,7 +68,7 @@ public class MapsForgeDatasourceNodeFactory implements NodeFactory {
                         projectData.getProjectFolders().putFolder(DATASOURCE_FILENAME, datasourceFolderPath);
                         mapsForgeProject.modelChanged(MapsForgeDatasourceNodeList.this, projectData);
 
-                    } else if (datasourceFolderPath != null) {
+                    } else {
                         // there is an entry for the gpx datasource file
                         // validate path and get folder if possible
                         FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(datasourceFolderPath);

@@ -24,8 +24,6 @@ public class GPXDatasourceNode extends FilterNode {
 
     @StaticResource
     private static final String DATASOURCE_ICON_PATH = "de/fub/mapsforge/project/datasource/datasourceIcon.png";
-    private final DataObject gpxDataSourceObject;
-    private final MapsForgeProject project;
 
     public GPXDatasourceNode(DataObject gpxDataSourceObject, MapsForgeProject project) {
         super(gpxDataSourceObject.getNodeDelegate(),
@@ -33,11 +31,8 @@ public class GPXDatasourceNode extends FilterNode {
                 new ProxyLookup(
                 gpxDataSourceObject.getNodeDelegate().getLookup(),
                 Lookups.singleton(project)));
-        this.gpxDataSourceObject = gpxDataSourceObject;
-        this.project = project;
         setDisplayName(MapsForgeDatasourceNodeFactory.DATASOURCE_FILENAME);
     }
-
 
     @Override
     public Image getIcon(int type) {

@@ -120,23 +120,10 @@ import org.xml.sax.InputSource;
 public class GPXDataObject extends GeoDataObject implements GPXProvider {
 
     private static final long serialVersionUID = 1L;
-    private Lookup lookup = null;
-    protected final Set<ChangeListener> changeListenerSet = Collections.synchronizedSet(new HashSet<ChangeListener>());
+    private transient Lookup lookup = null;
+    protected transient final Set<ChangeListener> changeListenerSet = Collections.synchronizedSet(new HashSet<ChangeListener>());
     private Gpx gpx = null;
-    private final PropertyChangeListener pcl = new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (DataObject.PROP_MODIFIED.equals(evt.getPropertyName())) {
-                try {
-                    DataEditorSupport editorSupport = getLookup().lookup(DataEditorSupport.class);
-                    updateGpx(editorSupport.getInputStream());
-                    modelChanged(GPXDataObject.this, gpx);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    };
+    private transient final PropertyChangeListener pcl = new PropertyChangeListenerImpl();
 
     public GPXDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
@@ -260,5 +247,24 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
             }
         }
         return boundingBox;
+    }
+
+    private class PropertyChangeListenerImpl implements PropertyChangeListener {
+
+        public PropertyChangeListenerImpl() {
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (DataObject.PROP_MODIFIED.equals(evt.getPropertyName())) {
+                try {
+                    DataEditorSupport editorSupport = getLookup().lookup(DataEditorSupport.class);
+                    updateGpx(editorSupport.getInputStream());
+                    modelChanged(GPXDataObject.this, gpx);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }
 }

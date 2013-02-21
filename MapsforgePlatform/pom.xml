@@ -87,6 +87,8 @@
         <module>MapsForgeProjectAggregatorModule</module>
         <module>OpenstreetMap</module>
     <module>GeoFileTypeApi</module>
+    <module>XmlCatalogModule</module>
+    <module>SettingsModule</module>
   </modules>
 
     <properties>

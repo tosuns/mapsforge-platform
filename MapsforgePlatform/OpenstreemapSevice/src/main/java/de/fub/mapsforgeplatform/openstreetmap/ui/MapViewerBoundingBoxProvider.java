@@ -8,7 +8,6 @@ import de.fub.mapsforgeplatform.openstreetmap.service.LocationBoundingBoxService
 import de.fub.mapviewer.shapes.OsmRectangle;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -38,55 +37,10 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  */
 public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements LocationBoundingBoxService {
 
-    private final Object MUTEX = new Object();
-    private final MapRectangle mapRectangle = new MapRectangle() {
-        @Override
-        public Coordinate getTopLeft() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public Coordinate getBottomRight() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void paint(Graphics grphcs, Point point, Point point1) {
-        }
-    };
-    private final ChangeSupport csp = new ChangeSupport(this);
-    private final MouseAdapter mouseAdapter = new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            fireChangeEvent();
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            fireChangeEvent();
-        }
-
-        @Override
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            fireChangeEvent();
-        }
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            fireChangeEvent();
-        }
-    };
-    private ComponentListener componentListener = new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            fireChangeEvent();
-        }
-
-        @Override
-        public void componentShown(ComponentEvent e) {
-            fireChangeEvent();
-        }
-    };
+    private static final long serialVersionUID = 1L;
+    private transient final ChangeSupport csp = new ChangeSupport(this);
+    private transient final MouseAdapter mouseAdapter = new MouseAdapterImpl();
+    private transient ComponentListener componentListener = new ComponentAdapterImpl();
 
     /**
      * Creates new form MapViewer
@@ -521,19 +475,14 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
     }
 
     private void updateView() {
-        try {
-            double left = Double.parseDouble(leftLong.getText().replaceAll("°", ""));
-            double top = Double.parseDouble(topLat.getText().replaceAll("°", ""));
-            double right = Double.parseDouble(rightLong.getText().replaceAll("°", ""));
-            double bottom = Double.parseDouble(bottomLat.getText().replaceAll("°", ""));
+        double left = Double.parseDouble(leftLong.getText().replaceAll("°", ""));
+        double top = Double.parseDouble(topLat.getText().replaceAll("°", ""));
+        double right = Double.parseDouble(rightLong.getText().replaceAll("°", ""));
+        double bottom = Double.parseDouble(bottomLat.getText().replaceAll("°", ""));
 
-            mapViewer.setMapRectangleList(new ArrayList<MapRectangle>(Arrays.asList(new OsmRectangle(left, top, right, bottom))));
-            mapViewer.setDisplayToFitMapRectangle();
-            fireChangeEvent();
-        } catch (Exception ex) {
-            // do nothing 
-        } finally {
-        }
+        mapViewer.setMapRectangleList(new ArrayList<MapRectangle>(Arrays.asList(new OsmRectangle(left, top, right, bottom))));
+        mapViewer.setDisplayToFitMapRectangle();
+        fireChangeEvent();
     }
 
     public void lockInputFields(boolean lock) {
@@ -545,6 +494,48 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
             topLat.setEnabled(!lock);
             rightLong.setEnabled(!lock);
             bottomLat.setEnabled(!lock);
+        }
+    }
+
+    private class MouseAdapterImpl extends MouseAdapter {
+
+        public MouseAdapterImpl() {
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            fireChangeEvent();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            fireChangeEvent();
+        }
+
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            fireChangeEvent();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            fireChangeEvent();
+        }
+    }
+
+    private class ComponentAdapterImpl extends ComponentAdapter {
+
+        public ComponentAdapterImpl() {
+        }
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            fireChangeEvent();
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+            fireChangeEvent();
         }
     }
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    targetNamespace="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
+    version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="aggregator" type="aggregatorDescriptor"/>
+    <xs:element name="process" type="process"/>
+    <xs:complexType name="aggregatorDescriptor">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="datasources">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0"
+                                    name="datasources" nillable="true" type="source"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pipeline" type="pipeline"/>
+            <xs:element minOccurs="0" name="properties" type="properties"/>
+        </xs:sequence>
+        <xs:attribute name="aggregationStrategyClass" type="xs:string"/>
+        <xs:attribute name="cacheFolderPath" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="tileCachingStrategyClass" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="source">
+        <xs:sequence/>
+        <xs:attribute name="url" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="pipeline">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="process"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="process">
+        <xs:sequence>
+            <xs:element name="properties" type="properties"/>
+        </xs:sequence>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="class" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="properties">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="section" type="section"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="section">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="propertyset" type="propertyset"/>
+        </xs:sequence>
+        <xs:attribute name="description" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="propertyset">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="property" type="property"/>
+        </xs:sequence>
+        <xs:attribute name="description" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="property">
+        <xs:sequence/>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+</xs:schema>

@@ -12,10 +12,8 @@ import java.awt.Insets;
 import java.awt.LinearGradientPaint;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.RoundRectangle2D;
 import java.util.Collection;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -34,7 +32,7 @@ import org.netbeans.api.visual.widget.Widget;
 public class ProcessWidget extends Widget {
 
     private final AbstractAggregationProcess process;
-    private final Shape shape = new RoundRectangle2D.Double(0, 0, 200, 200, 10, 10);
+//    private final Shape shape = new RoundRectangle2D.Double(0, 0, 200, 200, 10, 10);
     private JButton button;
     private JLabel nameLabel = new JLabel();
     private final ProcessGraph processGraph;
@@ -64,7 +62,7 @@ public class ProcessWidget extends Widget {
         });
 
 
-        AbstractAggregationProcess aap = process;
+//        AbstractAggregationProcess aap = process;
 //        JXImagePanel imagePanel = new JXImagePanel();
 //        imagePanel.setStyle(JXImagePanel.Style.CENTERED);
 //        imagePanel.setImage(aap.getIcon());

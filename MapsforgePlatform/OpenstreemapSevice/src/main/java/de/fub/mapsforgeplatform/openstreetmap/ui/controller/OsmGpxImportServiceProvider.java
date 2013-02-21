@@ -80,7 +80,7 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 
     private void startDownLoadProcess() {
@@ -211,7 +211,9 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
 
                 writeGPX(gpx);
                 LOG.log(Level.INFO, "finished with page {0}", page);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
+                LOG.log(Level.INFO, ex.getMessage(), ex);
+            } catch (JAXBException ex) {
                 LOG.log(Level.INFO, ex.getMessage(), ex);
             } finally {
                 if (openstreetMapService != null) {

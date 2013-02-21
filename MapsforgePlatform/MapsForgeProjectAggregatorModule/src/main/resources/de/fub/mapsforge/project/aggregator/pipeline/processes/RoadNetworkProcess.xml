@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process xmlns="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
-         description="Road Generation process" name="Road Generator" class="de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess">
+<process 
+    description="Road Generation process" name="Road Generator" class="de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess">
     <properties>
         <section name="Road Generator">
             <propertyset description="Settings" name="Aggragation Filter Settings">

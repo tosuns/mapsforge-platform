@@ -17,6 +17,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
+import javax.xml.bind.JAXBException;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -85,6 +86,7 @@ public final class AggregatorWizardAction implements ActionListener {
                             AggregatorDescriptor aggregator = aggregatorDataObject.getAggregator();
                             aggregator.setName((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_NAME));
                             aggregator.setDescription((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION));
+                            aggregator.setCacheFolderPath(null);
                             property = wiz.getProperty(AggregatorWizardAction.PROP_NAME_DATASOURCES);
 
                             if (property instanceof Node[]) {
@@ -114,21 +116,13 @@ public final class AggregatorWizardAction implements ActionListener {
                             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                             marshaller.marshal(aggregator, outputStream);
 
-                        } catch (Exception ex) {
-                            if (outputStream != null) {
-                                try {
-                                    outputStream.close();
-                                } catch (IOException ee) {
-                                    Exceptions.printStackTrace(ee);
-                                }
+                        } catch (IOException ex) {
+                            if (outputStream != null && fileName != null) {
+                                handleExceptionOfOutputStream(outputStream, fileName);
                             }
-                            FileObject fileObject = dataObject.getPrimaryFile().getFileObject(fileName);
-                            if (fileObject != null) {
-                                try {
-                                    fileObject.delete();
-                                } catch (IOException ex1) {
-                                    Exceptions.printStackTrace(ex1);
-                                }
+                        } catch (JAXBException ex) {
+                            if (outputStream != null && fileName != null) {
+                                handleExceptionOfOutputStream(outputStream, fileName);
                             }
                         } finally {
                             if (outputStream != null) {
@@ -143,6 +137,24 @@ public final class AggregatorWizardAction implements ActionListener {
                     }
                 }
             });
+        }
+    }
+
+    private void handleExceptionOfOutputStream(OutputStream outputStream, String fileName) {
+        if (outputStream != null) {
+            try {
+                outputStream.close();
+            } catch (IOException ee) {
+                Exceptions.printStackTrace(ee);
+            }
+        }
+        FileObject fileObject = dataObject.getPrimaryFile().getFileObject(fileName);
+        if (fileObject != null) {
+            try {
+                fileObject.delete();
+            } catch (IOException ex1) {
+                Exceptions.printStackTrace(ex1);
+            }
         }
     }
 

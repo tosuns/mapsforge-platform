@@ -21,9 +21,11 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -39,12 +41,13 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
 
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
-    private final LayerManager layerManager = new LayerManager(this);
+    private transient final LayerManager layerManager = new LayerManager(this);
+    private transient final MouseWheelListener osmWheelListener;
     private boolean labelsVisible = true;
     private int highlightIndex = 0;
     private int savedZIndex = Integer.MAX_VALUE;
     private boolean transparentHighlighting = true;
-    private final MouseWheelListener osmWheelListener;
+    private static final Logger LOG = Logger.getLogger(AggContentPanel.class.getName());
 
     /**
      * Creates new form AggContentPanel
@@ -67,7 +70,7 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
                     // push down
                     if (getZoom() < 17) {
                         osmWheelListener.mouseWheelMoved(e);
-                        Logger.getLogger("test").info("zoom level: " + getZoom());
+                        LOG.log(Level.INFO, "zoom level: {0}", getZoom());
                     }
                 }
                 layerManager.requestUpdate();
@@ -175,12 +178,7 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
         ArrayList<AbstractLayer<?>> paintLayers = new ArrayList<AbstractLayer<?>>();
         paintLayers.addAll(getLayerManager().getLayers());
         // sort layers
-        Collections.sort(paintLayers, new Comparator<AbstractLayer<?>>() {
-            @Override
-            public int compare(AbstractLayer<?> o1, AbstractLayer<?> o2) {
-                return o1.getOptions().getzIndex() - o2.getOptions().getzIndex();
-            }
-        });
+        Collections.sort(paintLayers, new LayerComparator());
         for (AbstractLayer<?> layer : paintLayers) {
             layer.paintLayer(g2, new Rectangle(getSize()));
         }
@@ -216,5 +214,18 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
 
     void removeAllLayers() {
         layerManager.removeAllLayers();
+    }
+
+    private static class LayerComparator implements Comparator<AbstractLayer<?>>, Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        public LayerComparator() {
+        }
+
+        @Override
+        public int compare(AbstractLayer<?> o1, AbstractLayer<?> o2) {
+            return o1.getOptions().getzIndex() - o2.getOptions().getzIndex();
+        }
     }
 }

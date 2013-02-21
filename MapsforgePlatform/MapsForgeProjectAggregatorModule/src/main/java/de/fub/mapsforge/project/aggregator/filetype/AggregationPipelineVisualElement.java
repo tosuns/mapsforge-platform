@@ -13,8 +13,9 @@ import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -27,7 +28,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
-import org.netbeans.spi.actions.AbstractSavable;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -46,21 +46,20 @@ import org.openide.windows.TopComponent;
 @Messages("LBL_AggregationBuilder_PIPELINE=Pipeline")
 public final class AggregationPipelineVisualElement extends JPanel implements MultiViewElement, PropertyChangeListener {
 
+    private static final Logger LOG = Logger.getLogger(AggregationPipelineVisualElement.class.getName());
     private static final long serialVersionUID = 1L;
-    private Aggregator aggregator;
+    private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+    private transient final GraphUpdater graphUpdater = new GraphUpdater();
+    private transient final ModelUpdater modelUpdater = new ModelUpdater();
+    private final InstanceContent content = new InstanceContent();
+    private AbstractLookup lookup = null;
+    private transient Aggregator aggregator;
     private JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;
-    private AbstractLookup lookup = null;
-    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
-    private final GraphUpdater graphUpdater = new GraphUpdater();
-    private final ModelUpdater modelUpdater = new ModelUpdater();
-    private final InstanceContent content = new InstanceContent();
-    private final SaveModelCookie savemodel = new SaveModelCookie();
 
     public AggregationPipelineVisualElement(Lookup lkp) {
         AggregatorNode node = lkp.lookup(AggregatorNode.class);
         if (node != null) {
-            lkp = node.getLookup();
             aggregator = node.getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
@@ -188,59 +187,22 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
         }
     }
 
-    private class SaveModelCookie extends AbstractSavable {
-
-        @Override
-        protected String findDisplayName() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        protected void handleSave() throws IOException {
-            if (aggregator != null) {
-                aggregator.getDescriptor().getPipeline().getList().clear();
-                List<AbstractAggregationProcess<?, ?>> pipeline = graphPanel1.collectPipeline();
-                for (AbstractAggregationProcess<?, ?> process : pipeline) {
-                    if (process.getDescriptor() != null) {
-                        if (process.getDescriptor().getJavatype() == null
-                                || process.getDescriptor().getDisplayName() == null
-                                || process.getDescriptor().getDescription() == null) {
-                            process.setDescriptor(new ProcessDescriptor(process));
-                        }
-                        aggregator.getDescriptor().getPipeline().getList().add(process.getDescriptor());
-                    }
-                }
-                aggregator.getDataObject().save();
-            }
-
-            modelSynchronizerClient.modelChanged();
-        }
-
-        AggregationPipelineVisualElement getTopComponent() {
-            return AggregationPipelineVisualElement.this;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof SaveModelCookie) {
-                SaveModelCookie m = (SaveModelCookie) obj;
-                return getTopComponent() == m.getTopComponent();
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return AggregationPipelineVisualElement.this.hashCode();
-        }
-    }
-
     private class ModelUpdater implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (getLookup().lookup(SaveModelCookie.class) == null) {
-                content.add(savemodel);
+            if (aggregator != null) {
+                List<AbstractAggregationProcess<?, ?>> pipelineList = graphPanel1.collectPipeline();
+                List<ProcessDescriptor> list = aggregator.getDescriptor().getPipeline().getList();
+                list.clear();
+                for (AbstractAggregationProcess<?, ?> process : pipelineList) {
+                    if (process.getDescriptor() != null) {
+                        list.add(process.getDescriptor());
+                    } else {
+                        LOG.log(Level.SEVERE, "process {0} doesn''T have a ProcessDescriptor", process.getName());
+                    }
+                }
+                aggregator.notifyModified();
             }
         }
     }

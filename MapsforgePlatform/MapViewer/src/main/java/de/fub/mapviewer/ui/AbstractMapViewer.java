@@ -27,7 +27,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  */
 public class AbstractMapViewer extends javax.swing.JPanel {
 
-    private MapViewListener mouseListener = new MapViewListener();
+    private transient MapViewListener mouseListener = new MapViewListener();
 
     /**
      * Creates new form AbstractMapViewer

@@ -11,7 +11,6 @@ import de.fub.agg2graphui.controller.LayerManager;
 import java.awt.Point;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
@@ -32,7 +31,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
 public final class AggTopComponent extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private MapViewListener mouseListener = new MapViewListener(this);
+    private transient MapViewListener mouseListener = new MapViewListener(this);
     // explorerManager for nodes that represent the current
     // state of the dataflow step
 
@@ -52,7 +51,7 @@ public final class AggTopComponent extends JPanel {
     }
 
     public void showArea(DoubleRect area) {
-        OSMMapRect mapRect = new OSMMapRect(area);
+//        OSMMapRect mapRect = new OSMMapRect(area);
 //        mapViewer.addMapRectangle(mapRect);
 //        mapViewer.setDisplayToFitMapRectangle();
 //        mapViewer.removeMapRectangle(mapRect);

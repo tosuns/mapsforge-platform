@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
  */
 public class DelegateActionNode extends AbstractAction {
 
+    private static final long serialVersionUID = 1L;
     private final NodeAction node;
 
     public DelegateActionNode(NodeAction node) {

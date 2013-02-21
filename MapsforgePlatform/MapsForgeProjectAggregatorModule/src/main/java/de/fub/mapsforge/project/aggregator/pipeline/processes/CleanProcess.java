@@ -12,9 +12,7 @@ import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.layers.GPSSegmentLayer;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline.ProcessEvent;
-import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
@@ -39,12 +37,14 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, List<GPSSegment>> {
+public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, List<GPSSegment>> {
 
-    private static final Logger LOG = Logger.getLogger(CleanProcess.class.getName());
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
+    private static final String CLEAN_SETTINGS = "Cleaning Settings";
+    private static final String RAMER_DOUGLAS_PEUCKER_SETTINGS = "Raimer Douglas Peucker Filter Settings";
+    private static final Logger LOG = Logger.getLogger(CleanProcess.class.getName());
     private ArrayList<GPSSegment> cleanSegmentList = new ArrayList<GPSSegment>();
     private List<GPSSegment> inputList = new ArrayList<GPSSegment>();
     private GPSCleaner gpsCleaner = new GPSCleaner();
@@ -55,56 +55,59 @@ public class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, L
         this(null);
     }
 
-    private void createCleaningOptions(List<Property> properties) {
-        gpsCleaner.setCleaningOptions(AggregateUtils.createValue(CleaningOptions.class, properties));
-
-    }
-
     public CleanProcess(Aggregator aggregator) {
         super(aggregator);
-        if (aggregator != null) {
-            AggregatorDescriptor aggregatorDescriptor = aggregator.getDescriptor();
-            if (aggregatorDescriptor != null) {
-                ProcessDescriptorList pipeline = aggregatorDescriptor.getPipeline();
-                for (ProcessDescriptor processDescriptor : pipeline.getList()) {
-                    if (getClass().getName().equals(processDescriptor.getJavatype())) {
-                        Properties properties = processDescriptor.getProperties();
-                        if (!properties.getSections().isEmpty()) {
-                            PropertySection propertySection = properties.getSections().iterator().next();
-                            for (int i = 0; i < propertySection.getPropertySet().size(); i++) {
-                                PropertySet propertySet = propertySection.getPropertySet().get(i);
-                                if ("Cleaning Settings".equals(propertySet.getName())) {
-                                    createCleaningOptions(propertySet.getProperties());
-                                }
 
-                            }
-                        }
-                    }
-                }
-            }
+        PropertySet propertySet = getPropertySet(CLEAN_SETTINGS);
+        if (propertySet != null) {
+            createCleaningOptions(propertySet.getProperties());
         }
-
-//        CleaningOptions cleaningOptions = gpsCleaner.getCleaningOptions();
-//        cleaningOptions.filterBySegmentLength = true;
-//        cleaningOptions.minSegmentLength = 1;
-//        cleaningOptions.maxSegmentLength = 100;
-//        cleaningOptions.filterByEdgeLength = true;
-//        cleaningOptions.minEdgeLength = 0.3;
-//        cleaningOptions.maxEdgeLength = 750;
-//        cleaningOptions.filterZigzag = true;
-//        cleaningOptions.maxZigzagAngle = 30;
-//        cleaningOptions.filterFakeCircle = true;
-//        cleaningOptions.maxFakeCircleAngle = 50;
-//        cleaningOptions.filterOutliers = false;
-//        cleaningOptions.maxNumOutliers = 2;
-
         RenderingOptions renderingOptions = new RenderingOptions();
         renderingOptions.setColor(new Color(39, 172, 88)); // green
         renderingOptions.setRenderingType(RenderingOptions.RenderingType.ALL);
         renderingOptions.setzIndex(0);
         renderingOptions.setOpacity(1);
-        gPSSegmentLayer = new GPSSegmentLayer("clean", "Clean gps data", renderingOptions);
+        gPSSegmentLayer = new GPSSegmentLayer(getName(), "Clean gps data", renderingOptions);
         layers.add(gPSSegmentLayer);
+    }
+
+    private void createCleaningOptions(List<Property> properties) {
+        gpsCleaner.setCleaningOptions(AggregateUtils.createValue(CleaningOptions.class, properties));
+    }
+
+    private PropertySet getPropertySet(String name) {
+        if (getDescriptor() != null) {
+            Properties properties = getDescriptor().getProperties();
+            if (!properties.getSections().isEmpty()) {
+                return getPropertySet(name, properties);
+            }
+        }
+        return null;
+    }
+
+    private PropertySet getPropertySet(String name, Properties properties) {
+        if (!properties.getSections().isEmpty()) {
+            PropertySection propertySection = properties.getSections().iterator().next();
+            for (int i = 0; i < propertySection.getPropertySet().size(); i++) {
+                PropertySet propertySet = propertySection.getPropertySet().get(i);
+                if (name.equals(propertySet.getName())) {
+                    return propertySet;
+                }
+
+            }
+        }
+        return null;
+    }
+
+    private RamerDouglasPeuckerFilter getFilterInstance() {
+        RamerDouglasPeuckerFilter filter = null;
+        PropertySet propertySet = getPropertySet(RAMER_DOUGLAS_PEUCKER_SETTINGS);
+        if (propertySet != null) {
+            filter = AggregateUtils.createValue(RamerDouglasPeuckerFilter.class, propertySet.getProperties());
+        } else {
+            filter = new RamerDouglasPeuckerFilter(5);
+        }
+        return filter;
     }
 
     @Override
@@ -112,7 +115,7 @@ public class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, L
         synchronized (MUTEX) {
             if (inputList != null) {
                 gPSSegmentLayer.clearRenderObjects();
-                RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(5);
+                RamerDouglasPeuckerFilter rdpf = getFilterInstance();
                 int segCount = 0;
                 LOG.log(Level.INFO, "segmentsize: {0}", inputList.size());
                 int progess = 0;
@@ -147,11 +150,17 @@ public class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, L
 
     @Override
     public String getName() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDisplayName();
+        }
         return "Clean";
     }
 
     @Override
     public String getDescription() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDescription();
+        }
         return "Clean Process";
     }
 

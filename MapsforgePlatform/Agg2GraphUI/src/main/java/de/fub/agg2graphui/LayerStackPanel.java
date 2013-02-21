@@ -25,9 +25,9 @@ import org.openide.util.WeakListeners;
 public class LayerStackPanel extends LayerPanel implements ChangeListener, LayerListener {
 
     private static final long serialVersionUID = 1L;
-    private final Object MUTEX = new Object();
-    private LayerManager layerManager;
-    private SortedSet<AbstractLayer<?>> layers = new TreeSet<AbstractLayer<?>>();
+    private transient final Object MUTEX = new Object();
+    private transient LayerManager layerManager;
+    private transient SortedSet<AbstractLayer<?>> layers = new TreeSet<AbstractLayer<?>>();
 
     /**
      * Creates new form LayerPanel
@@ -71,7 +71,10 @@ public class LayerStackPanel extends LayerPanel implements ChangeListener, Layer
 
     public Collection<AbstractLayer<?>> getLayers() {
         synchronized (MUTEX) {
-            ArrayList<AbstractLayer<?>> list = new ArrayList< AbstractLayer<?>>(getLayers());
+            ArrayList<AbstractLayer<?>> list = new ArrayList< AbstractLayer<?>>();
+            if (layers != null) {
+                list.addAll(layers);
+            }
             return list;
         }
     }

@@ -30,7 +30,6 @@ public class GpxNode extends DataNode {
     @StaticResource
     private static final String IMAGE_PATH = "de/fub/gpxmodule/gpx.png";
     private static final Image IMAGE = ImageUtilities.loadImage(IMAGE_PATH);
-    private static int counter = 0;
 
     public GpxNode(GPXDataObject dataObject) throws IntrospectionException {
         this(dataObject, Children.create(new GPXChildNodeFactory(dataObject.getGpx()), true));

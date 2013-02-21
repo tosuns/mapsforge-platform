@@ -35,6 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 // TODO define position attribute
 @TemplateRegistration(folder = "Project/Fu-Berlin", displayName = "#MapsForge_displayName", description = "MapsForgeDescription.html", iconBase = "de/fub/mapforgeproject/icons/mapsforgeIcon16.png", content = "MapsForge.zip")
@@ -54,13 +55,13 @@ public class MapsForgeWizardIterator implements WizardDescriptor./*Progress*/Ins
 
     private WizardDescriptor.Panel[] createPanels() {
         return new WizardDescriptor.Panel[]{
-                    new MapsForgeWizardPanel(),};
+            new MapsForgeWizardPanel(),};
     }
 
     private String[] createSteps() {
         return new String[]{
-                    NbBundle.getMessage(MapsForgeWizardIterator.class, "LBL_CreateProjectStep")
-                };
+            NbBundle.getMessage(MapsForgeWizardIterator.class, "LBL_CreateProjectStep")
+        };
     }
 
     @Override
@@ -111,7 +112,7 @@ public class MapsForgeWizardIterator implements WizardDescriptor./*Progress*/Ins
                 JComponent jc = (JComponent) c;
                 // Step #.
                 // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-                jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(i));
+                jc.putClientProperty("WizardPanel_contentSelectedIndex", i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty("WizardPanel_contentData", steps);
             }
@@ -129,7 +130,7 @@ public class MapsForgeWizardIterator implements WizardDescriptor./*Progress*/Ins
     @Override
     public String name() {
         return MessageFormat.format("{0} of {1}",
-                new Object[]{new Integer(index + 1), new Integer(panels.length)});
+                new Object[]{(index + 1), (panels.length)});
     }
 
     @Override
@@ -227,7 +228,7 @@ public class MapsForgeWizardIterator implements WizardDescriptor./*Progress*/Ins
             } finally {
                 out.close();
             }
-        } catch (Exception ex) {
+        } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
             writeFile(str, fo);
         }

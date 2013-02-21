@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.fub.mapsforge.project.aggregator.xml;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -12,6 +9,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.Marshaller;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -57,10 +55,11 @@ public class AggregatorDescriptorTest {
 
     @Test
     public void testUnmarshall() {
+        InputStream resourceAsStream = null;
         try {
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(AggregatorDescriptor.class);
             javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-            InputStream resourceAsStream = getClass().getResourceAsStream("/de/fub/mapsforge/project/aggregator/filetype/AggregationBuilderTemplate.agg");
+            resourceAsStream = AggregatorDescriptorTest.class.getResourceAsStream("/de/fub/mapsforge/project/aggregator/filetype/AggregationBuilderTemplate.agg");
             Assert.assertNotNull(resourceAsStream);
             AggregatorDescriptor descriptor = (AggregatorDescriptor) unmarshaller.unmarshal(resourceAsStream); //NOI18N
             Assert.assertNotNull(descriptor);
@@ -71,6 +70,14 @@ public class AggregatorDescriptorTest {
         } catch (javax.xml.bind.JAXBException ex) {
             Logger.getLogger(AggregatorDescriptorTest.class.getName()).log(Level.INFO, ex.getMessage(), ex);
             Assert.fail(ex.getMessage());
+        } finally {
+            if (resourceAsStream != null) {
+                try {
+                    resourceAsStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
     }
 }

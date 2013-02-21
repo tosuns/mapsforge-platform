@@ -40,10 +40,10 @@ import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.ServiceProvider;
 
 @ActionID(
-    category = "Project",
-id = "de.fub.mapforgeproject.ImportGPX")
+        category = "Project",
+        id = "de.fub.mapforgeproject.ImportGPX")
 @ActionRegistration(
-    displayName = "#CTL_ImportGPX", lazy = false)
+        displayName = "#CTL_ImportGPX", lazy = false)
 @ActionReference(path = "Projects/org-mapsforge-project/GPXDataSource/Actions", position = 0)
 @Messages({"CTL_ImportGPX=Import GPX Data",
     "CLT_Import_From_Disk=From Disk...",
@@ -54,7 +54,7 @@ id = "de.fub.mapforgeproject.ImportGPX")
 public final class ImportGPXAction extends AbstractAction implements ContextAwareAction, Presenter.Popup {
 
     private JMenu contextMenu = new JMenu(Bundle.CTL_ImportGPX(), false);
-    private MapsForgeProject project;
+    private transient MapsForgeProject project;
     private final Lookup context;
 
     public ImportGPXAction() {
@@ -177,30 +177,31 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
                 Object notify = DialogDisplayer.getDefault().notify(nd);
                 if (NotifyDescriptor.OK_OPTION.equals(notify)) {
                     try {
+                        if (gpxDataSourceFolder != null) {
+                            final String folderName = nd.getInputText();
+                            FileObject gpxFolderFileObject = gpxDataSourceFolder.getFileObject(folderName);
 
-                        final String folderName = nd.getInputText();
-                        FileObject gpxFolderFileObject = gpxDataSourceFolder.getFileObject(folderName);
+                            // check if folfer name already exists.
+                            if (gpxFolderFileObject == null) {
+                                gpxFolderFileObject = gpxDataSourceFolder.createFolder(folderName);
+                                JFileChooser fileChooser = createGPXFileChooser();
+                                int result = fileChooser.showOpenDialog(null);
 
-                        // check if folfer name already exists.
-                        if (gpxFolderFileObject == null) {
-                            gpxFolderFileObject = gpxDataSourceFolder.createFolder(folderName);
-                            JFileChooser fileChooser = createGPXFileChooser();
-                            int result = fileChooser.showOpenDialog(null);
+                                if (JFileChooser.APPROVE_OPTION == result && fileChooser.getSelectedFiles().length > 0) {
+                                    // start copy/import procedure.
+                                    copyProcedure(fileChooser.getSelectedFiles(), gpxFolderFileObject);
+                                }
 
-                            if (JFileChooser.APPROVE_OPTION == result && fileChooser.getSelectedFiles().length > 0) {
-                                // start copy/import procedure.
-                                copyProcedure(fileChooser.getSelectedFiles(), gpxFolderFileObject);
+                                // doesn't matter what the user selects. either way the
+                                // import process finished.
+                                repeat = false;
+                            } else {
+                                // create error message, because there already is a folder with the
+                                // specified name. repeat process.
+                                nd = createErrorDialog(folderName);
                             }
-
-                            // doesn't matter what the user selects. either way the 
-                            // import process finished.
-                            repeat = false;
-                        } else {
-                            // create error message, because there already is a folder with the
-                            // specified name. repeat process.
-                            nd = createErrorDialog(folderName);
                         }
-                    } catch (Exception ex) {
+                    } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                         repeat = false;
                     }
@@ -212,18 +213,7 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
         }
 
         private JFileChooser createGPXFileChooser() {
-            JFileChooser fileChooser = new FileChooserBuilder(ImportGPXAction.class).setTitle(Bundle.CLT_GPX_File_Import()).addFileFilter(new FileFilter() {
-                @Override
-                public boolean accept(File f) {
-                    FileObject fileObject = FileUtil.toFileObject(f);
-                    return fileObject != null && "gpx".equalsIgnoreCase(fileObject.getExt());
-                }
-
-                @Override
-                public String getDescription() {
-                    return Bundle.CLT_File_Filter_Description();
-                }
-            }).createFileChooser();
+            JFileChooser fileChooser = new FileChooserBuilder(ImportGPXAction.class).setTitle(Bundle.CLT_GPX_File_Import()).addFileFilter(new GPXFileFilter()).createFileChooser();
 
             fileChooser.setMultiSelectionEnabled(true);
             return fileChooser;
@@ -264,6 +254,23 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
         @Override
         public String getName() {
             return Bundle.CLT_Import_From_Disk();
+        }
+
+        private static class GPXFileFilter extends FileFilter {
+
+            public GPXFileFilter() {
+            }
+
+            @Override
+            public boolean accept(File f) {
+                FileObject fileObject = FileUtil.toFileObject(f);
+                return fileObject != null && "gpx".equalsIgnoreCase(fileObject.getExt());
+            }
+
+            @Override
+            public String getDescription() {
+                return Bundle.CLT_File_Filter_Description();
+            }
         }
     }
 }

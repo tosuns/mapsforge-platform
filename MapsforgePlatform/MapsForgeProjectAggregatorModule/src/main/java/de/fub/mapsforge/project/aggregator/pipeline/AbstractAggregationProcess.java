@@ -7,7 +7,9 @@ package de.fub.mapsforge.project.aggregator.pipeline;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline.ProcessEvent;
 import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline.ProcessListener;
+import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
@@ -54,7 +56,20 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
 
     public ProcessDescriptor getDescriptor() {
         if (descriptor == null) {
-            descriptor = createProcessDescriptor();
+            if (aggregator != null) {
+                AggregatorDescriptor aggregatorDescriptor = aggregator.getDescriptor();
+                if (aggregatorDescriptor != null) {
+                    ProcessDescriptorList pipeline = aggregatorDescriptor.getPipeline();
+                    for (ProcessDescriptor processDescriptor : pipeline.getList()) {
+                        if (getClass().getName().equals(processDescriptor.getJavaType())) {
+                            descriptor = processDescriptor;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                descriptor = createProcessDescriptor();
+            }
         }
         return descriptor;
     }

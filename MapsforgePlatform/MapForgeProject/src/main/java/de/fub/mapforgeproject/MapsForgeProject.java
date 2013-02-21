@@ -116,7 +116,7 @@ public class MapsForgeProject extends FileChangeAdapter implements Project, Mode
     private FileObject getProjectFile() throws FileNotFoundException {
         FileObject fileObject = getProjectDirectory().getFileObject(MapsForgeProjectFactory.MAPS_FORGE_PROJECT_FILE);
         if (fileObject == null) {
-            NotifyDescriptor.Message nm = new NotifyDescriptor.Message(Bundle.CLT_Project_Xml_File_Not_Found(), NotifyDescriptor.Message.ERROR_MESSAGE);
+//            NotifyDescriptor.Message nm = new NotifyDescriptor.Message(Bundle.CLT_Project_Xml_File_Not_Found(), NotifyDescriptor.Message.ERROR_MESSAGE);
             throw new FileNotFoundException(Bundle.CLT_Project_Xml_File_Not_Found());
         }
         return fileObject;

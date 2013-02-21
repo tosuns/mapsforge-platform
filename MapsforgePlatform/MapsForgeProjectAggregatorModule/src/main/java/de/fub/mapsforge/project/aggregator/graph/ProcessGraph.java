@@ -13,6 +13,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     private LayerWidget connectionLayer = null;
     private LayerWidget interactionLayer = null;
     private final ChangeSupport pcs = new ChangeSupport(this);
-    public static int edgeCount = 0;
+    static int edgeCount = 0;
 
     public ProcessGraph() {
         getActions().addAction(ActionFactory.createZoomAction(1.5, true));
@@ -241,7 +242,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         return list;
     }
 
-    private class ProcessSelectProvider implements SelectProvider {
+    private static class ProcessSelectProvider implements SelectProvider {
 
         @Override
         public boolean isAimingAllowed(Widget widget, Point localLocation, boolean invertSelection) {
@@ -313,16 +314,16 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
 
         @Override
         public void createConnection(Widget sourceWidget, Widget targetWidget) {
-            String edge = "edge" + edgeCount++;
-            ProcessGraph.this.addEdge(edge);
+            String edgeId = MessageFormat.format("edge + {1}", edgeCount++);
+            ProcessGraph.this.addEdge(edgeId);
             Object sourceObject = ProcessGraph.this.findObject(sourceWidget);
             Object targetObject = ProcessGraph.this.findObject(targetWidget);
             if (ProcessGraph.this.isNode(targetObject)
                     && ProcessGraph.this.isNode(sourceObject)
                     && sourceObject instanceof AbstractAggregationProcess
                     && targetObject instanceof AbstractAggregationProcess) {
-                setEdgeSource(edge, (AbstractAggregationProcess) sourceObject);
-                setEdgeTarget(edge, (AbstractAggregationProcess) targetObject);
+                setEdgeSource(edgeId, (AbstractAggregationProcess) sourceObject);
+                setEdgeTarget(edgeId, (AbstractAggregationProcess) targetObject);
                 updateAggregatorPipeline();
             }
         }
@@ -443,6 +444,9 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
                 Object transferData = transferable.getTransferData(AbstractAggregationProcess.PROCESS_FLAVOR);
                 if (transferData != null) {
                     child = findWidget(transferData);
+                    if (child != null) {
+                        return ConnectorState.REJECT;
+                    }
                 }
             } catch (UnsupportedFlavorException ex) {
                 Exceptions.printStackTrace(ex);

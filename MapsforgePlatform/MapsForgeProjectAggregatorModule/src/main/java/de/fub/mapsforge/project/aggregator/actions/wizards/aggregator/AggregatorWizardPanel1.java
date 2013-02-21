@@ -75,8 +75,8 @@ public class AggregatorWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
     @Override
     public boolean isValid() {
         // If it is always OK to press Next or Finish, then:
-        return component.getAggregatorName().getText() != null
-                && component.getAggregatorName().getText().length() > 0;
+        return getComponent().getAggregatorName().getText() != null
+                && getComponent().getAggregatorName().getText().length() > 0;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class AggregatorWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty(AggregatorWizardAction.PROP_NAME_NAME, component.getAggregatorName().getText());
-        wiz.putProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION, component.getAggregatorDescription().getText());
+        wiz.putProperty(AggregatorWizardAction.PROP_NAME_NAME, getComponent().getAggregatorName().getText());
+        wiz.putProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION, getComponent().getAggregatorDescription().getText());
     }
 }

@@ -7,6 +7,7 @@ package de.fub.mapviewer.ui.caches;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +43,7 @@ public class PersistentTileCache implements TileCache {
     private RequestProcessor requestProcessor = new RequestProcessor(getClass().getName(), Runtime.getRuntime().availableProcessors());
     private static File tmpDir = null;
 
-    private File getCacheDir() {
+    private synchronized static File getCacheDir() {
         if (tmpDir == null) {
             String property = System.getProperty(TEMP_FOLDER);
             tmpDir = property != null ? new File(property) : new File(".");
@@ -124,7 +125,7 @@ public class PersistentTileCache implements TileCache {
                 } else {
                     LOG.log(Level.FINEST, "cache miss for tile: {0}", fileName);
                 }
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             } finally {
                 if (inputStream != null) {
@@ -189,6 +190,9 @@ public class PersistentTileCache implements TileCache {
                 try {
                     if (!tileFileObject.exists()) {
                         if (tileFileObject.createNewFile()) {
+                            //  we have to wait a little bit
+                            // to let the filesystem release the lock to the
+                            // file
                             wait(100);
                         }
                     }

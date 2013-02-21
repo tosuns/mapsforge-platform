@@ -36,11 +36,11 @@ import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
 @ActionID(
-    category = "GPX",
-id = "de.fub.mapforgeproject.actions.GpxMergeAction")
+        category = "GPX",
+        id = "de.fub.mapforgeproject.actions.GpxMergeAction")
 @ActionRegistration(
-//    iconBase = "de/fub/gpxmodule/icons/gpxmerge.png",
-displayName = "#CTL_GpxMergeAction", lazy = false)
+        //    iconBase = "de/fub/gpxmodule/icons/gpxmerge.png",
+        displayName = "#CTL_GpxMergeAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Menu/GPX", position = 0),
     @ActionReference(path = "Toolbars/GPX", position = 0),
@@ -72,9 +72,9 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
     @Override
     public void actionPerformed(ActionEvent ev) {
         final Collection<? extends GPXDataObject> allInstances = this.context.lookupResult(GPXDataObject.class).allInstances();
-        
+
         if (!allInstances.isEmpty()) {
-            
+
             FileObject parentFolder = allInstances.iterator().next().getPrimaryFile().getParent();
             MergeForm mergeForm = new MergeForm(parentFolder);
             DialogDescriptor descriptor = mergeForm.getDescriptor();
@@ -82,7 +82,7 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
             dialog.setVisible(true);
 
             if (mergeForm.checkIfValid()) {
-                synchronized (this) { // synchronization only because of wait method.                    
+                synchronized (this) { // synchronization only because of wait method.
                     // need fileObject to merge to
                     String filename = mergeForm.getFilename().getText();
                     String foldername = mergeForm.getFoldername().getText();
@@ -122,14 +122,14 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
             handle.start(list.size());
             int workunit = 0;
             for (GPXDataObject dataObject : list) {
-                
+
                 Gpx toMergeGpx = dataObject.getGpx();
 
                 gpx.getTrk().addAll(toMergeGpx.getTrk());
                 gpx.getRte().addAll(toMergeGpx.getRte());
                 gpx.getWpt().addAll(toMergeGpx.getWpt());
                 gpx.getAny().addAll(toMergeGpx.getAny());
-                
+
                 handle.progress(++workunit);
             }
 
@@ -178,9 +178,5 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
             Collection<? extends GPXDataObject> allInstances = result.allInstances();
             setEnabled(allInstances.size() > 1);
         }
-    }
-
-    private void setVisible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

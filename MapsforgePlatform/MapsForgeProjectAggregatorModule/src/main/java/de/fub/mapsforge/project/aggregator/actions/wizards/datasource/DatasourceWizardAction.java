@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JComponent;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
@@ -128,7 +129,7 @@ public final class DatasourceWizardAction implements ActionListener {
 
     private void addGPXFile(FileObject fileObject) {
         if (fileObject.isData()) {
-            if (fileObject.getExt() != null && "gpx".equalsIgnoreCase(fileObject.getExt().toLowerCase())) {
+            if (fileObject.getExt() != null && "gpx".equalsIgnoreCase(fileObject.getExt().toLowerCase(Locale.getDefault()))) {
                 File file = FileUtil.toFile(fileObject);
                 if (file != null) {
                     Source source = new Source();

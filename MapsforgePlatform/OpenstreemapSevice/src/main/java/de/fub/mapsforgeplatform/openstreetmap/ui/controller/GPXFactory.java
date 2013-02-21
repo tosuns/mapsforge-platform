@@ -65,7 +65,7 @@ public class GPXFactory extends ChildFactory<Node> {
         return result;
     }
 
-    public boolean remove(Object o) {
+    public boolean remove(Node o) {
         boolean result = nodes.remove(o);
         if (result) {
             refresh(true);

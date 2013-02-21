@@ -22,6 +22,7 @@ public class MapsForgeWizardPanel implements WizardDescriptor.Panel,
 
     private WizardDescriptor wizardDescriptor;
     private MapsForgePanelVisual component;
+    private transient final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
     public MapsForgeWizardPanel() {
     }
@@ -42,10 +43,11 @@ public class MapsForgeWizardPanel implements WizardDescriptor.Panel,
 
     @Override
     public boolean isValid() {
-        getComponent();
-        return component.valid(wizardDescriptor);
+        if (getComponent() instanceof MapsForgePanelVisual) {
+            return ((MapsForgePanelVisual) getComponent()).valid(wizardDescriptor);
+        }
+        return false;
     }
-    private final Set<ChangeListener> listeners = new HashSet<ChangeListener>(1); // or can use ChangeSupport in NB 6.0
 
     @Override
     public final void addChangeListener(ChangeListener l) {
@@ -75,13 +77,17 @@ public class MapsForgeWizardPanel implements WizardDescriptor.Panel,
     @Override
     public void readSettings(Object settings) {
         wizardDescriptor = (WizardDescriptor) settings;
-        component.read(wizardDescriptor);
+        if (getComponent() instanceof MapsForgePanelVisual) {
+            ((MapsForgePanelVisual) getComponent()).read(wizardDescriptor);
+        }
     }
 
     @Override
     public void storeSettings(Object settings) {
         WizardDescriptor d = (WizardDescriptor) settings;
-        component.store(d);
+        if (getComponent() instanceof MapsForgePanelVisual) {
+            ((MapsForgePanelVisual) getComponent()).store(d);
+        }
     }
 
     @Override

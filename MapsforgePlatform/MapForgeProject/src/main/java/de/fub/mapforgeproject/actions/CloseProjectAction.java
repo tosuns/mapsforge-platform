@@ -31,7 +31,7 @@ public final class CloseProjectAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
     private final Action delegateCloseAction = CommonProjectActions.closeProjectAction();
-    private MapsForgeProject context;
+    private transient final MapsForgeProject context;
 
     public CloseProjectAction(Project context) {
         super();

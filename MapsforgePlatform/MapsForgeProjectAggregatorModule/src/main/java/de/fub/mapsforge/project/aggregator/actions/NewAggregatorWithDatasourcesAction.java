@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.aggregator.actions;
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.mapsforge.project.aggregator.actions.wizards.aggregator.AggregatorWizardWithDatasourcesAction;
 import java.awt.event.ActionEvent;
-import java.util.Collection;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.api.annotations.common.StaticResource;
@@ -40,7 +39,7 @@ public final class NewAggregatorWithDatasourcesAction extends AbstractAction imp
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png";
     private static final long serialVersionUID = 1L;
-    private final Lookup.Result<GPXDataObject> context;
+    private transient final Lookup.Result<GPXDataObject> context;
 
     public NewAggregatorWithDatasourcesAction() {
         this(Utilities.actionsGlobalContext());

@@ -21,6 +21,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -30,8 +31,6 @@ import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.filesystems.FileChangeAdapter;
-import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -53,6 +52,8 @@ public class Aggregator extends ModelSynchronizer {
     private AggregateProcessPipeline pipeline = new AggregateProcessPipeline(this);
     private AggContainer aggContainer;
     private ModelSynchronizerClient dataObjectModelSynchonizerClient;
+    private final Object MUTEX_PROCESS_RUNNING = new Object();
+    private final Object MUTEX_PROCESS_CREATOR = new Object();
 
     public Aggregator(AggregatorDataObject dataObject) {
         assert dataObject != null;
@@ -73,6 +74,7 @@ public class Aggregator extends ModelSynchronizer {
         this.dataObject.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
+                setUpPipeline();
                 dataObjectModelSynchonizerClient.modelChanged();
             }
         });
@@ -133,57 +135,50 @@ public class Aggregator extends ModelSynchronizer {
 
     @NbBundle.Messages({"# {0} - processName", "# {1} - aggregatorName", "CLT_Proceeding_Process={1}: Running {0}..."})
     @SuppressWarnings("unchecked")
-    public synchronized void start(final List<AbstractAggregationProcess<?, ?>> processes) {
-        final ProgressHandle handler = ProgressHandleFactory.createHandle(Bundle.CLT_Proceeding_Process("", getDescriptor().getName()));
-        try {
-            setAggregatorState(Aggregator.AggregatorState.INACTIVE);
+    public void start(final List<AbstractAggregationProcess<?, ?>> processes) {
+        synchronized (MUTEX_PROCESS_RUNNING) {
+            final ProgressHandle handler = ProgressHandleFactory.createHandle(Bundle.CLT_Proceeding_Process("", getDescriptor().getName()));
+            try {
+                setAggregatorState(Aggregator.AggregatorState.INACTIVE);
 
-            handler.start(100);
-            int i = 0;
-            AbstractAggregationProcess lastProcess = null;
-            setAggregatorState(Aggregator.AggregatorState.RUNNING);
+                handler.start(100);
+                int i = 0;
+                AbstractAggregationProcess lastProcess = null;
+                setAggregatorState(Aggregator.AggregatorState.RUNNING);
 
-            long lastTime = System.currentTimeMillis();
+                long lastTime = System.currentTimeMillis();
 
-            for (int j = 0; j < processes.size(); j++) {
-                final int unit = j;
-                AbstractAggregationProcess process = processes.get(j);
-                handler.setDisplayName(Bundle.CLT_Proceeding_Process(process.getName(), getDescriptor().getName()));
-                if (j == 0) {
-                    int indexOf = getPipeline().indexOf(process);
-                    if (indexOf > 0) {
-                        lastProcess = getPipeline().get(indexOf - 1);
+                for (int j = 0; j < processes.size(); j++) {
+                    final int unit = j;
+                    AbstractAggregationProcess process = processes.get(j);
+                    handler.setDisplayName(Bundle.CLT_Proceeding_Process(process.getName(), getDescriptor().getName()));
+                    if (j == 0) {
+                        int indexOf = getPipeline().indexOf(process);
+                        if (indexOf > 0) {
+                            lastProcess = getPipeline().get(indexOf - 1);
+                        }
                     }
-                }
-                if (lastProcess != null) {
-                    Object result = lastProcess.getResult();
-                    process.setInput(result);
-                }
-                ProcessPipeline.ProcessListener processListener = new ProcessPipeline.ProcessListener() {
-                    @Override
-                    public void changed(ProcessPipeline.ProcessEvent event) {
-                        double progress = (100d / processes.size());
-                        progress = (progress / 100 * event.getPercentfinished()) + (100 / processes.size() * unit);
-                        LOG.log(Level.INFO, "progress {0}", progress);
-                        handler.progress(event.getProcessMessage(), (int) progress);
-
+                    if (lastProcess != null) {
+                        Object result = lastProcess.getResult();
+                        process.setInput(result);
                     }
-                };
-                process.addProcessListener(processListener);
-                lastTime = System.currentTimeMillis();
-                process.run();
-                long now = System.currentTimeMillis();
-                process.removeProcessListener(processListener);
-                LOG.log(Level.INFO, "Process {0} took {1} time.", new Object[]{process.getName(), new Long(now - lastTime)});
-                lastProcess = process;
-                lastTime = now;
+                    ProcessPipeline.ProcessListener processListener = new ProcessListenerImpl(processes, unit, handler);
+                    process.addProcessListener(processListener);
+                    lastTime = System.currentTimeMillis();
+                    process.run();
+                    long now = System.currentTimeMillis();
+                    process.removeProcessListener(processListener);
+                    LOG.log(Level.INFO, "Process {0} took {1} time.", new Object[]{process.getName(), (now - lastTime)});
+                    lastProcess = process;
+                    lastTime = now;
+                }
+                setAggregatorState(Aggregator.AggregatorState.INACTIVE);
+            } catch (Throwable ex) {
+                Exceptions.printStackTrace(ex);
+                setAggregatorState(Aggregator.AggregatorState.ERROR);
+            } finally {
+                handler.finish();
             }
-            setAggregatorState(Aggregator.AggregatorState.INACTIVE);
-        } catch (Throwable ex) {
-            Exceptions.printStackTrace(ex);
-            setAggregatorState(Aggregator.AggregatorState.ERROR);
-        } finally {
-            handler.finish();
         }
     }
 
@@ -199,7 +194,7 @@ public class Aggregator extends ModelSynchronizer {
         return getDescriptor().getDatasources();
     }
 
-    public AggregatorState getAggregatorState() {
+    public synchronized AggregatorState getAggregatorState() {
         return aggregatorState;
     }
 
@@ -224,6 +219,10 @@ public class Aggregator extends ModelSynchronizer {
         return null;
     }
 
+    public void notifyModified() {
+        dataObject.modifySourceEditor();
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
@@ -232,24 +231,30 @@ public class Aggregator extends ModelSynchronizer {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public synchronized AbstractAggregationProcess createProcess(ProcessDescriptor processDescriptor) {
-        assert processDescriptor != null;
-        AbstractAggregationProcess<?, ?> aggregateProcess = null;
-        Set<Class<? extends AbstractAggregationProcess>> allClasses = Lookup.getDefault().lookupResult(AbstractAggregationProcess.class).allClasses();
+    public AbstractAggregationProcess createProcess(ProcessDescriptor processDescriptor) {
+        synchronized (MUTEX_PROCESS_CREATOR) {
+            assert processDescriptor != null;
+            AbstractAggregationProcess<?, ?> aggregateProcess = null;
+            Set<Class<? extends AbstractAggregationProcess>> allClasses = Lookup.getDefault().lookupResult(AbstractAggregationProcess.class).allClasses();
 
-        for (Class<? extends AbstractAggregationProcess> clazz : allClasses) {
-            if (clazz != null && clazz.getName().equals(processDescriptor.getJavatype())) {
-                try {
-                    Constructor<? extends AbstractAggregationProcess> constructor = clazz.getDeclaredConstructor(Aggregator.class);
-                    aggregateProcess = constructor.newInstance(Aggregator.this);
-                    aggregateProcess.setDescriptor(processDescriptor);
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
+            for (Class<? extends AbstractAggregationProcess> clazz : allClasses) {
+                if (clazz != null && clazz.getName().equals(processDescriptor.getJavaType())) {
+                    try {
+                        Constructor<? extends AbstractAggregationProcess> constructor = clazz.getDeclaredConstructor(Aggregator.class);
+                        aggregateProcess = constructor.newInstance(Aggregator.this);
+                        aggregateProcess.setDescriptor(processDescriptor);
+                    } catch (SecurityException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (IllegalArgumentException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (ReflectiveOperationException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    break;
                 }
-                break;
             }
+            return aggregateProcess;
         }
-        return aggregateProcess;
     }
 
     public enum AggregatorState {
@@ -271,6 +276,28 @@ public class Aggregator extends ModelSynchronizer {
 
         public Image getImage() {
             return image;
+        }
+    }
+
+    private static class ProcessListenerImpl implements ProcessPipeline.ProcessListener {
+
+        private final List<AbstractAggregationProcess<?, ?>> processes;
+        private final int unit;
+        private final ProgressHandle handler;
+
+        public ProcessListenerImpl(List<AbstractAggregationProcess<?, ?>> processes, int unit, ProgressHandle handler) {
+            this.processes = processes;
+            this.unit = unit;
+            this.handler = handler;
+        }
+
+        @Override
+        public void changed(ProcessPipeline.ProcessEvent event) {
+            double progress = (100d / processes.size());
+            progress = (progress / 100 * event.getPercentfinished()) + (100 / processes.size() * unit);
+            LOG.log(Level.INFO, "progress {0}", progress);
+            handler.progress(event.getProcessMessage(), (int) progress);
+
         }
     }
 }

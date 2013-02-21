@@ -56,6 +56,8 @@ public class RoadNetworkLayer extends AbstractLayer<RoadNetwork> {
                     case TERTIARY:
                         roInternal = roTertiary;
                         break;
+                    default:
+                        break;
                 }
                 List<? extends ILocation> nodes = r.getNodes();
                 for (int i = 1; i < nodes.size(); i++) {

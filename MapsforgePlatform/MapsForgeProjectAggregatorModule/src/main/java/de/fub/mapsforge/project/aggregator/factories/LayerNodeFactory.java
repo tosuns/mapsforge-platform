@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 
 /**
@@ -30,7 +31,7 @@ public class LayerNodeFactory extends ChildFactory<AbstractLayer<?>> {
 
     @Override
     protected Node createNodeForKey(AbstractLayer<?> layer) {
-        return layer.getNodeDelegate();
+        return new FilterNode(layer.getNodeDelegate());
     }
 
     public boolean add(AbstractLayer<?> layer) {

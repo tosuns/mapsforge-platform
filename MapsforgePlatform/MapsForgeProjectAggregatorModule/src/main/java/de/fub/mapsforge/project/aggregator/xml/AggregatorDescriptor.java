@@ -44,7 +44,6 @@ public class AggregatorDescriptor {
     }
 
     public void setName(String name) {
-        Object oldValue = this.name;
         this.name = name;
     }
 
@@ -54,7 +53,6 @@ public class AggregatorDescriptor {
     }
 
     public void setDescription(String description) {
-        Object oldValue = this.description;
         this.description = description;
     }
 
@@ -64,7 +62,6 @@ public class AggregatorDescriptor {
     }
 
     public void setPipeline(ProcessDescriptorList pipeline) {
-        Object oldValue = this.pipeline;
         this.pipeline = pipeline;
     }
 
@@ -74,7 +71,6 @@ public class AggregatorDescriptor {
     }
 
     public void setDatasources(List<Source> sources) {
-        Object oldValue = this.datasources;
         this.datasources = sources;
     }
 
@@ -84,7 +80,6 @@ public class AggregatorDescriptor {
     }
 
     public void setProperties(Properties properties) {
-        Object oldValue = this.properties;
         this.properties = properties;
     }
 
@@ -94,7 +89,6 @@ public class AggregatorDescriptor {
     }
 
     public void setAggregationStrategy(String aggregationStrategy) {
-        Object oldValue = this.aggregationStrategy;
         this.aggregationStrategy = aggregationStrategy;
     }
 
@@ -104,7 +98,6 @@ public class AggregatorDescriptor {
     }
 
     public void setTileCachingStrategy(String tileCachingStrategy) {
-        Object oldValue = this.tileCachingStrategy;
         this.tileCachingStrategy = tileCachingStrategy;
     }
 
@@ -114,7 +107,6 @@ public class AggregatorDescriptor {
     }
 
     public void setCacheFolderPath(String cacheFolderPath) {
-        Object oldValue = this.cacheFolderPath;
         this.cacheFolderPath = cacheFolderPath;
     }
 

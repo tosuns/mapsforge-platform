@@ -179,7 +179,10 @@ public class GPSPointsFetcherController {
                     DataObject dataObject = DataObject.find(fileObject);
                     updateList(dataObject.getNodeDelegate());
                 }
-            } catch (Exception ex) {
+            } catch (IOException ex) {
+                LOG.log(Level.INFO, ex.getMessage(), ex);
+                updateList(null);
+            } catch (JAXBException ex) {
                 LOG.log(Level.INFO, ex.getMessage(), ex);
                 updateList(null);
             } finally {

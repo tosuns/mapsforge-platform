@@ -20,9 +20,9 @@ import org.openide.util.RequestProcessor;
 public class DelegateAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
-    private final List<AbstractAggregationProcess<?, ?>> processes;
-    private RequestProcessor requestProcessor = new RequestProcessor(DelegateAction.class.getName());
-    private final Aggregator aggregator;
+    private transient final List<AbstractAggregationProcess<?, ?>> processes;
+    private transient RequestProcessor requestProcessor = new RequestProcessor(DelegateAction.class.getName());
+    private transient final Aggregator aggregator;
     private static final Logger LOG = Logger.getLogger(DelegateAction.class.getName());
 
     public DelegateAction(Aggregator aggregator, AbstractAggregationProcess<?, ?> process) {

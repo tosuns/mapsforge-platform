@@ -47,7 +47,6 @@ public class AggregateUtils {
     public static final String ICON_PATH_BUSY = "de/fub/mapsforge/project/aggregator/aggregatorIconBusy.png";
     @StaticResource
     public static final String ICON_PATH_ERROR = "de/fub/mapsforge/project/aggregator/aggregatorIconError.png";
-    private static HashMap<String, Class<? extends AbstractAggregationProcess>> hashMap = new HashMap<String, Class<? extends AbstractAggregationProcess>>();
     private static final PaletteController palette = PaletteFactory.createPalette(
             new AbstractNode(Children.create(new CategoryNodeFactory(), true)),
             new EmptyPaletteAction(), null, new PaletteDragAndDropHandler());
@@ -84,11 +83,17 @@ public class AggregateUtils {
             for (Property property : properties) {
                 propertyMap.put(property.getName(), property);
             }
-            for (Field field : clazz.getFields()) {
+            for (Field field : clazz.getDeclaredFields()) {
                 Property property = propertyMap.get(field.getName());
                 if (property != null) {
                     try {
-                        field.set(instance, getValue(Class.forName(property.getJavaType()), property));
+                        if (!field.isAccessible()) {
+                            field.setAccessible(true);
+                            field.set(instance, getValue(Class.forName(property.getJavaType()), property));
+                            field.setAccessible(false);
+                        } else {
+                            field.set(instance, getValue(Class.forName(property.getJavaType()), property));
+                        }
                     } catch (ClassNotFoundException ex) {
                         Exceptions.printStackTrace(ex);
                     } catch (Exception ex) {
@@ -154,6 +159,8 @@ public class AggregateUtils {
                 descriptor = (ProcessDescriptor) unmarshaller.unmarshal(resourceAsStream); //NOI18N
             } catch (javax.xml.bind.JAXBException ex) {
                 throw new IOException(ex);
+            } finally {
+                resourceAsStream.close();
             }
         } else {
             throw new FileNotFoundException(Bundle.CLT_File_not_found(filePatn));
@@ -189,22 +196,22 @@ public class AggregateUtils {
 
         @Override
         public Action[] getImportActions() {
-            return null;
+            return new Action[0];
         }
 
         @Override
         public Action[] getCustomPaletteActions() {
-            return null;
+            return new Action[0];
         }
 
         @Override
         public Action[] getCustomCategoryActions(Lookup lkp) {
-            return null;
+            return new Action[0];
         }
 
         @Override
         public Action[] getCustomItemActions(Lookup lkp) {
-            return null;
+            return new Action[0];
         }
 
         @Override

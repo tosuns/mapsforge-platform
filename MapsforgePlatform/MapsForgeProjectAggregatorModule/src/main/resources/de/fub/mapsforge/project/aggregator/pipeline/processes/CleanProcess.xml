@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process xmlns="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
-         description="A simple GPS segment cleaner" name="Cleaner" class="de.fub.mapsforge.project.aggregator.pipeline.processes.CleanProcess">
+<process 
+    description="A simple GPS segment cleaner" name="Cleaner" class="de.fub.mapsforge.project.aggregator.pipeline.processes.CleanProcess">
     <properties>
         <section name="Cleaning Process">
             <propertyset description="Setting description" name="Cleaning Settings">

@@ -17,7 +17,7 @@ import org.openide.util.NbBundle;
 public class LayerContainer extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
-    private AbstractLayer<?> layer;
+    private transient AbstractLayer<?> layer;
 
     /**
      * Creates new form LayerContainer
