@@ -135,7 +135,9 @@ public class RamerDouglasPeuckerFilter {
     public GPSSegment simplify(GPSSegment cleanSegment) {
         List<ILocation> removablePoints = getRemovablePoints(cleanSegment);
         List<GPSPoint> points = cleanSegment;
-        points.removeAll(removablePoints);
+        for (ILocation point : removablePoints) {
+            points.remove(point);
+        }
         return cleanSegment;
     }
 

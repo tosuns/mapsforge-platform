@@ -4,7 +4,7 @@ import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.utils.Parameterizable;
 
 /**
- * A TrackFilter is used to limit the Waypoints of a GPS-track.
+ * A WaypointFilter is used to limit the Waypoints of a GPS-track.
  */
 public abstract class WaypointFilter extends Parameterizable {
 

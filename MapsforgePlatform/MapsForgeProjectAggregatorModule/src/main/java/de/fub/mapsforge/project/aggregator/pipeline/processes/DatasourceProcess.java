@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.Exceptions;
@@ -114,7 +116,9 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
             totalGPXFiles++;
             fireProcessEvent(new ProcessPipeline.ProcessEvent(this, "import", (int) ((100d / sourceList.size()) * (++progress))));
         }
+        LOG.log(Level.INFO, "segments: {0}", segments.toString());
     }
+    private static final Logger LOG = Logger.getLogger(DatasourceProcess.class.getName());
 
     @Override
     public Image getIcon() {

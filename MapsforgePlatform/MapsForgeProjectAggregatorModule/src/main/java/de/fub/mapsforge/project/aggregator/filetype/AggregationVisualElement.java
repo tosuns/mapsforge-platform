@@ -6,8 +6,8 @@ package de.fub.mapsforge.project.aggregator.filetype;
 
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
-import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.factories.LayerNodeFactory;
+import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
@@ -15,9 +15,12 @@ import de.fub.mapsforge.project.models.ModelSynchronizer;
 import de.fub.mapsforge.project.ui.component.StatisticsPanel;
 import de.fub.mapsforge.project.utils.LayerTableCellRender;
 import geofiletypeapi.GeoUtil;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -29,6 +32,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -57,6 +61,11 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
+import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 /**
  *
@@ -97,6 +106,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private JButton statisticsDataButton;
     private JPopupMenu layersMenu;
     private JPopupMenu processMenu;
+    private JComboBox<TileSource> tileSourceComboBox;
 
     /**
      * Creates new form AggregationVisualElement
@@ -176,6 +186,29 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         "CLT_Statistics_Window=Statistics"})
     private void setUpToolbar() {
 
+        // set up tilesource combobox
+        if (tileSourceComboBox == null) {
+            tileSourceComboBox = new JComboBox<TileSource>(
+                    new TileSource[]{
+                new OsmTileSource.Mapnik(),
+                new OsmTileSource.CycleMap(),
+                new BingAerialTileSource(),
+                new MapQuestOsmTileSource(),
+                new MapQuestOpenAerialTileSource()});
+            tileSourceComboBox.setMaximumSize(new Dimension(100, 16));
+            tileSourceComboBox.setSelectedIndex(0);
+            tileSourceComboBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    if (tileSourceComboBox.getSelectedItem() instanceof TileSource) {
+                        aggComponent.setTileSource((TileSource) tileSourceComboBox.getSelectedItem());
+                    }
+                }
+            });
+            toolbar.add(tileSourceComboBox);
+            toolbar.add(new JToolBar.Separator());
+        }
+
         // set up statistics button
         if (statisticsDataButton == null) {
             statisticsDataButton = new JButton(ImageUtilities.loadImageIcon(STATISTICS_BUTTON_ICON_PATH, true));
@@ -186,6 +219,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                     if (aggregator != null) {
                         StatisticsPanel statisticsPanel = new StatisticsPanel(aggregator.getStatistics());
                         DialogDescriptor dd = new DialogDescriptor(statisticsPanel, Bundle.CLT_Statistics_Window());
+                        dd.setOptionType(DialogDescriptor.DEFAULT_OPTION);
                         DialogDisplayer.getDefault().notifyLater(dd);
                     }
                 }

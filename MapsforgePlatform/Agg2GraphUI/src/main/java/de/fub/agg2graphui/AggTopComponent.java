@@ -7,10 +7,11 @@ package de.fub.agg2graphui;
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.agg2graphui.controller.LayerManager;
+import de.fub.utilsmodule.text.MessageFormatter;
 import java.awt.Point;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -18,6 +19,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
+import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * Top component which displays something.
@@ -98,10 +100,14 @@ public final class AggTopComponent extends JPanel {
         setLongitude(position.getLon());
     }
 
+    public void updateZoomLevel() {
+        setZoomLevel(mapViewer.getZoom());
+    }
+
     public void updateBoundingBox() {
         Coordinate leftLongBottomLat = mapViewer.getPosition(getLocation().x, getLocation().y + getHeight());
         Coordinate rigtLongTopLat = mapViewer.getPosition(getLocation().x + getWidth(), getLocation().y);
-        boundingBox.setText(MessageFormat.format(
+        boundingBox.setText(MessageFormatter.format(Locale.ENGLISH,
                 NbBundle.getMessage(this.getClass(), "AggTopComponent.boundingBox.text"),
                 leftLongBottomLat.getLon(),
                 rigtLongTopLat.getLat(),
@@ -110,13 +116,18 @@ public final class AggTopComponent extends JPanel {
     }
 
     public void setLatitude(double lat) {
-        latitude.setText(MessageFormat.format(
+        latitude.setText(MessageFormatter.format(Locale.ENGLISH,
                 NbBundle.getMessage(this.getClass(), "AggTopComponent.latitude.text"), lat));
     }
 
     public void setLongitude(double lon) {
-        longitude.setText(MessageFormat.format(
-                NbBundle.getMessage(this.getClass(), "AggTopComponent.longitude.text"), lon));
+        longitude.setText(MessageFormatter.format(Locale.ENGLISH,
+                NbBundle.getMessage(this.getClass(), "AggTopComponent.longitude.text"), lon).replaceAll(",", "\\."));
+    }
+
+    public void setZoomLevel(int zoomLevel) {
+        this.zoomLevel.setText(MessageFormatter.format(Locale.ENGLISH,
+                NbBundle.getMessage(this.getClass(), "AggTopComponent.zoomLevel.text"), zoomLevel));
     }
 
     public void setLabelsVisible(boolean labelsVisible) {
@@ -139,6 +150,13 @@ public final class AggTopComponent extends JPanel {
         mapViewer.removeAllLayers();
     }
 
+    public void setTileSource(TileSource tileSource) {
+        if (tileSource.getMaxZoom() < mapViewer.getZoom()) {
+            mapViewer.setZoom(tileSource.getMaxZoom());
+        }
+        mapViewer.setTileSource(tileSource);
+    }
+
     /**
      *
      * This method is called from within the constructor to initialize the form.
@@ -150,6 +168,10 @@ public final class AggTopComponent extends JPanel {
 
         statusbar = new javax.swing.JPanel();
         filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(2, 0), new java.awt.Dimension(2, 0), new java.awt.Dimension(2, 32767));
+        jLabel4 = new javax.swing.JLabel();
+        filler8 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
+        zoomLevel = new javax.swing.JLabel();
+        filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(8, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(8, 222222));
         jLabel1 = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         latitude = new javax.swing.JLabel();
@@ -170,27 +192,46 @@ public final class AggTopComponent extends JPanel {
         statusbar.setLayout(new javax.swing.BoxLayout(statusbar, javax.swing.BoxLayout.X_AXIS));
         statusbar.add(filler6);
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.jLabel4.text")); // NOI18N
+        statusbar.add(jLabel4);
+        statusbar.add(filler8);
+
+        zoomLevel.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(zoomLevel, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.zoomLevel.text")); // NOI18N
+        zoomLevel.setMaximumSize(new java.awt.Dimension(50, 14));
+        zoomLevel.setMinimumSize(new java.awt.Dimension(50, 14));
+        zoomLevel.setPreferredSize(new java.awt.Dimension(50, 14));
+        statusbar.add(zoomLevel);
+        statusbar.add(filler9);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.jLabel1.text")); // NOI18N
         statusbar.add(jLabel1);
         statusbar.add(filler2);
 
+        latitude.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(latitude, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.latitude.text")); // NOI18N
         statusbar.add(latitude);
         statusbar.add(filler1);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.jLabel2.text")); // NOI18N
         statusbar.add(jLabel2);
         statusbar.add(filler3);
 
+        longitude.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(longitude, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.longitude.text")); // NOI18N
         longitude.setMaximumSize(new java.awt.Dimension(150, 14));
         statusbar.add(longitude);
         statusbar.add(filler5);
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.jLabel3.text")); // NOI18N
         statusbar.add(jLabel3);
         statusbar.add(filler4);
 
+        boundingBox.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(boundingBox, org.openide.util.NbBundle.getMessage(AggTopComponent.class, "AggTopComponent.boundingBox.text")); // NOI18N
         boundingBox.setMaximumSize(new java.awt.Dimension(32665, 14));
         statusbar.add(boundingBox);
@@ -210,12 +251,16 @@ public final class AggTopComponent extends JPanel {
     private javax.swing.Box.Filler filler5;
     private javax.swing.Box.Filler filler6;
     private javax.swing.Box.Filler filler7;
+    private javax.swing.Box.Filler filler8;
+    private javax.swing.Box.Filler filler9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel latitude;
     private javax.swing.JLabel longitude;
     private de.fub.agg2graphui.AggContentPanel mapViewer;
     private javax.swing.JPanel statusbar;
+    private javax.swing.JLabel zoomLevel;
     // End of variables declaration//GEN-END:variables
 }

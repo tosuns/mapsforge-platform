@@ -94,7 +94,6 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/management/Statistics
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/osm/ExporterFactory.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/osm/IExporter.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/osm/OsmExporter.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/osm/OsmPanel.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/pt/PTIntProcedure.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/pt/StopTree.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/roadgen/AggFilterFactory.java -text
@@ -137,7 +136,6 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/structs/projection/Os
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/DSL.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/StepStorage.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/Token.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/cli/AutoTest.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/cli/CLI.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/CalcThread.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/IRenderingPanel.java -text
@@ -155,9 +153,13 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/MainRender
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/OsmPanel.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/TestUI.java -text
 MapsforgePlatform/Agg2Graph/src/main/nbm/manifest.mf -text
-MapsforgePlatform/Agg2Graph/src/main/resources/agg2graph.log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/Aggregation[!!-~]\[agg2graph\].log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/Aggregation[!!-~]\[mapsforge\].log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/Cleaning[!!-~]\[agg2graph\].log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/Cleaning[!!-~]\[mapsforge\].log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/Data[!!-~]\[agg2graph\].log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/Data[!!-~]\[mapsforge\].log -text
 MapsforgePlatform/Agg2Graph/src/main/resources/de/fub/agg2graph/Bundle.properties -text
-MapsforgePlatform/Agg2Graph/src/main/resources/mapsforge.log -text
 MapsforgePlatform/Agg2Graph/src/main/resources/mapsforge2.log -text
 MapsforgePlatform/Agg2GraphUI/pom.xml -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/AggContentPanel.form -text
@@ -441,6 +443,7 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/profiling/Profilu
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/BigDecimalEditor.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/BigDecimalInplace.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/synchronizer/ModelSynchronizer.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/text/MessageFormatter.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapEntry.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapType.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/XmlGenericMapAdapter.java -text

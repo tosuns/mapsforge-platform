@@ -122,19 +122,23 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
             totalSmoothedGPSPointCount = 0;
             if (inputList != null) {
                 gPSSegmentLayer.clearRenderObjects();
-                RamerDouglasPeuckerFilter rdpf = getFilterInstance();
+                RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(5);
                 int segCount = 0;
                 LOG.log(Level.INFO, "segmentsize: {0}", inputList.size());
                 int progess = 0;
+                LOG.log(Level.INFO, "cleaning options: {0}", gpsCleaner.getCleaningOptions().toString());
+
                 for (GPSSegment segment : inputList) {
                     List<GPSSegment> clean = gpsCleaner.clean(segment);
                     totalCleanSegmentCount += clean.size();
                     LOG.log(Level.INFO, "clean segmentsize: {0}", clean.size());
+                    LOG.log(Level.INFO, "Cleaner segments: {0}", clean.toString());
                     for (GPSSegment cleanSegment : clean) {
                         totalCleanGPSPointCount += cleanSegment.size();
                         // run through Douglas-Peucker here (slightly modified
                         // perhaps to avoid too long edges)
                         GPSSegment smoothSegment = rdpf.simplify(cleanSegment);
+                        LOG.log(Level.INFO, "rdpf segments: {0}", smoothSegment.toString());
                         totalSmoothedGPSPointCount += (cleanSegment.size() - smoothSegment.size());
                         cleanSegmentList.add(smoothSegment);
                         gPSSegmentLayer.add(smoothSegment);

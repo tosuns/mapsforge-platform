@@ -1,12 +1,19 @@
 /**
  * *****************************************************************************
- * Copyright (c) 2012 Johannes Mitlmeier. All rights reserved. This program and
- * the accompanying materials are made available under the terms of the GNU
- * Affero Public License v3.0 which accompanies this distribution, and is
- * available at http://www.gnu.org/licenses/agpl-3.0.html
+ * Copyright 2013 Johannes Mitlmeier
  *
- * Contributors: Johannes Mitlmeier - initial API and implementation
- * ****************************************************************************
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+*****************************************************************************
  */
 package de.fub.agg2graph.input;
 
@@ -30,7 +37,7 @@ import java.util.logging.Logger;
  */
 public class GPSCleaner {
 
-    private static final Logger logger = Logger.getLogger("agg2graph.clean");
+    private static final Logger LOG = Logger.getLogger(GPSCleaner.class.getName());
     private CleaningOptions cleaningOptions = new CleaningOptions();
 
     public GPSCleaner enableDefault() {
@@ -53,7 +60,7 @@ public class GPSCleaner {
             GPSPoint point = pointList.get(i);
             ILocation lastPoint = currentSegment.size() > 0 ? currentSegment
                     .get(currentSegment.size() - 1) : null;
-            logger.log(Level.FINE, "Examining point {0}", point);
+            LOG.log(Level.FINE, "Examining point {0}", point);
 
             double length = 0;
             if (cleaningOptions.filterByEdgeLength || cleaningOptions.filterByEdgeLengthIncrease) {
@@ -65,17 +72,17 @@ public class GPSCleaner {
             // check edge length
             if (cleaningOptions.filterByEdgeLength && currentSegment.size() > 0) {
                 if (length < cleaningOptions.minEdgeLength) {
-                    logger.fine(String.format(
+                    LOG.fine(String.format(
                             "edge length %s to %s: %.2f < %.2f", lastPoint,
                             point, length, cleaningOptions.minEdgeLength));
-                    logger.log(Level.FINE, "short edge, dropping point {0}", point);
+                    LOG.log(Level.FINE, "short edge, dropping point {0}", point);
                     continue;
                 }
                 if (length > cleaningOptions.maxEdgeLength) {
-                    logger.fine(String.format(
+                    LOG.fine(String.format(
                             "edge length %s to %s: %.2f > %.2f", lastPoint,
                             point, length, cleaningOptions.maxEdgeLength));
-                    logger.log(Level.FINE, "long edge, still NOT dropping point {0}", point);
+                    LOG.log(Level.FINE, "long edge, still NOT dropping point {0}", point);
                     // make new segment
                     if (currentSegment.size() > cleaningOptions.minSegmentLength) {
                         result.add(currentSegment);
@@ -115,14 +122,14 @@ public class GPSCleaner {
                         // is it zigzagged?
                         if (((angleHere > 180 - cleaningOptions.maxZigzagAngle) && (angleBefore < cleaningOptions.maxZigzagAngle))
                                 || ((angleHere < cleaningOptions.maxZigzagAngle) && (angleBefore > 180 - cleaningOptions.maxZigzagAngle))) {
-                            logger.fine("found zigzag");
-                            logger.fine(String.format("%.3f <- -> %.3f",
+                            LOG.fine("found zigzag");
+                            LOG.fine(String.format("%.3f <- -> %.3f",
                                     angleBefore, angleHere));
                             i++;
                             continue;
                         }
                     } else {
-                        logger.fine("something bad");
+                        LOG.fine("something bad");
                     }
                 }
             }
@@ -145,8 +152,8 @@ public class GPSCleaner {
                         // is it a fake circle?
                         if ((angleHere > 180 - cleaningOptions.maxFakeCircleAngle)
                                 && (angleBefore > 180 - cleaningOptions.maxFakeCircleAngle)) {
-                            logger.fine("found fake circle");
-                            logger.fine(String.format("%.3f <- -> %.3f",
+                            LOG.fine("found fake circle");
+                            LOG.fine(String.format("%.3f <- -> %.3f",
                                     angleBefore, angleHere));
                             // insert as second but last element
                             GPSPoint oldLastPoint = currentSegment
@@ -170,7 +177,7 @@ public class GPSCleaner {
                 currentSegment = new GPSSegment();
             }
 
-            logger.log(Level.FINE, "adding point {0}", point);
+            LOG.log(Level.FINE, "adding point {0}", point);
             currentSegment.add(point);
         }
 

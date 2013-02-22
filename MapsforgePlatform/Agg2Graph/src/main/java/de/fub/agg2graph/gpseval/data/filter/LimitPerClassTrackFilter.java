@@ -1,6 +1,7 @@
 package de.fub.agg2graph.gpseval.data.filter;
 
 import de.fub.agg2graph.gpseval.data.file.TrackFile;
+
 import java.util.HashMap;
 import java.util.Map;
 

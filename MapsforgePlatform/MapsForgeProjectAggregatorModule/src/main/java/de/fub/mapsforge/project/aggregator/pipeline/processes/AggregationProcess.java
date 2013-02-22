@@ -97,6 +97,8 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
 
             int counter = 0;
 
+            LOG.log(Level.INFO, "clean segments: {0}", inputList.toString());
+
             for (GPSSegment inputSegment : inputList) {
                 counter++;
                 aggregator.getAggContainer().addSegment(inputSegment);

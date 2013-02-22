@@ -17,16 +17,15 @@
  */
 package de.fub.agg2graph.roadgen;
 
+import de.fub.agg2graph.agg.AggContainer;
+import de.fub.agg2graph.structs.ClassObjectEditor;
+import de.fub.agg2graph.ui.StepStorage;
+import de.fub.agg2graph.ui.gui.UIStepStorage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import de.fub.agg2graph.agg.AggContainer;
-import de.fub.agg2graph.structs.ClassObjectEditor;
-import de.fub.agg2graph.ui.StepStorage;
-import de.fub.agg2graph.ui.gui.UIStepStorage;
 
 /**
  * Data structure for the street graph representation.

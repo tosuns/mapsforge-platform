@@ -43,7 +43,6 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private transient final LayerManager layerManager = new LayerManager(this);
-    private transient final MouseWheelListener osmWheelListener;
     private boolean labelsVisible = true;
     private int highlightIndex = 0;
     private int savedZIndex = Integer.MAX_VALUE;
@@ -55,29 +54,33 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
      */
     public AggContentPanel() {
         initComponents();
+        setScrollWrapEnabled(true);
         layerManager.addChangeListener(AggContentPanel.this);
         layerManager.addLayerListener(AggContentPanel.this);
         explorerManager.addPropertyChangeListener(AggContentPanel.this);
         DefaultMapController controller = new DefaultMapController(AggContentPanel.this);
         controller.setMovementMouseButton(MouseEvent.BUTTON1);
-        osmWheelListener = getMouseWheelListeners()[0];
-        removeMouseWheelListener(osmWheelListener);
+        for (MouseWheelListener listener : getMouseWheelListeners()) {
+            removeMouseWheelListener(listener);
+        }
         addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                if (e.isShiftDown()) {
+                if (e.isControlDown()) {
                     highlightLayer(e.getWheelRotation());
-                } else if (osmWheelListener != null) {
+                    e.consume();
+                } else {
                     // push down
-                    if (getZoom() < 19) {
-                        osmWheelListener.mouseWheelMoved(e);
-                        LOG.log(Level.INFO, "zoom level: {0}", getZoom());
+                    if (getZoom() < getTileController().getTileSource().getMaxZoom() || e.getWheelRotation() > 0) {
+                        setZoom(getZoom() - e.getWheelRotation());
+                        LOG.log(Level.INFO, "zoom level: {0}, Maxzoom: {1}", new Object[]{getZoom(), getTileController().getTileSource().getMaxZoom()});
                     }
                 }
                 layerManager.requestUpdate();
             }
         });
-        addMouseMotionListener(new MouseMotionAdapter() {
+        addMouseMotionListener(
+                new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 layerManager.requestUpdate();

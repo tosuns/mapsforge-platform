@@ -1,18 +1,20 @@
-/*******************************************************************************
-   Copyright 2013 Johannes Mitlmeier
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-******************************************************************************/
+/**
+ * *****************************************************************************
+ * Copyright 2013 Johannes Mitlmeier
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * ****************************************************************************
+ */
 package de.fub.agg2graph.roadgen;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import de.fub.agg2graph.structs.IEdge;
 import de.fub.agg2graph.structs.ILocation;
 
 public class DefaultRoadObjectMerger implements IRoadObjectMerger {
+
     private static final Logger logger = Logger
             .getLogger("agg2graph.roadgen.merger");
     public double maxIntersectionMergeDistance = 30;
@@ -58,7 +61,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
                 boolean allPseudo = i1.isPseudo() && i2.isPseudo();
                 if ((connected && maxOnePseudo) || (!connected && allPseudo)) {
                     // ...that can be merged
-					mergeableIntersections.add(new Intersection[] { i1, i2 });
+                    mergeableIntersections.add(new Intersection[]{i1, i2});
                 }
             }
         }
@@ -126,7 +129,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
                     logger.info(r1.toString());
                     logger.info(r2.toString());
                     if (r2.getTo().equals(r1.getFrom())) {
-						mergeableRoads.add(new Road[] { r1, r2 });
+                        mergeableRoads.add(new Road[]{r1, r2});
                     }
                 }
             }
@@ -189,5 +192,4 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
             r1.mergedTo = r1;
         }
     }
-
 }

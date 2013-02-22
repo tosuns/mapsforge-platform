@@ -7,7 +7,7 @@ import de.fub.agg2graph.gpseval.data.Waypoint;
  * between each other.
  *
  * It has one parameter "distance" that specifies the minimal distance in meters
- * between to waypoints.
+ * between two waypoints.
  */
 public class MinDistanceWaypointFilter extends WaypointFilter {
 

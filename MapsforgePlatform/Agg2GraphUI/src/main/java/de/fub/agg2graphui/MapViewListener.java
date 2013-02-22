@@ -29,6 +29,7 @@ public class MapViewListener extends MouseAdapter implements ComponentListener {
         lastPoint = e.getPoint();
         this.aggTopComponent.updateLonLat(lastPoint);
         this.aggTopComponent.updateBoundingBox();
+        this.aggTopComponent.updateZoomLevel();
     }
 
     @Override
@@ -48,6 +49,7 @@ public class MapViewListener extends MouseAdapter implements ComponentListener {
     public void componentResized(ComponentEvent e) {
         this.aggTopComponent.updateBoundingBox();
         this.aggTopComponent.updateLonLat(new Point(e.getComponent().getWidth() / 2, e.getComponent().getHeight() / 2));
+        this.aggTopComponent.updateZoomLevel();
     }
 
     @Override

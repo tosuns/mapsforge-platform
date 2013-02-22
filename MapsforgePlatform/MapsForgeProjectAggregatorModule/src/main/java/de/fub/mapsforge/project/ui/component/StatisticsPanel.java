@@ -5,12 +5,14 @@
 package de.fub.mapsforge.project.ui.component;
 
 import de.fub.mapsforge.project.api.StatisticProvider;
+import java.awt.Component;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.swing.tabcontrol.TabDisplayer;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -39,6 +41,7 @@ public class StatisticsPanel extends javax.swing.JPanel implements ExplorerManag
 
     public StatisticsPanel(List<StatisticProvider> statisticsProvides) {
         this();
+        initPropSheetViewTabSelection();
         this.statisticsProvides = statisticsProvides;
         statisticsNode = new StatisticsNode(this.statisticsProvides);
         explorerManager.setRootContext(statisticsNode);
@@ -46,6 +49,21 @@ public class StatisticsPanel extends javax.swing.JPanel implements ExplorerManag
             explorerManager.setSelectedNodes(new Node[]{statisticsNode});
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
+        }
+    }
+
+    /**
+     * Sets the first tab as the current viewed tab of the component.
+     *
+     * this one is a hack and might not work in the future.
+     */
+    private void initPropSheetViewTabSelection() {
+        Component[] components = propertySheetView1.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof TabDisplayer) {
+                TabDisplayer displayer = (TabDisplayer) comp;
+                displayer.getSelectionModel().setSelectedIndex(0);
+            }
         }
     }
 
@@ -94,10 +112,13 @@ public class StatisticsPanel extends javax.swing.JPanel implements ExplorerManag
                     Sheet.Set set = null;
                     Property<?> property = null;
                     Collections.reverse(provider.getStatisticData());
+                    int i = 0;
                     for (StatisticProvider.StatisticSection section : provider.getStatisticData()) {
                         set = Sheet.createPropertiesSet();
-                        set.setValue(TAB_NAME, provider.getName());
-                        set.setName(section.getName());
+                        if (i != 0) {
+                            set.setValue(TAB_NAME, provider.getName());
+                            set.setName(section.getName());
+                        }
                         set.setDisplayName(section.getName());
                         set.setShortDescription(section.getDescription());
                         sheet.put(set);
@@ -110,6 +131,7 @@ public class StatisticsPanel extends javax.swing.JPanel implements ExplorerManag
                             };
                             set.put(property);
                         }
+                        i++;
                     }
                     if (set != null) {
                         set.setPreferred(true);
@@ -118,7 +140,7 @@ public class StatisticsPanel extends javax.swing.JPanel implements ExplorerManag
                     LOG.log(Level.SEVERE, ex.getMessage(), ex);
                 }
             }
-            sheet.remove("properties");
+//            sheet.remove("properties");
             return sheet;
         }
     }
