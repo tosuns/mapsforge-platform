@@ -18,9 +18,10 @@ import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map.Entry;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.Exceptions;
@@ -38,8 +39,8 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
-    private RoadNetwork roadNetwork = null;
     private final Object MUTEX = new Object();
+    private RoadNetwork roadNetwork = null;
     private IntersectionLayer intersectionLayer = new IntersectionLayer();
     private RoadNetworkLayer roadNetworkLayer = new RoadNetworkLayer();
 
@@ -60,7 +61,9 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     @Override
     protected void start() {
         synchronized (MUTEX) {
+
             if (aggregator != null) {
+
                 roadNetworkLayer.clearRenderObjects();
                 intersectionLayer.clearRenderObjects();
 
@@ -72,8 +75,10 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
                 }
 
                 roadNetworkLayer.add(roadNetwork);
+
                 fireProcessEvent(new ProcessPipeline.ProcessEvent(this, "Creating Roadnetwork...", 100));
             }
+
         }
     }
 
@@ -121,16 +126,25 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
         return desc;
     }
 
-    @NbBundle.Messages("CLT_No_Statistics_Available=No road network was computed to provide its statistics. Please run the read generator process!")
+    @NbBundle.Messages({"CLT_No_Statistics_Available=No road network was computed to provide its statistics. Please run the read generator process!",
+        "CLT_Description_Not_Available=Description not available."})
     @Override
-    public SortedMap<String, Double> getStatisticData() {
-        SortedMap<String, Double> statisticMap = new TreeMap<String, Double>();
+    public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException {
+        List<StatisticSection> statisticData = new ArrayList<StatisticSection>();
+
+        // create process performance statistics
+        StatisticSection section = getPerformanceData();
+        statisticData.add(section);
+
         if (getResult() != null) {
+            // create road network statistics
+            section = new StatisticSection("Road Network Statistics", "Displays statistical data of the generated road network");
+            statisticData.add(section);
             Map<String, Double> data = Statistics.getData(getResult());
-            statisticMap.putAll(data);
-        } else {
-            throw new StatisticNotAvailableException(Bundle.CLT_No_Statistics_Available());
+            for (Entry<String, Double> entry : data.entrySet()) {
+                section.getStatisticsItemList().add(new StatisticItem(entry.getKey(), String.valueOf(entry.getValue()), Bundle.CLT_Description_Not_Available()));
+            }
         }
-        return statisticMap;
+        return statisticData;
     }
 }

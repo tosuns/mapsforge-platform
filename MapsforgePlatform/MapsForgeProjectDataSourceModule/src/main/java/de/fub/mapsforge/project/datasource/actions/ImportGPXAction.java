@@ -53,6 +53,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_Folder_Creator_Message=Please specify a folder name for the to be imported GPX-Files."})
 public final class ImportGPXAction extends AbstractAction implements ContextAwareAction, Presenter.Popup {
 
+    private static final long serialVersionUID = 1L;
     private JMenu contextMenu = new JMenu(Bundle.CTL_ImportGPX(), false);
     private transient MapsForgeProject project;
     private final Lookup context;
@@ -132,6 +133,7 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
 
     private static class DelegateAction extends AbstractAction {
 
+        private static final long serialVersionUID = 1L;
         private final GPXImportService delegate;
         private final FileObject dataSourceFileObject;
 
@@ -165,6 +167,7 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
         }
 
         @Messages({"CLT_Copy_Files_Start_Message=Copying Files",
+            "# {0} - fileName",
             "CLT_Copy_File_Message=Copying File {0}"})
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -219,7 +222,8 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
             return fileChooser;
         }
 
-        @Messages("CLT_Folder_Creator_Error_Message=Folder {0} exists already!")
+        @Messages({"# {0} - folderName",
+            "CLT_Folder_Creator_Error_Message=Folder {0} exists already!"})
         private NotifyDescriptor.InputLine createErrorDialog(String folderName) {
             InputLine notifyDescriptor = createFolderNameDialog();
             notifyDescriptor.setInputText(folderName);

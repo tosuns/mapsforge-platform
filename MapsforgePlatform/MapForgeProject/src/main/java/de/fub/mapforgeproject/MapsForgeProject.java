@@ -24,7 +24,6 @@ import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;

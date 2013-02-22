@@ -31,6 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.DefaultMapController;
 
 /**
@@ -68,7 +69,7 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
                     highlightLayer(e.getWheelRotation());
                 } else if (osmWheelListener != null) {
                     // push down
-                    if (getZoom() < 17) {
+                    if (getZoom() < 19) {
                         osmWheelListener.mouseWheelMoved(e);
                         LOG.log(Level.INFO, "zoom level: {0}", getZoom());
                     }
@@ -157,8 +158,10 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
         synchronized (getTreeLock()) {
             Graphics2D g2d = (Graphics2D) g.create();
             try {
-                GPSPoint leftTop = new GPSPoint(getPosition(0, getHeight()));
-                GPSPoint bottomRight = new GPSPoint(getPosition(getWidth(), 0));
+                Coordinate position = getPosition(0, getHeight());
+                GPSPoint leftTop = new GPSPoint(position.getLat(), position.getLon());
+                position = getPosition(getWidth(), 0);
+                GPSPoint bottomRight = new GPSPoint(position.getLat(), position.getLon());
                 Rectangle2D.Double gpsArea = new Rectangle2D.Double(leftTop.getLat(), leftTop.getLon(), bottomRight.getLat() - leftTop.getLat(), bottomRight.getLon() - leftTop.getLon());
                 Rectangle2D.Double projectionArea = new Rectangle2D.Double(leftTop.getX(), leftTop.getY(), bottomRight.getX() - leftTop.getX(), bottomRight.getY() - leftTop.getY());
                 getLayerManager().setArea(gpsArea, projectionArea);

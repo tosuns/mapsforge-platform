@@ -31,12 +31,12 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>      
+        </repository>
         <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
             <url>http://localhost:8081/artifactory/repo/</url>
-        </repository> 
+        </repository>
     </repositories>
 
     <dependencies>
@@ -63,14 +63,14 @@
         <dependency>
             <groupId>org.jscience</groupId>
             <artifactId>jscience</artifactId>
-            <version>4.3.1</version>            
+            <version>4.3.1</version>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>uk.me.jstott</groupId>
-            <artifactId>jstott</artifactId>
-            <version>1.0.0</version>
-            <type>jar</type>            
+            <exclusions>
+                <exclusion>
+                    <artifactId>javolution</artifactId>
+                    <groupId>org.javolution</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -86,12 +86,24 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>WekaLibModule</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>java-cup</artifactId>
+                    <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
             <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>trove</groupId>
@@ -123,6 +135,7 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
 

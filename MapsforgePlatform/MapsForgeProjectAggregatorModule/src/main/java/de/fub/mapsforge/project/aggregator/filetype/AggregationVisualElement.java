@@ -12,6 +12,7 @@ import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.models.ModelSynchronizer;
+import de.fub.mapsforge.project.ui.component.StatisticsPanel;
 import de.fub.mapsforge.project.utils.LayerTableCellRender;
 import geofiletypeapi.GeoUtil;
 import java.awt.Image;
@@ -41,6 +42,7 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.DropDownButtonFactory;
@@ -77,6 +79,8 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private static final String LAYERVIEW_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/layerview.png";
     @StaticResource
     private static final String PROCESS_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png";
+    @StaticResource
+    private static final String STATISTICS_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/statisticsIcon.png";
     private transient final RequestProcessor requestProcessor = new RequestProcessor();
     private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private transient final ViewUpdater viewUpdater = new ViewUpdater();
@@ -167,35 +171,27 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     @NbBundle.Messages({"CLT_Information_Message=Task still running!",
         "CLT_Process_Button_Tooltip=Run pipline",
         "CLT_Show_Hide_Layers=Shows/Hides Layers",
-        "CLT_Show_Hide_Layer_View=Shows/Hides Layer View"})
+        "CLT_Show_Hide_Layer_View=Shows/Hides Layer View",
+        "CLT_Statistics_Button_Tooltip=Displays all available Statistics of this Aggregator.",
+        "CLT_Statistics_Window=Statistics"})
     private void setUpToolbar() {
-        // set up process drop down button
-        if (processMenu == null) {
-            processMenu = new JPopupMenu();
-            initProcessPopupMenu();
-            processButton = DropDownButtonFactory.createDropDownButton(ImageUtilities.loadImageIcon(PROCESS_BUTTON_ICON_PATH, true), processMenu);
-            processButton.setToolTipText(Bundle.CLT_Process_Button_Tooltip());
-            processButton.addActionListener(new ActionListener() {
+
+        // set up statistics button
+        if (statisticsDataButton == null) {
+            statisticsDataButton = new JButton(ImageUtilities.loadImageIcon(STATISTICS_BUTTON_ICON_PATH, true));
+            statisticsDataButton.setToolTipText(Bundle.CLT_Statistics_Button_Tooltip());
+            statisticsDataButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        requestProcessor.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                aggregator.start(new ArrayList<AbstractAggregationProcess<?, ?>>(aggregator.getPipeline().getProcesses()));
-                            }
-                        });
-                    } else {
-                        NotifyDescriptor nd = new NotifyDescriptor.Message(Bundle.CLT_Information_Message(), NotifyDescriptor.ERROR_MESSAGE);
-
-                        DialogDisplayer.getDefault().notifyLater(nd);
+                    if (aggregator != null) {
+                        StatisticsPanel statisticsPanel = new StatisticsPanel(aggregator.getStatistics());
+                        DialogDescriptor dd = new DialogDescriptor(statisticsPanel, Bundle.CLT_Statistics_Window());
+                        DialogDisplayer.getDefault().notifyLater(dd);
                     }
                 }
             });
-            toolbar.add(processButton);
-        } else {
-            processMenu.removeAll();
-            initProcessPopupMenu();
+            toolbar.add(statisticsDataButton);
+            toolbar.add(new JToolBar.Separator());
         }
 
         // set up layer show/hide drop down button
@@ -237,8 +233,37 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 }
             });
             toolbar.add(layerViewButton);
+            toolbar.add(new JToolBar.Separator());
         }
 
+        // set up process drop down button
+        if (processMenu == null) {
+            processMenu = new JPopupMenu();
+            initProcessPopupMenu();
+            processButton = DropDownButtonFactory.createDropDownButton(ImageUtilities.loadImageIcon(PROCESS_BUTTON_ICON_PATH, true), processMenu);
+            processButton.setToolTipText(Bundle.CLT_Process_Button_Tooltip());
+            processButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                        requestProcessor.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                aggregator.start(new ArrayList<AbstractAggregationProcess<?, ?>>(aggregator.getPipeline().getProcesses()));
+                            }
+                        });
+                    } else {
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(Bundle.CLT_Information_Message(), NotifyDescriptor.ERROR_MESSAGE);
+
+                        DialogDisplayer.getDefault().notifyLater(nd);
+                    }
+                }
+            });
+            toolbar.add(processButton);
+        } else {
+            processMenu.removeAll();
+            initProcessPopupMenu();
+        }
     }
 
     private void updateLayerView() {
@@ -269,10 +294,13 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         jSplitPane1.setDividerLocation(1000000);
         jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setEnabled(false);
+        jSplitPane1.setMinimumSize(new java.awt.Dimension(400, 276));
 
         outlineView1.setMinimumSize(new java.awt.Dimension(0, 25));
         outlineView1.setPreferredSize(new java.awt.Dimension(0, 400));
         jSplitPane1.setRightComponent(outlineView1);
+
+        aggComponent.setMinimumSize(new java.awt.Dimension(400, 274));
         jSplitPane1.setLeftComponent(aggComponent);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);

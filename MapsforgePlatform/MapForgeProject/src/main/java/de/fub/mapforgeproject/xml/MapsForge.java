@@ -11,17 +11,23 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Serdar
  */
 @XmlRootElement(name = "mapsforge")
+@XmlType(name = "mapsforge")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MapsForge {
 
+    @XmlTransient
     public static final String PROP_NAME_NAME = "maps.forge.name";
+    @XmlTransient
     public static final String PROP_NAME_VERSION = "maps.forge.version";
+    @XmlTransient
     private static final String DEFAULT_VERSION = "1.0";
     @XmlAttribute(required = true, name = "version")
     private String version;

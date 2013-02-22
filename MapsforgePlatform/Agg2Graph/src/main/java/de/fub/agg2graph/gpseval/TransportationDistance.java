@@ -4,9 +4,8 @@ import com.infomatiq.jsi.Point;
 import de.fub.agg2graph.pt.StopTree;
 
 /**
- * A (Singleton-)Wrapper for de.fub.agg2graph.pt.StopTree.
+ * A (Singleton-)Wrapper for {@link de.fub.agg2graph.pt.StopTree StopTree}.
  *
- * @author mkay
  */
 public class TransportationDistance {
 

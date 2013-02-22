@@ -1,19 +1,24 @@
 /*******************************************************************************
- * Copyright (c) 2012 Johannes Mitlmeier.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Affero Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/agpl-3.0.html
- * 
- * Contributors:
- *     Johannes Mitlmeier - initial API and implementation
- ******************************************************************************/
+   Copyright 2013 Johannes Mitlmeier
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+******************************************************************************/
 package de.fub.agg2graph.structs;
 
 import java.util.List;
+
 import org.jscience.mathematics.number.Float64;
 import org.jscience.mathematics.vector.Float64Vector;
-import uk.me.jstott.jcoord.LatLng;
 
 /**
  * Static methods for calculations on gps data like distance and angles.
@@ -32,7 +37,9 @@ public class GPSCalc {
 	 */
 	public static double getDistance(double lat1, double lon1, double lat2,
 			double lon2) {
-		return new LatLng(lat1, lon1).distance(new LatLng(lat2, lon2)) * 1000;
+		return getSimpleDistance(lat1, lon1, lat2, lon2);
+	//  former use of jcoord library removed because of licensing incompatibilities	
+	//	return new LatLng(lat1, lon1).distance(new LatLng(lat2, lon2)) * 1000;
 	}
 
 	public static double getDistance(ILocation a, ILocation b) {

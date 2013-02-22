@@ -5,6 +5,7 @@ import de.fub.agg2graph.gpseval.data.file.TrackFileFactory;
 import de.fub.agg2graph.gpseval.data.filter.TrackFilter;
 import de.fub.agg2graph.gpseval.data.filter.WaypointFilter;
 import de.fub.agg2graph.gpseval.features.Feature;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -130,6 +131,7 @@ public class DataLoader {
 
     /**
      * Load a single GPS-data-file and return the aggregated data.
+     * <p>Note: {@link de.fub.agg2graph.gpseval.data.filter.WaypointFilter WaypointFilter}s will be applied.</p>
      *
      * @param gpsFile The GPS-data-file to load.
      * @return The aggregated data or null if file could not be loaded.

@@ -10,17 +10,22 @@ import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline.ProcessListe
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
+import de.fub.mapsforge.project.api.StatisticProvider;
+import de.fub.mapsforge.project.api.StatisticProvider.StatisticSection;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JComponent;
 import org.openide.nodes.Node;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -38,6 +43,8 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private final Object MUTEX = new Object();
     private Node nodeDelegate;
+    private long processStartTime;
+    private long processFinishTime;
 
     public AbstractAggregationProcess(Aggregator aggregator) {
         this.aggregator = aggregator;
@@ -82,9 +89,11 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
     @Override
     public void run() {
         try {
+            processStartTime = System.currentTimeMillis();
             setProcessState(State.RUNNING);
             start();
             setProcessState(State.OK);
+            processFinishTime = System.currentTimeMillis();
         } catch (Throwable ex) {
             setProcessState(State.ERROR);
             throw new ProcessRuntimeException(ex);
@@ -135,6 +144,30 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
 
     public List<AbstractLayer<?>> getLayers() {
         return layers;
+    }
+
+    @NbBundle.Messages({
+        "# {0} - processName",
+        "CLT_Section_Name={0} Performance",
+        "# {0} - processName",
+        "CLT_Section_Description=Displays performance data for the {0} process.",
+        "CLT_Process_Started_Label=Process Started",
+        "# {0} - processName",
+        "CLT_Process_Started_Description=The last start time of this {0} process.",
+        "CLT_Process_Finished_Label=Process Finished",
+        "# {0} - processName",
+        "CLT_Process_Finished_Description=The last finish time of this {0} process.",
+        "CLT_Process_Duration_Label=Duration Time (ms)",
+        "# {0} - processName",
+        "CLT_Process_Duration_Description=The duration time that this {0} process took in milliseconds."
+    })
+    protected StatisticProvider.StatisticSection getPerformanceData() {
+        StatisticSection section = new StatisticProvider.StatisticSection(Bundle.CLT_Section_Name(getName()), Bundle.CLT_Section_Description(getName()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:MM:ss:SSS");
+        section.getStatisticsItemList().add(new StatisticProvider.StatisticItem(Bundle.CLT_Process_Started_Label(), simpleDateFormat.format(new Date(processStartTime)), Bundle.CLT_Process_Started_Description(getName())));
+        section.getStatisticsItemList().add(new StatisticProvider.StatisticItem(Bundle.CLT_Process_Finished_Label(), simpleDateFormat.format(new Date(processFinishTime)), Bundle.CLT_Process_Finished_Description(getName())));
+        section.getStatisticsItemList().add(new StatisticProvider.StatisticItem(Bundle.CLT_Process_Duration_Label(), String.valueOf(processFinishTime - processStartTime), Bundle.CLT_Process_Duration_Description(getName())));
+        return section;
     }
 
     @Override

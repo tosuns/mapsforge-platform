@@ -80,7 +80,7 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
     }
 
     public void setDisplayToFitMapRectangle() {
-        mapViewer.setDisplayToFitMapRectangle();
+        mapViewer.setDisplayToFitMapRectangles();
     }
 
     public Coordinate getPosition() {
@@ -481,7 +481,7 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
         double bottom = Double.parseDouble(bottomLat.getText().replaceAll("°", ""));
 
         mapViewer.setMapRectangleList(new ArrayList<MapRectangle>(Arrays.asList(new OsmRectangle(left, top, right, bottom))));
-        mapViewer.setDisplayToFitMapRectangle();
+        mapViewer.setDisplayToFitMapRectangles();
         fireChangeEvent();
     }
 

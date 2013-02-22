@@ -4,7 +4,6 @@
  */
 package de.fub.agg2graphui;
 
-import de.fub.agg2graph.osm.OsmPanel.OSMMapRect;
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.agg2graphui.controller.LayerManager;
@@ -66,7 +65,7 @@ public final class AggTopComponent extends JPanel {
     }
 
     public void setDisplayToFitMapRectangle() {
-        mapViewer.setDisplayToFitMapRectangle();
+        mapViewer.setDisplayToFitMapRectangles();
     }
 
     public synchronized void addMapMarker(MapMarker marker) {

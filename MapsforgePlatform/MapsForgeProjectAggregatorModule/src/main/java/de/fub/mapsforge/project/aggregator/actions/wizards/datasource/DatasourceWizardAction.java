@@ -40,8 +40,11 @@ import org.openide.util.NbBundle;
         id = "de.fub.mapsforge.project.aggregator.actions.wizards.DatasourceWizardAction")
 @ActionRegistration(
         displayName = "#CTL_AddDatasourcesAction")
-@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 505)
-@NbBundle.Messages({"CTL_AddDatasourcesAction=Add Datasources", "# {0} - Foldername", "# {1} - projectname",
+@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 225)
+@NbBundle.Messages({
+    "CTL_AddDatasourcesAction=Add Datasources",
+    "# {0} - Foldername",
+    "# {1} - projectname",
     "CLT_Datasource_Folder_Not_Found=Couldn't find datasource folder {0} in project {1}",
     "CLT_No_Datasource_Entry_In_Project_Register=Couldn't find any datasource folder registration in project property file!",
     "CLT_Datasource_Dialog_Title=Datasource Dialog"})

@@ -14,13 +14,15 @@ import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 
 /**
  * WekaEval is used to run Weka with training- and test-sets to test the
- * different classification algorithms with different parameters.
+ * different classification algorithms with different parameters. Instead of
+ * using training/test-sets you can run a cross validation, too.
  */
 public class WekaEval {
 
@@ -34,20 +36,19 @@ public class WekaEval {
     private List<WekaResult> mCrossValidationResults = new LinkedList<>();
     private List<WekaResult> mTrainingTestResults = new LinkedList<>();
     // TODO implement setter
-    private Classifier[] mClassifiers = new Classifier[]{
-        new J48(),
-        new RandomForest(),
-        new NaiveBayes(),
+    private Classifier[] mClassifiers = new Classifier[]{new J48(),
+        new RandomForest(), new NaiveBayes(),
         // TODO new BayesNet(), --> produces warning
-        new MultilayerPerceptron()
-    };
+        new MultilayerPerceptron()};
 
     /**
      *
-     * @param gpsData The GPS-data to use for training- and test-sets
-     * @param features The feasture-set
+     * @param gpsData The GPS-data to use
+     * @param features The feature-set
      */
-    public WekaEval(Map<String, List<AggregatedData>> gpsData, List<Feature> features) {
+    @SuppressWarnings("unchecked")
+    public WekaEval(Map<String, List<AggregatedData>> gpsData,
+            List<Feature> features) {
         mGpsData = gpsData;
         mFeatures = features;
 
@@ -58,7 +59,8 @@ public class WekaEval {
         mAttrs = new FastVector();
 
         for (Feature feature : mFeatures) {
-            Attribute attr = new Attribute(feature.getIdentifier(), mFeatureAttrMapping.keySet().size());
+            Attribute attr = new Attribute(feature.getIdentifier(),
+                    mFeatureAttrMapping.keySet().size());
             mFeatureAttrMapping.put(feature.getIdentifier(), attr);
             mAttrs.addElement(attr);
         }
@@ -101,8 +103,10 @@ public class WekaEval {
      *
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public void runTrainTestSet() throws Exception {
         // Training set
+
         Instances trainingSet = new Instances("Classes", mAttrs, 0);
         trainingSet.setClassIndex(trainingSet.numAttributes() - 1);
 
@@ -113,7 +117,8 @@ public class WekaEval {
         // fill training and test set
         for (String className : mGpsData.keySet()) {
             List<AggregatedData> gpsData = mGpsData.get(className);
-            int curTrainingSetSize = (int) Math.ceil(gpsData.size() * mTrainingSetSize);
+            int curTrainingSetSize = (int) Math.ceil(gpsData.size()
+                    * mTrainingSetSize);
 
             for (int i = 0; i < gpsData.size(); i++) {
                 Instance instance = getInstance(className, gpsData.get(i));
@@ -143,8 +148,10 @@ public class WekaEval {
     /**
      * Runs Weka using cross-validation.
      */
+    @SuppressWarnings("unchecked")
     public void runCrossValidation() throws Exception {
         // Training set
+
         Instances trainingSet = new Instances("Classes", mAttrs, 0);
         trainingSet.setClassIndex(trainingSet.numAttributes() - 1);
 
@@ -165,7 +172,7 @@ public class WekaEval {
     }
 
     /**
-     * Get a Weka-Instance-object for the given aggregated data and clas name.
+     * Get a Weka-Instance-object for the given aggregated data and class name.
      *
      * @param className
      * @param data
@@ -173,7 +180,7 @@ public class WekaEval {
      */
     public Instance getInstance(String className, AggregatedData data) {
         int capacity = mAttrs.size();
-        Instance instance = new Instance(capacity);
+        Instance instance = new DenseInstance(capacity);
 
         for (Feature feature : mFeatures) {
             String featureId = feature.getIdentifier();
@@ -188,26 +195,38 @@ public class WekaEval {
     }
 
     /**
-     * Start Weka-evaluation using training- and test-set,
+     * Start Weka-evaluation using training- and test-set.
      *
      * @param cls
      * @param trainingSet
      * @param testingSet
      * @throws Exception
      */
-    public void evaluate(Classifier cls, Instances trainingSet, Instances testingSet) throws Exception {
+    public void evaluate(Classifier cls, Instances trainingSet,
+            Instances testingSet) throws Exception {
         cls.buildClassifier(trainingSet);
         Evaluation eval = new Evaluation(trainingSet);
         eval.evaluateModel(cls, testingSet);
 
-        mTrainingTestResults.add(new WekaResult(cls.getClass().getSimpleName(), eval, trainingSet));
+        mTrainingTestResults.add(new WekaResult(cls.getClass().getSimpleName(),
+                eval, trainingSet));
     }
 
-    public void evaluate(Classifier cls, Instances trainingSet, int numFolds) throws Exception {
+    /**
+     * Start Weka-evaluation using cross-validation.
+     *
+     * @param cls
+     * @param trainingSet
+     * @param numFolds
+     * @throws Exception
+     */
+    public void evaluate(Classifier cls, Instances trainingSet, int numFolds)
+            throws Exception {
         Evaluation eval = new Evaluation(trainingSet);
         eval.crossValidateModel(cls, trainingSet, numFolds, new Random());
 
-        mCrossValidationResults.add(new WekaResult(cls.getClass().getSimpleName(), eval, trainingSet));
+        mCrossValidationResults.add(new WekaResult(cls.getClass()
+                .getSimpleName(), eval, trainingSet));
     }
 
     /**
@@ -217,19 +236,35 @@ public class WekaEval {
      */
     public void setTrainingSetSize(double size) {
         if (size > 1.0 || size <= 0.0) {
-            throw new IllegalArgumentException("Training size must be a value between 0 (exclusive) and 1.");
+            throw new IllegalArgumentException(
+                    "Training size must be a value between 0 (exclusive) and 1.");
         }
         mTrainingSetSize = size;
     }
 
+    /**
+     * Set the number of folds used for cross-validation.
+     *
+     * @param numFolds
+     */
     public void setCrossValidationFolds(int numFolds) {
         mCrossValidationFolds = numFolds;
     }
 
+    /**
+     * Get the results for the cross-validation evaluation.
+     *
+     * @return
+     */
     public List<WekaResult> getCrossValidationResults() {
         return mCrossValidationResults;
     }
 
+    /**
+     * Get the results for the evaluation based on training/test set.
+     *
+     * @return
+     */
     public List<WekaResult> getTrainingTestResults() {
         return mTrainingTestResults;
     }

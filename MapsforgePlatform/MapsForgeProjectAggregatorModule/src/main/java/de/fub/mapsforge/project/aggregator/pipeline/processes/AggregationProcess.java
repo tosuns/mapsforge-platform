@@ -19,6 +19,7 @@ import de.fub.agg2graphui.layers.MergingLayer;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.api.StatisticProvider;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
@@ -38,7 +39,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegment>, AggContainer> {
+public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegment>, AggContainer> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -48,6 +49,9 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
     private final MergingLayer mergeLayer;
     private final MatchingLayer matchingLayer;
     private final AggContainerLayer aggregationLayer;
+    private int totalAggNodeCount = 0;
+    private int totalGPSPointCount = 0;
+    private int totalPointGhostPointPairs = 0;
 
     public AggregationProcess() {
         this(null);
@@ -76,6 +80,10 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
 
     @Override
     protected void start() {
+        totalAggNodeCount = 0;
+        totalGPSPointCount = 0;
+        totalPointGhostPointPairs = 0;
+
         if (inputList != null
                 && aggregator != null
                 && aggregator.getAggContainer() != null) {
@@ -84,6 +92,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
             aggregationLayer.clearRenderObjects();
             mergeLayer.clearRenderObjects();
             matchingLayer.clearRenderObjects();
+
             AggContainer aggContainer = aggregator.getAggContainer();
 
             int counter = 0;
@@ -94,17 +103,22 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
 
                 // update debug layers: matching, merging
                 IAggregationStrategy aggregationStrategy = aggContainer.getAggregationStrategy();
+
                 if (aggregationStrategy instanceof AbstractAggregationStrategy) {
                     AbstractAggregationStrategy abstractAggregationStrategy = (AbstractAggregationStrategy) aggregationStrategy;
                     IMergeHandler mergeHandler = abstractAggregationStrategy.getMergeHandler();
+
                     if (mergeHandler != null) {
+
                         List<AggNode> aggNodes = mergeHandler.getAggNodes();
                         if (aggNodes != null) {
+                            totalAggNodeCount += aggNodes.size();
                             matchingLayer.add(aggNodes);
                         }
 
                         List<GPSPoint> gpsPoints = mergeHandler.getGpsPoints();
                         if (gpsPoints != null) {
+                            totalGPSPointCount += gpsPoints.size();
                             matchingLayer.add(gpsPoints);
                         }
 
@@ -114,6 +128,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
                             line.add(new GPSPoint(pgpp.point));
                             line.add(new GPSPoint(pgpp.ghostPoint));
                             mergeLayer.add(line);
+                            totalPointGhostPointPairs++;
                         }
                     }
                 }
@@ -163,5 +178,19 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
         }
 
         return desc;
+    }
+
+    @Override
+    public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException {
+        List<StatisticSection> statisticSections = new ArrayList<StatisticProvider.StatisticSection>();
+        statisticSections.add(getPerformanceData());
+
+        StatisticSection section = new StatisticSection("Aggregation Statistics", "Displays all statistics data which are computed during the aggregation.");
+        statisticSections.add(section);
+        section.getStatisticsItemList().add(new StatisticItem("Total Aggregation Node Count", String.valueOf(totalAggNodeCount), "The total amount of aggreagtion nodes, which are created during this aggregation process."));
+        section.getStatisticsItemList().add(new StatisticItem("Total GPS Point Count", String.valueOf(totalGPSPointCount), "The total amount of GPS Point that are added during the aggregation."));
+        section.getStatisticsItemList().add(new StatisticItem("Total Count Point/GhostPoint Pairs ", String.valueOf(totalPointGhostPointPairs), "The total amount of paris of Point/Ghostpoint."));
+
+        return statisticSections;
     }
 }

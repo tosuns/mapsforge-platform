@@ -14,6 +14,7 @@ import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
+import de.fub.mapsforge.project.api.StatisticProvider;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
@@ -21,7 +22,8 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -109,6 +111,7 @@ public class Aggregator extends ModelSynchronizer {
                     try {
                         sourceFolder.createNewFile();
                     } catch (IOException ex) {
+                        LOG.log(Level.SEVERE, MessageFormat.format("{0}.\\n sourceFikder: {1}", ex.getMessage(), sourceFolder.getAbsolutePath()), ex);
                         Exceptions.printStackTrace(ex);
                     }
                 }
@@ -255,6 +258,16 @@ public class Aggregator extends ModelSynchronizer {
             }
             return aggregateProcess;
         }
+    }
+
+    public List<StatisticProvider> getStatistics() {
+        List<StatisticProvider> statisticProviders = new ArrayList<StatisticProvider>();
+        for (AbstractAggregationProcess<?, ?> process : getPipeline().getProcesses()) {
+            if (process instanceof StatisticProvider) {
+                statisticProviders.add(((StatisticProvider) process));
+            }
+        }
+        return statisticProviders;
     }
 
     public enum AggregatorState {

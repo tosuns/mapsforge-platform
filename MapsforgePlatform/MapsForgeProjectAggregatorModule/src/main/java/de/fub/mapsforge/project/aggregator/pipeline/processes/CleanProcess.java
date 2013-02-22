@@ -17,6 +17,7 @@ import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
+import de.fub.mapsforge.project.api.StatisticProvider;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Color;
@@ -37,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, List<GPSSegment>> {
+public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, List<GPSSegment>> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -50,6 +51,9 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
     private GPSCleaner gpsCleaner = new GPSCleaner();
     private final Object MUTEX = new Object();
     private final GPSSegmentLayer gPSSegmentLayer;
+    private int totalCleanSegmentCount = 0;
+    private int totalCleanGPSPointCount = 0;
+    private int totalSmoothedGPSPointCount = 0;
 
     public CleanProcess() {
         this(null);
@@ -113,6 +117,9 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
     @Override
     protected void start() {
         synchronized (MUTEX) {
+            totalCleanGPSPointCount = 0;
+            totalCleanSegmentCount = 0;
+            totalSmoothedGPSPointCount = 0;
             if (inputList != null) {
                 gPSSegmentLayer.clearRenderObjects();
                 RamerDouglasPeuckerFilter rdpf = getFilterInstance();
@@ -121,13 +128,16 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
                 int progess = 0;
                 for (GPSSegment segment : inputList) {
                     List<GPSSegment> clean = gpsCleaner.clean(segment);
+                    totalCleanSegmentCount += clean.size();
                     LOG.log(Level.INFO, "clean segmentsize: {0}", clean.size());
                     for (GPSSegment cleanSegment : clean) {
+                        totalCleanGPSPointCount += cleanSegment.size();
                         // run through Douglas-Peucker here (slightly modified
                         // perhaps to avoid too long edges)
-                        cleanSegment = rdpf.simplify(cleanSegment);
-                        cleanSegmentList.add(cleanSegment);
-                        gPSSegmentLayer.add(cleanSegment);
+                        GPSSegment smoothSegment = rdpf.simplify(cleanSegment);
+                        totalSmoothedGPSPointCount += (cleanSegment.size() - smoothSegment.size());
+                        cleanSegmentList.add(smoothSegment);
+                        gPSSegmentLayer.add(smoothSegment);
                         LOG.log(Level.INFO, "clean segcount: {0}", (++segCount));
                     }
                     fireProcessEvent(new ProcessEvent(CleanProcess.this, "Cleaning...", (int) ((100d / inputList.size()) * (++progess))));
@@ -189,5 +199,20 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
         }
 
         return desc;
+    }
+
+    @Override
+    public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException {
+        List<StatisticSection> statisticSections = new ArrayList<StatisticProvider.StatisticSection>();
+        statisticSections.add(getPerformanceData());
+
+        StatisticSection section = new StatisticSection("Cleaning Statistics", "Statistical data of the cleaning process.");
+        statisticSections.add(section);
+        section.getStatisticsItemList().add(new StatisticItem("Clean GPS Point Count", String.valueOf(totalCleanGPSPointCount), "Total count of GPS points after cleaning."));
+        section.getStatisticsItemList().add(new StatisticItem("Clean Segment Count", String.valueOf(totalCleanSegmentCount), "Total count of GPS segments after cleaning."));
+        section.getStatisticsItemList().add(new StatisticItem("Clean GPS Point/Segment Ratio", String.valueOf(totalCleanGPSPointCount / (double) totalCleanSegmentCount), "The ratio of cleaned points to cleaned segements."));
+        section.getStatisticsItemList().add(new StatisticItem("Smoothed GPS Points", String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter."));
+
+        return statisticSections;
     }
 }

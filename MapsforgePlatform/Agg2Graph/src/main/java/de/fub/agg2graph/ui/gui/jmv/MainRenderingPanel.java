@@ -1,20 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2012 Johannes Mitlmeier.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Affero Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/agpl-3.0.html
- * 
- * Contributors:
- *     Johannes Mitlmeier - initial API and implementation
- ******************************************************************************/
-package de.fub.agg2graph.ui.gui;
+    Copyright (c) 2012 Johannes Mitlmeier.
+ 
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-import de.fub.agg2graph.input.Globals;
-import de.fub.agg2graph.management.Statistics;
-import de.fub.agg2graph.osm.OsmPanel;
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.ui.gui.RenderingOptions.LabelRenderingType;
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
+
+ ******************************************************************************/
+package de.fub.agg2graph.ui.gui.jmv;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -31,10 +26,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+
+import de.fub.agg2graph.input.Globals;
+import de.fub.agg2graph.management.Statistics;
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.ui.gui.IRenderingPanel;
+import de.fub.agg2graph.ui.gui.LayerManager;
+import de.fub.agg2graph.ui.gui.RenderingOptions.LabelRenderingType;
 
 public class MainRenderingPanel extends OsmPanel implements IRenderingPanel {
 	private static final long serialVersionUID = 1199223710435106007L;
@@ -149,7 +154,7 @@ public class MainRenderingPanel extends OsmPanel implements IRenderingPanel {
 				showingLabels = !showingLabels;
 				for (Layer layer : getUi().getLayerManager().getLayers()) {
 					if (showingLabels) {
-						layer.getOptions().setLabelRenderingType(LabelRenderingType.ALWAYS);
+						layer.getOptions().setLabelRenderingType( LabelRenderingType.ALWAYS);
 					} else {
 						layer.getOptions().setLabelRenderingType(LabelRenderingType.NEVER);
 					}
@@ -361,8 +366,10 @@ public class MainRenderingPanel extends OsmPanel implements IRenderingPanel {
 			return;
 		}
 		LayerManager lm = getUi().getLayerManager();
-		GPSPoint leftTop = new GPSPoint(getPosition(0, getHeight()));
-		GPSPoint bottomRight = new GPSPoint(getPosition(getWidth(), 0));
+		Coordinate lt = getPosition(0, getHeight());
+		GPSPoint leftTop = new GPSPoint(lt.getLat(), lt.getLon());
+		Coordinate br = getPosition(getWidth(), 0);
+		GPSPoint bottomRight = new GPSPoint(br.getLat(), br.getLon());
 		Rectangle2D.Double gpsArea = new Rectangle2D.Double(leftTop.getLat(),
 				leftTop.getLon(), bottomRight.getLat() - leftTop.getLat(),
 				bottomRight.getLon() - leftTop.getLon());
@@ -386,7 +393,7 @@ public class MainRenderingPanel extends OsmPanel implements IRenderingPanel {
 			return;
 		}
 		LayerManager lm = getUi().getLayerManager();
-		if (getLayers().size() == 0 || lm.getGpsArea() == null) {
+		if (getLayers().isEmpty() || lm.getGpsArea() == null) {
 			return;
 		}
 		// paint the layers

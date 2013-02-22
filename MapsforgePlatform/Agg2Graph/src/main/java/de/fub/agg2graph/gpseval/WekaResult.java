@@ -6,22 +6,42 @@ import weka.classifiers.Evaluation;
 import weka.core.Instances;
 
 /**
- *
+ * This class is used to store the results of a Weka-evaluation.
  */
 public class WekaResult {
 
-    public String mClsName;
-    public Evaluation mEval;
-    public List<String> mClasses = new LinkedList<>();
+	/**
+	 * The name of the classifier used for the evaluation.
+	 */
+	public String mClsName;
 
-    public WekaResult(String clsName, Evaluation eval, Instances trainingSet) {
-        mClsName = clsName;
-        mEval = eval;
+	/**
+	 * The weka.classifiers.Evaluation-object containing the results.
+	 */
+	public Evaluation mEval;
 
-        int numClasses = trainingSet.numClasses();
-        for (int i = 0; i < numClasses; i++) {
-            String className = trainingSet.classAttribute().value(i);
-            mClasses.add(className);
-        }
-    }
+	/**
+	 * The names of the classes used in the Evaluation.
+	 */
+	public List<String> mClasses = new LinkedList<>();
+
+	/**
+	 * 
+	 * @param clsName
+	 *            The name of the classifier used for the evaluation.
+	 * @param eval
+	 *            The weka.classifiers.Evaluation-object containing the results.
+	 * @param trainingSet
+	 *            The instances from which the class-names are taken from.
+	 */
+	public WekaResult(String clsName, Evaluation eval, Instances trainingSet) {
+		mClsName = clsName;
+		mEval = eval;
+
+		int numClasses = trainingSet.numClasses();
+		for (int i = 0; i < numClasses; i++) {
+			String className = trainingSet.classAttribute().value(i);
+			mClasses.add(className);
+		}
+	}
 }

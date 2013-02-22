@@ -33,6 +33,11 @@
             <name>matsim</name>
             <url>http://matsim.org/m2repo/</url>
         </repository>
+        <repository>
+            <id>Yakumo</id>
+            <name>Yakumo-releases</name>
+            <url>http://localhost:8081/artifactory/repo/</url>
+        </repository> 
     </repositories>
 
     <dependencies>
@@ -44,7 +49,7 @@
         <dependency>
             <groupId>org.openstreetmap</groupId>
             <artifactId>jmapviewer</artifactId>
-            <version>0.1-20110219</version>
+            <version>0.1-20130210</version>
         </dependency>
     </dependencies>
 

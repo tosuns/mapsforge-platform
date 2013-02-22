@@ -102,11 +102,11 @@ import org.xml.sax.InputSource;
             @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
             position = 1100,
             separatorAfter = 1200),
-    @ActionReference(
-            path = "Loaders/text/aggregationbuilder+xml/Actions",
-            id =
-            @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
-            position = 1300),
+//    @ActionReference(
+//            path = "Loaders/text/aggregationbuilder+xml/Actions",
+//            id =
+//            @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
+//            position = 1300),
     @ActionReference(
             path = "Loaders/text/aggregationbuilder+xml/Actions",
             id =

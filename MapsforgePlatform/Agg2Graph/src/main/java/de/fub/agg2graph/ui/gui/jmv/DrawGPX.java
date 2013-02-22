@@ -1,18 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2012 Johannes Mitlmeier.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Affero Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/agpl-3.0.html
- * 
- * Contributors:
- *     Johannes Mitlmeier - initial API and implementation
- ******************************************************************************/
-package de.fub.agg2graph.ui.gui;
+    Copyright (c) 2012 Johannes Mitlmeier.
+ 
+    This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-import de.fub.agg2graph.input.GPXWriter;
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.structs.GPSSegment;
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
+
+ ******************************************************************************/
+package de.fub.agg2graph.ui.gui.jmv;
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,12 +29,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
+
+import de.fub.agg2graph.input.GPXWriter;
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.structs.GPSSegment;
 
 public class DrawGPX {
 	private Rectangle2D.Double area = new Rectangle2D.Double(0, 0, 1, 1);

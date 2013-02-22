@@ -1,14 +1,24 @@
 /**
  * *****************************************************************************
- * Copyright (c) 2012 Johannes Mitlmeier. All rights reserved. This program and
- * the accompanying materials are made available under the terms of the GNU
- * Affero Public License v3.0 which accompanies this distribution, and is
- * available at http://www.gnu.org/licenses/agpl-3.0.html
+ * Copyright 2013 Johannes Mitlmeier
  *
- * Contributors: Johannes Mitlmeier - initial API and implementation
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  * ****************************************************************************
  */
 package de.fub.agg2graph.graph;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
@@ -19,8 +29,6 @@ import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graph.structs.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Filters data using Ramer-Douglas-Peucker algorithm with specified tolerance
@@ -35,7 +43,7 @@ import java.util.List;
  */
 public class RamerDouglasPeuckerFilter {
 
-    private double epsilon = 5;
+    private double epsilon;
     private double maxSegmentLength = 100; // meters
 
     public RamerDouglasPeuckerFilter() {
@@ -127,9 +135,7 @@ public class RamerDouglasPeuckerFilter {
     public GPSSegment simplify(GPSSegment cleanSegment) {
         List<ILocation> removablePoints = getRemovablePoints(cleanSegment);
         List<GPSPoint> points = cleanSegment;
-        for (ILocation point : removablePoints) {
-            points.remove(point);
-        }
+        points.removeAll(removablePoints);
         return cleanSegment;
     }
 

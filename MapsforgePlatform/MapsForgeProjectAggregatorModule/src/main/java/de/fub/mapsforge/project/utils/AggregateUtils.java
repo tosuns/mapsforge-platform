@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -76,38 +78,46 @@ public class AggregateUtils {
     }
 
     public static <T> T createValue(Class<T> clazz, List<Property> properties) {
-        T instance = null;
+        T returnInstance = null;
         try {
-            instance = clazz.newInstance();
+            final T instance = clazz.newInstance();
             HashMap<String, Property> propertyMap = new HashMap<String, Property>();
             for (Property property : properties) {
                 propertyMap.put(property.getName(), property);
             }
-            for (Field field : clazz.getDeclaredFields()) {
-                Property property = propertyMap.get(field.getName());
+            for (final Field field : clazz.getDeclaredFields()) {
+                final Property property = propertyMap.get(field.getName());
                 if (property != null) {
                     try {
                         if (!field.isAccessible()) {
-                            field.setAccessible(true);
-                            field.set(instance, getValue(Class.forName(property.getJavaType()), property));
-                            field.setAccessible(false);
+                            AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                                @Override
+                                public Void run() {
+                                    try {
+                                        field.setAccessible(true);
+                                        field.set(instance, getValue(Class.forName(property.getJavaType()), property));
+                                        field.setAccessible(false);
+                                    } catch (IllegalArgumentException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    } catch (ReflectiveOperationException ex) {
+                                        Exceptions.printStackTrace(ex);
+                                    }
+                                    return null;
+                                }
+                            });
                         } else {
                             field.set(instance, getValue(Class.forName(property.getJavaType()), property));
                         }
-                    } catch (ClassNotFoundException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (Exception ex) {
+                    } catch (ReflectiveOperationException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }
             }
-
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
+            returnInstance = instance;
+        } catch (ReflectiveOperationException ex) {
             Exceptions.printStackTrace(ex);
         }
-        return instance;
+        return returnInstance;
     }
 
     @SuppressWarnings({"unchecked"})

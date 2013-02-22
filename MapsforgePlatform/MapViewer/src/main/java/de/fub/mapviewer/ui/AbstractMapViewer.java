@@ -27,6 +27,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
  */
 public class AbstractMapViewer extends javax.swing.JPanel {
 
+    private static final long serialVersionUID = 1L;
     private transient MapViewListener mouseListener = new MapViewListener();
 
     /**
@@ -79,7 +80,7 @@ public class AbstractMapViewer extends javax.swing.JPanel {
     }
 
     public void setDisplayToFitMapRectangle() {
-        mapViewer.setDisplayToFitMapRectangle();
+        mapViewer.setDisplayToFitMapRectangles();
     }
 
     public Coordinate getPosition() {

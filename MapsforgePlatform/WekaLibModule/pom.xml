@@ -43,8 +43,8 @@
         </dependency>
         <dependency>
             <groupId>nz.ac.waikato.cms.weka</groupId>
-            <artifactId>weka-stable</artifactId>
-            <version>3.6.8</version>
+            <artifactId>weka-dev</artifactId>
+            <version>3.7.8</version>
         </dependency>
     </dependencies>
 
@@ -62,97 +62,97 @@
                         <publicPackage>weka.associations.gsp</publicPackage>
                         <publicPackage>weka.associations.gsp.messages</publicPackage>
                         <publicPackage>weka.associations.messages</publicPackage>
-                        <publicPackage>weka.associations.tertius</publicPackage>                       
+                        <publicPackage>weka.associations.tertius</publicPackage>
                         <publicPackage>weka.attributeSelection</publicPackage>
                         <publicPackage>weka.classifiers</publicPackage>
                         <publicPackage>weka.classifiers.bayes</publicPackage>
                         <publicPackage>weka.classifiers.bayes.blr</publicPackage>
-                        <publicPackage>weka.classifiers.bayes.net</publicPackage>                       
+                        <publicPackage>weka.classifiers.bayes.net</publicPackage>
                         <publicPackage>weka.classifiers.bayes.net.estimate</publicPackage>
                         <publicPackage>weka.classifiers.bayes.net.icons</publicPackage>
                         <publicPackage>weka.classifiers.bayes.net.search</publicPackage>
                         <publicPackage>weka.classifiers.bayes.net.search.ci</publicPackage>
-                        <publicPackage>weka.classifiers.bayes.net.search.fixed</publicPackage>                       
+                        <publicPackage>weka.classifiers.bayes.net.search.fixed</publicPackage>
                         <publicPackage>weka.classifiers.bayes.net.search.global</publicPackage>
                         <publicPackage>weka.classifiers.bayes.net.search.local</publicPackage>
                         <publicPackage>weka.classifiers.evaluation</publicPackage>
                         <publicPackage>weka.classifiers.functions</publicPackage>
-                        <publicPackage>weka.classifiers.functions.neural</publicPackage>                       
+                        <publicPackage>weka.classifiers.functions.neural</publicPackage>
                         <publicPackage>weka.classifiers.functions.pace</publicPackage>
                         <publicPackage>weka.classifiers.functions.supportVector</publicPackage>
                         <publicPackage>weka.classifiers.lazy</publicPackage>
                         <publicPackage>weka.classifiers.lazy.kstar</publicPackage>
-                        <publicPackage>weka.classifiers.meta</publicPackage>                       
+                        <publicPackage>weka.classifiers.meta</publicPackage>
                         <publicPackage>weka.classifiers.meta.nestedDichotomies</publicPackage>
                         <publicPackage>weka.classifiers.mi</publicPackage>
                         <publicPackage>weka.classifiers.mi.supportVector</publicPackage>
                         <publicPackage>weka.classifiers.misc</publicPackage>
-                        <publicPackage>weka.classifiers.pmml.consumer</publicPackage>                       
+                        <publicPackage>weka.classifiers.pmml.consumer</publicPackage>
                         <publicPackage>weka.classifiers.rules</publicPackage>
                         <publicPackage>weka.classifiers.rules.part</publicPackage>
                         <publicPackage>weka.classifiers.trees</publicPackage>
                         <publicPackage>weka.classifiers.trees.adtree</publicPackage>
-                        <publicPackage>weka.classifiers.trees.ft</publicPackage>                       
+                        <publicPackage>weka.classifiers.trees.ft</publicPackage>
                         <publicPackage>weka.classifiers.trees.j48</publicPackage>
                         <publicPackage>weka.classifiers.trees.lmt</publicPackage>
                         <publicPackage>weka.classifiers.trees.m5</publicPackage>
                         <publicPackage>weka.classifiers.xml</publicPackage>
-                        <publicPackage>weka.clusterers</publicPackage>                       
+                        <publicPackage>weka.clusterers</publicPackage>
                         <publicPackage>weka.clusterers.forOPTICSAndDBScan.DataObjects</publicPackage>
                         <publicPackage>weka.clusterers.forOPTICSAndDBScan.Databases</publicPackage>
                         <publicPackage>weka.clusterers.forOPTICSAndDBScan.OPTICS_GUI</publicPackage>
                         <publicPackage>weka.clusterers.forOPTICSAndDBScan.OPTICS_GUI.Graphics</publicPackage>
-                        <publicPackage>weka.clusterers.forOPTICSAndDBScan.Utils</publicPackage>                       
+                        <publicPackage>weka.clusterers.forOPTICSAndDBScan.Utils</publicPackage>
                         <publicPackage>weka.core</publicPackage>
                         <publicPackage>weka.core.converters</publicPackage>
                         <publicPackage>weka.core.logging</publicPackage>
                         <publicPackage>weka.core.mathematicalexpression</publicPackage>
-                        <publicPackage>weka.core.matrix</publicPackage>                       
+                        <publicPackage>weka.core.matrix</publicPackage>
                         <publicPackage>weka.core.neighboursearch</publicPackage>
                         <publicPackage>weka.core.neighboursearch.balltrees</publicPackage>
                         <publicPackage>weka.core.neighboursearch.covertrees</publicPackage>
                         <publicPackage>weka.core.neighboursearch.kdtrees</publicPackage>
-                        <publicPackage>weka.core.pmml</publicPackage>                       
+                        <publicPackage>weka.core.pmml</publicPackage>
                         <publicPackage>weka.core.stemmers</publicPackage>
                         <publicPackage>weka.core.tokenizers</publicPackage>
                         <publicPackage>weka.core.xml</publicPackage>
                         <publicPackage>weka.datagenerators</publicPackage>
-                        <publicPackage>weka.datagenerators.classifiers.classification</publicPackage>                       
+                        <publicPackage>weka.datagenerators.classifiers.classification</publicPackage>
                         <publicPackage>weka.datagenerators.classifiers.regression</publicPackage>
                         <publicPackage>weka.datagenerators.clusterers</publicPackage>
                         <publicPackage>weka.estimators</publicPackage>
                         <publicPackage>weka.experiment</publicPackage>
-                        <publicPackage>weka.experiment.xml</publicPackage>                       
+                        <publicPackage>weka.experiment.xml</publicPackage>
                         <publicPackage>weka.filters</publicPackage>
                         <publicPackage>weka.filters.supervised.attribute</publicPackage>
                         <publicPackage>weka.filters.supervised.instance</publicPackage>
                         <publicPackage>weka.filters.unsupervised.attribute</publicPackage>
-                        <publicPackage>weka.filters.unsupervised.instance</publicPackage>                       
+                        <publicPackage>weka.filters.unsupervised.instance</publicPackage>
                         <publicPackage>weka.filters.unsupervised.instance.subsetbyexpression</publicPackage>
                         <publicPackage>weka.gui</publicPackage>
                         <publicPackage>weka.gui.arffviewer</publicPackage>
                         <publicPackage>weka.gui.arffviewer.messages</publicPackage>
-                        <publicPackage>weka.gui.beans</publicPackage>                       
+                        <publicPackage>weka.gui.beans</publicPackage>
                         <publicPackage>weka.gui.beans.icons</publicPackage>
                         <publicPackage>weka.gui.beans.messages</publicPackage>
                         <publicPackage>weka.gui.beans.xml</publicPackage>
                         <publicPackage>weka.gui.beans.xml.messages</publicPackage>
-                        <publicPackage>weka.gui.boundaryvisualizer</publicPackage>                       
+                        <publicPackage>weka.gui.boundaryvisualizer</publicPackage>
                         <publicPackage>weka.gui.boundaryvisualizer.messages</publicPackage>
                         <publicPackage>weka.gui.explorer</publicPackage>
                         <publicPackage>weka.gui.explorer.messages</publicPackage>
                         <publicPackage>weka.gui.graphvisualizer</publicPackage>
-                        <publicPackage>weka.gui.graphvisualizer.icons</publicPackage>                       
+                        <publicPackage>weka.gui.graphvisualizer.icons</publicPackage>
                         <publicPackage>weka.gui.graphvisualizer.messages</publicPackage>
                         <publicPackage>weka.gui.hierarchyvisualizer</publicPackage>
                         <publicPackage>weka.gui.hierarchyvisualizer.messages</publicPackage>
                         <publicPackage>weka.gui.images</publicPackage>
-                        <publicPackage>weka.gui.messages</publicPackage>                       
+                        <publicPackage>weka.gui.messages</publicPackage>
                         <publicPackage>weka.gui.sql</publicPackage>
                         <publicPackage>weka.gui.sql.event</publicPackage>
                         <publicPackage>weka.gui.sql.event.messages</publicPackage>
                         <publicPackage>weka.gui.sql.messages</publicPackage>
-                        <publicPackage>weka.gui.streams</publicPackage>                      
+                        <publicPackage>weka.gui.streams</publicPackage>
                         <publicPackage>weka.gui.streams.messages</publicPackage>
                         <publicPackage>weka.gui.treevisualizer</publicPackage>
                         <publicPackage>weka.gui.treevisualizer.messages</publicPackage>

@@ -8,11 +8,14 @@ import de.fub.agg2graph.osm.OsmExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.api.StatisticProvider;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -32,7 +35,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AbstractAggregationProcess.class)
 @NbBundle.Messages({"CLT_OSM_Export_Title=OSM File Export",
     "CLT_OSM_Export_Description=OSM Exporter process"})
-public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, FileObject> {
+public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, FileObject> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -127,6 +130,13 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
         }
 
         return desc;
+    }
+
+    @Override
+    public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException {
+        List<StatisticSection> statisticSections = new ArrayList<StatisticSection>();
+        statisticSections.add(getPerformanceData());
+        return statisticSections;
     }
 
     private static class OsmXmlFileFilter extends FileFilter {

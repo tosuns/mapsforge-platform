@@ -3,6 +3,7 @@ package de.fub.agg2graph.gpseval;
 import de.fub.agg2graph.gpseval.data.filter.TrackFilter;
 import de.fub.agg2graph.gpseval.data.filter.WaypointFilter;
 import de.fub.agg2graph.gpseval.features.Feature;
+
 import java.util.List;
 import java.util.Map;
 

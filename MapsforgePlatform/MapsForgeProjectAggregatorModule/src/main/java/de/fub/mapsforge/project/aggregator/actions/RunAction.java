@@ -26,7 +26,7 @@ import org.openide.util.actions.Presenter;
 @ActionRegistration(
         displayName = "#CTL_RunAction",
         lazy = false)
-@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 510, separatorAfter = 550)
+@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 250, separatorAfter = 275)
 @Messages("CTL_RunAction=Run")
 public final class RunAction extends AbstractAction implements Presenter.Popup {
 
