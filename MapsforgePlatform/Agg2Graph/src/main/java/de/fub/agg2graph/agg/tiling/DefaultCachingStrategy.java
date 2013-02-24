@@ -1,38 +1,37 @@
-/*******************************************************************************
-   Copyright 2013 Johannes Mitlmeier
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-******************************************************************************/
+/**
+ * *****************************************************************************
+ * Copyright 2013 Johannes Mitlmeier
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * ****************************************************************************
+ */
 package de.fub.agg2graph.agg.tiling;
-
-import java.awt.geom.Rectangle2D.Double;
-import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.structs.IEdge;
 import de.fub.agg2graph.structs.ILocation;
-import org.openide.util.lookup.ServiceProvider;
+import java.awt.geom.Rectangle2D.Double;
+import java.io.File;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
-@ServiceProvider(service = ICachingStrategy.class)
 public class DefaultCachingStrategy implements ICachingStrategy {
+
     protected File sourceFolder = null;
     protected AggContainer agg;
     protected TileManager tm;

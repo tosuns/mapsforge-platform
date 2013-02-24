@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -119,7 +120,7 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
                     graph.validate();
                     nodeWidget.setPreferredLocation(new Point(20 + (i * 200), 50));
                     if (lastNodeWidget != null && lastProcess != null) {
-                        String edgeID = "edge" + ProcessGraph.edgeCount++;
+                        String edgeID = graph.createEdge();
                         graph.addEdge(edgeID);
                         graph.setEdgeSource(edgeID, lastProcess);
                         graph.setEdgeTarget(edgeID, process);

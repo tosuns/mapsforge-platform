@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:detector name="Empty Detector" description="A empty test detector" xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
+    <inferencemodel javaType="de.fub.dummy.path.Instance" name="Dummy Inference Model" description="A dummy inference model for the propose of unit testing.">
+        <features>
+            <feature javaType="de.fub.dummy.path.Instance" name="Dummy Feature" description="Dummy feature for the propose of unit testing.">
+                <properties>
+                    <property javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                </properties>
+            </feature>
+        </features>
+    </inferencemodel>
+    <datasets>
+        <trainingsset>
+            <dataset url="file:\\somepath"/>
+        </trainingsset>
+        <inferenceset>
+            <dataset url="file:\\somepath"/>
+        </inferenceset>
+    </datasets>
+    <preprocessors>
+        <filter javaType="de.fub.detector.Instance" name="Dummy Filter" description="A dummy filter for the propose of unit testing.">
+            <properties>
+                <property javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+            </properties>
+        </filter>
+    </preprocessors>
+    <postprocessors>
+        <task javaType="de.fub.detector.Instance" name="Dummy Task" description="A dummy task for the propose of unit testing.">
+            <properties>
+                <property javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+            </properties>
+        </task>
+    </postprocessors>
+</dec:detector>

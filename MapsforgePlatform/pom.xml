@@ -89,6 +89,7 @@
     <module>GeoFileTypeApi</module>
     <module>XmlCatalogModule</module>
     <module>SettingsModule</module>
+    <module>MapsForgeProjectDetectorModule</module>
   </modules>
 
     <properties>

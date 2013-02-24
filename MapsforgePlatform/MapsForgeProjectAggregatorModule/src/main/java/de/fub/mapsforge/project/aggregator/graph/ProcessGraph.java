@@ -52,7 +52,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     private LayerWidget connectionLayer = null;
     private LayerWidget interactionLayer = null;
     private final ChangeSupport pcs = new ChangeSupport(this);
-    static long edgeCount = 0;
+    private static long edgeCount = 0;
 
     public ProcessGraph() {
         getActions().addAction(ActionFactory.createZoomAction(1.5, true));
@@ -66,6 +66,10 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         addChild(connectionLayer);
         addChild(interactionLayer);
         getActions().addAction(ActionFactory.createAcceptAction(new AcceptProviderImpl()));
+    }
+
+    public synchronized String createEdge() {
+        return MessageFormat.format("edge-{0}", edgeCount++);
     }
 
     public void addChangeListener(ChangeListener listener) {

@@ -20,7 +20,6 @@ package de.fub.agg2graph.agg.strategy;
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.agg.AggregationStrategyFactory;
-import de.fub.agg2graph.agg.IAggregationStrategy;
 import de.fub.agg2graph.agg.IMergeHandler;
 import de.fub.agg2graph.agg.MergeHandlerFactory;
 import de.fub.agg2graph.agg.TraceDistanceFactory;
@@ -32,9 +31,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service = IAggregationStrategy.class)
 public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
 
     private static final Logger logger = Logger

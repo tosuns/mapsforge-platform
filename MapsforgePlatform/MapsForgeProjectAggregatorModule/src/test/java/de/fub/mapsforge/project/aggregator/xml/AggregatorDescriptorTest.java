@@ -17,6 +17,8 @@ import org.openide.util.Exceptions;
  */
 public class AggregatorDescriptorTest {
 
+    private static final Logger LOG = Logger.getLogger(AggregatorDescriptorTest.class.getName());
+
     public AggregatorDescriptorTest() {
     }
 
@@ -42,12 +44,12 @@ public class AggregatorDescriptorTest {
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             StringWriter stringWriter = new StringWriter();
             marshaller.marshal(descriptor, stringWriter);
-            System.out.println(stringWriter.toString());
+            LOG.info(stringWriter.toString());
             javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
             StringReader stringReader = new StringReader(stringWriter.toString());
             descriptor = (AggregatorDescriptor) unmarshaller.unmarshal(stringReader); //NOI18N
-            marshaller.marshal(descriptor, System.out);
-
+            marshaller.marshal(descriptor, stringWriter);
+            LOG.info(stringWriter.toString());
         } catch (javax.xml.bind.JAXBException ex) {
             Assert.fail(ex.getMessage());
         }

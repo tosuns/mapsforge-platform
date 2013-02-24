@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project;
 
-import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorFolderNode;
 import de.fub.mapforgeproject.MapsForgeProject;
 import de.fub.mapforgeproject.xml.MapsForge;
+import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorFolderNode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.openide.util.Exceptions;
  *
  * @author Serdar
  */
-@NodeFactory.Registration(projectType = "org-mapsforge-project", position = 10)
+@NodeFactory.Registration(projectType = "org-mapsforge-project", position = 1000)
 public class MapsForgeAggregationBuilderNodeFactory implements NodeFactory {
 
     public static final String AGGREGATION_BUILDER_FILENAME = "Aggregation Builders";

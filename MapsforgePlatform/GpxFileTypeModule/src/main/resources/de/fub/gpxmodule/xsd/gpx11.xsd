@@ -10,7 +10,7 @@
     <xsd:annotation>
         <xsd:appinfo>
             <jxb:globalBindings>
-                <jxb:javaType name="int" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
+                <jxb:javaType name="int" xmlType="xsd:nonNegativeInteger" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                 <jxb:javaType name="java.util.Date" xmlType="xsd:dateTime" parseMethod="de.fub.gpxmodule.DateAdapter.parseDate" printMethod="de.fub.gpxmodule.DateAdapter.printDate" />
             </jxb:globalBindings>
         </xsd:appinfo>
