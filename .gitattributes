@@ -152,6 +152,7 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/Layer.java
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/MainRenderingPanel.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/OsmPanel.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/TestUI.java -text
+MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/utils/MathUtil.java -text
 MapsforgePlatform/Agg2Graph/src/main/nbm/manifest.mf -text
 MapsforgePlatform/Agg2Graph/src/main/resources/Aggregation[!!-~]\[agg2graph\].log -text
 MapsforgePlatform/Agg2Graph/src/main/resources/Aggregation[!!-~]\[mapsforge\].log -text
@@ -239,6 +240,7 @@ MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/icons/gp
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/icons/gpxmerge24.png -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/icons/gpxmerge32.png -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx.xsd -text
+MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx11.xsd -text
 MapsforgePlatform/MapForgeProject/pom.xml -text
 MapsforgePlatform/MapForgeProject/src/main/java/de/fub/mapforgeproject/MapsForgeLogicalView.java -text
 MapsforgePlatform/MapForgeProject/src/main/java/de/fub/mapforgeproject/MapsForgeProject.java -text

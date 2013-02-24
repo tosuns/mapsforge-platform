@@ -22,6 +22,7 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -101,14 +102,14 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                 if (pipeline != null) {
                     List<ProcessDescriptor> processDescriptors = Collections.unmodifiableList(pipeline.getList());
                     if (processDescriptors != null) {
-                        for (int i = 0; i < processDescriptors.size(); i++) {
-                            ProcessDescriptor processDescriptor = processDescriptors.get(i);
+                        for (int index = 0; index < processDescriptors.size(); index++) {
+                            ProcessDescriptor processDescriptor = processDescriptors.get(index);
                             if (processDescriptor != null) {
                                 properties = processDescriptor.getProperties();
                                 if (properties != null) {
                                     for (PropertySection section : properties.getSections()) {
                                         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
-                                            Sheet.Set createProcessProperty = createProcessProperty(propertySet, processDescriptor.getDisplayName());
+                                            Sheet.Set createProcessProperty = createProcessProperty(index, propertySet, processDescriptor.getDisplayName());
                                             setMap.put(createProcessProperty.getName(), createProcessProperty);
                                             sheet.put(createProcessProperty);
                                         }
@@ -125,12 +126,12 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         return sheet;
     }
 
-    private Sheet.Set createProcessProperty(de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet, String tabName) {
+    private Sheet.Set createProcessProperty(int id, de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet, String tabName) {
         Sheet.Set set = Sheet.createPropertiesSet();
-        set.setName(propertySet.getName());
+        set.setName(propertySet.getName() + id);
         set.setDisplayName(propertySet.getName());
         set.setShortDescription(propertySet.getDescription());
-        set.setValue(TAB_NAME, tabName);
+        set.setValue(TAB_NAME, MessageFormat.format("{0} ({1})", tabName, id));
 
         for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
             Property<?> prop = createProperty(property);
@@ -433,6 +434,10 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
     @Override
     public void stateChanged(ChangeEvent e) {
+        for (PropertySet set : sheet.toArray()) {
+            sheet.remove(set.getName());
+        }
+        setMap.clear();
         createSheet();
         for (Sheet.Set set : setMap.values()) {
             sheet.put(set);

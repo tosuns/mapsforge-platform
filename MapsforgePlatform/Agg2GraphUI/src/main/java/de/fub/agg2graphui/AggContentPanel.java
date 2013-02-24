@@ -14,8 +14,6 @@ import de.fub.mapviewer.ui.MapViewer;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
@@ -32,7 +30,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.DefaultMapController;
 
 /**
  *
@@ -58,8 +55,7 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
         layerManager.addChangeListener(AggContentPanel.this);
         layerManager.addLayerListener(AggContentPanel.this);
         explorerManager.addPropertyChangeListener(AggContentPanel.this);
-        DefaultMapController controller = new DefaultMapController(AggContentPanel.this);
-        controller.setMovementMouseButton(MouseEvent.BUTTON1);
+
         for (MouseWheelListener listener : getMouseWheelListeners()) {
             removeMouseWheelListener(listener);
         }
@@ -71,18 +67,11 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
                     e.consume();
                 } else {
                     // push down
-                    if (getZoom() < getTileController().getTileSource().getMaxZoom() || e.getWheelRotation() > 0) {
-                        setZoom(getZoom() - e.getWheelRotation());
+                    if (getZoom() <= getTileController().getTileSource().getMaxZoom() || e.getWheelRotation() > 0) {
+                        setZoom(getZoom() - e.getWheelRotation(), e.getPoint());
                         LOG.log(Level.INFO, "zoom level: {0}, Maxzoom: {1}", new Object[]{getZoom(), getTileController().getTileSource().getMaxZoom()});
                     }
                 }
-                layerManager.requestUpdate();
-            }
-        });
-        addMouseMotionListener(
-                new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
                 layerManager.requestUpdate();
             }
         });

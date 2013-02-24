@@ -13,10 +13,13 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.structs;
 
+import de.fub.agg2graph.utils.MathUtil;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import org.jscience.mathematics.number.Float64;
 import org.jscience.mathematics.vector.Float64Vector;
@@ -64,6 +67,16 @@ public class GPSCalc {
         return distance * 1000;
     }
 
+    public static double getPreciseDistance(double lat1, double lon1,
+            double lat2, double lon2) {
+
+        double lat = new BigDecimal(lat1 + lat2).divide(new BigDecimal(2), RoundingMode.HALF_UP).doubleValue() * 0.01745;
+        double dx = 111.3 * Math.cos(lat) * (lon1 - lon2);
+        double dy = 111.3 * (lat1 - lat2);
+        double distance = MathUtil.sqrt(new BigDecimal(dx * dx + dy * dy), RoundingMode.HALF_UP).doubleValue();
+        return distance * 1000;
+    }
+
     public static double getSimpleDistance(ILocation a, ILocation b) {
         return getSimpleDistance(a.getLat(), a.getLon(), b.getLat(), b.getLon());
     }
@@ -76,8 +89,9 @@ public class GPSCalc {
      * @return
      */
     public static ILocation getMidwayLocation(ILocation a, ILocation b) {
-        double newLat = a.getLat() + (b.getLat() - a.getLat()) / 2;
-        double newLon = a.getLon() + (b.getLon() - a.getLon()) / 2;
+        BigDecimal TWO = new BigDecimal(2);
+        double newLat = a.getLat() + new BigDecimal(b.getLat() - a.getLat()).divide(TWO, RoundingMode.HALF_UP).doubleValue();
+        double newLon = a.getLon() + new BigDecimal(b.getLon() - a.getLon()).divide(TWO, RoundingMode.HALF_UP).doubleValue();
         return new GPSPoint(newLat, newLon);
     }
 
@@ -237,7 +251,7 @@ public class GPSCalc {
     }
 
     public static ILocation getPointAverage(List<ILocation> locations) {
-        if (locations.size() == 0) {
+        if (locations.isEmpty()) {
             return null;
         }
         GPSPoint zero = new GPSPoint(0, 0);

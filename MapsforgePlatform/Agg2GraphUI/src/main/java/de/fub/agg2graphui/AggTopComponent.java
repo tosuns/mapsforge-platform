@@ -48,7 +48,6 @@ public final class AggTopComponent extends JPanel {
         mapViewer.addMouseMotionListener(mouseListener);
         mapViewer.addMouseWheelListener(mouseListener);
         mapViewer.addComponentListener(mouseListener);
-        mapViewer.setZoomContolsVisible(false);
     }
 
     public void showArea(DoubleRect area) {

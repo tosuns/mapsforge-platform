@@ -260,27 +260,33 @@ public class AbstractMapViewer extends javax.swing.JPanel {
         statusbar.setLayout(new javax.swing.BoxLayout(statusbar, javax.swing.BoxLayout.X_AXIS));
         statusbar.add(filler6);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AbstractMapViewer.class, "AbstractMapViewer.jLabel1.text")); // NOI18N
         statusbar.add(jLabel1);
         statusbar.add(filler2);
 
+        latitude.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(latitude, org.openide.util.NbBundle.getMessage(AbstractMapViewer.class, "AbstractMapViewer.latitude.text")); // NOI18N
         statusbar.add(latitude);
         statusbar.add(filler1);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(AbstractMapViewer.class, "AbstractMapViewer.jLabel2.text")); // NOI18N
         statusbar.add(jLabel2);
         statusbar.add(filler3);
 
+        longitude.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(longitude, org.openide.util.NbBundle.getMessage(AbstractMapViewer.class, "AbstractMapViewer.longitude.text")); // NOI18N
         longitude.setMaximumSize(new java.awt.Dimension(150, 14));
         statusbar.add(longitude);
         statusbar.add(filler5);
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AbstractMapViewer.class, "AbstractMapViewer.jLabel3.text")); // NOI18N
         statusbar.add(jLabel3);
         statusbar.add(filler4);
 
+        boundingBox.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(boundingBox, org.openide.util.NbBundle.getMessage(AbstractMapViewer.class, "AbstractMapViewer.boundingBox.text")); // NOI18N
         boundingBox.setMaximumSize(new java.awt.Dimension(700, 14));
         boundingBox.setMinimumSize(new java.awt.Dimension(300, 14));

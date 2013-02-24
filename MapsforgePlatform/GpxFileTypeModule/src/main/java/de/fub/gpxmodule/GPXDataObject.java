@@ -178,7 +178,7 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
             javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
             gpx = (Gpx) unmarshaller.unmarshal(inputStream); //NOI18N
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger("global").log(java.util.logging.Level.SEVERE, null, ex); //NOI18N
+            Exceptions.printStackTrace(ex);
         } finally {
             if (inputStream != null) {
                 inputStream.close();

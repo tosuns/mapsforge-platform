@@ -13,7 +13,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.input;
 
@@ -60,7 +60,7 @@ public class GPSCleaner {
             GPSPoint point = pointList.get(i);
             ILocation lastPoint = currentSegment.size() > 0 ? currentSegment
                     .get(currentSegment.size() - 1) : null;
-            LOG.log(Level.FINE, "Examining point {0}", point);
+            LOG.log(Level.INFO, "Examining point {0}", point);
 
             double length = 0;
             if (cleaningOptions.filterByEdgeLength || cleaningOptions.filterByEdgeLengthIncrease) {
@@ -75,14 +75,14 @@ public class GPSCleaner {
                     LOG.fine(String.format(
                             "edge length %s to %s: %.2f < %.2f", lastPoint,
                             point, length, cleaningOptions.minEdgeLength));
-                    LOG.log(Level.FINE, "short edge, dropping point {0}", point);
+                    LOG.log(Level.INFO, "short edge, dropping point {0}", point);
                     continue;
                 }
                 if (length > cleaningOptions.maxEdgeLength) {
                     LOG.fine(String.format(
                             "edge length %s to %s: %.2f > %.2f", lastPoint,
                             point, length, cleaningOptions.maxEdgeLength));
-                    LOG.log(Level.FINE, "long edge, still NOT dropping point {0}", point);
+                    LOG.log(Level.INFO, "long edge, still NOT dropping point {0}", point);
                     // make new segment
                     if (currentSegment.size() > cleaningOptions.minSegmentLength) {
                         result.add(currentSegment);
@@ -122,14 +122,14 @@ public class GPSCleaner {
                         // is it zigzagged?
                         if (((angleHere > 180 - cleaningOptions.maxZigzagAngle) && (angleBefore < cleaningOptions.maxZigzagAngle))
                                 || ((angleHere < cleaningOptions.maxZigzagAngle) && (angleBefore > 180 - cleaningOptions.maxZigzagAngle))) {
-                            LOG.fine("found zigzag");
-                            LOG.fine(String.format("%.3f <- -> %.3f",
+                            LOG.log(Level.INFO, "found zigzag");
+                            LOG.log(Level.INFO, String.format("%.3f <- -> %.3f",
                                     angleBefore, angleHere));
                             i++;
                             continue;
                         }
                     } else {
-                        LOG.fine("something bad");
+                        LOG.log(Level.INFO, "something bad");
                     }
                 }
             }
@@ -152,8 +152,8 @@ public class GPSCleaner {
                         // is it a fake circle?
                         if ((angleHere > 180 - cleaningOptions.maxFakeCircleAngle)
                                 && (angleBefore > 180 - cleaningOptions.maxFakeCircleAngle)) {
-                            LOG.fine("found fake circle");
-                            LOG.fine(String.format("%.3f <- -> %.3f",
+                            LOG.log(Level.INFO, "found fake circle");
+                            LOG.log(Level.INFO, String.format("%.3f <- -> %.3f",
                                     angleBefore, angleHere));
                             // insert as second but last element
                             GPSPoint oldLastPoint = currentSegment
@@ -177,7 +177,7 @@ public class GPSCleaner {
                 currentSegment = new GPSSegment();
             }
 
-            LOG.log(Level.FINE, "adding point {0}", point);
+            LOG.log(Level.INFO, "adding point {0}", point);
             currentSegment.add(point);
         }
 

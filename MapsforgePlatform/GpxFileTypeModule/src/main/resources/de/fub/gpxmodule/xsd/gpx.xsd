@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- GPX.xsd version 1.0 - For more information on GPX and this schema, visit http://www.topografix.com/gpx.asp -->
-<xsd:schema    
+<xsd:schema
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:gpx="http://www.topografix.com/GPX/1/0"
     xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
     jxb:version="1.0"
-    targetNamespace="http://www.topografix.com/GPX/1/0"   
+    targetNamespace="http://www.topografix.com/GPX/1/0"
     elementFormDefault="qualified">
 
     <!-- Main GPX definition -->
@@ -15,7 +15,7 @@
                 <jxb:class name="Gpx"/>
             </xsd:appinfo>
         </xsd:annotation>
-        <xsd:complexType >            
+        <xsd:complexType >
             <xsd:sequence>
                 <xsd:element name="name" type="xsd:string" minOccurs="0"/>		<!-- GPX file name -->
                 <xsd:element name="desc" type="xsd:string" minOccurs="0"/>		<!-- GPX file description -->
@@ -31,23 +31,24 @@
                 <xsd:element name="wpt" minOccurs="0" maxOccurs="unbounded" type="gpx:WptType"/>
                 <xsd:element name="rte" minOccurs="0" maxOccurs="unbounded" type="gpx:RteType"/>
                 <xsd:element name="trk" minOccurs="0" maxOccurs="unbounded" type="gpx:TrkType"/>
-                
+
                 <!-- you can add your own privately defined elements at the end of the GPX file -->
                 <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
             </xsd:sequence>
             <xsd:attribute name="version" type="xsd:string" use="required" fixed="1.0"/>	<!-- version 1.0 -->
             <xsd:attribute name="creator" type="xsd:string" use="required"/>
-        </xsd:complexType>                
+        </xsd:complexType>
     </xsd:element>
+
     <xsd:annotation>
         <xsd:appinfo>
             <jxb:globalBindings>
                 <jxb:javaType name="java.util.Date" xmlType="xsd:dateTime" parseMethod="de.fub.gpxmodule.DateAdapter.parseDate" printMethod="de.fub.gpxmodule.DateAdapter.printDate" />
             </jxb:globalBindings>
         </xsd:appinfo>
-    </xsd:annotation>      
-    
-    
+    </xsd:annotation>
+
+
     <xsd:complexType name="TrkType">
         <xsd:annotation>
             <xsd:appinfo>
@@ -62,20 +63,20 @@
             <xsd:element name="url" type="xsd:anyURI" minOccurs="0"/>
             <xsd:element name="urlname" type="xsd:string" minOccurs="0"/>
             <xsd:element name="number" type="xsd:nonNegativeInteger" minOccurs="0">	<!-- GPS track number -->
-                <xsd:annotation> 
+                <xsd:annotation>
                     <xsd:appinfo>
                         <jxb:javaType name="int" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                     </xsd:appinfo>
-                </xsd:annotation>  
-            </xsd:element>                        
+                </xsd:annotation>
+            </xsd:element>
             <xsd:element name="trkseg"	minOccurs="0" maxOccurs="unbounded" type="gpx:TrkSegType"/>
             <!-- 	  <xsd:element name="type"			type="xsd:string"		minOccurs="0"/>  PROPOSED -->
             <!-- you can add your own privately defined trk elements at the end of the trk -->
             <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
-    
-    
+
+
     <xsd:complexType name="TrkSegType">
         <xsd:annotation>
             <xsd:appinfo>
@@ -110,13 +111,13 @@
                         <!-- Accuracy info -->
                         <xsd:element name="fix" type="gpx:fixType" minOccurs="0"/>
                         <xsd:element name="sat" type="xsd:nonNegativeInteger" minOccurs="0">
-                            <xsd:annotation> 
+                            <xsd:annotation>
                                 <xsd:appinfo>
                                     <jxb:javaType name="int"
-                                                  parseMethod="javax.xml.bind.DatatypeConverter.parseInt" 
+                                                  parseMethod="javax.xml.bind.DatatypeConverter.parseInt"
                                                   printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                                 </xsd:appinfo>
-                            </xsd:annotation> 
+                            </xsd:annotation>
                         </xsd:element>
 
                         <xsd:element name="hdop" type="xsd:double" minOccurs="0"/>
@@ -135,7 +136,7 @@
             </xsd:element>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="RteType">
         <xsd:annotation>
             <xsd:appinfo>
@@ -151,11 +152,11 @@
             <xsd:element name="url" type="xsd:anyURI" minOccurs="0"/>
             <xsd:element name="urlname" type="xsd:string" minOccurs="0"/>
             <xsd:element name="number" type="xsd:nonNegativeInteger" minOccurs="0">	<!-- GPS track number -->
-                <xsd:annotation> 
+                <xsd:annotation>
                     <xsd:appinfo>
                         <jxb:javaType name="int" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                     </xsd:appinfo>
-                </xsd:annotation> 
+                </xsd:annotation>
             </xsd:element>
             <!--	  <xsd:element name="type"			type="xsd:string"	minOccurs="0"/>	PROPOSED -->
             <!-- you can add your own privately defined rte elements at the end of the rte -->
@@ -185,11 +186,11 @@
                         <!-- Accuracy info -->
                         <xsd:element name="fix" type="gpx:fixType" minOccurs="0"/>
                         <xsd:element name="sat" type="xsd:nonNegativeInteger" minOccurs="0">
-                            <xsd:annotation> 
+                            <xsd:annotation>
                                 <xsd:appinfo>
                                     <jxb:javaType name="int" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                                 </xsd:appinfo>
-                            </xsd:annotation> 
+                            </xsd:annotation>
                         </xsd:element>
                         <xsd:element name="hdop" type="xsd:double" minOccurs="0"/>
                         <xsd:element name="vdop" type="xsd:double" minOccurs="0"/>
@@ -235,11 +236,11 @@
             <!-- Accuracy info -->
             <xsd:element name="fix" type="gpx:fixType" minOccurs="0"/>
             <xsd:element name="sat" type="xsd:nonNegativeInteger"	minOccurs="0">
-                <xsd:annotation> 
+                <xsd:annotation>
                     <xsd:appinfo>
                         <jxb:javaType name="int" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                     </xsd:appinfo>
-                </xsd:annotation> 
+                </xsd:annotation>
             </xsd:element>
             <xsd:element name="hdop" type="xsd:double" minOccurs="0"/>
             <xsd:element name="vdop" type="xsd:double"	minOccurs="0"/>
@@ -281,7 +282,7 @@
 
     <xsd:simpleType name="fixType">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="none"/>	<!-- none means GPS had no fix.  To signify "the fix info is unknown, leave out the <fix> tag entirely --> 
+            <xsd:enumeration value="none"/>	<!-- none means GPS had no fix.  To signify "the fix info is unknown, leave out the <fix> tag entirely -->
             <xsd:enumeration value="2d"/>
 
             <xsd:enumeration value="3d"/>
@@ -312,4 +313,4 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-</xsd:schema> 
+</xsd:schema>

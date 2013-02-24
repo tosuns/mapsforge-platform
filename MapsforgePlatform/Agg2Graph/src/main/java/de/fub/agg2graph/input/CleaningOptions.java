@@ -18,6 +18,7 @@
 package de.fub.agg2graph.input;
 
 import de.fub.agg2graph.agg.AggCleaner;
+import java.math.BigDecimal;
 
 /**
  * Container class for several options to be used with {@link GPSCleaner} or

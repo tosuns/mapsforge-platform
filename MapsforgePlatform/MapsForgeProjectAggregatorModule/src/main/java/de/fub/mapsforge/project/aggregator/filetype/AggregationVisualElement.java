@@ -431,23 +431,25 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 @Override
                 public void run() {
                     TopComponent topComponent = callback.getTopComponent();
-                    switch (aggregator.getAggregatorState()) {
-                        case ERROR:
-                        case INACTIVE:
-                            if (defaulImage != null) {
-                                topComponent.setIcon(defaulImage);
-                            }
-                            if (processButton != null) {
-                                processButton.setEnabled(true);
-                            }
-                            break;
-                        case RUNNING:
-                            defaulImage = topComponent.getIcon();
-                            topComponent.setIcon(aggregator.getAggregatorState().getImage());
-                            if (processButton != null) {
-                                processButton.setEnabled(false);
-                            }
-                            break;
+                    if (callback.isSelectedElement()) {
+                        switch (aggregator.getAggregatorState()) {
+                            case ERROR:
+                            case INACTIVE:
+                                if (defaulImage != null) {
+                                    topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(0));
+                                }
+                                if (processButton != null) {
+                                    processButton.setEnabled(true);
+                                }
+                                break;
+                            case RUNNING:
+                                defaulImage = topComponent.getIcon();
+                                topComponent.setIcon(aggregator.getAggregatorState().getImage());
+                                if (processButton != null) {
+                                    processButton.setEnabled(false);
+                                }
+                                break;
+                        }
                     }
                 }
             });

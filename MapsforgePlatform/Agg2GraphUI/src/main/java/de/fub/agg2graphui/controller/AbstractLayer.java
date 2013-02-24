@@ -245,7 +245,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     }
 
     protected void drawLine(ILocation location1, ILocation location2, RenderingOptions ro, float weightFactor) {
-        drawLine(location1, location2, ro, weightFactor, false);
+        drawLine(location1, location2, ro, weightFactor, true);
     }
 
     protected void drawLine(ILocation location1, ILocation location2, RenderingOptions ro, float weightFactor, boolean flag) {
@@ -256,7 +256,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         // make sure we only render what's visible
         java.awt.Point p1 = getLayerManager().getMapViewer().getMapPosition(location1.getLat(), location1.getLon(), false);
         java.awt.Point p2 = getLayerManager().getMapViewer().getMapPosition(location2.getLat(), location2.getLon(), false);
-        drawables.add(new Line(new XYPoint(location1.getID(), p1.x, p1.y), new XYPoint(location2.getID(), p2.x, p2.y), ro, weightFactor));
+        drawables.add(new Line(new XYPoint(location1.getID(), p1.x, p1.y), new XYPoint(location2.getID(), p2.x, p2.y), ro, weightFactor, flag));
     }
 
     protected void drawPoint(ILocation location, RenderingOptions ro) {
@@ -323,11 +323,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
                                     && getDrawnPointsCounter() > MAX_VISIBLE_POINTS_INTELLIGENT_LABELS) {
                                 continue;
                             }
-                            // g2.drawString(p.at.getID(), (int) (p.at.getX() - layerManager
-                            // .getMainPanel().getWidth() * 0.0),
-                            // (int) (p.at.getY() + layerManager.getMainPanel()
-                            // .getHeight() * 0.025));
-                            g2d.drawString(p.getAt().getID(), (int) p.getAt().getX(), (int) (p.getAt().getY() + getLayerManager().getMapViewer().getHeight() * 0.025));
+                            g2d.drawString(p.getAt().getID(), (int) p.getAt().getX(), (int) (p.getAt().getY() + getLayerManager().getMapViewer().getHeight() * 0.075));
 
                         } else if (drawObject instanceof Line) {
                             // draw line
@@ -336,7 +332,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
                             }
                             Line line = (Line) drawObject;
                             float width = line.getWeightFactor() * getLayerManager().getThicknessFactor();
-                            g2d.setStroke(ro.getStroke(((Line) drawObject).getWeightFactor() * getLayerManager().getThicknessFactor()));
+                            g2d.setStroke(ro.getStroke(width));
                             g2d.drawLine((int) line.getFrom().getX(), (int) line.getFrom().getY(), (int) line.getTo().getX(), (int) line.getTo().getY());
                             // make a nice arrow :) (code from
                             // http://stackoverflow.com/a/3094933)
@@ -347,16 +343,20 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
                                     && getDrawnPointsCounter() > MAX_VISIBLE_POINTS_INTELLIGENT_POINT) {
                                 continue;
                             }
-                            double angle = Math.atan2(line.getTo().getY() - line.getFrom().getY(), line.getTo().getX() - line.getFrom().getX());
-                            AffineTransform oldTx = g2d.getTransform();
-                            AffineTransform tx = new AffineTransform(oldTx);
-                            tx.translate(line.getTo().getX(), line.getTo().getY());
-                            tx.rotate((angle - Math.PI / 2d));
-                            g2d.setTransform(tx);
-                            g2d.setStroke(ro.getStroke(getLayerManager().getThicknessFactor()));
-                            g2d.drawLine(0, 0, (int) (6 + width * 2), (int) (-8 - width * 2));
-                            g2d.drawLine(0, 0, (int) (-6 - width * 2), (int) (-8 - width * 2));
-                            g2d.setTransform(oldTx);
+                            if (line.isDirected()) {
+
+
+                                double angle = Math.atan2(line.getTo().getY() - line.getFrom().getY(), line.getTo().getX() - line.getFrom().getX());
+                                AffineTransform oldTx = g2d.getTransform();
+                                AffineTransform tx = new AffineTransform(oldTx);
+                                tx.translate(line.getTo().getX(), line.getTo().getY());
+                                tx.rotate((angle - Math.PI / 2d));
+                                g2d.setTransform(tx);
+                                g2d.setStroke(ro.getStroke(getLayerManager().getThicknessFactor()));
+                                g2d.drawLine(0, 0, (int) (6 + width * 2), (int) (-8 - width * 2));
+                                g2d.drawLine(0, 0, (int) (-6 - width * 2), (int) (-8 - width * 2));
+                                g2d.setTransform(oldTx);
+                            }
                         }
                     }
                 }

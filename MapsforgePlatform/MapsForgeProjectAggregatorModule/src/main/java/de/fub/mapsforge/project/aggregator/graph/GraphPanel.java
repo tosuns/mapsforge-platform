@@ -12,11 +12,15 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.visual.graph.layout.GraphLayout;
 import org.netbeans.api.visual.graph.layout.GraphLayoutFactory;
 import org.netbeans.api.visual.graph.layout.GraphLayoutSupport;
+import org.netbeans.api.visual.graph.layout.GridGraphLayout;
+import org.netbeans.api.visual.graph.layout.UniversalGraph;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.layout.SceneLayout;
 import org.netbeans.api.visual.widget.Widget;
@@ -28,10 +32,12 @@ import org.openide.util.ChangeSupport;
  */
 public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
 
+    private static final Logger LOG = Logger.getLogger(GraphPanel.class.getName());
     private static final long serialVersionUID = 1L;
     private transient final ProcessGraph graph = new ProcessGraph();
     private transient Aggregator aggregator = null;
     private transient final ChangeSupport cs = new ChangeSupport(this);
+    private boolean reinitProcess = false;
 
     /**
      * Creates new form GraphPanel
@@ -57,8 +63,6 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
     public void setAggregator(Aggregator aggregator) {
         graph.removeChangeListener(GraphPanel.this);
         this.aggregator = aggregator;
-        graph.clearGraph();
-        graph.validate();
         reinitGraph();
         graph.addChangeListener(GraphPanel.this);
     }
@@ -81,7 +85,7 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
 
     public void layoutGraph() {
         Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
-        final GraphLayout<AbstractAggregationProcess<?, ?>, String> layout = GraphLayoutFactory.createTreeGraphLayout(5, 5, 200, 10, true);
+        final GraphLayout<AbstractAggregationProcess<?, ?>, String> layout = new GridGraphLayout<AbstractAggregationProcess<?, ?>, String>();
         AbstractAggregationProcess rootProcess = processes.iterator().next();
         GraphLayoutSupport.setTreeGraphLayoutRootNode(layout, rootProcess);
         SceneLayout sceneLayout = LayoutFactory.createSceneGraphLayout(graph, layout);
@@ -92,39 +96,62 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
     }
 
     private void reinitGraph() {
-        graph.revalidate();
-        Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
-        Widget lastNodeWidget = null;
-        AbstractAggregationProcess<?, ?> lastProcess = null;
-        int i = 1;
-        for (AbstractAggregationProcess<?, ?> process : processes) {
-            if (process != null) {
-                Widget nodeWidget = graph.addNode(process);
+        reinitProcess = true;
+        try {
+            graph.validate();
+
+            // collected all processes that are currently in the gaphscene
+            List<AbstractAggregationProcess<?, ?>> collectPipeline = collectPipeline();
+            // remove all process
+            for (AbstractAggregationProcess<?, ?> process : collectPipeline) {
+                graph.removeNodeWithEdges(process);
                 graph.validate();
-                nodeWidget.setPreferredLocation(new Point(20 + (i * 200), 50));
-                if (lastNodeWidget != null && lastProcess != null) {
-                    String edgeID = "edge" + ProcessGraph.edgeCount++;
-                    graph.addEdge(edgeID);
-                    graph.setEdgeSource(edgeID, lastProcess);
-                    graph.setEdgeTarget(edgeID, process);
-                    graph.validate();
-                }
-                i++;
-                lastNodeWidget = nodeWidget;
-                lastProcess = process;
-            } else {
-                System.out.println("Error");
             }
+
+            Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
+
+            Widget lastNodeWidget = null;
+            AbstractAggregationProcess<?, ?> lastProcess = null;
+            int i = 1;
+            for (AbstractAggregationProcess<?, ?> process : processes) {
+                if (process != null) {
+                    Widget nodeWidget = graph.addNode(process);
+                    graph.validate();
+                    nodeWidget.setPreferredLocation(new Point(20 + (i * 200), 50));
+                    if (lastNodeWidget != null && lastProcess != null) {
+                        String edgeID = "edge" + ProcessGraph.edgeCount++;
+                        graph.addEdge(edgeID);
+                        graph.setEdgeSource(edgeID, lastProcess);
+                        graph.setEdgeTarget(edgeID, process);
+                        graph.validate();
+                    }
+                    i++;
+                    lastNodeWidget = nodeWidget;
+                    lastProcess = process;
+                } else {
+                    LOG.log(Level.FINE, "Error");
+                }
+            }
+            graph.repaint();
+            repaint();
+        } finally {
+            reinitProcess = false;
         }
-        graph.repaint();
-        repaint();
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        cs.fireChange();
+        if (!reinitProcess) {
+            cs.fireChange();
+        }
     }
 
+    /**
+     * Returns a chain of process that start with an process that has as input
+     * type Void.
+     *
+     * @return
+     */
     public List<AbstractAggregationProcess<?, ?>> collectPipeline() {
         return graph.collectPipeline();
     }

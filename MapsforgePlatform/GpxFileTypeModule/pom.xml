@@ -121,21 +121,38 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <version>1.5</version>
                 <executions>
                     <execution>
-                        <id>xjc</id>
+                        <id>xjc2</id>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
+                        <configuration>
+                            <schemaFiles>gpx11.xsd</schemaFiles>
+                            <packageName>de.fub.gpxmodule.xml.gpx</packageName>  The name of your generated source package
+                            <staleFile>${project.build.directory}/jaxb2/.schema1XjcStaleFlag</staleFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>xjc1</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFiles>gpx.xsd</schemaFiles>
+                            <packageName>de.fub.gpxmodule.xml</packageName>  The name of your generated source package
+                            <staleFile>${project.build.directory}/jaxb2/.schema2XjcStaleFlag</staleFile>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <schemaDirectory>${project.basedir}/src/main/resources/de/fub/gpxmodule/xsd</schemaDirectory>
-                    <packageName>de.fub.gpxmodule.xml</packageName>  The name of your generated source package
                 </configuration>
             </plugin>
 

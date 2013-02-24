@@ -37,6 +37,7 @@ public class MapViewListener extends MouseAdapter implements ComponentListener {
         lastPoint = e.getPoint();
         this.aggTopComponent.updateLonLat(lastPoint);
         this.aggTopComponent.updateBoundingBox();
+        this.aggTopComponent.getLayerManager().requestUpdate();
     }
 
     @Override

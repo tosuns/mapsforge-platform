@@ -31,7 +31,7 @@ public class MergingLayer extends AbstractLayer<List<? extends ILocation>> {
             ILocation lastLocation = null;
             for (ILocation location : locationList) {
                 if (lastLocation != null) {
-                    drawLine(lastLocation, location, getOptions(), 1);
+                    drawLine(lastLocation, location, getOptions(), 1, true);
                 }
                 drawPoint(location, getOptions());
                 lastLocation = location;

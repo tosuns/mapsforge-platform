@@ -181,7 +181,13 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
                 @Override
                 public void run() {
                     TopComponent topComponent = callback.getTopComponent();
-                    topComponent.setIcon(aggregator.getAggregatorState().getImage());
+                    if (callback.isSelectedElement()) {
+                        if (aggregator.getAggregatorState() == Aggregator.AggregatorState.RUNNING) {
+                            topComponent.setIcon(aggregator.getAggregatorState().getImage());
+                        } else {
+                            topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(0));
+                        }
+                    }
                 }
             });
         }

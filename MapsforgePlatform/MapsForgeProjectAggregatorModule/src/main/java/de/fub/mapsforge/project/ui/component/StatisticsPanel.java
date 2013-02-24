@@ -115,10 +115,10 @@ public class StatisticsPanel extends javax.swing.JPanel implements ExplorerManag
                     int i = 0;
                     for (StatisticProvider.StatisticSection section : provider.getStatisticData()) {
                         set = Sheet.createPropertiesSet();
-                        if (i != 0) {
-                            set.setValue(TAB_NAME, provider.getName());
-                            set.setName(section.getName());
-                        }
+//                        if (i != 0) {
+                        set.setValue(TAB_NAME, provider.getName());
+                        set.setName(section.getName());
+//                        }
                         set.setDisplayName(section.getName());
                         set.setShortDescription(section.getDescription());
                         sheet.put(set);

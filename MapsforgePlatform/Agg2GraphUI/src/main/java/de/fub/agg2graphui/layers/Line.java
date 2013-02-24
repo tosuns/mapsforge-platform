@@ -17,13 +17,20 @@ public class Line implements Drawable {
     private ILocation to;
     private RenderingOptions renderingOptions;
     private float weightFactor = 1;
+    private boolean directed;
 
     public Line(ILocation from, ILocation to, RenderingOptions ro,
             float weightFactor) {
+        this(from, to, ro, weightFactor, false);
+    }
+
+    public Line(ILocation from, ILocation to, RenderingOptions ro,
+            float weightFactor, boolean directed) {
         this.from = from;
         this.to = to;
         this.renderingOptions = ro;
         this.weightFactor = weightFactor;
+        this.directed = directed;
     }
 
     @Override
@@ -78,5 +85,13 @@ public class Line implements Drawable {
      */
     public void setWeightFactor(float weightFactor) {
         this.weightFactor = weightFactor;
+    }
+
+    public boolean isDirected() {
+        return directed;
+    }
+
+    public void setDirected(boolean directed) {
+        this.directed = directed;
     }
 }

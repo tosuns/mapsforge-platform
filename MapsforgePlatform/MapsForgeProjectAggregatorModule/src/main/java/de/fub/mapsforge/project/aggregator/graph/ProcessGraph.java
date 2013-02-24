@@ -41,6 +41,7 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 
 /**
+ * TODO besseren layouter implementieren.
  *
  * @author Serdar
  */
@@ -51,7 +52,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     private LayerWidget connectionLayer = null;
     private LayerWidget interactionLayer = null;
     private final ChangeSupport pcs = new ChangeSupport(this);
-    static int edgeCount = 0;
+    static long edgeCount = 0;
 
     public ProcessGraph() {
         getActions().addAction(ActionFactory.createZoomAction(1.5, true));
@@ -257,6 +258,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         @Override
         public void select(Widget widget, Point localLocation, boolean invertSelection) {
             widget.bringToFront();
+            widget.getScene().validate();
         }
     }
 
@@ -299,6 +301,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
                     }
                 }
             }
+            // TODO show message dialog why not accepted.
             return ConnectorState.REJECT;
         }
 
@@ -326,6 +329,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
                 setEdgeTarget(edgeId, (AbstractAggregationProcess) targetObject);
                 updateAggregatorPipeline();
             }
+            validate();
         }
     }
 
@@ -341,7 +345,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
 
         @Override
         public void reconnectingFinished(ConnectionWidget connectionWidget, boolean reconnectingSource) {
-            updateAggregatorPipeline();
+            validate();
         }
 
         @Override
@@ -386,13 +390,23 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         @Override
         public void reconnect(ConnectionWidget connectionWidget, Widget replacementWidget, boolean reconnectingSource) {
             // TODO differen logic for the condition to reconnect to given target
-            if (replacementWidget == null) {
+            if (replacementWidget == null && isEdge(edge)) {
                 removeEdge(edge);
             } else if (reconnectingSource) {
                 setEdgeSource(edge, replacementNode);
             } else {
-                setEdgeTarget(edge, replacementNode);
+                Object edgeObject = findObject(connectionWidget);
+                Object nodeObject = findObject(replacementWidget);
+
+                if (isEdge(edgeObject) && edgeObject instanceof String
+                        && isNode(nodeObject) && nodeObject instanceof AbstractAggregationProcess<?, ?>) {
+
+                    setEdgeTarget((String) edgeObject, (AbstractAggregationProcess<?, ?>) nodeObject);
+                }
+                //
             }
+            validate();
+            updateAggregatorPipeline();
         }
     }
 
@@ -442,7 +456,13 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
             Widget child = null;
             try {
                 Object transferData = transferable.getTransferData(AbstractAggregationProcess.PROCESS_FLAVOR);
-                if (transferData != null) {
+                if (transferData instanceof AbstractAggregationProcess<?, ?>) {
+                    AbstractAggregationProcess<?, ?> proc = (AbstractAggregationProcess<?, ?>) transferData;
+                    Class<?> inputType = getInputType(proc);
+                    if (inputType != null && inputType.isAssignableFrom(Void.class)) {
+                        // TODO message dialog why didn't get accepted!
+                        return ConnectorState.REJECT;
+                    }
                     child = findWidget(transferData);
                     if (child != null) {
                         return ConnectorState.REJECT;
