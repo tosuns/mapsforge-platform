@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Serdar
  */
-@XmlType(name = "preprocessors")
+@XmlType(name = "preprocessors", namespace = "http://inf.fu-berlin.de/mapsforge/detector/schema")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PreProcessors {
 
