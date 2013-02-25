@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: fu/berlin/mapsforge/xmlcatalogmodule/layer.xml
 OpenIDE-Module-Localizing-Bundle: fu/berlin/mapsforge/xmlcatalogmodule/Bundle.properties

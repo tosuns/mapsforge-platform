@@ -1,11 +1,13 @@
 package de.fub.mapsforge.project.aggregator.xml;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class AggregatorDescriptorTest {
     }
 
     @Test
-    public void testMarshall() {
+    public void marshallAggregationDescriptorTest() {
         AggregatorDescriptor descriptor = new AggregatorDescriptor("Test", "Test Description");
         descriptor.setAggregationStrategy("de.fub.agg2graph.agg.strategy.DefaultAggregationStrategy");
         descriptor.setTileCachingStrategy("de.fub.agg2graph.agg.tiling.DefaultCachingStrategy");
@@ -56,7 +58,7 @@ public class AggregatorDescriptorTest {
     }
 
     @Test
-    public void testUnmarshall() {
+    public void unmarshallAggregationDescriptorTest() {
         InputStream resourceAsStream = null;
         try {
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(AggregatorDescriptor.class);
@@ -81,5 +83,55 @@ public class AggregatorDescriptorTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void unmarshallProcessDescriptorTest() {
+        try {
+            ProcessDescriptor unmarshallProcessDescriptor = unmarshallProcessDescriptor();
+            Assert.assertNotNull(unmarshallProcessDescriptor);
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        } catch (JAXBException ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void marshallProcessDescriptorTest() {
+        try {
+            ProcessDescriptor processDescriptor = unmarshallProcessDescriptor();
+            Assert.assertNotNull(processDescriptor);
+            StringWriter stringWriter = new StringWriter();
+            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(ProcessDescriptor.class);
+            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(processDescriptor, stringWriter);
+            LOG.info(stringWriter.toString());
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        } catch (JAXBException ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    private ProcessDescriptor unmarshallProcessDescriptor() throws IOException, JAXBException {
+        ProcessDescriptor processDescriptor;
+        InputStream inputStream = ProcessDescriptor.class.getResourceAsStream("/de/fub/mapsforge/project/aggregator/pipeline/processes/CleanProcess.xml");
+        if (inputStream != null) {
+            try {
+                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(ProcessDescriptor.class);
+                javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
+                processDescriptor = (ProcessDescriptor) unmarshaller.unmarshal(inputStream); //NOI18N
+            } finally {
+                inputStream.close();
+            }
+        } else {
+            throw new FileNotFoundException("/de/fub/mapsforge/project/aggregator/pipeline/processes/CleanProcess.xml not found.");
+        }
+
+
+        return processDescriptor;
     }
 }

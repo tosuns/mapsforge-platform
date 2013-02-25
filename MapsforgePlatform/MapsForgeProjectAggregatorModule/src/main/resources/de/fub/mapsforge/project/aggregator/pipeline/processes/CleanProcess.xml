@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process 
+<process
     description="A simple GPS segment cleaner" name="Cleaner" class="de.fub.mapsforge.project.aggregator.pipeline.processes.CleanProcess">
     <properties>
         <section name="Cleaning Process">

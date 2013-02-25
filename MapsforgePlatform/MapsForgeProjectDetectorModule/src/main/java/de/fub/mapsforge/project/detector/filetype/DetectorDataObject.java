@@ -7,6 +7,9 @@ package de.fub.mapsforge.project.detector.filetype;
 import java.io.IOException;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.spi.xml.cookies.CheckXMLSupport;
+import org.netbeans.spi.xml.cookies.DataObjectAdapters;
+import org.netbeans.spi.xml.cookies.ValidateXMLSupport;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -19,6 +22,7 @@ import org.openide.loaders.MultiFileLoader;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
+import org.xml.sax.InputSource;
 
 @Messages({
     "LBL_Detector_LOADER=Files of Detector"
@@ -91,9 +95,16 @@ import org.openide.windows.TopComponent;
 })
 public class DetectorDataObject extends MultiDataObject {
 
+    private static final long serialVersionUID = 1L;
+
     public DetectorDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/detector+xml", true);
+        InputSource inputSource = DataObjectAdapters.inputSource(DetectorDataObject.this);
+        CheckXMLSupport checkXMLSupport = new CheckXMLSupport(inputSource);
+        ValidateXMLSupport validateXMLSupport = new ValidateXMLSupport(inputSource);
+        getCookieSet().add(checkXMLSupport);
+        getCookieSet().add(validateXMLSupport);
     }
 
     @Override

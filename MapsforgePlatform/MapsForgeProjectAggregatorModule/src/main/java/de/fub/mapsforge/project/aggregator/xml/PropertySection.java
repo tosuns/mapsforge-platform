@@ -41,7 +41,7 @@ public class PropertySection {
         this.name = name;
     }
 
-    @XmlAttribute(name = "description", required = true)
+    @XmlAttribute(name = "description")
     public String getDescription() {
         return description;
     }

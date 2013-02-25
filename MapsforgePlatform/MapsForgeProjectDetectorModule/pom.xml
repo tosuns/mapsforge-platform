@@ -111,6 +111,18 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <artifactId>org-openide-explorer</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73-BETA2</version>
+        </dependency>
+        <dependency>
+            <artifactId>org-netbeans-api-xml</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73-BETA2</version>
+        </dependency>
     </dependencies>
 
     <build>

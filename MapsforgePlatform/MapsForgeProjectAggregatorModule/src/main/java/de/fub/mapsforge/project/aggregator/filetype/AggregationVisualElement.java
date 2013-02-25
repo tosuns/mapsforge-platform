@@ -421,7 +421,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public CloseOperationState canCloseElement() {
-        return CloseOperationState.STATE_OK;
+        return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING ? CloseOperationState.STATE_OK : null;
     }
 
     @Override

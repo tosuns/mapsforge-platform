@@ -92,7 +92,7 @@ public class MapsForgeProject extends FileChangeAdapter implements Project, Mode
                     new MoveImpl(this),
                     new CopyImpl(this),
                     new MapsForgeProjectActionProvider(this),
-                    CommonProjectActions.closeProjectAction(),
+                    //                    CommonProjectActions.closeProjectAction(),
                     new MapsForgeProjectInfo(MapsForgeProject.this),
                     new MapsForgeLogicalView(MapsForgeProject.this));
         }

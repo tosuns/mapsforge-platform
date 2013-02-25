@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.junit.Assert;
 import org.junit.Test;
-import org.openide.util.Exceptions;
 
 /**
  *

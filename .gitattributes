@@ -273,6 +273,7 @@ MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/Bund
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/actions/ui/Bundle.properties -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/dataobject/MapsForgeTemplate.xml -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/icons/mapsforgeIcon16.png -text
+MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/layer.xml -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/Bundle.properties -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/MapsForge.zip -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/MapsForgeDescription.html -text
@@ -387,6 +388,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layersIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layerview.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/layer.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/AggregationProcess.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/CleanProcess.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/DatasourceProcess.xml -text
@@ -454,8 +456,11 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/Bundle.properties -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/filetype/DetectorTemplate.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/filetype/detector.png -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/layer.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/models/xmls/DetectorTestTemplate.xml -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/models/xsds/DetectorDescriptor.xsd -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/wizards/detector/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/test/java/de/fub/mapsforge/project/detector/models/xmls/DetectorDescriptorGeneratorTest.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/test/java/de/fub/mapsforge/project/detector/models/xmls/DetectorDescriptorTest.java -text
 MapsforgePlatform/OpenstreemapSevice/pom.xml -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/LocationBoundingBoxService.java -text
@@ -490,6 +495,7 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/Obser
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/ObservableList.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/awt/ColorUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/NodeFactories/MutableChildFactory.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/icons/IconRegister.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/installer/UtilInstaller.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/profiling/ProfilungUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/BigDecimalEditor.java -text
@@ -499,6 +505,7 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/text/MessageForma
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapEntry.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapType.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/XmlGenericMapAdapter.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/generator/SchemaGenertator.java -text
 MapsforgePlatform/UtilsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/Bundle.properties -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/layer.xml -text
@@ -509,6 +516,7 @@ MapsforgePlatform/XmlCatalogModule/pom.xml -text
 MapsforgePlatform/XmlCatalogModule/src/main/java/fu/berlin/mapsforge/xmlcatalogmodule/MapsForgeCatalogProvider.java -text
 MapsforgePlatform/XmlCatalogModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/XmlCatalogModule/src/main/resources/fu/berlin/mapsforge/xmlcatalogmodule/Bundle.properties -text
+MapsforgePlatform/XmlCatalogModule/src/main/resources/fu/berlin/mapsforge/xmlcatalogmodule/layer.xml -text
 MapsforgePlatform/application/nb-configuration.xml -text
 MapsforgePlatform/application/nbactions.xml -text
 MapsforgePlatform/application/pom.xml -text

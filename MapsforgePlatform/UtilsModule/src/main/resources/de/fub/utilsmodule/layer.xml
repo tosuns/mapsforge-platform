@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Actions">
+        <folder name="Tools">
+            <file name="org-netbeans-modules-diff-DiffAction.instance_hidden"/>
+            <file name="org-netbeans-modules-diff-PatchAction.instance_hidden"/>
+        </folder>
+    </folder>
+    <folder name="IconRegister"/>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="org-netbeans-modules-favorites-templates-TemplatesAction.shadow_hidden"/>
+        </folder>
+    </folder>
 </filesystem>

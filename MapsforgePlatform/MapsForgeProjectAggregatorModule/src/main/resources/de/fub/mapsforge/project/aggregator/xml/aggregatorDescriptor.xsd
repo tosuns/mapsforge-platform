@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
+    xmlns="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
     targetNamespace="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
     version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="aggregator" type="aggregatorDescriptor"/>
-    <xs:element name="process" type="process"/>
     <xs:complexType name="aggregatorDescriptor">
         <xs:sequence>
             <xs:element minOccurs="0" name="datasources">
@@ -29,7 +29,7 @@
     </xs:complexType>
     <xs:complexType name="pipeline">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" ref="process"/>
+            <xs:element name="process" maxOccurs="unbounded" minOccurs="0" type="process"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="process">
@@ -51,7 +51,7 @@
             <xs:element maxOccurs="unbounded" minOccurs="0"
                         name="propertyset" type="propertyset"/>
         </xs:sequence>
-        <xs:attribute name="description" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="propertyset">

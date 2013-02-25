@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="MapsForge">
+        <folder name="Catalog">
+            <file name="Aggregator Descriptor.xsd" url="nbres:/de/fub/mapsforge/project/aggregator/xml/aggregatorDescriptor.xsd">
+                <attr name="schemaId" stringvalue="http://inf.fu-berlin.de/mapsforge/aggregation/schema"/>
+                <attr name="resource" stringvalue="nbres:/de/fub/mapsforge/project/aggregator/xml/aggregatorDescriptor.xsd"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

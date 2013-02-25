@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="MapsForge">
+        <folder name="Catalog">
+            <file name="Detector Descriptor.xsd" url="nbres:/de/fub/mapsforge/project/detector/models/xsds/detectorDescriptor.xsd">
+                <attr name="schemaId" stringvalue="http://inf.fu-berlin.de/mapsforge/detector/schema"/>
+                <attr name="resource" stringvalue="nbres:/de/fub/mapsforge/project/detector/models/xsds/detectorDescriptor.xsd"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

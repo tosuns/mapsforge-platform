@@ -111,7 +111,6 @@ public class InterfaceInplaceEditor implements InplaceEditor {
     @Override
     public void reset() {
 
-
         Object value = editor.getValue();
         if (value instanceof ClassWrapper) {
             comboBox.setSelectedItem(value);

@@ -156,7 +156,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
                 @Override
                 public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val)) {
+                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                         value = val;
                         propertyItem.setValue(String.valueOf(val));
                         update();
@@ -175,7 +175,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
                 @Override
                 public void setValue(Double val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val)) {
+                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                         value = val;
                         propertyItem.setValue(String.valueOf(val));
                         update();
@@ -213,7 +213,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
                 @Override
                 public void setValue(Long val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val)) {
+                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                         value = val;
                         propertyItem.setValue(String.valueOf(val));
                         update();
@@ -232,7 +232,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
                 @Override
                 public void setValue(Color val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (val != null && color.getRGB() != val.getRGB()) {
+                    if (val != null && color.getRGB() != val.getRGB() && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                         color = val;
                         propertyItem.setValue(String.valueOf(val.getRGB()));
                         update();
@@ -251,7 +251,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
                 @Override
                 public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val)) {
+                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                         value = val;
                         propertyItem.setValue(val);
                         update();
@@ -297,10 +297,11 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                value = val;
-                aggregator.getDescriptor().setName(val);
-//                setDisplayName(val);
-                update();
+                if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                    value = val;
+                    aggregator.getDescriptor().setName(val);
+                    update();
+                }
             }
         };
         set.put(property);
@@ -315,9 +316,11 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
             @Override
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                description = val;
-                aggregator.getDescriptor().setDescription(val);
-                update();
+                if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                    description = val;
+                    aggregator.getDescriptor().setDescription(val);
+                    update();
+                }
             }
         };
         set.put(property);
@@ -333,12 +336,14 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
             @Override
             public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                if (val == null) {
-                    throw new IllegalArgumentException(" null is not a valid argument!");
+                if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                    if (val == null) {
+                        throw new IllegalArgumentException(" null is not a valid argument!");
+                    }
+                    wrapper = val;
+                    aggregator.getDescriptor().setAggregationStrategy(val.getQualifiedName());
+                    update();
                 }
-                wrapper = val;
-                aggregator.getDescriptor().setAggregationStrategy(val.getQualifiedName());
-                update();
             }
         };
         set.put(property);
@@ -355,13 +360,15 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
             @Override
             public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                if (val == null) {
-                    throw new IllegalArgumentException("null is not a valid argument!");
-                }
-                wrapper = val;
-                aggregator.getDescriptor().setTileCachingStrategy(val.getQualifiedName());
+                if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                    if (val == null) {
+                        throw new IllegalArgumentException("null is not a valid argument!");
+                    }
+                    wrapper = val;
+                    aggregator.getDescriptor().setTileCachingStrategy(val.getQualifiedName());
 
-                update();
+                    update();
+                }
             }
         };
         set.put(property);

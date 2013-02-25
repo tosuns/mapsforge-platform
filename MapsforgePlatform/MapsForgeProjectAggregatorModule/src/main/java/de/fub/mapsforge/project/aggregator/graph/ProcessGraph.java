@@ -321,7 +321,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
 
         @Override
         public void createConnection(Widget sourceWidget, Widget targetWidget) {
-            String edgeId = MessageFormat.format("edge + {1}", edgeCount++);
+            String edgeId = MessageFormat.format("edge + {0}", edgeCount++);
             ProcessGraph.this.addEdge(edgeId);
             Object sourceObject = ProcessGraph.this.findObject(sourceWidget);
             Object targetObject = ProcessGraph.this.findObject(targetWidget);
