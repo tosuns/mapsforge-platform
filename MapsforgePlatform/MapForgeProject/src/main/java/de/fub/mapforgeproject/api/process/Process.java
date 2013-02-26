@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.aggregator.pipeline;
+package de.fub.mapforgeproject.api.process;
 
+import de.fub.mapforgeproject.api.process.Process;
 import java.awt.datatransfer.DataFlavor;
 
 /**
@@ -12,12 +13,6 @@ import java.awt.datatransfer.DataFlavor;
  */
 public interface Process<I, O> extends Runnable {
 
-    public enum State {
-
-        OK,
-        RUNNING,
-        ERROR;
-    }
     public static final DataFlavor PROCESS_FLAVOR = new DataFlavor(Process.class, "Process");
 
     public String getName();
@@ -28,7 +23,7 @@ public interface Process<I, O> extends Runnable {
 
     public O getResult();
 
-    public State getProcessState();
+    public ProcessState getProcessState();
 
     public void addProcessListener(ProcessPipeline.ProcessListener listener);
 

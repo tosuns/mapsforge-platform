@@ -10,7 +10,7 @@ import de.fub.mapforgeproject.actions.MapsForgeProjectActionProvider;
 import de.fub.mapforgeproject.actions.MoveImpl;
 import de.fub.mapforgeproject.actions.RenameImpl;
 import de.fub.mapforgeproject.xml.MapsForge;
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer2;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +37,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public class MapsForgeProject extends FileChangeAdapter implements Project, ModelSynchronizer<MapsForge> {
+public class MapsForgeProject extends FileChangeAdapter implements Project, ModelSynchronizer2<MapsForge> {
 
     private final FileObject projectDir;
     private final ProjectState state;

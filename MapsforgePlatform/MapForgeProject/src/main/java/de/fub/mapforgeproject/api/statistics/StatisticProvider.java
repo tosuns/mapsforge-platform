@@ -2,10 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.api;
+package de.fub.mapforgeproject.api.statistics;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

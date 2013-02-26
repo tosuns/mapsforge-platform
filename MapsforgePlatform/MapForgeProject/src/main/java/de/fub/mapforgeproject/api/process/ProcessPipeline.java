@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.aggregator.pipeline;
+package de.fub.mapforgeproject.api.process;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -101,19 +101,19 @@ public abstract class ProcessPipeline<T extends Process<?, ?>> {
         public void changed(ProcessEvent event);
     }
 
-    public static class ProcessEvent {
+    public static class ProcessEvent<T extends Process<?, ?>> {
 
-        private AbstractAggregationProcess<?, ?> source;
+        private T source;
         private String processMessage;
         private int percentfinished;
 
-        public ProcessEvent(AbstractAggregationProcess<?, ?> source, String processMessage, int percentfinished) {
+        public ProcessEvent(T source, String processMessage, int percentfinished) {
             this.source = source;
             this.processMessage = processMessage;
             this.percentfinished = percentfinished;
         }
 
-        public AbstractAggregationProcess<?, ?> getSource() {
+        public T getSource() {
             return source;
         }
 

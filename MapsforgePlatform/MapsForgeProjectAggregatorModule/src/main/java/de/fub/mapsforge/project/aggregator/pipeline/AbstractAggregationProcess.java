@@ -5,46 +5,26 @@
 package de.fub.mapsforge.project.aggregator.pipeline;
 
 import de.fub.agg2graphui.controller.AbstractLayer;
-import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline.ProcessEvent;
-import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline.ProcessListener;
+import de.fub.mapforgeproject.api.process.AbstractProcess;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
-import de.fub.mapsforge.project.api.StatisticProvider;
-import de.fub.mapsforge.project.api.StatisticProvider.StatisticSection;
 import de.fub.mapsforge.project.models.Aggregator;
-import java.awt.Image;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.swing.JComponent;
 import org.openide.nodes.Node;
-import org.openide.util.NbBundle;
 
 /**
  *
  * @author Serdar
  */
-public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>, PropertyChangeListener {
+public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I, O> {
 
-    public static final String PROP_NAME_PROCESS_STATE = "process.state";
     public static final String PROP_NAME_PROCESS_DESCRIPTOR = "process.descriptor";
-    protected State processState = State.OK;
     protected Aggregator aggregator;
     protected ProcessDescriptor descriptor;
     protected ArrayList<AbstractLayer<?>> layers = new ArrayList<AbstractLayer<?>>();
-    protected final Set<ProcessListener> processListenerSet = new HashSet<ProcessListener>();
-    protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private final Object MUTEX = new Object();
     private Node nodeDelegate;
-    private long processStartTime;
-    private long processFinishTime;
 
     public AbstractAggregationProcess(Aggregator aggregator) {
         this.aggregator = aggregator;
@@ -54,9 +34,10 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
         return aggregator;
     }
 
+    @Override
     public Node getNodeDelegate() {
         if (nodeDelegate == null) {
-            nodeDelegate = new ProcessNode(AbstractAggregationProcess.this);
+            nodeDelegate = new AggregationProcessNode(AbstractAggregationProcess.this);
         }
         return nodeDelegate;
     }
@@ -81,129 +62,15 @@ public abstract class AbstractAggregationProcess<I, O> implements Process<I, O>,
         return descriptor;
     }
 
-    @Override
-    public State getProcessState() {
-        return processState;
-    }
-
-    @Override
-    public void run() {
-        try {
-            processStartTime = System.currentTimeMillis();
-            setProcessState(State.RUNNING);
-            start();
-            setProcessState(State.OK);
-            processFinishTime = System.currentTimeMillis();
-        } catch (Throwable ex) {
-            setProcessState(State.ERROR);
-            throw new ProcessRuntimeException(ex);
-        }
-    }
-
-    protected void setProcessState(State state) {
-        Object oldValue = processState;
-        processState = state;
-        pcs.firePropertyChange(PROP_NAME_PROCESS_STATE, oldValue, processState);
-    }
-
     public void setDescriptor(ProcessDescriptor descriptor) {
         Object oldValue = this.descriptor;
         this.descriptor = descriptor;
         pcs.firePropertyChange(PROP_NAME_PROCESS_DESCRIPTOR, oldValue, this.descriptor);
     }
 
-    protected void fireProcessEvent(ProcessEvent event) {
-        synchronized (MUTEX) {
-            for (ProcessListener listener : processListenerSet) {
-                listener.changed(event);
-            }
-        }
-    }
-
-    @Override
-    public void addProcessListener(ProcessListener listener) {
-        synchronized (MUTEX) {
-            processListenerSet.add(listener);
-        }
-    }
-
-    @Override
-    public void removeProcessListener(ProcessListener listener) {
-        synchronized (MUTEX) {
-            processListenerSet.remove(listener);
-        }
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        pcs.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        pcs.removePropertyChangeListener(listener);
-    }
-
     public List<AbstractLayer<?>> getLayers() {
         return layers;
     }
 
-    @NbBundle.Messages({
-        "# {0} - processName",
-        "CLT_Section_Name={0} Performance",
-        "# {0} - processName",
-        "CLT_Section_Description=Displays performance data for the {0} process.",
-        "CLT_Process_Started_Label=Process Started",
-        "# {0} - processName",
-        "CLT_Process_Started_Description=The last start time of this {0} process.",
-        "CLT_Process_Finished_Label=Process Finished",
-        "# {0} - processName",
-        "CLT_Process_Finished_Description=The last finish time of this {0} process.",
-        "CLT_Process_Duration_Label=Duration Time (ms)",
-        "# {0} - processName",
-        "CLT_Process_Duration_Description=The duration time that this {0} process took in milliseconds."
-    })
-    protected StatisticProvider.StatisticSection getPerformanceData() {
-        StatisticSection section = new StatisticProvider.StatisticSection(Bundle.CLT_Section_Name(getName()), Bundle.CLT_Section_Description(getName()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:MM:ss:SSS");
-        section.getStatisticsItemList().add(new StatisticProvider.StatisticItem(Bundle.CLT_Process_Started_Label(), simpleDateFormat.format(new Date(processStartTime)), Bundle.CLT_Process_Started_Description(getName())));
-        section.getStatisticsItemList().add(new StatisticProvider.StatisticItem(Bundle.CLT_Process_Finished_Label(), simpleDateFormat.format(new Date(processFinishTime)), Bundle.CLT_Process_Finished_Description(getName())));
-        section.getStatisticsItemList().add(new StatisticProvider.StatisticItem(Bundle.CLT_Process_Duration_Label(), String.valueOf(processFinishTime - processStartTime), Bundle.CLT_Process_Duration_Description(getName())));
-        return section;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        pcs.firePropertyChange(evt);
-    }
-
     protected abstract ProcessDescriptor createProcessDescriptor();
-
-    protected abstract void start();
-
-    public abstract Image getIcon();
-
-    public abstract JComponent getSettingsView();
-
-    public static class ProcessRuntimeException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
-
-        public ProcessRuntimeException() {
-        }
-
-        public ProcessRuntimeException(String message) {
-            super(message);
-        }
-
-        public ProcessRuntimeException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public ProcessRuntimeException(Throwable cause) {
-            super(cause);
-        }
-
-        public ProcessRuntimeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-            super(message, cause, enableSuppression, writableStackTrace);
-        }
-    }
 }

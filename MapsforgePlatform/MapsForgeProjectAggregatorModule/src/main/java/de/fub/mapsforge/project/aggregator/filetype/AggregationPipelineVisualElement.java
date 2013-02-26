@@ -8,7 +8,7 @@ import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.models.ModelSynchronizer;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;

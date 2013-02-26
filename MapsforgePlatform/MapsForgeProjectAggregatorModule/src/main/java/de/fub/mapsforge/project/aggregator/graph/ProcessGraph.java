@@ -484,7 +484,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         public void accept(Widget widget, Point point, Transferable transferable) {
             try {
                 Object transferData = transferable.getTransferData(AbstractAggregationProcess.PROCESS_FLAVOR);
-                if (transferData instanceof de.fub.mapsforge.project.aggregator.pipeline.Process) {
+                if (transferData instanceof de.fub.mapforgeproject.api.process.Process) {
                     Widget processWidget = addNode((AbstractAggregationProcess) transferData.getClass().newInstance());
                     Dimension preferredSize = processWidget.getPreferredSize();
                     Point point1 = new Point(point.x - preferredSize.width / 2, point.y - preferredSize.height / 2);

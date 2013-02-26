@@ -131,7 +131,10 @@
                     <useOSGiDependencies>true</useOSGiDependencies>
                     <publicPackages>
                         <publicPackage>de.fub.mapforgeproject</publicPackage>
+                        <publicPackage>de.fub.mapforgeproject.api.process</publicPackage>
+                        <publicPackage>de.fub.mapforgeproject.api.statistics</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.dataobject</publicPackage>
+                        <publicPackage>de.fub.mapforgeproject.nodes</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.xml</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.xml.adapters</publicPackage>
                     </publicPackages>

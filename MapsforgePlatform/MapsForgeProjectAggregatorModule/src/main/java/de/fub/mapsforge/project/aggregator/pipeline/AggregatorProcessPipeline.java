@@ -5,16 +5,17 @@
 package de.fub.mapsforge.project.aggregator.pipeline;
 
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapforgeproject.api.process.ProcessPipeline;
 
 /**
  *
  * @author Serdar
  */
-public class AggregateProcessPipeline extends ProcessPipeline<AbstractAggregationProcess<?, ?>> {
+public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregationProcess<?, ?>> {
 
     private final Aggregator aggregator;
 
-    public AggregateProcessPipeline(Aggregator aggregator1) {
+    public AggregatorProcessPipeline(Aggregator aggregator1) {
         super();
         assert aggregator1 != null;
         this.aggregator = aggregator1;

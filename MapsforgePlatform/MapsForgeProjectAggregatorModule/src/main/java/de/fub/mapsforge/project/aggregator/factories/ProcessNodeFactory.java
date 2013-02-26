@@ -6,7 +6,7 @@ package de.fub.mapsforge.project.aggregator.factories;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.models.ModelSynchronizer;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

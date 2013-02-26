@@ -59,6 +59,6 @@ public class Property {
 
     @Override
     public String toString() {
-        return "Property{" + "javaType=" + javaType + ", name=" + name + ", description=" + description + '}';
+        return String.format("%s{javaType=%s, name=%s, description=%s}", this.getClass().getSimpleName(), javaType, name, description);
     }
 }

@@ -7,7 +7,7 @@ package de.fub.mapsforge.project.aggregator.factories;
 import de.fub.mapsforge.project.aggregator.factories.nodes.SourceNode;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.models.ModelSynchronizer;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.net.URISyntaxException;
 import java.util.List;
 import javax.swing.event.ChangeEvent;

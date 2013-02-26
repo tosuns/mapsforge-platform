@@ -8,7 +8,7 @@ import de.fub.agg2graph.osm.OsmExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
-import de.fub.mapsforge.project.api.StatisticProvider;
+import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;

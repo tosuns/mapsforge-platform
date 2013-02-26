@@ -16,14 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "inferencemodel", propOrder = {"javaType", "name", "description", "features"})
 @XmlAccessorType(XmlAccessType.FIELD)
-public class InferenceModelDescriptor {
+public class InferenceModelDescriptor extends Property {
 
-    @XmlAttribute(name = "name", required = true)
-    private String name;
-    @XmlAttribute(name = "description")
-    private String description;
-    @XmlAttribute(name = "javaType", required = true)
-    private String javaType;
     @XmlElement(name = "features")
     private Features features = new Features();
 
@@ -31,41 +25,10 @@ public class InferenceModelDescriptor {
     }
 
     public InferenceModelDescriptor(String name, String description, String javaType) {
-        this.name = name;
-        this.description = description;
-        this.javaType = javaType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getJavaType() {
-        return javaType;
-    }
-
-    public void setJavaType(String javaType) {
-        this.javaType = javaType;
+        super(javaType, name, description);
     }
 
     public Features getFeatures() {
         return features;
-    }
-
-    @Override
-    public String toString() {
-        return "InferenceModelDescriptor{" + "name=" + name + ", description=" + description + ", javaType=" + javaType + '}';
     }
 }

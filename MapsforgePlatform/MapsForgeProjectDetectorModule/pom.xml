@@ -123,6 +123,12 @@
             <type>jar</type>
             <version>RELEASE73-BETA2</version>
         </dependency>
+        <dependency>
+            <artifactId>UtilsModule</artifactId>
+            <groupId>de.fub</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

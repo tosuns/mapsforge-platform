@@ -92,6 +92,7 @@
                         <publicPackage>de.fub.utilsmodule.NodeFactories</publicPackage>
                         <publicPackage>de.fub.utilsmodule.icons</publicPackage>
                         <publicPackage>de.fub.utilsmodule.installer</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.process</publicPackage>
                         <publicPackage>de.fub.utilsmodule.profiling</publicPackage>
                         <publicPackage>de.fub.utilsmodule.propertyeditors</publicPackage>
                         <publicPackage>de.fub.utilsmodule.synchronizer</publicPackage>

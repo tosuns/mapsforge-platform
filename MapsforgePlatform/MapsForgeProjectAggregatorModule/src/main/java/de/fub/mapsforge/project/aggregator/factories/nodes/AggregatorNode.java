@@ -16,7 +16,7 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.models.ModelSynchronizer;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Color;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;

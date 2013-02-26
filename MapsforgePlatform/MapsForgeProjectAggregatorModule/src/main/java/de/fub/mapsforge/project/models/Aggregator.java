@@ -4,17 +4,18 @@
  */
 package de.fub.mapsforge.project.models;
 
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.IAggregationStrategy;
 import de.fub.agg2graph.agg.tiling.ICachingStrategy;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.AggregateProcessPipeline;
-import de.fub.mapsforge.project.aggregator.pipeline.ProcessPipeline;
+import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
+import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
-import de.fub.mapsforge.project.api.StatisticProvider;
+import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
@@ -51,7 +52,7 @@ public class Aggregator extends ModelSynchronizer {
     private final AggregatorDataObject dataObject;
     private AggregatorState aggregatorState = AggregatorState.INACTIVE;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private AggregateProcessPipeline pipeline = new AggregateProcessPipeline(this);
+    private AggregatorProcessPipeline pipeline = new AggregatorProcessPipeline(this);
     private AggContainer aggContainer;
     private ModelSynchronizerClient dataObjectModelSynchonizerClient;
     private final Object MUTEX_PROCESS_RUNNING = new Object();
@@ -189,7 +190,7 @@ public class Aggregator extends ModelSynchronizer {
         return aggContainer;
     }
 
-    public AggregateProcessPipeline getPipeline() {
+    public AggregatorProcessPipeline getPipeline() {
         return pipeline;
     }
 

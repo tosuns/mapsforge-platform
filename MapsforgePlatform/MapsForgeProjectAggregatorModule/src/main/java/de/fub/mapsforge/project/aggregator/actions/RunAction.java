@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.aggregator.actions;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.AggregateProcessPipeline;
+import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -51,7 +51,7 @@ public final class RunAction extends AbstractAction implements Presenter.Popup {
         Aggregator aggregator = context.lookup(Aggregator.class);
         JMenu menu = new JMenu(Bundle.CTL_RunAction());
         if (aggregator != null && !aggregator.getSourceList().isEmpty()) {
-            AggregateProcessPipeline pipeline = aggregator.getPipeline();
+            AggregatorProcessPipeline pipeline = aggregator.getPipeline();
             DelegateAction delegateAction = null;
             for (int i = 0; i < pipeline.size(); i++) {
                 AbstractAggregationProcess<?, ?> process = pipeline.get(i);

@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.ui.component;
 
-import de.fub.mapsforge.project.api.StatisticProvider;
+import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import java.awt.Component;
 import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
