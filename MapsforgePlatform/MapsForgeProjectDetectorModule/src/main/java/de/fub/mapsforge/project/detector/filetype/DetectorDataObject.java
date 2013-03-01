@@ -5,8 +5,8 @@
 package de.fub.mapsforge.project.detector.filetype;
 
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.models.xmls.DetectorDescriptor;
-import de.fub.mapsforge.project.detector.nodes.DetectorNode;
+import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
+import de.fub.mapsforge.project.detector.factories.nodes.DetectorNode;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,7 +160,7 @@ public class DetectorDataObject extends MultiDataObject {
             try {
                 javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
                 javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-                inputStream = (InputStream) unmarshaller.unmarshal(inputStream); //NOI18N
+                detectorDescriptor = (DetectorDescriptor) unmarshaller.unmarshal(inputStream); //NOI18N
             } finally {
                 if (inputStream != null) {
                     inputStream.close();

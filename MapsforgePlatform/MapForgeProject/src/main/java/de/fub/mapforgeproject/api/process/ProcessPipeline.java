@@ -7,6 +7,7 @@ package de.fub.mapforgeproject.api.process;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventListener;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
 public abstract class ProcessPipeline<T extends Process<?, ?>> {
 
     protected final ArrayList<T> pipeline = new ArrayList<T>();
+    private final HashSet<PipelineListener> listenerSet = new HashSet<PipelineListener>();
+    private final Object EVENT_MUTEX = new Object();
 
     public Collection<T> getProcesses() {
         return pipeline;
@@ -78,7 +81,47 @@ public abstract class ProcessPipeline<T extends Process<?, ?>> {
         return pipeline.iterator();
     }
 
-    public interface PipelineListener {
+    protected void firePipelineEvent(PipelineEvents event) {
+        synchronized (EVENT_MUTEX) {
+            for (PipelineListener listener : listenerSet) {
+                switch (event) {
+                    case CANCELED:
+                        listener.stoped(PipelineListener.Result.CANCELED);
+                        break;
+                    case CHANCHED:
+                        listener.pipelineChanged();
+                        break;
+                    case FINISHED:
+                        listener.stoped(PipelineListener.Result.FINISHED);
+                        break;
+                    case STARTED:
+                        listener.started();
+                        break;
+                    case WILL_START:
+                        break;
+                    case ERROR:
+                        listener.stoped(PipelineListener.Result.ERROR);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+
+    public void addPipelineListener(PipelineListener listener) {
+        synchronized (EVENT_MUTEX) {
+            listenerSet.add(listener);
+        }
+    }
+
+    public void removePipelineListener(PipelineListener listener) {
+        synchronized (EVENT_MUTEX) {
+            listenerSet.remove(listener);
+        }
+    }
+
+    public interface PipelineListener extends EventListener {
 
         public enum Result {
 
@@ -91,14 +134,20 @@ public abstract class ProcessPipeline<T extends Process<?, ?>> {
 
         public void started();
 
-        public void stopted(Result result);
+        public void stoped(Result result);
 
         public void pipelineChanged();
     }
 
     public interface ProcessListener extends EventListener {
 
+        public void started();
+
         public void changed(ProcessEvent event);
+
+        public void canceled();
+
+        public void finished();
     }
 
     public static class ProcessEvent<T extends Process<?, ?>> {
@@ -129,5 +178,10 @@ public abstract class ProcessPipeline<T extends Process<?, ?>> {
         public String toString() {
             return "ProcessEvent{" + "source=" + source + ", processMessage=" + processMessage + ", percentfinished=" + percentfinished + '}';
         }
+    }
+
+    protected enum PipelineEvents {
+
+        WILL_START, STARTED, FINISHED, CANCELED, CHANCHED, ERROR;
     }
 }

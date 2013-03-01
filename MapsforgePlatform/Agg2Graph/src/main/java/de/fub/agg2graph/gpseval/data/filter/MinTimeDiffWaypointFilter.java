@@ -26,12 +26,12 @@ public class MinTimeDiffWaypointFilter extends WaypointFilter {
     public boolean filter(Waypoint gpsData) {
         if (mLastAcceptedWaypointTime != null) {
             long time1 = mLastAcceptedWaypointTime.getTime();
-            long time2 = gpsData.mDate.getTime();
-            if ((time2 - time1) < (mInterval * 1000)-1) {
+            long time2 = gpsData.getmDate().getTime();
+            if ((time2 - time1) < (mInterval * 1000) - 1) {
                 return false;
             }
         }
-        mLastAcceptedWaypointTime = gpsData.mDate;
+        mLastAcceptedWaypointTime = gpsData.getmDate();
         return true;
     }
 }

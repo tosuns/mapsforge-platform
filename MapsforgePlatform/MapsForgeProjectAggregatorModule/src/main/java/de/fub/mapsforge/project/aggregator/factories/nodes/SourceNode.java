@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.models.AggregatorSource;
 import java.awt.Image;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.filesystems.FileObject;
@@ -22,10 +23,14 @@ import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 /**
+ * TODO Validation check and approciated display in error case.
+ *
  *
  * @author Serdar
  */
 public class SourceNode extends FilterNode {
+
+    private final static String HTML_PATTERN = "<html><font color='gray'><i>{0}</i></font></html>";
 
     public SourceNode(Source source, Aggregator aggregator) throws DataObjectNotFoundException, URISyntaxException {
         this(new AggregatorSource(aggregator, source));
@@ -33,6 +38,11 @@ public class SourceNode extends FilterNode {
 
     private SourceNode(AggregatorSource aggregatorSource) {
         super(getDataObject(aggregatorSource).getNodeDelegate(), Children.LEAF, Lookups.fixed(aggregatorSource));
+    }
+
+    @Override
+    public String getHtmlDisplayName() {
+        return MessageFormat.format(HTML_PATTERN, getDisplayName());
     }
 
     @Override

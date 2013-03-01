@@ -59,6 +59,7 @@ public final class AggTopComponent extends JPanel {
         mapViewer.addMapMarker(new MapMarkerDot(area.getWidth(), area.getHeight()));
         mapViewer.setDisplayToFitMapMarkers();
         removeAllMarkers();
+        updateZoomLevel();
     }
 
     public void setDisplayToFitMapMarkers() {

@@ -11,8 +11,8 @@ public class MaxPrecisionFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        if (entry.mPrecision > mMaxPrecision) {
-            mMaxPrecision = entry.mPrecision;
+        if (entry.getmPrecision() > mMaxPrecision) {
+            mMaxPrecision = entry.getmPrecision();
         }
     }
 

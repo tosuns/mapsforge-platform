@@ -9,4 +9,27 @@
             </file>
         </folder>
     </folder>
+    <folder name="IconRegister">
+        <file name="datasetIcon.png" url="nbres:/de/fub/mapsforge/project/aggregator/datasetIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/datasetIcon.png"/>
+        </file>
+        <file name="processFolderIcon.png" url="nbres:/de/fub/mapsforge/project/aggregator/processFolderIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/processFolderIcon.png"/>
+        </file>
+        <file name="processIconError.png" url="nbres:/de/fub/mapsforge/project/aggregator/processIconError.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/processIconError.png"/>
+        </file>
+        <file name="processIconNormal.png" url="nbres:/de/fub/mapsforge/project/aggregator/processIconNormal.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/processIconNormal.png"/>
+        </file>
+        <file name="processIconRun.png" url="nbres:/de/fub/mapsforge/project/aggregator/processIconRun.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/processIconRun.png"/>
+        </file>
+        <file name="statisticsIcon.png" url="nbres:/de/fub/mapsforge/project/aggregator/statisticsIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/statisticsIcon.png"/>
+        </file>
+        <file name="toolbarProcessRunIcon.png" url="nbres:/de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png"/>
+        </file>
+    </folder>
 </filesystem>

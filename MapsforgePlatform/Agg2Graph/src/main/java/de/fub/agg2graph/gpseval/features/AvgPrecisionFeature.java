@@ -12,7 +12,7 @@ public class AvgPrecisionFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        mSumPrecision += entry.mPrecision;
+        mSumPrecision += entry.getmPrecision();
         ++mCount;
     }
 

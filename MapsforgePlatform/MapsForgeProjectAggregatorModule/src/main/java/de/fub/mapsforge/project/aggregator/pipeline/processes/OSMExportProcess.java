@@ -6,9 +6,10 @@ package de.fub.mapsforge.project.aggregator.pipeline.processes;
 
 import de.fub.agg2graph.osm.OsmExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
+import de.fub.mapforgeproject.api.process.ProcessPipeline;
+import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
-import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
@@ -42,7 +43,6 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
     private RoadNetwork roadNetwork;
     private FileObject fileObject;
-    private final Object MUTEX = new Object();
 
     public OSMExportProcess() {
         super(null);
@@ -59,39 +59,38 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
 
     @Override
     public FileObject getResult() {
-        synchronized (MUTEX) {
+        synchronized (RUN_MUTEX) {
             return fileObject;
         }
     }
 
     @Override
     protected void start() {
-        synchronized (MUTEX) {
-            if (roadNetwork != null) {
+        if (roadNetwork != null) {
 
-                FileChooserBuilder builder = new FileChooserBuilder(OSMExportProcess.class);
-                builder.setTitle(Bundle.CLT_OSM_Export_Title()).addFileFilter(new OsmXmlFileFilter());
-                JFileChooser fileChooser = builder.createFileChooser();
-                int showSaveDialog = fileChooser.showSaveDialog(null);
+            FileChooserBuilder builder = new FileChooserBuilder(OSMExportProcess.class);
+            builder.setTitle(Bundle.CLT_OSM_Export_Title()).addFileFilter(new OsmXmlFileFilter());
+            JFileChooser fileChooser = builder.createFileChooser();
+            int showSaveDialog = fileChooser.showSaveDialog(null);
 
-                if (JFileChooser.APPROVE_OPTION == showSaveDialog) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    if (selectedFile != null) {
-                        try {
-                            if (!selectedFile.exists()) {
-                                selectedFile.createNewFile();
-                            }
-                            OsmExporter osmExport = new OsmExporter();
-                            osmExport.setTargetFile(selectedFile);
-                            osmExport.export(roadNetwork);
-
-                            fileObject = FileUtil.toFileObject(selectedFile);
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
+            if (JFileChooser.APPROVE_OPTION == showSaveDialog) {
+                File selectedFile = fileChooser.getSelectedFile();
+                if (selectedFile != null) {
+                    try {
+                        if (!selectedFile.exists()) {
+                            selectedFile.createNewFile();
                         }
+                        OsmExporter osmExport = new OsmExporter();
+                        osmExport.setTargetFile(selectedFile);
+                        osmExport.export(roadNetwork);
+
+                        fileObject = FileUtil.toFileObject(selectedFile);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
                 }
             }
+            fireProcessProgressEvent(new ProcessPipeline.ProcessEvent<OSMExportProcess>(this, "Creating OSM File...", 100));
         }
     }
 
@@ -137,6 +136,12 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
         List<StatisticSection> statisticSections = new ArrayList<StatisticSection>();
         statisticSections.add(getPerformanceData());
         return statisticSections;
+    }
+
+    @Override
+    public boolean cancel() {
+        canceled.set(true);
+        return canceled.get();
     }
 
     private static class OsmXmlFileFilter extends FileFilter {

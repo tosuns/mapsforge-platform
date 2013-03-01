@@ -11,8 +11,8 @@ public class MinPrecisionFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        if (entry.mPrecision < mMinPrecision) {
-            mMinPrecision = entry.mPrecision;
+        if (entry.getmPrecision() < mMinPrecision) {
+            mMinPrecision = entry.getmPrecision();
         }
     }
 

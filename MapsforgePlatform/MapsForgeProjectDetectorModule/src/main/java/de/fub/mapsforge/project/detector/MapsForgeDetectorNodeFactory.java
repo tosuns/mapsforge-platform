@@ -6,7 +6,7 @@ package de.fub.mapsforge.project.detector;
 
 import de.fub.mapforgeproject.MapsForgeProject;
 import de.fub.mapforgeproject.xml.MapsForge;
-import de.fub.mapsforge.project.detector.nodes.DetectorFolderNode;
+import de.fub.mapsforge.project.detector.factories.nodes.DetectorFolderNode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

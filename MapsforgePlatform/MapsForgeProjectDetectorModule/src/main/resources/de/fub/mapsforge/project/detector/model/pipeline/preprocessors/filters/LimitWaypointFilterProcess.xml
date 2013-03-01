@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<processunit javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.LimitWaypointFilterProcess"
+             name="Limit Waypoints Filter"
+             description="THis filter is responsible to check the number of gps points that a gps track contains. If the number of gps points exceeds a given threshold, then the track gets seperated into two segments and the filter continous the filtering process with the second segment until it reaches the end of the track.">
+    <properties>
+        <!-- value in meters -->
+        <property value="2" javaType="java.lang.Integer" name="limit" description="count of gps points."/>
+    </properties>
+</processunit>

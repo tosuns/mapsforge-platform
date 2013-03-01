@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<processunit javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgSpeedFeatureProcess"
+             name="Average Speed Feature"
+             description="A feature for a classifier responsible to compotue the average speed of an GPS track.">
+    <properties/>
+</processunit>

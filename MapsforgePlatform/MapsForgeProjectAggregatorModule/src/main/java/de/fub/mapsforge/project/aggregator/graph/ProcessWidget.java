@@ -15,6 +15,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -61,17 +62,6 @@ public class ProcessWidget extends Widget {
             }
         });
 
-
-//        AbstractAggregationProcess aap = process;
-//        JXImagePanel imagePanel = new JXImagePanel();
-//        imagePanel.setStyle(JXImagePanel.Style.CENTERED);
-//        imagePanel.setImage(aap.getIcon());
-//        imagePanel.setOpaque(false);
-//        ComponentWidget imageComponentWidget = new ComponentWidget(scene, imagePanel);
-//        imageComponentWidget.setPreferredLocation(new Point(10, 28));
-//        imageComponentWidget.setPreferredSize(new Dimension(getPreferredSize().width - 12 - 12, getPreferredSize().height - 68));
-//        addChild(imageComponentWidget);
-
         ComponentWidget labelWidget = new ComponentWidget(scene, nameLabel);
         labelWidget.setPreferredLocation(new Point(8, 8));
         labelWidget.setPreferredSize(new Dimension(getPreferredSize().width - 24, 14));
@@ -108,7 +98,9 @@ public class ProcessWidget extends Widget {
                 (getPreferredSize().height - process.getIcon().getHeight(null)) / 2 - 5,
                 null);
         graphics.setColor(color);
+//        LOG.info(getLocation().toString());
     }
+    private static final Logger LOG = Logger.getLogger(ProcessWidget.class.getName());
 
     private class ProcessPopupProvider implements PopupMenuProvider {
 
@@ -123,11 +115,12 @@ public class ProcessWidget extends Widget {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Collection<String> findNodeEdges = processGraph.findNodeEdges(process, true, true);
-                    ProcessWidget.this.removeFromParent();
+                    ProcessWidget.this.processGraph.removeNode(process);
                     for (String string : findNodeEdges) {
                         processGraph.removeEdge(string);
                         processGraph.updateAggregatorPipeline();
                     }
+                    getScene().validate();
                 }
             });
         }

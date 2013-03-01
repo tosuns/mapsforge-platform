@@ -29,6 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -116,43 +118,55 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
 
     @Override
     protected void start() {
-        synchronized (MUTEX) {
-            totalCleanGPSPointCount = 0;
-            totalCleanSegmentCount = 0;
-            totalSmoothedGPSPointCount = 0;
-            if (inputList != null) {
+        totalCleanGPSPointCount = 0;
+        totalCleanSegmentCount = 0;
+        totalSmoothedGPSPointCount = 0;
+        ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
+
+        if (inputList != null) {
+            handle.start(inputList.size());
+            try {
                 gPSSegmentLayer.clearRenderObjects();
                 RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(5);
                 int segCount = 0;
-                LOG.log(Level.INFO, "segmentsize: {0}", inputList.size());
                 int progess = 0;
-                LOG.log(Level.INFO, "cleaning options: {0}", gpsCleaner.getCleaningOptions().toString());
-
                 for (GPSSegment segment : inputList) {
+
+                    if (canceled.get()) {
+                        fireProcessCanceledEvent();
+                        break;
+                    }
+
+
                     List<GPSSegment> clean = gpsCleaner.clean(segment);
                     totalCleanSegmentCount += clean.size();
-                    LOG.log(Level.INFO, "clean segmentsize: {0}", clean.size());
-                    LOG.log(Level.INFO, "Cleaner segments: {0}", clean.toString());
                     for (GPSSegment cleanSegment : clean) {
+
+                        if (canceled.get()) {
+                            fireProcessCanceledEvent();
+                            break;
+                        }
+
                         totalCleanGPSPointCount += cleanSegment.size();
                         // run through Douglas-Peucker here (slightly modified
                         // perhaps to avoid too long edges)
                         GPSSegment smoothSegment = rdpf.simplify(cleanSegment);
-                        LOG.log(Level.INFO, "rdpf segments: {0}", smoothSegment.toString());
                         totalSmoothedGPSPointCount += (cleanSegment.size() - smoothSegment.size());
                         cleanSegmentList.add(smoothSegment);
                         gPSSegmentLayer.add(smoothSegment);
-                        LOG.log(Level.INFO, "clean segcount: {0}", (++segCount));
                     }
-                    fireProcessEvent(new ProcessEvent(CleanProcess.this, "Cleaning...", (int) ((100d / inputList.size()) * (++progess))));
+                    fireProcessProgressEvent(new ProcessEvent<CleanProcess>(CleanProcess.this, "Cleaning...", (int) ((100d / inputList.size()) * (++progess))));
+                    handle.progress(progess);
                 }
+            } finally {
+                handle.finish();
             }
         }
     }
 
     @Override
     public List<GPSSegment> getResult() {
-        synchronized (MUTEX) {
+        synchronized (RUN_MUTEX) {
             return cleanSegmentList;
         }
     }
@@ -218,5 +232,11 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
         section.getStatisticsItemList().add(new StatisticItem("Smoothed GPS Points", String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter."));
 
         return statisticSections;
+    }
+
+    @Override
+    public boolean cancel() {
+        canceled.set(true);
+        return canceled.get();
     }
 }

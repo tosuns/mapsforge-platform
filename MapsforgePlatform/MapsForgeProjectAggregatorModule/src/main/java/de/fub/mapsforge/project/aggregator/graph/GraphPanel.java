@@ -7,10 +7,11 @@ package de.fub.mapsforge.project.aggregator.graph;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
-import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,9 +19,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.visual.graph.layout.GraphLayout;
-import org.netbeans.api.visual.graph.layout.GraphLayoutFactory;
 import org.netbeans.api.visual.graph.layout.GraphLayoutSupport;
-import org.netbeans.api.visual.graph.layout.GridGraphLayout;
 import org.netbeans.api.visual.graph.layout.UniversalGraph;
 import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.layout.SceneLayout;
@@ -86,7 +85,8 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
 
     public void layoutGraph() {
         Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
-        final GraphLayout<AbstractAggregationProcess<?, ?>, String> layout = new GridGraphLayout<AbstractAggregationProcess<?, ?>, String>();
+        final GraphLayout<AbstractAggregationProcess<?, ?>, String> layout = new GraphLayoutImpl();
+
         AbstractAggregationProcess rootProcess = processes.iterator().next();
         GraphLayoutSupport.setTreeGraphLayoutRootNode(layout, rootProcess);
         SceneLayout sceneLayout = LayoutFactory.createSceneGraphLayout(graph, layout);
@@ -118,7 +118,6 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
                 if (process != null) {
                     Widget nodeWidget = graph.addNode(process);
                     graph.validate();
-                    nodeWidget.setPreferredLocation(new Point(20 + (i * 200), 50));
                     if (lastNodeWidget != null && lastProcess != null) {
                         String edgeID = graph.createEdge();
                         graph.addEdge(edgeID);
@@ -133,6 +132,7 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
                     LOG.log(Level.FINE, "Error");
                 }
             }
+            layoutGraph();
             graph.repaint();
             repaint();
         } finally {
@@ -182,6 +182,90 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
 
         @Override
         public void drop(DropTargetDropEvent dtde) {
+        }
+    }
+
+    private class GraphLayoutImpl extends GraphLayout<AbstractAggregationProcess<?, ?>, String> {
+
+        private static final int BOUNDS_MARGIN = 20;
+
+        public GraphLayoutImpl() {
+        }
+
+        @Override
+        protected void performGraphLayout(UniversalGraph<AbstractAggregationProcess<?, ?>, String> graph) {
+
+            int horizontalOffset = BOUNDS_MARGIN;
+            int verticalOffset = BOUNDS_MARGIN;
+            int row = 0;
+            int column = 0;
+            Rectangle viewRect = jScrollPane1.getViewport().getViewRect();
+
+            Collection<AbstractAggregationProcess<?, ?>> nodes = graph.getNodes();
+            ArrayList<AbstractAggregationProcess<?, ?>> rootNodeList = new ArrayList<AbstractAggregationProcess<?, ?>>();
+
+            // find root nodes;
+            for (AbstractAggregationProcess<?, ?> node : nodes) {
+                Collection<String> inputEdges = graph.findNodeEdges(node, false, true);
+                if (inputEdges.isEmpty()) {
+                    rootNodeList.add(node);
+                }
+            }
+
+
+            ArrayList<ArrayList<AbstractAggregationProcess<?, ?>>> chainLists = new ArrayList<ArrayList<AbstractAggregationProcess<?, ?>>>();
+
+            for (AbstractAggregationProcess<?, ?> rootNode : rootNodeList) {
+
+                ArrayList<AbstractAggregationProcess<?, ?>> chainList = new ArrayList<AbstractAggregationProcess<?, ?>>();
+
+
+                while (rootNode != null) {
+                    chainList.add(rootNode);
+                    Collection<String> findNodeEdges = graph.findNodeEdges(rootNode, true, false);
+                    if (findNodeEdges.isEmpty()) {
+                        rootNode = null;
+                    } else {
+                        for (String nodeEdge : findNodeEdges) {
+                            rootNode = graph.getEdgeTarget(nodeEdge);
+                            break;
+                        }
+                    }
+                }
+
+                chainLists.add(chainList);
+            }
+
+
+            if (viewRect != null) {
+                for (ArrayList<AbstractAggregationProcess<?, ?>> chainList : chainLists) {
+                    for (AbstractAggregationProcess<?, ?> node : chainList) {
+                        Widget widget = graph.getScene().findWidget(node);
+
+
+                        if (widget != null && widget.getBounds() != null) {
+                            Rectangle bounds = widget.getBounds();
+                            if ((horizontalOffset + bounds.width) >= (viewRect.width - BOUNDS_MARGIN)) {
+                                column++;
+                                horizontalOffset = (column % 2 == 0) ? BOUNDS_MARGIN : BOUNDS_MARGIN * 3 + bounds.width / 2;
+                                verticalOffset += bounds.height + bounds.width / 2 + BOUNDS_MARGIN;
+                            }
+                            Point convertLocalToScene = graph.getScene().convertLocalToScene(new Point(horizontalOffset, verticalOffset));
+                            widget.setPreferredLocation(convertLocalToScene);
+                            LOG.info(widget.getLocation().toString());
+                            graph.getScene().validate();
+                            horizontalOffset += bounds.width + bounds.width / 2 + BOUNDS_MARGIN;
+                        }
+                    }
+                    horizontalOffset = BOUNDS_MARGIN;
+                    verticalOffset += 250 + BOUNDS_MARGIN;
+                }
+            }
+        }
+
+        @Override
+        protected void performNodesLayout(UniversalGraph<AbstractAggregationProcess<?, ?>, String> graph, Collection<AbstractAggregationProcess<?, ?>> nodes) {
+            performGraphLayout(graph);
         }
     }
 }

@@ -4,10 +4,15 @@
  */
 package de.fub.mapsforge.project.detector.model;
 
+import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
-import de.fub.mapsforge.project.detector.models.xmls.DetectorDescriptor;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.PostProcessorPipeline;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcessorPipeline;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -15,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.print.CancelablePrintJob;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
@@ -64,9 +68,10 @@ public class Detector extends ModelSynchronizer {
                 dataObjectModelSynchronizerClient.modelChanged();
             }
         });
+        reinit();
     }
 
-    // initialized this instance with the helo of the detector descriptor.
+    // initialized this instance with the help of the detector descriptor.
     private void reinit() {
     }
 
@@ -77,6 +82,10 @@ public class Detector extends ModelSynchronizer {
     public void start() {
         synchronized (MUTEX_PROCESS_RUNNING) {
             final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Running_Process(getDetectorDescriptor().getName(), ""), new CancellableImpl());
+            try {
+            } finally {
+                handle.finish();
+            }
         }
     }
 

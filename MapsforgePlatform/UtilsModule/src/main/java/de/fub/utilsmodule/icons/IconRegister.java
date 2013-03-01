@@ -41,9 +41,21 @@ public class IconRegister {
                 FileObject iconFolder = FileUtil.getConfigFile(ICON_REGISTER_PATH);
                 for (FileObject icon : iconFolder.getChildren()) {
                     if (icon.isData()) {
-                        Object urlPath = icon.getAttribute("url");
+                        Object urlPath = icon.getAttribute("iconBase");
                         if (urlPath instanceof String) {
                             try {
+
+
+                                StringBuilder urlString = new StringBuilder((String) urlPath);
+                                if (!urlString.toString().startsWith("nbres:/")) {
+                                    if (urlString.toString().startsWith("/")) {
+                                        urlString.insert(0, "nbres:");
+                                    } else {
+                                        urlString.insert(0, "nbres:/");
+                                    }
+                                }
+
+
                                 URL url = new URL((String) urlPath);
                                 platformIconMap.put(icon.getNameExt(), ImageIO.read(url));
                             } catch (MalformedURLException ex) {
@@ -67,7 +79,17 @@ public class IconRegister {
                     Object urlPath = icon.getAttribute("iconBase");
                     if (urlPath instanceof String) {
                         try {
-                            URL url = new URL((String) urlPath);
+
+                            StringBuilder urlString = new StringBuilder((String) urlPath);
+                            if (!urlString.toString().startsWith("nbres:/")) {
+                                if (urlString.toString().startsWith("/")) {
+                                    urlString.insert(0, "nbres:");
+                                } else {
+                                    urlString.insert(0, "nbres:/");
+                                }
+                            }
+
+                            URL url = new URL(urlString.toString());
                             BufferedImage image = ImageIO.read(url);
                             platformIconMap.put(icon.getNameExt(), image);
                         } catch (MalformedURLException ex) {
@@ -82,7 +104,7 @@ public class IconRegister {
         return platformIconMap.get(nameWithExtension);
     }
 
-    public Image findSystemIcon(File file) {
+    public static Image findSystemIcon(File file) {
         synchronized (SYSTEM_ICON_MUTEX) {
             Image image = null;
             if (file != null) {
@@ -96,11 +118,11 @@ public class IconRegister {
         }
     }
 
-    public Image findSystemIcon(FileObject fileObject) {
+    public static Image findSystemIcon(FileObject fileObject) {
         return findSystemIcon(FileUtil.toFile(fileObject));
     }
 
-    public synchronized Image getDriveIcon() {
+    public static synchronized Image getDriveIcon() {
         if (SYSTEM_DRIVE_ICON == null) {
             FileSystemView fileSystemView = FileSystemView.getFileSystemView();
             Icon systemIcon = fileSystemView.getSystemIcon(FileSystemView.getFileSystemView().getRoots()[0]);
@@ -111,7 +133,7 @@ public class IconRegister {
         return SYSTEM_DRIVE_ICON;
     }
 
-    public synchronized Image getFolderIcon() {
+    public static synchronized Image getFolderIcon() {
         if (SYSTEM_FOLDER_ICON == null) {
             if (System.getProperty("user.dir") != null) {
                 File file = new File(System.getProperty("user.dir"), "dummyFolder");

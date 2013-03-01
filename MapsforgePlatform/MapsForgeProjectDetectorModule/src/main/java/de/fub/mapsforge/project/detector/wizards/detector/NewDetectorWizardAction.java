@@ -24,11 +24,11 @@ public final class NewDetectorWizardAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-        panels.add(new NewDetectorWizardPanel1());
-        panels.add(new NewDetectorWizardPanel2());
-        panels.add(new NewDetectorWizardPanel3());
-        panels.add(new NewDetectorWizardPanel4());
-        panels.add(new NewDetectorWizardPanel5());
+        panels.add(new CommonDetectorInformationWizardPanel1());
+        panels.add(new InferenceModelSelectionWizardPanel2());
+        panels.add(new InferenceModelFeatureSelectionWizardPanel3());
+        panels.add(new PreprocessorSelectionWizardPanel4());
+        panels.add(new PostprocessorSelectionWizardPanel5());
         panels.add(new NewDetectorWizardPanel6());
         String[] steps = new String[panels.size()];
         for (int i = 0; i < panels.size(); i++) {

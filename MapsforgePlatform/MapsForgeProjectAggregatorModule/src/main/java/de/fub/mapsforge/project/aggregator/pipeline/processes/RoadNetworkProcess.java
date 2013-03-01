@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -39,7 +41,6 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
-    private final Object MUTEX = new Object();
     private RoadNetwork roadNetwork = null;
     private IntersectionLayer intersectionLayer = new IntersectionLayer();
     private RoadNetworkLayer roadNetworkLayer = new RoadNetworkLayer();
@@ -60,31 +61,41 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
 
     @Override
     protected void start() {
-        synchronized (MUTEX) {
 
-            if (aggregator != null) {
-
+        if (aggregator != null) {
+            ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
+            try {
+                handle.start();
                 roadNetworkLayer.clearRenderObjects();
                 intersectionLayer.clearRenderObjects();
 
                 roadNetwork = new RoadNetwork();
                 roadNetwork.parse(aggregator.getAggContainer(), null);
-
+                handle.switchToDeterminate(roadNetwork.intersections.size());
+                int counter = 0;
                 for (Intersection intersection : roadNetwork.intersections) {
+
+                    if (canceled.get()) {
+                        fireProcessCanceledEvent();
+                        return;
+                    }
+
                     intersectionLayer.add(intersection);
+                    handle.progress(++counter);
                 }
 
                 roadNetworkLayer.add(roadNetwork);
 
-                fireProcessEvent(new ProcessPipeline.ProcessEvent(this, "Creating Roadnetwork...", 100));
+                fireProcessProgressEvent(new ProcessPipeline.ProcessEvent<RoadNetworkProcess>(this, "Creating Roadnetwork...", 100));
+            } finally {
+                handle.finish();
             }
-
         }
     }
 
     @Override
     public RoadNetwork getResult() {
-        synchronized (MUTEX) {
+        synchronized (RUN_MUTEX) {
             return roadNetwork;
         }
     }
@@ -146,5 +157,11 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
             }
         }
         return statisticData;
+    }
+
+    @Override
+    public boolean cancel() {
+        canceled.set(true);
+        return canceled.get();
     }
 }

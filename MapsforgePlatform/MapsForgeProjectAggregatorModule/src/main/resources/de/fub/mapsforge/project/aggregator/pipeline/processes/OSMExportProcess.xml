@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process  xmlns="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
-          description="Exports the graph to an osm xml file" name="OSM Exporter" class="de.fub.mapsforge.project.aggregator.pipeline.processes.OSMExportProcess">
+<process 
+    description="Exports the graph to an osm xml file" name="OSM Exporter" class="de.fub.mapsforge.project.aggregator.pipeline.processes.OSMExportProcess">
     <properties/>
 </process>

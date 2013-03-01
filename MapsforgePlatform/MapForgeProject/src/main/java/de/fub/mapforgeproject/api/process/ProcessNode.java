@@ -4,7 +4,6 @@
  */
 package de.fub.mapforgeproject.api.process;
 
-import de.fub.mapforgeproject.api.process.Process;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -18,11 +17,30 @@ import org.openide.util.lookup.Lookups;
  */
 public class ProcessNode extends AbstractNode implements PropertyChangeListener, ProcessPipeline.ProcessListener {
 
+    private final Process<?, ?> process;
+
     public ProcessNode(Process<?, ?> process) {
         super(Children.LEAF, Lookups.singleton(process));
+        this.process = process;
         setDisplayName(process.getName());
         setShortDescription(process.getDescription());
         process.addProcessListener(ProcessNode.this);
+    }
+
+    @Override
+    public String getDisplayName() {
+        if (process != null) {
+            return process.getName();
+        }
+        return super.getDisplayName();
+    }
+
+    @Override
+    public String getShortDescription() {
+        if (process != null) {
+            return process.getDescription();
+        }
+        return super.getShortDescription();
     }
 
     @Override
@@ -37,6 +55,21 @@ public class ProcessNode extends AbstractNode implements PropertyChangeListener,
 
     @Override
     public void changed(ProcessPipeline.ProcessEvent event) {
+        fireIconChange();
+    }
+
+    @Override
+    public void started() {
+        fireIconChange();
+    }
+
+    @Override
+    public void canceled() {
+        fireIconChange();
+    }
+
+    @Override
+    public void finished() {
         fireIconChange();
     }
 }

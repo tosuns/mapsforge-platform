@@ -16,10 +16,10 @@ import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graphui.layers.AggContainerLayer;
 import de.fub.agg2graphui.layers.MatchingLayer;
 import de.fub.agg2graphui.layers.MergingLayer;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
@@ -30,6 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -75,7 +77,9 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
 
     @Override
     public AggContainer getResult() {
-        return aggregator.getAggContainer();
+        synchronized (RUN_MUTEX) {
+            return aggregator.getAggContainer();
+        }
     }
 
     @Override
@@ -87,60 +91,72 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
         if (inputList != null
                 && aggregator != null
                 && aggregator.getAggContainer() != null) {
-            LOG.log(Level.INFO, "Segment size: {0}", inputList.size());
+            LOG.log(Level.FINE, "Segment size: {0}", inputList.size());
+            ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
+            handle.start(inputList.size());
+            try {
 
-            aggregationLayer.clearRenderObjects();
-            mergeLayer.clearRenderObjects();
-            matchingLayer.clearRenderObjects();
+                aggregationLayer.clearRenderObjects();
+                mergeLayer.clearRenderObjects();
+                matchingLayer.clearRenderObjects();
 
-            AggContainer aggContainer = aggregator.getAggContainer();
+                AggContainer aggContainer = aggregator.getAggContainer();
 
-            int counter = 0;
+                int counter = 0;
 
-            LOG.log(Level.INFO, "clean segments: {0}", inputList.toString());
+                LOG.log(Level.FINE, "clean segments: {0}", inputList.toString());
 
-            for (GPSSegment inputSegment : inputList) {
-                counter++;
-                aggregator.getAggContainer().addSegment(inputSegment);
+                for (GPSSegment inputSegment : inputList) {
+                    if (canceled.get()) {
+                        fireProcessCanceledEvent();
+                        break;
+                    }
 
-                // update debug layers: matching, merging
-                IAggregationStrategy aggregationStrategy = aggContainer.getAggregationStrategy();
+                    counter++;
+                    aggregator.getAggContainer().addSegment(inputSegment);
 
-                if (aggregationStrategy instanceof AbstractAggregationStrategy) {
-                    AbstractAggregationStrategy abstractAggregationStrategy = (AbstractAggregationStrategy) aggregationStrategy;
-                    IMergeHandler mergeHandler = abstractAggregationStrategy.getMergeHandler();
+                    // update debug layers: matching, merging
+                    IAggregationStrategy aggregationStrategy = aggContainer.getAggregationStrategy();
 
-                    if (mergeHandler != null) {
+                    if (aggregationStrategy instanceof AbstractAggregationStrategy) {
+                        AbstractAggregationStrategy abstractAggregationStrategy = (AbstractAggregationStrategy) aggregationStrategy;
+                        IMergeHandler mergeHandler = abstractAggregationStrategy.getMergeHandler();
 
-                        List<AggNode> aggNodes = mergeHandler.getAggNodes();
-                        if (aggNodes != null) {
-                            totalAggNodeCount += aggNodes.size();
-                            matchingLayer.add(aggNodes);
-                        }
+                        if (mergeHandler != null) {
 
-                        List<GPSPoint> gpsPoints = mergeHandler.getGpsPoints();
-                        if (gpsPoints != null) {
-                            totalGPSPointCount += gpsPoints.size();
-                            matchingLayer.add(gpsPoints);
-                        }
+                            List<AggNode> aggNodes = mergeHandler.getAggNodes();
+                            if (aggNodes != null) {
+                                totalAggNodeCount += aggNodes.size();
+                                matchingLayer.add(aggNodes);
+                            }
 
-                        List<PointGhostPointPair> pointGhostPointPairs = mergeHandler.getPointGhostPointPairs();
-                        for (PointGhostPointPair pgpp : pointGhostPointPairs) {
-                            List<ILocation> line = new ArrayList<ILocation>(2);
-                            line.add(new GPSPoint(pgpp.point));
-                            line.add(new GPSPoint(pgpp.ghostPoint));
-                            mergeLayer.add(line);
-                            totalPointGhostPointPairs++;
+                            List<GPSPoint> gpsPoints = mergeHandler.getGpsPoints();
+                            if (gpsPoints != null) {
+                                totalGPSPointCount += gpsPoints.size();
+                                matchingLayer.add(gpsPoints);
+                            }
+
+                            List<PointGhostPointPair> pointGhostPointPairs = mergeHandler.getPointGhostPointPairs();
+                            for (PointGhostPointPair pgpp : pointGhostPointPairs) {
+                                List<ILocation> line = new ArrayList<ILocation>(2);
+                                line.add(new GPSPoint(pgpp.point));
+                                line.add(new GPSPoint(pgpp.ghostPoint));
+                                mergeLayer.add(line);
+                                totalPointGhostPointPairs++;
+                            }
                         }
                     }
+
+                    fireProcessProgressEvent(new ProcessPipeline.ProcessEvent<AggregationProcess>(this, "Aggregation...", (int) ((100d / inputList.size()) * (counter))));
+                    handle.progress(counter);
+                    LOG.log(Level.FINE, "Segment number: {0}", (counter));
                 }
 
-                fireProcessEvent(new ProcessPipeline.ProcessEvent(this, "Aggregation...", (int) ((100d / inputList.size()) * (counter))));
-                LOG.log(Level.INFO, "Segment number: {0}", (counter));
+
+                aggregationLayer.add(aggContainer);
+            } finally {
+                handle.finish();
             }
-
-
-            aggregationLayer.add(aggContainer);
 
         }
     }
@@ -194,5 +210,11 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
         section.getStatisticsItemList().add(new StatisticItem("Total Count Point/GhostPoint Pairs ", String.valueOf(totalPointGhostPointPairs), "The total amount of paris of Point/Ghostpoint."));
 
         return statisticSections;
+    }
+
+    @Override
+    public boolean cancel() {
+        canceled.set(true);
+        return canceled.get();
     }
 }

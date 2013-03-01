@@ -12,19 +12,22 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.openide.nodes.Node;
+import org.openide.util.Cancellable;
 
 /**
  *
  * @author Serdar
  */
-public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I, O> {
+public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I, O> implements Cancellable {
 
     public static final String PROP_NAME_PROCESS_DESCRIPTOR = "process.descriptor";
     protected Aggregator aggregator;
     protected ProcessDescriptor descriptor;
     protected ArrayList<AbstractLayer<?>> layers = new ArrayList<AbstractLayer<?>>();
     private Node nodeDelegate;
+    protected AtomicBoolean canceled = new AtomicBoolean(false);
 
     public AbstractAggregationProcess(Aggregator aggregator) {
         this.aggregator = aggregator;
@@ -40,6 +43,12 @@ public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I
             nodeDelegate = new AggregationProcessNode(AbstractAggregationProcess.this);
         }
         return nodeDelegate;
+    }
+
+    @Override
+    public void run() {
+        canceled.set(false);
+        super.run();
     }
 
     public ProcessDescriptor getDescriptor() {
@@ -70,6 +79,18 @@ public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I
 
     public List<AbstractLayer<?>> getLayers() {
         return layers;
+    }
+
+    @Override
+    protected void fireProcessStartedEvent() {
+        canceled.set(false);
+        super.fireProcessStartedEvent();
+    }
+
+    @Override
+    protected void fireProcessCanceledEvent() {
+        canceled.set(true);
+        super.fireProcessCanceledEvent();
     }
 
     protected abstract ProcessDescriptor createProcessDescriptor();

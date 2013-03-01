@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.models.xmls;
 
+import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

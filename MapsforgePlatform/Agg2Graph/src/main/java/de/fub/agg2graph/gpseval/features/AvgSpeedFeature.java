@@ -12,8 +12,8 @@ public class AvgSpeedFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        mSumSpeed += entry.mSpeed;
-        if (entry.mSpeed > 0) {
+        mSumSpeed += entry.getmSpeed();
+        if (entry.getmSpeed() > 0) {
             ++mCount;
         }
     }

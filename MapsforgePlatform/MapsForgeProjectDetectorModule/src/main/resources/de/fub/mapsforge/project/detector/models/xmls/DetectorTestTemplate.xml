@@ -4,7 +4,7 @@
         <features>
             <feature javaType="de.fub.dummy.path.Instance" name="Dummy Feature" description="Dummy feature for the propose of unit testing.">
                 <properties>
-                    <property javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                    <property javaType="de.fub.dummy.path.Instance" value="true" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
                 </properties>
             </feature>
         </features>
@@ -20,14 +20,14 @@
     <preprocessors>
         <filter javaType="de.fub.detector.Instance" name="Dummy Filter" description="A dummy filter for the propose of unit testing.">
             <properties>
-                <property javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                <property javaType="de.fub.dummy.path.Instance" value="1" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
             </properties>
         </filter>
     </preprocessors>
     <postprocessors>
         <task javaType="de.fub.detector.Instance" name="Dummy Task" description="A dummy task for the propose of unit testing.">
             <properties>
-                <property javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                <property javaType="de.fub.dummy.path.Instance" value="Something"  name="Dummy Property" description="Dummy property for the propose of unit testing."/>
             </properties>
         </task>
     </postprocessors>

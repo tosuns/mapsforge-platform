@@ -4,7 +4,7 @@
  */
 package de.fub.mapforgeproject.api.process;
 
-import de.fub.mapforgeproject.api.process.Process;
+import de.fub.mapforgeproject.api.process.ProcessPipeline.ProcessListener;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider.StatisticSection;
 import java.awt.Image;
@@ -32,7 +32,8 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
     private ProcessState processState = ProcessState.INACTIVE;
     protected final Set<ProcessPipeline.ProcessListener> processListenerSet = new HashSet<ProcessPipeline.ProcessListener>();
     protected final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private final Object MUTEX = new Object();
+    private final Object EVENT_MUTEX = new Object();
+    protected final Object RUN_MUTEX = new Object();
 
     public Node getNodeDelegate() {
         if (nodeDelegate == null) {
@@ -43,15 +44,19 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
 
     @Override
     public void run() {
-        try {
-            processStartTime = System.currentTimeMillis();
-            setProcessState(ProcessState.RUNNING);
-            start();
-            setProcessState(ProcessState.INACTIVE);
-            processFinishTime = System.currentTimeMillis();
-        } catch (Throwable ex) {
-            setProcessState(ProcessState.ERROR);
-            throw new ProcessRuntimeException(ex);
+        synchronized (RUN_MUTEX) {
+            try {
+                fireProcessStartedEvent();
+                processStartTime = System.currentTimeMillis();
+                setProcessState(ProcessState.RUNNING);
+                start();
+                setProcessState(ProcessState.INACTIVE);
+                processFinishTime = System.currentTimeMillis();
+                fireProcessFinishedEvent();
+            } catch (Throwable ex) {
+                setProcessState(ProcessState.ERROR);
+                throw new ProcessRuntimeException(ex);
+            }
         }
     }
 
@@ -64,10 +69,34 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
         return processState;
     }
 
-    protected void fireProcessEvent(ProcessPipeline.ProcessEvent event) {
-        synchronized (MUTEX) {
-            for (ProcessPipeline.ProcessListener listener : processListenerSet) {
+    protected void fireProcessProgressEvent(ProcessPipeline.ProcessEvent event) {
+        synchronized (EVENT_MUTEX) {
+            for (ProcessListener listener : processListenerSet) {
                 listener.changed(event);
+            }
+        }
+    }
+
+    protected void fireProcessStartedEvent() {
+        synchronized (EVENT_MUTEX) {
+            for (ProcessListener listener : processListenerSet) {
+                listener.started();
+            }
+        }
+    }
+
+    protected void fireProcessFinishedEvent() {
+        synchronized (EVENT_MUTEX) {
+            for (ProcessListener listener : processListenerSet) {
+                listener.finished();
+            }
+        }
+    }
+
+    protected void fireProcessCanceledEvent() {
+        synchronized (EVENT_MUTEX) {
+            for (ProcessListener listener : processListenerSet) {
+                listener.canceled();
             }
         }
     }
@@ -79,14 +108,14 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
 
     @Override
     public void addProcessListener(ProcessPipeline.ProcessListener listener) {
-        synchronized (MUTEX) {
+        synchronized (EVENT_MUTEX) {
             processListenerSet.add(listener);
         }
     }
 
     @Override
     public void removeProcessListener(ProcessPipeline.ProcessListener listener) {
-        synchronized (MUTEX) {
+        synchronized (EVENT_MUTEX) {
             processListenerSet.remove(listener);
         }
     }

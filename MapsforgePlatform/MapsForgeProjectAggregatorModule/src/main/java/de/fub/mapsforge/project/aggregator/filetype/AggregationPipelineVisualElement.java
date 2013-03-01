@@ -137,6 +137,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
 
     @Override
     public void componentOpened() {
+        graphPanel1.layoutGraph();
     }
 
     @Override

@@ -8,10 +8,11 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.IAggregationStrategy;
 import de.fub.agg2graph.agg.tiling.ICachingStrategy;
+import de.fub.mapforgeproject.api.process.Process;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
-import de.fub.mapforgeproject.api.process.ProcessPipeline;
+import de.fub.mapforgeproject.api.process.ProcessPipeline.PipelineListener;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
@@ -32,8 +33,6 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -52,15 +51,15 @@ public class Aggregator extends ModelSynchronizer {
     private final AggregatorDataObject dataObject;
     private AggregatorState aggregatorState = AggregatorState.INACTIVE;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private AggregatorProcessPipeline pipeline = new AggregatorProcessPipeline(this);
+    private final AggregatorProcessPipeline pipeline;
     private AggContainer aggContainer;
     private ModelSynchronizerClient dataObjectModelSynchonizerClient;
-    private final Object MUTEX_PROCESS_RUNNING = new Object();
     private final Object MUTEX_PROCESS_CREATOR = new Object();
 
     public Aggregator(AggregatorDataObject dataObject) {
         assert dataObject != null;
         this.dataObject = dataObject;
+        pipeline = new AggregatorProcessPipeline(this);
         init();
     }
 
@@ -73,7 +72,6 @@ public class Aggregator extends ModelSynchronizer {
             }
         });
 
-
         this.dataObject.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -82,6 +80,7 @@ public class Aggregator extends ModelSynchronizer {
             }
         });
         setUpPipeline();
+        getPipeline().addPipelineListener(new PipelineListenerImpl());
     }
 
     private void setUpPipeline() {
@@ -140,50 +139,7 @@ public class Aggregator extends ModelSynchronizer {
     @NbBundle.Messages({"# {0} - processName", "# {1} - aggregatorName", "CLT_Proceeding_Process={1}: Running {0}..."})
     @SuppressWarnings("unchecked")
     public void start(final List<AbstractAggregationProcess<?, ?>> processes) {
-        synchronized (MUTEX_PROCESS_RUNNING) {
-            final ProgressHandle handler = ProgressHandleFactory.createHandle(Bundle.CLT_Proceeding_Process("", getDescriptor().getName()));
-            try {
-                setAggregatorState(Aggregator.AggregatorState.INACTIVE);
-
-                handler.start(100);
-                int i = 0;
-                AbstractAggregationProcess lastProcess = null;
-                setAggregatorState(Aggregator.AggregatorState.RUNNING);
-
-                long lastTime = System.currentTimeMillis();
-
-                for (int j = 0; j < processes.size(); j++) {
-                    final int unit = j;
-                    AbstractAggregationProcess process = processes.get(j);
-                    handler.setDisplayName(Bundle.CLT_Proceeding_Process(process.getName(), getDescriptor().getName()));
-                    if (j == 0) {
-                        int indexOf = getPipeline().indexOf(process);
-                        if (indexOf > 0) {
-                            lastProcess = getPipeline().get(indexOf - 1);
-                        }
-                    }
-                    if (lastProcess != null) {
-                        Object result = lastProcess.getResult();
-                        process.setInput(result);
-                    }
-                    ProcessPipeline.ProcessListener processListener = new ProcessListenerImpl(processes, unit, handler);
-                    process.addProcessListener(processListener);
-                    lastTime = System.currentTimeMillis();
-                    process.run();
-                    long now = System.currentTimeMillis();
-                    process.removeProcessListener(processListener);
-                    LOG.log(Level.INFO, "Process {0} took {1} time.", new Object[]{process.getName(), (now - lastTime)});
-                    lastProcess = process;
-                    lastTime = now;
-                }
-                setAggregatorState(Aggregator.AggregatorState.INACTIVE);
-            } catch (Throwable ex) {
-                Exceptions.printStackTrace(ex);
-                setAggregatorState(Aggregator.AggregatorState.ERROR);
-            } finally {
-                handler.finish();
-            }
-        }
+        getPipeline().start(processes);
     }
 
     public AggContainer getAggContainer() {
@@ -293,25 +249,39 @@ public class Aggregator extends ModelSynchronizer {
         }
     }
 
-    private static class ProcessListenerImpl implements ProcessPipeline.ProcessListener {
+    private class PipelineListenerImpl implements PipelineListener {
 
-        private final List<AbstractAggregationProcess<?, ?>> processes;
-        private final int unit;
-        private final ProgressHandle handler;
-
-        public ProcessListenerImpl(List<AbstractAggregationProcess<?, ?>> processes, int unit, ProgressHandle handler) {
-            this.processes = processes;
-            this.unit = unit;
-            this.handler = handler;
+        public PipelineListenerImpl() {
         }
 
         @Override
-        public void changed(ProcessPipeline.ProcessEvent event) {
-            double progress = (100d / processes.size());
-            progress = (progress / 100 * event.getPercentfinished()) + (100 / processes.size() * unit);
-            LOG.log(Level.INFO, "progress {0}", progress);
-            handler.progress(event.getProcessMessage(), (int) progress);
+        public void willStart(List<Process> propcesses) {
+            setAggregatorState(Aggregator.AggregatorState.INACTIVE);
+        }
 
+        @Override
+        public void started() {
+            setAggregatorState(Aggregator.AggregatorState.RUNNING);
+        }
+
+        @Override
+        public void stoped(PipelineListener.Result result) {
+            switch (result) {
+                case CANCELED:
+                    setAggregatorState(Aggregator.AggregatorState.INACTIVE);
+                    break;
+                case FINISHED:
+                    setAggregatorState(Aggregator.AggregatorState.INACTIVE);
+                    break;
+                case ERROR:
+                    setAggregatorState(Aggregator.AggregatorState.ERROR);
+                    break;
+            }
+        }
+
+        @Override
+        public void pipelineChanged() {
+            // something TODO ?
         }
     }
 }

@@ -11,8 +11,8 @@ public class MaxSpeedFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        if (entry.mSpeed > mMaxSpeed) {
-            mMaxSpeed = entry.mSpeed;
+        if (entry.getmSpeed() > mMaxSpeed) {
+            mMaxSpeed = entry.getmSpeed();
         }
     }
 

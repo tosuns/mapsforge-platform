@@ -26,14 +26,14 @@ public class AvgBearingChangeFeature extends Feature {
     public void addWaypoint(Waypoint entry) {
         // If segment has changed, use current waypoint as new "start"-waypoint
         // for following calculations.
-        if (entry.mSegment != mLastSegment) {
+        if (entry.getmSegment() != mLastSegment) {
             mLastBearing = null;
-            mLastSegment = entry.mSegment;
+            mLastSegment = entry.getmSegment();
         }
 
         if (mLastBearing != null) {
-            double bearMax = Math.max(mLastBearing, entry.mBearing);
-            double bearMin = Math.min(mLastBearing, entry.mBearing);
+            double bearMax = Math.max(mLastBearing, entry.getmBearing());
+            double bearMin = Math.min(mLastBearing, entry.getmBearing());
             double bearChange = bearMax - bearMin;
             bearChange = bearChange > 180 ? 360 - bearChange : bearChange;
             if (bearChange > mBearingChangeThreshold) {
@@ -41,7 +41,7 @@ public class AvgBearingChangeFeature extends Feature {
                 ++mCount;
             }
         }
-        mLastBearing = entry.mBearing;
+        mLastBearing = entry.getmBearing();
     }
 
     @Override

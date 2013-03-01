@@ -7,7 +7,14 @@
             <file name="org-netbeans-modules-diff-PatchAction.instance_hidden"/>
         </folder>
     </folder>
-    <folder name="IconRegister"/>
+    <folder name="IconRegister">
+        <file name="errorHintIcon.png" url="nbres:/de/fub/utilsmodule/icons/errorHintIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/utilsmodule/icons/errorHintIcon.png"/>
+        </file>
+        <file name="playHintIcon.png" url="nbres:/de/fub/utilsmodule/icons/playHintIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/utilsmodule/icons/playHintIcon.png"/>
+        </file>
+    </folder>
     <folder name="Menu">
         <folder name="Tools">
             <file name="org-netbeans-modules-favorites-templates-TemplatesAction.shadow_hidden"/>

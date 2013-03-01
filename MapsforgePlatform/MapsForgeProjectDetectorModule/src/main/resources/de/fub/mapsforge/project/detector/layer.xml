@@ -9,4 +9,15 @@
             </file>
         </folder>
     </folder>
+    <folder name="IconRegister">
+        <file name="inferenceModelIcon.png" url="nbres:/de/fub/mapsforge/project/detector/model/inference/inferenceModelIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/detector/inferenceModelIcon.png"/>
+        </file>
+        <file name="filterIcon16.png" url="/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/filterIcon16.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/filterIcon16.png"/>
+        </file>
+        <file name="featureIcon.png" url="/de/fub/mapsforge/project/detector/model/inference/features/featureIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/mapsforge/project/detector/model/inference/features/featureIcon.png"/>
+        </file>
+    </folder>
 </filesystem>

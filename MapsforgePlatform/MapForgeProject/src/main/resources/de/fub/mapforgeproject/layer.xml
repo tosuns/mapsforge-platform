@@ -3,7 +3,7 @@
 <filesystem>
     <folder name="IconRegister">
         <file name="mapsforgeIcon16.png" url="nbres:/de/fub/mapforgeproject/icons/mapsforgeIcon16.png">
-            <attr name="iconBase" stringvalue="nbres:/de/fub/mapforgeproject/icons/mapsforgeIcon16.png"/>
+            <attr name="iconBase" stringvalue="de/fub/mapforgeproject/icons/mapsforgeIcon16.png"/>
         </file>
     </folder>
 </filesystem>
