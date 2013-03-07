@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_AvgSpeedFeature_Description=A feature for a classifier responsible to compotue the average speed of an GPS track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class AvgSpeedFeatureProcess extends FeatureProcess<GPSTrack, GPSTrack> {
+public class AvgSpeedFeatureProcess extends FeatureProcess<GPSTrack, Double> {
 
     private GPSTrack gpsTrack;
     private final AvgSpeedFeature feature = new AvgSpeedFeature();
@@ -67,8 +67,8 @@ public class AvgSpeedFeatureProcess extends FeatureProcess<GPSTrack, GPSTrack> {
     }
 
     @Override
-    public GPSTrack getResult() {
-        return this.gpsTrack;
+    public Double getResult() {
+        return feature.getResult();
     }
 
     @Override

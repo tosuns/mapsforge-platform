@@ -5,8 +5,14 @@
 package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.JPanel;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "CLT_CommonDetecotrInformation_Name=Name & Description"
+})
 public final class CommonDetectorInformationVisualPanel1 extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates new form CommonDetectorInformationVisualPanel1
@@ -17,7 +23,7 @@ public final class CommonDetectorInformationVisualPanel1 extends JPanel {
 
     @Override
     public String getName() {
-        return "Step #1";
+        return Bundle.CLT_CommonDetecotrInformation_Name();
     }
 
     /**

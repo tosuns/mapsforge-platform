@@ -5,19 +5,33 @@
 package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.JPanel;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "CLT_Preprocessors_Panel_Name=Preprocessor Filters",
+    "CLT_All_Available_Preprocessors=All Preprocessor Filters",
+    "CLT_Selected_Preprocessors=Selected Preprocessor Filters"
+})
 public final class PreprocessorSelectionVisualPanel4 extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates new form PreprocessorSelectionVisualPanel4
      */
     public PreprocessorSelectionVisualPanel4() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        selectionComponent.getAllItemListTitle().setText(Bundle.CLT_All_Available_Preprocessors());
+        selectionComponent.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Preprocessors());
     }
 
     @Override
     public String getName() {
-        return "Step #4";
+        return Bundle.CLT_Postprocessor_Panel_Name();
     }
 
     /**

@@ -5,19 +5,33 @@
 package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.JPanel;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "CLT_InferenceModelFeatures_Name=Features",
+    "CLT_All_Features_Title=All Available Features",
+    "CLT_Selected_Features_Title=Selected Features"
+})
 public final class InferenceModelFeatureSelectionVisualPanel3 extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates new form InferenceModelFeatureSelectionVisualPanel3
      */
     public InferenceModelFeatureSelectionVisualPanel3() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        selectionComponent.getAllItemListTitle().setText(Bundle.CLT_All_Features_Title());
+        selectionComponent.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Features_Title());
     }
 
     @Override
     public String getName() {
-        return "Step #3";
+        return Bundle.CLT_InferenceModelFeatures_Name();
     }
 
     /**

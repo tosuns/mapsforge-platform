@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 
 public class CommonDetectorInformationWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor> {
@@ -15,6 +16,7 @@ public class CommonDetectorInformationWizardPanel1 implements WizardDescriptor.P
      * component from this class, just use getComponent().
      */
     private CommonDetectorInformationVisualPanel1 component;
+    private final ChangeSupport cs = new ChangeSupport(this);
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
@@ -48,10 +50,12 @@ public class CommonDetectorInformationWizardPanel1 implements WizardDescriptor.P
 
     @Override
     public void addChangeListener(ChangeListener l) {
+        cs.addChangeListener(l);
     }
 
     @Override
     public void removeChangeListener(ChangeListener l) {
+        cs.removeChangeListener(l);
     }
 
     @Override

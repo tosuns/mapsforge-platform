@@ -5,19 +5,33 @@
 package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.JPanel;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "CLT_Postprocessor_Panel_Name=Postprocessor tasks",
+    "CLT_All_Available_Postprocessors=All Postprocessor Tasks",
+    "CLT_Selected_Postprocessors=Selected Postprocessor Tasks"
+})
 public final class PostprocessorSelectionVisualPanel5 extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Creates new form PostprocessorSelectionVisualPanel5
      */
     public PostprocessorSelectionVisualPanel5() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        selectionComponent1.getAllItemListTitle().setText(Bundle.CLT_All_Available_Postprocessors());
+        selectionComponent1.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Postprocessors());
     }
 
     @Override
     public String getName() {
-        return "Step #5";
+        return Bundle.CLT_Postprocessor_Panel_Name();
     }
 
     /**
@@ -28,8 +42,12 @@ public final class PostprocessorSelectionVisualPanel5 extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        selectionComponent1 = new de.fub.mapsforge.project.detector.ui.SelectionComponent();
+
         setLayout(new java.awt.BorderLayout());
+        add(selectionComponent1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private de.fub.mapsforge.project.detector.ui.SelectionComponent selectionComponent1;
     // End of variables declaration//GEN-END:variables
 }
