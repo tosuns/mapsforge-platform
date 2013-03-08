@@ -5,8 +5,6 @@
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
-import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
-import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
 
 /**
  *

@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 import de.fub.mapsforge.project.detector.factories.FeatureNodeFactory;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
-import de.fub.mapsforge.project.detector.ui.SelectionComponent;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
