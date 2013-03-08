@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgBearingChangeFeature;
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,7 +18,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_AvgBearingChangeFeature_Description=Feature computes the average bearing change that occures within the gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class AvgBearingChangeFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+public class AvgBearingChangeFeatureProcess extends FeatureProcess {
 
     private final AvgBearingChangeFeature feature = new AvgBearingChangeFeature();
     private GPSTrack gpsTack;
@@ -48,10 +47,5 @@ public class AvgBearingChangeFeatureProcess extends FeatureProcess<GPSTrack, Dou
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

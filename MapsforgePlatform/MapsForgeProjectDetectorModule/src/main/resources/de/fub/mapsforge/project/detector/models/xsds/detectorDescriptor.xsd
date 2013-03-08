@@ -20,6 +20,8 @@
             <xs:extension base="descriptor">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="features" type="features"/>
+                    <xs:element minOccurs="0"
+                                name="inferenceModelProcessHandlers" type="inferenceModelProcessHandlers"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -58,6 +60,20 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    <xs:complexType name="inferenceModelProcessHandlers">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="processHandler" type="processHandler"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="processHandler">
+        <xs:complexContent>
+            <xs:extension base="descriptor">
+                <xs:sequence/>
+                <xs:attribute name="inferenceMode" type="inferenceMode"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="datasets">
         <xs:sequence>
             <xs:element name="trainingsset" type="trainingsset"/>
@@ -89,7 +105,16 @@
     </xs:complexType>
     <xs:complexType name="postprocessors">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="task" type="processunit"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="task" type="processunit"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:simpleType name="inferenceMode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="trainingsMode"/>
+            <xs:enumeration value="crossvalidationMode"/>
+            <xs:enumeration value="inferenceMode"/>
+            <!--<xs:enumeration value="ALL_MODE"/>-->
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

@@ -16,10 +16,15 @@
         To create your own repository, use: nbm:populate-repository
         -->
         <repository>
+            <id>main-repository</id>
+            <name>Main Repository</name>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>netbeans</id>
             <name>NetBeans</name>
             <url>http://bits.netbeans.org/maven2/</url>
-        </repository> 
+        </repository>
         <repository>
             <id>matsim</id>
             <name>matsim</name>
@@ -29,12 +34,12 @@
             <id>central</id>
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2/</url>
-        </repository>    
+        </repository>
         <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
-            <url>http://localhost:8081/artifactory/repo/</url>
-        </repository>   
+            <url>http://localhost:8080/artifactory/libs-release-local/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -86,11 +91,12 @@
         <module>MapsForgeProjectDataSourceModule</module>
         <module>MapsForgeProjectAggregatorModule</module>
         <module>OpenstreetMap</module>
-    <module>GeoFileTypeApi</module>
-    <module>XmlCatalogModule</module>
-    <module>SettingsModule</module>
-    <module>MapsForgeProjectDetectorModule</module>
-  </modules>
+        <module>GeoFileTypeApi</module>
+        <module>XmlCatalogModule</module>
+        <module>SettingsModule</module>
+        <module>MapsForgeProjectDetectorModule</module>
+        <module>JFreeChartLib</module>
+    </modules>
 
     <properties>
         <netbeans.version>RELEASE73-BETA2</netbeans.version>

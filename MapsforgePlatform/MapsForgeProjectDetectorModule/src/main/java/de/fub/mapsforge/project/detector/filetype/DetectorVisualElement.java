@@ -26,6 +26,7 @@ import org.openide.windows.TopComponent;
 @Messages("LBL_Detector_VISUAL=Visual")
 public final class DetectorVisualElement extends JPanel implements MultiViewElement {
 
+    private static final long serialVersionUID = 1L;
     private DetectorDataObject obj;
     private JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;

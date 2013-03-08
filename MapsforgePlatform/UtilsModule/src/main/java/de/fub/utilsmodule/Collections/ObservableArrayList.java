@@ -18,6 +18,13 @@ public class ObservableArrayList<T> extends ArrayList<T> implements ObservableLi
     private static final long serialVersionUID = 1L;
     private transient final ChangeSupport csp = new ChangeSupport(this);
 
+    public ObservableArrayList() {
+    }
+
+    public ObservableArrayList(Collection<? extends T> c) {
+        super(c);
+    }
+
     @Override
     public boolean add(T e) {
         boolean result = super.add(e);

@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 import de.fub.agg2graph.gpseval.features.AvgSpeedFeature;
 import de.fub.agg2graph.structs.GPSTrack;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import org.openide.util.NbBundle;
@@ -22,7 +21,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_AvgSpeedFeature_Description=A feature for a classifier responsible to compotue the average speed of an GPS track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class AvgSpeedFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+public class AvgSpeedFeatureProcess extends FeatureProcess {
 
     private GPSTrack gpsTrack;
     private final AvgSpeedFeature feature = new AvgSpeedFeature();
@@ -69,10 +68,5 @@ public class AvgSpeedFeatureProcess extends FeatureProcess<GPSTrack, Double> {
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

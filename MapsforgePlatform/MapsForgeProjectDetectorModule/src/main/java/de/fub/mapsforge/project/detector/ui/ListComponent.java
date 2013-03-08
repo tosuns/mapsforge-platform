@@ -39,6 +39,7 @@ public class ListComponent extends javax.swing.JPanel implements ExplorerManager
         setLayout(new java.awt.BorderLayout(4, 4));
 
         org.openide.awt.Mnemonics.setLocalizedText(title, org.openide.util.NbBundle.getMessage(ListComponent.class, "ListComponent.title.text")); // NOI18N
+        title.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 1, 4));
         add(title, java.awt.BorderLayout.NORTH);
 
         listView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));

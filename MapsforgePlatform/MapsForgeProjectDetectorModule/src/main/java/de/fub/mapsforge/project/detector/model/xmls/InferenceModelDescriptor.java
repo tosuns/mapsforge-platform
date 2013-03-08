@@ -19,6 +19,8 @@ public class InferenceModelDescriptor extends Descriptor {
 
     @XmlElement(name = "features")
     private Features features = new Features();
+    @XmlElement(name = "inferenceModelProcessHandlers")
+    private ProcessHandlers inferenceModelProcessHandlers = new ProcessHandlers();
 
     public InferenceModelDescriptor() {
     }
@@ -29,6 +31,10 @@ public class InferenceModelDescriptor extends Descriptor {
 
     public Features getFeatures() {
         return features;
+    }
+
+    public ProcessHandlers getInferenceModelProcessHandlers() {
+        return inferenceModelProcessHandlers;
     }
 
     @Override

@@ -67,7 +67,10 @@ public class GPSPointsFetcherController {
         }
     }
 
-    @NbBundle.Messages({"Fetching_GPX_Data=Downloading GPX-Data-Batch {0} of {1}..."})
+    @NbBundle.Messages({
+        "# {0} - current",
+        "# {1} - total",
+        "Fetching_GPX_Data=Downloading GPX-Data-Batch {0} of {1}..."})
     public void handleFetch() throws JAXBException {
         synchronized (MUTEX) {
             if (!busy) {

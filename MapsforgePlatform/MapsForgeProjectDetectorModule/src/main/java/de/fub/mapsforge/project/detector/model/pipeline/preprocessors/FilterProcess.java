@@ -4,8 +4,8 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
+import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.pipeline.AbstractDetectorProcess;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Color;
 import java.awt.Graphics;

@@ -14,7 +14,7 @@ import org.openide.explorer.view.ListView;
  *
  * @author Serdar
  */
-public class SelectionComponent extends javax.swing.JPanel {
+public final class SelectionComponent extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,23 +53,22 @@ public class SelectionComponent extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
         setMinimumSize(new java.awt.Dimension(400, 110));
         setPreferredSize(new java.awt.Dimension(400, 300));
-        setLayout(new java.awt.BorderLayout());
 
+        jPanel1.setMinimumSize(new java.awt.Dimension(150, 41));
         jPanel1.setPreferredSize(new java.awt.Dimension(150, 362));
         jPanel1.setLayout(new java.awt.BorderLayout());
         jPanel1.add(allItemList, java.awt.BorderLayout.CENTER);
 
-        add(jPanel1, java.awt.BorderLayout.WEST);
-
+        jPanel2.setMinimumSize(new java.awt.Dimension(150, 41));
         jPanel2.setPreferredSize(new java.awt.Dimension(150, 362));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         SelectedItemList.setPreferredSize(new java.awt.Dimension(150, 148));
         jPanel2.add(SelectedItemList, java.awt.BorderLayout.CENTER);
 
-        add(jPanel2, java.awt.BorderLayout.EAST);
-
-        jPanel3.setMinimumSize(new java.awt.Dimension(100, 46));
+        jPanel3.setMaximumSize(new java.awt.Dimension(65, 2147483647));
+        jPanel3.setMinimumSize(new java.awt.Dimension(65, 46));
+        jPanel3.setPreferredSize(new java.awt.Dimension(65, 54));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jPanel4.setMinimumSize(new java.awt.Dimension(100, 46));
@@ -86,8 +85,6 @@ public class SelectionComponent extends javax.swing.JPanel {
 
         jPanel3.add(jPanel4, new java.awt.GridBagConstraints());
 
-        add(jPanel3, java.awt.BorderLayout.CENTER);
-
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SelectionComponent.class, "SelectionComponent.jLabel1.text")); // NOI18N
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -102,7 +99,7 @@ public class SelectionComponent extends javax.swing.JPanel {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jLabel1)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -116,7 +113,27 @@ public class SelectionComponent extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE))
         );
 
-        add(jPanel5, java.awt.BorderLayout.SOUTH);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private de.fub.mapsforge.project.detector.ui.ListComponent SelectedItemList;

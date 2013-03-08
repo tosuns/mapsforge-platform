@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.MaxSpeedFeature;
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,7 +18,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_MaxSpeedFeature_Description=Feature that computes the maximum speed that appears within a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class MaxSpeedFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+public class MaxSpeedFeatureProcess extends FeatureProcess {
 
     private final MaxSpeedFeature feature = new MaxSpeedFeature();
     private GPSTrack gpsTrack;
@@ -47,10 +46,5 @@ public class MaxSpeedFeatureProcess extends FeatureProcess<GPSTrack, Double> {
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

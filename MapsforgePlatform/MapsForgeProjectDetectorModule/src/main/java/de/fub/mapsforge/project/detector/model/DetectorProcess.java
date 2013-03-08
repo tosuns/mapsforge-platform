@@ -2,63 +2,34 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.pipeline;
+package de.fub.mapsforge.project.detector.model;
 
 import de.fub.mapforgeproject.api.process.AbstractProcess;
 import static de.fub.mapforgeproject.api.process.ProcessState.ERROR;
 import static de.fub.mapforgeproject.api.process.ProcessState.INACTIVE;
 import static de.fub.mapforgeproject.api.process.ProcessState.RUNNING;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
-import java.io.IOException;
 import org.openide.nodes.Node;
 import org.openide.util.Cancellable;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
 /**
  *
  * @author Serdar
  */
-public abstract class AbstractDetectorProcess<I, O> extends AbstractProcess<I, O> implements Cancellable {
+public abstract class DetectorProcess<I, O> extends AbstractProcess<I, O> implements Cancellable {
 
     private final Detector detector;
     private Node node;
-    private ProcessDescriptor processDescriptor = null;
 
-    public AbstractDetectorProcess(Detector detector) {
+    public DetectorProcess(Detector detector) {
         this.detector = detector;
     }
 
     protected Detector getDetector() {
         return detector;
-    }
-
-    public ProcessDescriptor getProcessDescriptor() {
-        if (processDescriptor == null) {
-            if (getDetector() == null) {
-                try {
-                    processDescriptor = DetectorUtils.getProcessDescriptor(getClass());
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                    processDescriptor = new ProcessDescriptor(getName(), getDescription(), getClass().getName());
-
-                }
-            } else {
-                for (ProcessDescriptor filterDescriptor : getDetector().getDetectorDescriptor().getPreprocessors().getPreprocessorList()) {
-                    if (filterDescriptor != null
-                            && AbstractDetectorProcess.class.getName().equals(filterDescriptor.getJavaType())
-                            && getName().equals(filterDescriptor.getName())) {
-                        processDescriptor = filterDescriptor;
-                        break;
-                    }
-                }
-            }
-        }
-        return processDescriptor;
     }
 
     @Override

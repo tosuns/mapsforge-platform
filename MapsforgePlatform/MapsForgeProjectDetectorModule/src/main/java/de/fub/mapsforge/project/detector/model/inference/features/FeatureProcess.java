@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.inference;
+package de.fub.mapsforge.project.detector.model.inference.features;
 
+import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.pipeline.AbstractDetectorProcess;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,7 +23,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public abstract class FeatureProcess<I, O> extends AbstractDetectorProcess<I, O> {
+public abstract class FeatureProcess extends AbstractDetectorProcess<GPSTrack, Double> {
 
     private static Image defaultImage;
 
@@ -64,11 +65,16 @@ public abstract class FeatureProcess<I, O> extends AbstractDetectorProcess<I, O>
         return null;
     }
 
+    @Override
+    public boolean cancel() {
+        return false;
+    }
+
     private static class FeatureNode extends AbstractNode {
 
-        private final FeatureProcess<?, ?> filterProcess;
+        private final FeatureProcess filterProcess;
 
-        public FeatureNode(FeatureProcess<?, ?> filterProcess) {
+        public FeatureNode(FeatureProcess filterProcess) {
             super(Children.LEAF, Lookups.fixed(filterProcess));
             this.filterProcess = filterProcess;
             setDisplayName(filterProcess.getName());

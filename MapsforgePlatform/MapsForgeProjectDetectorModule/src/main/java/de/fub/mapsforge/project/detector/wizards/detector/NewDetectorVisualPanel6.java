@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 
 public final class NewDetectorVisualPanel6 extends JPanel {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Creates new form NewDetectorVisualPanel6
      */

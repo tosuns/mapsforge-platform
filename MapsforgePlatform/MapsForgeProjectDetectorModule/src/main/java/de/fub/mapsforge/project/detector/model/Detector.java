@@ -13,6 +13,10 @@ import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.PostProce
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcessorPipeline;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.PreProcessors;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -35,16 +39,16 @@ import org.openide.util.NbBundle;
  */
 public class Detector extends ModelSynchronizer {
 
-    private static final Logger LOG = Logger.getLogger(Detector.class.getName());
     public static final String PROP_NAME_DETECTOR_STATE = "detector.state";
+    private static final Logger LOG = Logger.getLogger(Detector.class.getName());
     private final DetectorDataObject dataObject;
-    private ProcessState detectorState = ProcessState.INACTIVE;
-    private ModelSynchronizerClient dataObjectModelSynchronizerClient;
     private final PreProcessorPipeline preProcessorPipeline = new PreProcessorPipeline(this);
     private final PostProcessorPipeline postProcessorPipeline = new PostProcessorPipeline(this);
-    private AbstractInferenceModel inferenceModel;
     private final Object MUTEX_PROCESS_RUNNING = new Object();
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private AbstractInferenceModel inferenceModel;
+    private ProcessState detectorState = ProcessState.INACTIVE;
+    private ModelSynchronizerClient dataObjectModelSynchronizerClient;
 
     public Detector(DetectorDataObject dataObject) {
         assert dataObject != null;
@@ -71,8 +75,36 @@ public class Detector extends ModelSynchronizer {
         reinit();
     }
 
-    // initialized this instance with the help of the detector descriptor.
+    // TODO initialized this instance with the help of the detector descriptor.
     private void reinit() {
+        DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
+        if (detectorDescriptor != null) {
+            InferenceModelDescriptor inferenceModelDescriptor = detectorDescriptor.getInferenceModel();
+            if (inferenceModelDescriptor != null) {
+                inferenceModel = DetectorUtils.createInferenceModel(inferenceModelDescriptor, Detector.this);
+            }
+
+            PreProcessors preprocessors = detectorDescriptor.getPreprocessors();
+            if (preprocessors != null) {
+                FilterProcess filter = null;
+                for (ProcessDescriptor processDescriptor : preprocessors.getPreprocessorList()) {
+                    filter = DetectorUtils.createInstance(FilterProcess.class, processDescriptor.getJavaType());
+                    if (filter != null) {
+                        getPreProcessorPipeline().add(filter);
+                    }
+                }
+            }
+//            PostProcessors postprocessors = detectorDescriptor.getPostprocessors();
+//            if (postprocessors != null) {
+//                Task task = null;
+//                for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
+//                    task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType());
+//                    if (task != null) {
+//                        getPostProcessorPipeline().add(task);
+//                    }
+//                }
+//            }
+        }
     }
 
     @NbBundle.Messages({
@@ -160,8 +192,9 @@ public class Detector extends ModelSynchronizer {
 
         @Override
         public boolean cancel() {
+            // TODO cancel process.
             return false;
-            // cancel process.
+
         }
     }
 }

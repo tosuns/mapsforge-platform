@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.J48InferenceModel"
+                name="J48 Inference Model"
+                description="Inference Model which uses a J48 classifier.">
+    <features/>
+</inferencemodel>

@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.MinPrecisionFeature;
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,7 +18,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_MinPrecisionFeature_Description=Feature computes the minimum of precision that occures within a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class MinPrecisionFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+public class MinPrecisionFeatureProcess extends FeatureProcess {
 
     private MinPrecisionFeature feature = new MinPrecisionFeature();
     private GPSTrack gpsTrack;
@@ -47,10 +46,5 @@ public class MinPrecisionFeatureProcess extends FeatureProcess<GPSTrack, Double>
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

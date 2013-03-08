@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>MapsforgePlatform-parent</artifactId>
+        <groupId>de.fub</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>de.fub.mapsforge</groupId>
+    <artifactId>JFreeChartLib</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>nbm</packaging>
+
+    <name>JFreeChartLib</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <!--
+        Repository hosting NetBeans modules, especially APIs.
+        Versions are based on IDE releases, e.g.: RELEASE691
+        To create your own repository, use: nbm:populate-repository
+        -->
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>http://bits.netbeans.org/maven2/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>main-repository</id>
+            <name>Main Repository</name>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-annotations-common</artifactId>
+            <version>RELEASE73-BETA2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.14</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <version>3.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>org.jfree.chart</publicPackage>
+                        <publicPackage>org.jfree.chart.annotations</publicPackage>
+                        <publicPackage>org.jfree.chart.axis</publicPackage>
+                        <publicPackage>org.jfree.chart.block</publicPackage>
+                        <publicPackage>org.jfree.chart.demo</publicPackage>
+                        <publicPackage>org.jfree.chart.editor</publicPackage>
+                        <publicPackage>org.jfree.chart.encoders</publicPackage>
+                        <publicPackage>org.jfree.chart.entity</publicPackage>
+                        <publicPackage>org.jfree.chart.event</publicPackage>
+
+                        <publicPackage>org.jfree.chart.imagemap</publicPackage>
+                        <publicPackage>org.jfree.chart.labels</publicPackage>
+                        <publicPackage>org.jfree.chart.needle</publicPackage>
+                        <publicPackage>org.jfree.chart.panel</publicPackage>
+
+                        <publicPackage>org.jfree.chart.plot</publicPackage>
+                        <publicPackage>org.jfree.chart.plot.dial</publicPackage>
+                        <publicPackage>org.jfree.chart.renderer</publicPackage>
+                        <publicPackage>org.jfree.chart.renderer.category</publicPackage>
+
+                        <publicPackage>org.jfree.chart.renderer.xy</publicPackage>
+                        <publicPackage>org.jfree.chart.resources</publicPackage>
+                        <publicPackage>org.jfree.chart.servlet</publicPackage>
+                        <publicPackage>org.jfree.chart.title</publicPackage>
+
+                        <publicPackage>org.jfree.chart.urls</publicPackage>
+                        <publicPackage>org.jfree.chart.util</publicPackage>
+                        <publicPackage>org.jfree.data</publicPackage>
+                        <publicPackage>org.jfree.data.category</publicPackage>
+
+                        <publicPackage>org.jfree.data.contour</publicPackage>
+                        <publicPackage>org.jfree.data.function</publicPackage>
+                        <publicPackage>org.jfree.data.gantt</publicPackage>
+                        <publicPackage>org.jfree.data.general</publicPackage>
+
+                        <publicPackage>org.jfree.data.io</publicPackage>
+                        <publicPackage>org.jfree.data.jdbc</publicPackage>
+                        <publicPackage>org.jfree.data.resources</publicPackage>
+                        <publicPackage>org.jfree.data.statistics</publicPackage>
+
+                        <publicPackage>org.jfree.data.time</publicPackage>
+                        <publicPackage>org.jfree.data.time.ohlc</publicPackage>
+                        <publicPackage>org.jfree.data.xml</publicPackage>
+                        <publicPackage>org.jfree.data.xy</publicPackage>
+                    </publicPackages>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- NetBeans 6.9+ requires JDK 6 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!-- to have the jar plugin pickup the nbm generated manifest -->
+                    <useDefaultManifestFile>true</useDefaultManifestFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

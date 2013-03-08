@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgPrecisionFeature;
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,7 +18,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_AvgPrecisionFeature_Description=Feature measures the average precision of a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class AvgPrecisionFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+public class AvgPrecisionFeatureProcess extends FeatureProcess {
 
     private final AvgPrecisionFeature feature = new AvgPrecisionFeature();
     private GPSTrack gpsTrack;
@@ -47,10 +46,5 @@ public class AvgPrecisionFeatureProcess extends FeatureProcess<GPSTrack, Double>
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

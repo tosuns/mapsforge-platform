@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgTransportationDistanceFeature;
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,7 +18,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_AvgTransportationDistanceFeature_Description=Feature that computes the average distance of public transportation stations to an gps track"
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class AvgTransportationDistanceFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
 
     private GPSTrack gpxTrack;
     private final AvgTransportationDistanceFeature feature = new AvgTransportationDistanceFeature();
@@ -46,10 +45,5 @@ public class AvgTransportationDistanceFeatureProcess extends FeatureProcess<GPST
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

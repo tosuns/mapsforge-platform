@@ -6,13 +6,19 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgAccelerationFeature;
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.mapsforge.project.detector.model.inference.FeatureProcess;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Serdar
  */
-public class AvgAcceleratopmFeatureProcess extends FeatureProcess<GPSTrack, Double> {
+@NbBundle.Messages({
+    "CLT_AvgAccelerationFeature_Name=Average Acceleration Feature",
+    "CLT_AvgAccelerationFeature_Description=Feature that computes the average acceleration which a gps track contains."
+})
+@ServiceProvider(service = FeatureProcess.class)
+public class AvgAcceleratopmFeatureProcess extends FeatureProcess {
 
     private final AvgAccelerationFeature feature = new AvgAccelerationFeature();
     private GPSTrack gpsTrack;
@@ -24,12 +30,12 @@ public class AvgAcceleratopmFeatureProcess extends FeatureProcess<GPSTrack, Doub
 
     @Override
     public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Bundle.CLT_AvgAccelerationFeature_Name();
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Bundle.CLT_AvgAccelerationFeature_Description();
     }
 
     @Override
@@ -40,10 +46,5 @@ public class AvgAcceleratopmFeatureProcess extends FeatureProcess<GPSTrack, Doub
     @Override
     public Double getResult() {
         return feature.getResult();
-    }
-
-    @Override
-    public boolean cancel() {
-        return false;
     }
 }

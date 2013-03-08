@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dec:detector name="Empty Detector" description="A empty test detector" xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
-    <inferencemodel javaType="de.fub.dummy.path.Instance" name="Dummy Inference Model" description="A dummy inference model for the propose of unit testing.">
+<dec:detector name="Empty Detector"
+              description="A empty test detector"
+              xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
+    <inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.J48InferenceModel"
+                    name="J48 Inference Model"
+                    description="Inference Model which uses a J48 classifier.">
         <features>
-            <feature javaType="de.fub.dummy.path.Instance" name="Dummy Feature" description="Dummy feature for the propose of unit testing.">
+            <feature javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAcceleratopmFeatureProcess"
+                     name="Average Acceleration Feature"
+                     description="Feature that computes the average acceleration which a gps track contains.">
                 <properties>
-                    <property javaType="de.fub.dummy.path.Instance" value="true" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                    <property javaType="de.fub.dummy.path.Instance"
+                              value="true"
+                              name="Dummy Property"
+                              description="Dummy property for the propose of unit testing."/>
                 </properties>
             </feature>
         </features>
+        <inferenceModelProcessHandlers>
+            <processHandler javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler"
+                            inferenceMode="trainingsMode"
+                            name="trainingsProcessHandler"/>
+            <processHandler javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler"
+                            inferenceMode="crossvalidationMode"
+                            name="crossvalidationProcessHandler"/>
+            <processHandler javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler"
+                            inferenceMode="inferenceMode"
+                            name="inferenceModeProcessHandler"/>
+        </inferenceModelProcessHandlers>
     </inferencemodel>
     <datasets>
         <trainingsset>
@@ -18,16 +38,26 @@
         </inferenceset>
     </datasets>
     <preprocessors>
-        <filter javaType="de.fub.detector.Instance" name="Dummy Filter" description="A dummy filter for the propose of unit testing.">
+        <filter javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.MinDistanceWaypointFilterProcess"
+                name="Minimum Distance Filter"
+                description="A dummy filter for the propose of unit testing.">
             <properties>
-                <property javaType="de.fub.dummy.path.Instance" value="1" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                <property javaType="de.fub.dummy.path.Instance"
+                          value="1"
+                          name="Dummy Property"
+                          description="Dummy property for the propose of unit testing."/>
             </properties>
         </filter>
     </preprocessors>
     <postprocessors>
-        <task javaType="de.fub.detector.Instance" name="Dummy Task" description="A dummy task for the propose of unit testing.">
+        <task javaType="de.fub.detector.Instance"
+              name="Dummy Task"
+              description="A dummy task for the propose of unit testing.">
             <properties>
-                <property javaType="de.fub.dummy.path.Instance" value="Something"  name="Dummy Property" description="Dummy property for the propose of unit testing."/>
+                <property javaType="de.fub.dummy.path.Instance"
+                          value="Something"
+                          name="Dummy Property"
+                          description="Dummy property for the propose of unit testing."/>
             </properties>
         </task>
     </postprocessors>
