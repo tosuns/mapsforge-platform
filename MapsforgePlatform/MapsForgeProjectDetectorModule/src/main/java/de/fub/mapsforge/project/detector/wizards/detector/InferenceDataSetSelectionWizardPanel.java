@@ -8,22 +8,26 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class InferenceModelFeatureSelectionWizardPanel3 implements WizardDescriptor.Panel<WizardDescriptor> {
+/**
+ *
+ * @author Serdar
+ */
+public class InferenceDataSetSelectionWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private InferenceModelFeatureSelectionVisualPanel3 component;
+    private InferenceDataSetSelectionVisualPanel component;
 
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
     @Override
-    public InferenceModelFeatureSelectionVisualPanel3 getComponent() {
+    public InferenceDataSetSelectionVisualPanel getComponent() {
         if (component == null) {
-            component = new InferenceModelFeatureSelectionVisualPanel3();
+            component = new InferenceDataSetSelectionVisualPanel();
         }
         return component;
     }

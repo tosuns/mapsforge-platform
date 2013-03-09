@@ -38,6 +38,7 @@
             <artifactId>org-netbeans-modules-nbjunit</artifactId>
             <version>${netbeans.version}</version>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
         <!-- To use Jelly Tools in your functional tests, add or replace with:
         <dependency>
@@ -227,13 +228,13 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-xml-schema-completion</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-core</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>fu.berlin.mapsforge</groupId>
@@ -244,43 +245,43 @@
             <artifactId>org-netbeans-modules-xml-catalog</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-lexer</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-retriever</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-schema-model</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-tax</artifactId>
             <groupId>org.netbeans.modules</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-text</artifactId>
             <groupId>org.netbeans.modules</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-modules-xml-xam</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>de.fub.mapsforge</groupId>

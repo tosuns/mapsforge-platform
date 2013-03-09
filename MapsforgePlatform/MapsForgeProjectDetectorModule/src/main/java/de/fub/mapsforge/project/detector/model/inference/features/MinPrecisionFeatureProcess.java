@@ -14,7 +14,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_MinPrecisionFeature_Name=Minimum Precision Feature",
+    "CLT_MinPrecisionFeature_Name=Minimum Precision",
     "CLT_MinPrecisionFeature_Description=Feature computes the minimum of precision that occures within a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)

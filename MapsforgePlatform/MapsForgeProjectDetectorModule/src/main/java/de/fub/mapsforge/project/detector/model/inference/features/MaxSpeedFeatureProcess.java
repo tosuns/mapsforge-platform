@@ -14,7 +14,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_MaxSpeedFeature_Name=Maximum Speed Feature",
+    "CLT_MaxSpeedFeature_Name=Maximum Speed",
     "CLT_MaxSpeedFeature_Description=Feature that computes the maximum speed that appears within a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)

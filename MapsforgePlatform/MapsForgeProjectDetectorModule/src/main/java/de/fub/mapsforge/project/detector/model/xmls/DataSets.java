@@ -13,14 +13,14 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Serdar
  */
-@XmlType(name = "datasets", propOrder = {"trainingsset", "inferenceset"})
+@XmlType(name = "datasets", propOrder = {"trainingset", "inferenceset"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DataSets {
 
     @XmlElement(name = "inferenceset", required = true)
     private InferenceSet inferenceset = new InferenceSet();
-    @XmlElement(name = "trainingsset", required = true)
-    private TrainingsSet trainingsset = new TrainingsSet();
+    @XmlElement(name = "trainingset", required = true)
+    private TrainingSet trainingset = new TrainingSet();
 
     public DataSets() {
     }
@@ -29,7 +29,7 @@ public class DataSets {
         return inferenceset;
     }
 
-    public TrainingsSet getTrainingsSet() {
-        return trainingsset;
+    public TrainingSet getTrainingSet() {
+        return trainingset;
     }
 }

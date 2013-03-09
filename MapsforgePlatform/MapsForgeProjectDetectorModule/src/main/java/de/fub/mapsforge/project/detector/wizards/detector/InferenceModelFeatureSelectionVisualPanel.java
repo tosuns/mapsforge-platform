@@ -4,34 +4,39 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
+import de.fub.mapsforge.project.detector.model.DetectorProcess;
+import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
+import de.fub.utilsmodule.Collections.ObservableList;
 import javax.swing.JPanel;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "CLT_InferenceModelFeatures_Name=Features",
-    "CLT_All_Features_Title=All Available Features",
-    "CLT_Selected_Features_Title=Selected Features"
+    "CLT_InferenceModelFeatures_Name=Features"
 })
-public final class InferenceModelFeatureSelectionVisualPanel3 extends JPanel {
+public final class InferenceModelFeatureSelectionVisualPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates new form InferenceModelFeatureSelectionVisualPanel3
+     * Creates new form InferenceModelFeatureSelectionVisualPanel
      */
-    public InferenceModelFeatureSelectionVisualPanel3() {
+    public InferenceModelFeatureSelectionVisualPanel() {
         initComponents();
-        init();
-    }
-
-    private void init() {
-        selectionComponent.getAllItemListTitle().setText(Bundle.CLT_All_Features_Title());
-        selectionComponent.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Features_Title());
+        getAllFeatures().addAll(Lookup.getDefault().lookupResult(FeatureProcess.class).allInstances());
     }
 
     @Override
     public String getName() {
         return Bundle.CLT_InferenceModelFeatures_Name();
+    }
+
+    public ObservableList<DetectorProcess> getAllFeatures() {
+        return selectionComponent.getAllFeatures();
+    }
+
+    public ObservableList<DetectorProcess> getSelectedFeatures() {
+        return selectionComponent.getSelectedFeatures();
     }
 
     /**

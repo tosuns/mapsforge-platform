@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<processunit javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAccelerationFeatureProcess"
+             name="Average Acceleration"
+             description="Feature that computes the average acceleration which a gps track contains.">
+    <properties/>
+</processunit>

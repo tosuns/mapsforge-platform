@@ -6,26 +6,24 @@ package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
-import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 
-public class InferenceModelSelectionWizardPanel2 implements WizardDescriptor.Panel<WizardDescriptor> {
+public class InferenceModelFeatureSelectionWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
     /**
      * The visual component that displays this panel. If you need to access the
      * component from this class, just use getComponent().
      */
-    private InferenceModelSelectionVisualPanel2 component;
-    private final ChangeSupport cs = new ChangeSupport(this);
+    private InferenceModelFeatureSelectionVisualPanel component;
+
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
-
     @Override
-    public InferenceModelSelectionVisualPanel2 getComponent() {
+    public InferenceModelFeatureSelectionVisualPanel getComponent() {
         if (component == null) {
-            component = new InferenceModelSelectionVisualPanel2();
+            component = new InferenceModelFeatureSelectionVisualPanel();
         }
         return component;
     }
@@ -50,12 +48,10 @@ public class InferenceModelSelectionWizardPanel2 implements WizardDescriptor.Pan
 
     @Override
     public void addChangeListener(ChangeListener l) {
-        cs.addChangeListener(l);
     }
 
     @Override
     public void removeChangeListener(ChangeListener l) {
-        cs.removeChangeListener(l);
     }
 
     @Override
@@ -65,7 +61,6 @@ public class InferenceModelSelectionWizardPanel2 implements WizardDescriptor.Pan
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        wiz.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 5);
         // use wiz.putProperty to remember current panel state
     }
 }

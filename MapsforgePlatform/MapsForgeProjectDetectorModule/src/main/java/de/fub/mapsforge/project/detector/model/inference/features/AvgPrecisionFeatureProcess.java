@@ -14,7 +14,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_AvgPrecisionFeature_Name=Average Precision Feature",
+    "CLT_AvgPrecisionFeature_Name=Average Precision",
     "CLT_AvgPrecisionFeature_Description=Feature measures the average precision of a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)

@@ -6,7 +6,7 @@
                     name="J48 Inference Model"
                     description="Inference Model which uses a J48 classifier.">
         <features>
-            <feature javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAcceleratopmFeatureProcess"
+            <feature javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAccelerationFeatureProcess"
                      name="Average Acceleration Feature"
                      description="Feature that computes the average acceleration which a gps track contains.">
                 <properties>
@@ -30,9 +30,14 @@
         </inferenceModelProcessHandlers>
     </inferencemodel>
     <datasets>
-        <trainingsset>
-            <dataset url="file:\\somepath"/>
-        </trainingsset>
+        <trainingset>
+            <transportmode name="Car">
+                <dataset url="file:\\somepath"/>
+            </transportmode>
+            <transportmode name="bus">
+                <dataset url="file:\\somepath2"/>
+            </transportmode>
+        </trainingset>
         <inferenceset>
             <dataset url="file:\\somepath"/>
         </inferenceset>

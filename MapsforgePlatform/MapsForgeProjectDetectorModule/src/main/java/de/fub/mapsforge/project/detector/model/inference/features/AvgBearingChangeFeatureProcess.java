@@ -14,7 +14,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_AvgBearingChangeFeature_Name=Average Bearing Change Feature",
+    "CLT_AvgBearingChangeFeature_Name=Average Bearing Change",
     "CLT_AvgBearingChangeFeature_Description=Feature computes the average bearing change that occures within the gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)

@@ -16,7 +16,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.version>RELEASE73-BETA2</netbeans.version>
+        <!--<netbeans.version>RELEASE73-BETA2</netbeans.version>-->
     </properties>
 
     <repositories>
@@ -197,7 +197,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-spi-palette</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -208,7 +208,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-xml</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <!--        <dependency>
             <groupId>xerces</groupId>
@@ -225,7 +225,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-swing-tabcontrol</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
     </dependencies>
 

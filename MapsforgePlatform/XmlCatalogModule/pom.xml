@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-annotations-common</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>de.fub</groupId>
@@ -48,17 +48,17 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-filesystems</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-xml-catalog</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>

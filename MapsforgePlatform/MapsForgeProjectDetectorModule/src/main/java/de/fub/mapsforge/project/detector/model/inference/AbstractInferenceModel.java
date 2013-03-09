@@ -51,7 +51,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     private final EnumMap<InferenceMode, Class<? extends InferenceModelProcessHandler>> processHandlerMap = new EnumMap<InferenceMode, Class<? extends InferenceModelProcessHandler>>(InferenceMode.class);
     private final HashSet<InferenceModelListener> listenerSet = new HashSet<InferenceModelListener>();
     private final HashSet<FeatureProcess> featureList = new HashSet<FeatureProcess>();
-    protected final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+    protected ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private InferenceModelInputDataSet inputDataSet;
     private InferenceMode inferenceMode = InferenceMode.ALL_MODE;
     private Classifier classifier;
@@ -63,12 +63,14 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
 
     public AbstractInferenceModel(Detector detector) {
         super(detector);
-        modelSynchronizerClient = detector.create(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                reinit();
-            }
-        });
+        if (detector != null) {
+            modelSynchronizerClient = detector.create(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    reinit();
+                }
+            });
+        }
         reinit();
     }
 
@@ -107,8 +109,6 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                     inferenceModelDescriptor = DetectorUtils.getInferenceModelDescriptor(getClass());
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
-                    inferenceModelDescriptor = new InferenceModelDescriptor(getName(), getDescription(), getClass().getName());
-
                 }
             } else {
                 inferenceModelDescriptor = getDetector().getDetectorDescriptor().getInferenceModel();
@@ -303,7 +303,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
 
     @Override
     protected Node createNodeDelegate() {
-        return new InferenceModelNode(getDetector());
+        return new InferenceModelNode(AbstractInferenceModel.this);
     }
 
     @Override

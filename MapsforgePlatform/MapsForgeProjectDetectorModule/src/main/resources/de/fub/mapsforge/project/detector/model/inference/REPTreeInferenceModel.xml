@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.REPTreeInferenceModel"
+                name="REP Tree Inference Model"
+                description="Inference Model which uses a REPTree classifiere that builds a decision/regression tree using information gain/variance and prunes it using reduced-error pruning (with backfitting). Only sorts values for numeric attributes once. Missing values are dealt with by splitting the corresponding instances into pieces (i.e. as in C4.5).">
+    <features/>
+</inferencemodel>

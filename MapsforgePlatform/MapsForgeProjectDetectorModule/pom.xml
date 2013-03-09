@@ -39,17 +39,17 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-annotations-common</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-projectapi</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-projectuiapi</artifactId>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>de.fub</groupId>
@@ -116,13 +116,13 @@
             <artifactId>org-openide-explorer</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-api-xml</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>UtilsModule</artifactId>
@@ -134,7 +134,7 @@
             <artifactId>org-netbeans-api-progress</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73-BETA2</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>de.fub</groupId>
@@ -152,6 +152,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>JFreeChartLib</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>org-netbeans-swing-outline</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
         </dependency>
     </dependencies>
 

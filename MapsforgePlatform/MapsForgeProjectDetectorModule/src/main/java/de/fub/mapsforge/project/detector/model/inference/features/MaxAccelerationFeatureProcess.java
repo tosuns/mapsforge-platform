@@ -14,7 +14,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_MaxAccelerationFeature_Name=Maximal Acceleration Feature",
+    "CLT_MaxAccelerationFeature_Name=Maximal Acceleration",
     "CLT_MaxAccelerationFeature_Description=Feature that computes the maximal acceleration which a gps track contains."
 })
 @ServiceProvider(service = FeatureProcess.class)

@@ -30,7 +30,7 @@ public class DetectorSubNodeFactory extends ChildFactory<Node> {
         toPopulate.add(new DataSetFolderNode(detector));
         toPopulate.add(new PreProcessorsNode(detector));
         if (detector.getInferenceModel() != null) {
-            toPopulate.add(new InferenceModelNode(detector));
+            toPopulate.add(new InferenceModelNode(detector.getInferenceModel()));
         }
         toPopulate.add(new PostProcessorsNode(detector));
         return true;

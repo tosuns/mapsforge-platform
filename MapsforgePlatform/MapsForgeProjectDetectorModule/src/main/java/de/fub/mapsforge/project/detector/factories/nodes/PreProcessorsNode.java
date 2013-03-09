@@ -33,7 +33,7 @@ public class PreProcessorsNode extends AbstractNode {
     @Override
     public Image getIcon(int type) {
         if (image == null) {
-            image = IconRegister.findRegisteredIcon("processFolderIcon.png");
+            image = IconRegister.findRegisteredIcon("filterIcon16.png");
         }
         return image != null ? image : super.getIcon(type);
     }

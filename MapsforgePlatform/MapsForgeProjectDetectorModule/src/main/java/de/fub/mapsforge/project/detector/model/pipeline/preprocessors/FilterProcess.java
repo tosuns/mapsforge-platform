@@ -12,11 +12,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Cancellable;
+import org.openide.util.ImageUtilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -65,15 +69,58 @@ public abstract class FilterProcess<I, O> extends AbstractDetectorProcess<I, O> 
         return defaultImage;
     }
 
-    private static class FilterProcessNode extends AbstractNode {
+    private static class FilterProcessNode extends AbstractNode implements PropertyChangeListener {
 
         private final FilterProcess<?, ?> filterProcess;
 
         public FilterProcessNode(FilterProcess<?, ?> filterProcess) {
             super(Children.LEAF, Lookups.fixed(filterProcess));
             this.filterProcess = filterProcess;
+            this.filterProcess.addPropertyChangeListener(WeakListeners.propertyChange(FilterProcessNode.this, this.filterProcess));
             setDisplayName(filterProcess.getName());
             setShortDescription(filterProcess.getDescription());
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            Image image = null;
+            Image backgroundIcon = null;
+            Image overlayIcon = null;
+            switch (this.filterProcess.getProcessState()) {
+                case ERROR:
+                    backgroundIcon = IconRegister.findRegisteredIcon("processIconError.png");
+                    overlayIcon = IconRegister.findRegisteredIcon("errorHintIcon.png");
+                    break;
+                case INACTIVE:
+                    backgroundIcon = IconRegister.findRegisteredIcon("processIconNormal.png");
+                    break;
+                case RUNNING:
+                    backgroundIcon = IconRegister.findRegisteredIcon("processIconRun.png");
+                    overlayIcon = IconRegister.findRegisteredIcon("playHintIcon.png");
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+
+            if (backgroundIcon != null && overlayIcon != null) {
+                image = ImageUtilities.mergeImages(backgroundIcon, overlayIcon, 0, 0);
+            } else if (backgroundIcon != null) {
+                image = backgroundIcon;
+            }
+
+            return image != null ? image : super.getIcon(type);
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (FilterProcess.PROP_NAME_PROCESS_STATE.equals(evt.getPropertyName())) {
+                fireIconChange();
+            }
         }
     }
 }

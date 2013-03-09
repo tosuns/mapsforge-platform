@@ -17,7 +17,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_AvgSpeedFeature_Name=Average Speed Feature",
+    "CLT_AvgSpeedFeature_Name=Average Speed",
     "CLT_AvgSpeedFeature_Description=A feature for a classifier responsible to compotue the average speed of an GPS track."
 })
 @ServiceProvider(service = FeatureProcess.class)

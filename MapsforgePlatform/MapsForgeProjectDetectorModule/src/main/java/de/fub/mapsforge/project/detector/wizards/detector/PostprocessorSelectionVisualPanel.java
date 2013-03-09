@@ -12,14 +12,14 @@ import org.openide.util.NbBundle;
     "CLT_All_Available_Postprocessors=All Postprocessor Tasks",
     "CLT_Selected_Postprocessors=Selected Postprocessor Tasks"
 })
-public final class PostprocessorSelectionVisualPanel5 extends JPanel {
+public final class PostprocessorSelectionVisualPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates new form PostprocessorSelectionVisualPanel5
+     * Creates new form PostprocessorSelectionVisualPanel
      */
-    public PostprocessorSelectionVisualPanel5() {
+    public PostprocessorSelectionVisualPanel() {
         initComponents();
         init();
     }

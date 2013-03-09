@@ -16,6 +16,6 @@ public class FilterNode extends ProcessNode {
     public FilterNode(Process<?, ?> process) {
         super(process);
         setDisplayName(process.getName());
-        setShortDescription(process.getDescription());
+        setShortDescription(null);
     }
 }

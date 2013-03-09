@@ -16,7 +16,7 @@ import weka.classifiers.trees.J48;
  */
 @NbBundle.Messages({
     "CLT_J48InferenceModel_Name=J48 Inference Model",
-    "CLT_J48InferenceModel_Description=Inference Model which uses a J48 classifier."
+    "CLT_J48InferenceModel_Description=Inference Model which uses a J48 classifier that generates an unpruned or a pruned C4.5 decision tree."
 })
 @ServiceProvider(service = AbstractInferenceModel.class)
 public class J48InferenceModel extends AbstractInferenceModel {

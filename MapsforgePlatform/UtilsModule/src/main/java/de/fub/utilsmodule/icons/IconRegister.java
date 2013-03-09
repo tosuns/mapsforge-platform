@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -136,13 +137,24 @@ public class IconRegister {
     public static synchronized Image getFolderIcon() {
         if (SYSTEM_FOLDER_ICON == null) {
             if (System.getProperty("user.dir") != null) {
-                File file = new File(System.getProperty("user.dir"), "dummyFolder");
-                if (file.mkdirs()) {
-                    FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-                    Icon systemIcon = fileSystemView.getSystemIcon(file);
-                    if (systemIcon instanceof ImageIcon) {
-                        SYSTEM_FOLDER_ICON = ((ImageIcon) systemIcon).getImage();
+                try {
+                    Random random = new Random();
+                    File file = File.createTempFile("temp", "tmp");
+                    if (!file.exists()) {
+                        if (!file.createNewFile()) {
+                            return SYSTEM_FOLDER_ICON;
+                        }
                     }
+                    FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+                    if (file.getParentFile() != null) {
+                        Icon systemIcon = fileSystemView.getSystemIcon(file.getParentFile());
+                        if (systemIcon instanceof ImageIcon) {
+                            SYSTEM_FOLDER_ICON = ((ImageIcon) systemIcon).getImage();
+                        }
+                    }
+                    file.delete();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
         }

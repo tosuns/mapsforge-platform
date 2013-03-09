@@ -4,7 +4,11 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
+import de.fub.mapsforge.project.detector.model.DetectorProcess;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.utilsmodule.Collections.ObservableList;
 import javax.swing.JPanel;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
@@ -12,14 +16,14 @@ import org.openide.util.NbBundle;
     "CLT_All_Available_Preprocessors=All Preprocessor Filters",
     "CLT_Selected_Preprocessors=Selected Preprocessor Filters"
 })
-public final class PreprocessorSelectionVisualPanel4 extends JPanel {
+public final class PreprocessorSelectionVisualPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Creates new form PreprocessorSelectionVisualPanel4
+     * Creates new form PreprocessorSelectionVisualPanel
      */
-    public PreprocessorSelectionVisualPanel4() {
+    public PreprocessorSelectionVisualPanel() {
         initComponents();
         init();
     }
@@ -27,6 +31,15 @@ public final class PreprocessorSelectionVisualPanel4 extends JPanel {
     private void init() {
         selectionComponent.getAllItemListTitle().setText(Bundle.CLT_All_Available_Preprocessors());
         selectionComponent.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Preprocessors());
+        getAllFeatures().addAll(Lookup.getDefault().lookupResult(FilterProcess.class).allInstances());
+    }
+
+    public ObservableList<DetectorProcess> getAllFeatures() {
+        return selectionComponent.getAllFeatures();
+    }
+
+    public ObservableList<DetectorProcess> getSelectedFeatures() {
+        return selectionComponent.getSelectedFeatures();
     }
 
     @Override

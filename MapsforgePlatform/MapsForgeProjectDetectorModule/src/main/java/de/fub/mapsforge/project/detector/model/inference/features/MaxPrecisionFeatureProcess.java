@@ -14,7 +14,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_MaxPrecisionFeature_Name=Maximum Precision Feature",
+    "CLT_MaxPrecisionFeature_Name=Maximum Precision",
     "CLT_MaxPrecisionFeature_Description=Feature that computes the maximum precision which occurs within a gps track."
 })
 @ServiceProvider(service = FeatureProcess.class)

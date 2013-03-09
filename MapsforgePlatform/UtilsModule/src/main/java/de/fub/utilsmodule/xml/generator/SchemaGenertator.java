@@ -4,8 +4,6 @@
  */
 package de.fub.utilsmodule.xml.generator;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -16,6 +14,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 
 /**

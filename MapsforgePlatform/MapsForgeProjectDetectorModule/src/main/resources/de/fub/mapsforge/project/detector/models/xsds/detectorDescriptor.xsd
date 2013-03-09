@@ -76,19 +76,25 @@
     </xs:complexType>
     <xs:complexType name="datasets">
         <xs:sequence>
-            <xs:element name="trainingsset" type="trainingsset"/>
+            <xs:element name="trainingset" type="trainingset"/>
             <xs:element name="inferenceset" type="inferenceset"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:complexType name="trainingsset">
+    <xs:complexType name="trainingset">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="transportmode" type="transportmode"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="transportmode">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
                         name="dataset" type="dataset"/>
         </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="dataset">
         <xs:sequence/>
-        <xs:attribute name="transportmode" type="xs:string"/>
         <xs:attribute name="url" type="xs:string" use="required"/>
     </xs:complexType>
     <xs:complexType name="inferenceset">
@@ -105,8 +111,7 @@
     </xs:complexType>
     <xs:complexType name="postprocessors">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="task" type="processunit"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="task" type="processunit"/>
         </xs:sequence>
     </xs:complexType>
     <xs:simpleType name="inferenceMode">

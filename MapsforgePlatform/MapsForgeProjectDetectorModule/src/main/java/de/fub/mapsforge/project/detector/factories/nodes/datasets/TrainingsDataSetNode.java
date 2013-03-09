@@ -23,7 +23,6 @@ import org.openide.util.lookup.Lookups;
 public class TrainingsDataSetNode extends AbstractNode {
 
     private final Detector detector;
-    private Image image = null;
 
     public TrainingsDataSetNode(Detector detector) {
         super(Children.create(new TrainingsDataNodeFactory(detector), true), Lookups.fixed(detector));
@@ -34,9 +33,7 @@ public class TrainingsDataSetNode extends AbstractNode {
 
     @Override
     public Image getIcon(int type) {
-        if (image == null) {
-            image = IconRegister.getFolderIcon();
-        }
+        Image image = IconRegister.getFolderIcon();
         return image != null ? image : super.getIcon(type);
     }
 

@@ -6,11 +6,10 @@ package de.fub.mapsforge.project.detector.factories;
 
 import de.fub.mapsforge.project.detector.factories.nodes.datasets.TransportModeNode;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.xmls.DataSet;
-import de.fub.mapsforge.project.detector.model.xmls.TrainingsSet;
-import java.util.ArrayList;
+import de.fub.mapsforge.project.detector.model.xmls.TrainingSet;
+import de.fub.mapsforge.project.detector.model.xmls.TransportMode;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
@@ -19,7 +18,7 @@ import org.openide.nodes.Node;
  *
  * @author Serdar
  */
-public class TrainingsDataNodeFactory extends ChildFactory<List<DataSet>> {
+public class TrainingsDataNodeFactory extends ChildFactory<TransportMode> {
 
     private final Detector detector;
 
@@ -28,34 +27,29 @@ public class TrainingsDataNodeFactory extends ChildFactory<List<DataSet>> {
     }
 
     @Override
-    protected boolean createKeys(List<List<DataSet>> toPopulate) {
-        HashMap<String, List<DataSet>> map = new HashMap<String, List<DataSet>>();
-        TrainingsSet trainingsSet = detector.getDetectorDescriptor().getDatasets().getTrainingsSet();
+    protected boolean createKeys(List<TransportMode> toPopulate) {
+        TrainingSet trainingsSet = detector.getDetectorDescriptor().getDatasets().getTrainingSet();
 
         if (trainingsSet != null) {
-            for (DataSet dataSet : trainingsSet.getDataset()) {
-                if (dataSet.getTransportmode() != null) {
-                    if (!map.containsKey(dataSet.getTransportmode())) {
-                        map.put(dataSet.getTransportmode(), new ArrayList<DataSet>());
-                    }
-                    map.get(dataSet.getTransportmode()).add(dataSet);
+            for (TransportMode transportMode : trainingsSet.getTransportModeList()) {
+                if (transportMode.getName() != null) {
+                    toPopulate.add(transportMode);
                 }
             }
         }
 
-        ArrayList<String> keyList = new ArrayList<String>(map.keySet());
-
-        Collections.sort(keyList);
-
-        for (String transportMode : keyList) {
-            toPopulate.add(map.get(transportMode));
-        }
+        Collections.sort(toPopulate, new Comparator<TransportMode>() {
+            @Override
+            public int compare(TransportMode o1, TransportMode o2) {
+                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
+            }
+        });
 
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(List<DataSet> key) {
-        return new TransportModeNode(detector, key);
+    protected Node createNodeForKey(TransportMode transportMode) {
+        return new TransportModeNode(detector, transportMode);
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<process
-    description="Aggregation process" name="Aggregation" class="de.fub.mapsforge.project.aggregator.pipeline.processes.AggregationProcess">
+<process description="Aggregation process"
+         name="Aggregation"
+         class="de.fub.mapsforge.project.aggregator.pipeline.processes.AggregationProcess">
     <properties>
         <section name="Default Aggregation Strategy Settings">
             <propertyset description="Settings" name="Aggregation Strategy Settings">

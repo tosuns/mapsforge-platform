@@ -99,7 +99,7 @@
     </modules>
 
     <properties>
-        <netbeans.version>RELEASE73-BETA2</netbeans.version>
+        <netbeans.version>RELEASE73</netbeans.version>
         <brandingToken>mapsforgeplatform</brandingToken>
         <netbeans.run.params.ide/>
         <netbeans.run.params>${netbeans.run.params.ide} -J-Xmx512m</netbeans.run.params>

@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.factories.nodes;
 
 import de.fub.mapforgeproject.api.process.ProcessNode;
-import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.Action;
@@ -19,11 +19,11 @@ public class InferenceModelNode extends ProcessNode {
 
     public static final String ACTION_PATH = "MapsForge/Detector/inferenceModel/Actions";
     private Image image = null;
-    private final Detector detector;
+    private final AbstractInferenceModel inferenceModel;
 
-    public InferenceModelNode(Detector detector) {
-        super(detector.getInferenceModel());
-        this.detector = detector;
+    public InferenceModelNode(AbstractInferenceModel inferenceModel) {
+        super(inferenceModel);
+        this.inferenceModel = inferenceModel;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class InferenceModelNode extends ProcessNode {
     @Override
     public Image getIcon(int type) {
         if (image == null) {
-            image = detector.getInferenceModel().getIcon();
+            image = inferenceModel.getIcon();
         }
         return image != null ? image : super.getIcon(type);
     }

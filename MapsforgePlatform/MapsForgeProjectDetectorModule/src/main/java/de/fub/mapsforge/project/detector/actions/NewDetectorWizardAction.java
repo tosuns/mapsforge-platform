@@ -4,12 +4,13 @@
  */
 package de.fub.mapsforge.project.detector.actions;
 
-import de.fub.mapsforge.project.detector.wizards.detector.CommonDetectorInformationWizardPanel1;
-import de.fub.mapsforge.project.detector.wizards.detector.InferenceModelFeatureSelectionWizardPanel3;
-import de.fub.mapsforge.project.detector.wizards.detector.InferenceModelSelectionWizardPanel2;
-import de.fub.mapsforge.project.detector.wizards.detector.NewDetectorWizardPanel6;
-import de.fub.mapsforge.project.detector.wizards.detector.PostprocessorSelectionWizardPanel5;
-import de.fub.mapsforge.project.detector.wizards.detector.PreprocessorSelectionWizardPanel4;
+import de.fub.mapsforge.project.detector.wizards.detector.CommonDetectorInformationWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.InferenceDataSetSelectionWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.InferenceModelFeatureSelectionWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.InferenceModelSelectionWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.TrainingSetSelectionWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.PostprocessorSelectionWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.PreprocessorSelectionWizardPanel;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,12 +55,13 @@ public final class NewDetectorWizardAction implements ActionListener {
         private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
             if (panels == null) {
                 panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-                panels.add(new CommonDetectorInformationWizardPanel1());
-                panels.add(new InferenceModelSelectionWizardPanel2());
-                panels.add(new InferenceModelFeatureSelectionWizardPanel3());
-                panels.add(new PreprocessorSelectionWizardPanel4());
-                panels.add(new PostprocessorSelectionWizardPanel5());
-                panels.add(new NewDetectorWizardPanel6());
+                panels.add(new CommonDetectorInformationWizardPanel());
+                panels.add(new InferenceModelSelectionWizardPanel());
+                panels.add(new InferenceModelFeatureSelectionWizardPanel());
+                panels.add(new PreprocessorSelectionWizardPanel());
+                panels.add(new PostprocessorSelectionWizardPanel());
+                panels.add(new TrainingSetSelectionWizardPanel());
+                panels.add(new InferenceDataSetSelectionWizardPanel());
                 String[] steps = new String[panels.size()];
                 for (int i = 0; i < panels.size(); i++) {
                     Component c = panels.get(i).getComponent();

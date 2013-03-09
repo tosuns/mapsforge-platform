@@ -50,6 +50,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     }
 
     private void init() {
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
         detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
         if (detector != null) {
             inferenceModel = detector.getInferenceModel();

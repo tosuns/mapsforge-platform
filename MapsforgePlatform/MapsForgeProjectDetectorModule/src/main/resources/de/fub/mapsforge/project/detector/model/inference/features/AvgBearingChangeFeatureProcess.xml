@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<processunit javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgBearingChangeFeatureProcess"
+             name="Average Bearing Change"
+             description="Feature computes the average bearing change that occures within the gps track.">
+    <properties/>
+</processunit>

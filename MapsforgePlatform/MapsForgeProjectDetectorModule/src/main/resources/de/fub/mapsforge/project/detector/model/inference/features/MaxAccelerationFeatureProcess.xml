@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<processunit javaType="de.fub.mapsforge.project.detector.model.inference.features.MaxAccelerationFeatureProcess"
+             name="Maximal Acceleration"
+             description="Feature that computes the maximal acceleration which a gps track contains.">
+    <properties/>
+</processunit>

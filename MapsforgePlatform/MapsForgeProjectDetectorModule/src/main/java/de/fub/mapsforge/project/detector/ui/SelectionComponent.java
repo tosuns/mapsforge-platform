@@ -4,25 +4,184 @@
  */
 package de.fub.mapsforge.project.detector.ui;
 
+import de.fub.mapsforge.project.detector.factories.nodes.FilterNode;
+import de.fub.mapsforge.project.detector.model.DetectorProcess;
+import de.fub.utilsmodule.Collections.ObservableArrayList;
+import de.fub.utilsmodule.Collections.ObservableList;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.ListView;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Serdar
  */
-public final class SelectionComponent extends javax.swing.JPanel {
+@NbBundle.Messages({
+    "CLT_All_Features_Title=All Available Features",
+    "CLT_Selected_Features_Title=Selected Features"
+})
+public final class SelectionComponent extends javax.swing.JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
+    private final ObservableList<DetectorProcess> allFeatures = new ObservableArrayList<DetectorProcess>();
+    private final ObservableList<DetectorProcess> selectedFeatures = new ObservableArrayList<DetectorProcess>();
 
     /**
      * Creates new form SelectionComponent
      */
     public SelectionComponent() {
         initComponents();
+        init();
+    }
+
+    private void init() {
+        allFeatures.clear();
+
+        getAllListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(allFeatures), true)));
+        getSelectedListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(selectedFeatures), true)));
+
+        getAllListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getAllListExplorerManager()));
+        getSelectedListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getSelectedListExplorerManager()));
+
+        getAllItemListTitle().setText(Bundle.CLT_All_Features_Title());
+        getSelectedItemListTitle().setText(Bundle.CLT_Selected_Features_Title());
+
+        getToLeftButton().addActionListener(WeakListeners.create(ActionListener.class, SelectionComponent.this, getToLeftButton()));
+        getToRightButton().addActionListener(WeakListeners.create(ActionListener.class, SelectionComponent.this, getToRightButton()));
+
+        allFeatures.addChangeListener(WeakListeners.change(SelectionComponent.this, allFeatures));
+        selectedFeatures.addChangeListener(WeakListeners.change(SelectionComponent.this, selectedFeatures));
+
+        registerMouseClickListener();
+        checkButtonState();
+    }
+
+    public ObservableList<DetectorProcess> getAllFeatures() {
+        return allFeatures;
+    }
+
+    public ObservableList<DetectorProcess> getSelectedFeatures() {
+        return selectedFeatures;
+    }
+
+    private void registerMouseClickListener() {
+        JViewport viewport = getAllItemList().getViewport();
+        Component view = viewport.getView();
+        if (view instanceof JList) {
+            JList<?> jList = (JList<?>) view;
+
+            jList.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    ExplorerManager explorerManager = getAllListExplorerManager();
+                    propertyChange(new PropertyChangeEvent(explorerManager, ExplorerManager.PROP_SELECTED_NODES, null, explorerManager.getSelectedNodes()));
+                }
+            });
+        }
+        viewport = getSelectedItemList().getViewport();
+        view = viewport.getView();
+        if (view instanceof JList) {
+            JList<?> jList = (JList<?>) view;
+
+            jList.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    ExplorerManager explorerManager = getSelectedListExplorerManager();
+                    propertyChange(new PropertyChangeEvent(explorerManager, ExplorerManager.PROP_SELECTED_NODES, null, explorerManager.getSelectedNodes()));
+                }
+            });
+        }
+    }
+
+    private void checkButtonState() {
+        getToRightButton().setEnabled(!allFeatures.isEmpty());
+        getToLeftButton().setEnabled(!selectedFeatures.isEmpty());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (getToLeftButton().equals(e.getSource())) {
+            Node[] selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                for (Node node : selectedNodes) {
+                    DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
+                    if (detectorProcess != null) {
+                        allFeatures.add(detectorProcess);
+                    }
+                }
+                selectedFeatures.removeAll(allFeatures);
+            }
+        } else if (getToRightButton().equals(e.getSource())) {
+            Node[] selectedNodes = getAllListExplorerManager().getSelectedNodes();
+            if (selectedNodes.length > 0) {
+                for (Node node : selectedNodes) {
+                    DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
+                    if (detectorProcess != null) {
+                        selectedFeatures.add(detectorProcess);
+                    }
+                }
+                allFeatures.removeAll(selectedFeatures);
+            }
+        }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        checkButtonState();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (ExplorerManager.PROP_NODE_CHANGE.equals(evt.getPropertyName())) {
+            if (getAllListExplorerManager().equals(evt.getSource())) {
+            } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
+            }
+        } else if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
+            Node[] selectedNodes = new Node[0];
+            if (getAllListExplorerManager().equals(evt.getSource())) {
+                selectedNodes = getAllListExplorerManager().getSelectedNodes();
+            } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
+                selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
+            }
+            if (selectedNodes.length == 1) {
+                DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
+                if (detectorProcess != null) {
+                    getDescription().setText(detectorProcess.getDescription());
+                }
+            } else if (selectedNodes.length > 1) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Node node : selectedNodes) {
+                    DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
+                    if (detectorProcess != null) {
+                        stringBuilder.append(detectorProcess.toString()).append("/\n");
+                    }
+                }
+                stringBuilder.delete(stringBuilder.toString().lastIndexOf("/"), stringBuilder.toString().length() - 1);
+                getDescription().setText(stringBuilder.toString());
+            } else {
+                getDescription().setText(null);
+            }
+        }
     }
 
     /**
@@ -91,7 +250,9 @@ public final class SelectionComponent extends javax.swing.JPanel {
 
         description.setEditable(false);
         description.setColumns(20);
+        description.setLineWrap(true);
         description.setRows(3);
+        description.setWrapStyleWord(true);
         description.setOpaque(false);
         jScrollPane1.setViewportView(description);
 
@@ -118,11 +279,11 @@ public final class SelectionComponent extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -187,5 +348,36 @@ public final class SelectionComponent extends javax.swing.JPanel {
 
     public JButton getToRightButton() {
         return toRightButton;
+    }
+
+    private static class DetectorProcessNodeFactory extends ChildFactory<DetectorProcess> implements ChangeListener {
+
+        private final ObservableList<DetectorProcess> list;
+
+        public DetectorProcessNodeFactory(ObservableList<DetectorProcess> list) {
+            this.list = list;
+            list.addChangeListener(WeakListeners.change(DetectorProcessNodeFactory.this, list));
+        }
+
+        @Override
+        protected boolean createKeys(List<DetectorProcess> toPopulate) {
+            toPopulate.addAll(list);
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(DetectorProcess featureProcess) {
+            return new FilterNode(featureProcess) {
+                @Override
+                public String getShortDescription() {
+                    return null;
+                }
+            };
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            refresh(true);
+        }
     }
 }
