@@ -26,15 +26,15 @@ public class InferenceModelResultDataSet {
         return gpsTrackMap.isEmpty();
     }
 
-    public boolean containsKey(Object key) {
+    public boolean containsKey(String key) {
         return gpsTrackMap.containsKey(key);
     }
 
-    public boolean containsValue(Object value) {
+    public boolean containsValue(GPSTrack value) {
         return gpsTrackMap.containsValue(value);
     }
 
-    public GPSTrack get(Object key) {
+    public GPSTrack get(String key) {
         return gpsTrackMap.get(key);
     }
 
@@ -42,7 +42,7 @@ public class InferenceModelResultDataSet {
         return gpsTrackMap.put(key, value);
     }
 
-    public GPSTrack remove(Object key) {
+    public GPSTrack remove(String key) {
         return gpsTrackMap.remove(key);
     }
 
