@@ -37,7 +37,7 @@ import org.openide.util.Exceptions;
 import weka.classifiers.Classifier;
 
 /**
- * comment 2 3
+ * comment 2
  *
  * @author Serdar
  */
