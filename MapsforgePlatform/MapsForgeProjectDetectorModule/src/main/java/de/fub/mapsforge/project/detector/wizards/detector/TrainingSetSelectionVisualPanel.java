@@ -6,6 +6,8 @@ package de.fub.mapsforge.project.detector.wizards.detector;
 
 import javax.swing.JPanel;
 import org.openide.explorer.ExplorerManager;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
@@ -22,6 +24,7 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
     public TrainingSetSelectionVisualPanel() {
         initComponents();
         outlineView.getOutline().setRootVisible(false);
+        getExplorerManager().setRootContext(new AbstractNode(Children.LEAF));
     }
 
     @Override
