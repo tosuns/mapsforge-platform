@@ -15,7 +15,6 @@ public abstract class InferenceModelProcessHandler {
     private final AbstractInferenceModel inferenceModel;
 
     public InferenceModelProcessHandler(AbstractInferenceModel inferenceModel) {
-        assert inferenceModel != null;
         this.inferenceModel = inferenceModel;
     }
 

@@ -5,12 +5,18 @@
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Serdar
  */
+@ServiceProvider(service = InferenceModelProcessHandler.class)
 public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
+
+    public InferenceDataProcessHandler() {
+        super(null);
+    }
 
     public InferenceDataProcessHandler(AbstractInferenceModel inferenceModel) {
         super(inferenceModel);
