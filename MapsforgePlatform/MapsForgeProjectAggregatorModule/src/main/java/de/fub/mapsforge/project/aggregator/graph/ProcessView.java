@@ -10,6 +10,8 @@ package de.fub.mapsforge.project.aggregator.graph;
  */
 public class ProcessView extends javax.swing.JPanel {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Creates new form ProcessView
      */

@@ -36,11 +36,11 @@ public final class InferenceModelFeatureSelectionVisualPanel extends JPanel {
     }
 
     public ObservableList<DetectorProcess> getAllFeatures() {
-        return selectionComponent.getAllFeatures();
+        return selectionComponent.getAllItems();
     }
 
     public ObservableList<DetectorProcess> getSelectedFeatures() {
-        return selectionComponent.getSelectedFeatures();
+        return selectionComponent.getSelectedItems();
     }
 
     /**

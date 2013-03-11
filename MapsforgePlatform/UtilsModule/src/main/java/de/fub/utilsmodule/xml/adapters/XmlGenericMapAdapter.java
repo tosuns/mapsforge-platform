@@ -24,6 +24,7 @@ public class XmlGenericMapAdapter<K, V> extends XmlAdapter<MapType<K, V>, Map<K,
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public MapType marshal(Map<K, V> v) throws Exception {
         MapType<K, V> mapType = new MapType<K, V>();

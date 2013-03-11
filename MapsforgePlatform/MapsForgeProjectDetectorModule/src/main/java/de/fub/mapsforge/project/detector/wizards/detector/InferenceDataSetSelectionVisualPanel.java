@@ -25,7 +25,7 @@ public class InferenceDataSetSelectionVisualPanel extends JPanel implements Expl
      */
     public InferenceDataSetSelectionVisualPanel() {
         initComponents();
-        beanTreeView1.setRootVisible(false);
+        beanTreeView1.setRootVisible(true);
     }
 
     @Override
@@ -48,6 +48,7 @@ public class InferenceDataSetSelectionVisualPanel extends JPanel implements Expl
         setLayout(new java.awt.BorderLayout());
 
         beanTreeView1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        beanTreeView1.setPreferredSize(new java.awt.Dimension(400, 300));
         add(beanTreeView1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables

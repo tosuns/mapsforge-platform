@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.inference;
+package de.fub.mapsforge.project.detector.model.inference.impl;
 
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import weka.classifiers.Classifier;

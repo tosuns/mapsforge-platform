@@ -17,15 +17,16 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
 @MultiViewElement.Registration(
-    displayName = "#LBL_MapsForge_VISUAL",
-iconBase = "de/fub/mapforgeproject/icons/mapsforgeIcon16.png",
-mimeType = "text/mapsforgeproject+xml",
-persistenceType = TopComponent.PERSISTENCE_NEVER,
-preferredID = "MapsForgeVisual",
-position = 2000)
+        displayName = "#LBL_MapsForge_VISUAL",
+        iconBase = "de/fub/mapforgeproject/icons/mapsforgeIcon16.png",
+        mimeType = "text/mapsforgeproject+xml",
+        persistenceType = TopComponent.PERSISTENCE_NEVER,
+        preferredID = "MapsForgeVisual",
+        position = 2000)
 @Messages("LBL_MapsForge_VISUAL=Visual")
 public final class MapsForgeVisualElement extends JPanel implements MultiViewElement {
 
+    private static final long serialVersionUID = 1L;
     private MapsForgeDataObject obj;
     private JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;

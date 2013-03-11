@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dec:detector name="Empty Detector"
+<dec:detector name="Demo Detector"
               description="A empty test detector"
               xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
-    <inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.J48InferenceModel"
+    <inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.impl.J48InferenceModel"
                     name="J48 Inference Model"
                     description="Inference Model which uses a J48 classifier.">
         <features>
@@ -55,14 +55,14 @@
         </filter>
     </preprocessors>
     <postprocessors>
-        <task javaType="de.fub.detector.Instance"
-              name="Dummy Task"
-              description="A dummy task for the propose of unit testing.">
+        <task javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer"
+              name="Map Renderer"
+              description="Renders Gps data with the help of an Aggregator.">
             <properties>
-                <property javaType="de.fub.dummy.path.Instance"
-                          value="Something"
-                          name="Dummy Property"
-                          description="Dummy property for the propose of unit testing."/>
+                <property javaType="java.lang.String"
+                          value="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/AggregationBuilders/agg2Graph.agg"
+                          name="Aggregator file path"
+                          description="The file path to the aggregator file."/>
             </properties>
         </task>
     </postprocessors>

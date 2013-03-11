@@ -38,8 +38,8 @@ import org.openide.util.WeakListeners;
 public final class SelectionComponent extends javax.swing.JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
-    private final ObservableList<DetectorProcess> allFeatures = new ObservableArrayList<DetectorProcess>();
-    private final ObservableList<DetectorProcess> selectedFeatures = new ObservableArrayList<DetectorProcess>();
+    private final ObservableList<DetectorProcess> allItems = new ObservableArrayList<DetectorProcess>();
+    private final ObservableList<DetectorProcess> selectedItems = new ObservableArrayList<DetectorProcess>();
 
     /**
      * Creates new form SelectionComponent
@@ -50,10 +50,10 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     }
 
     private void init() {
-        allFeatures.clear();
+        allItems.clear();
 
-        getAllListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(allFeatures), true)));
-        getSelectedListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(selectedFeatures), true)));
+        getAllListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(allItems), true)));
+        getSelectedListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(selectedItems), true)));
 
         getAllListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getAllListExplorerManager()));
         getSelectedListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getSelectedListExplorerManager()));
@@ -61,19 +61,19 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
         getToLeftButton().addActionListener(WeakListeners.create(ActionListener.class, SelectionComponent.this, getToLeftButton()));
         getToRightButton().addActionListener(WeakListeners.create(ActionListener.class, SelectionComponent.this, getToRightButton()));
 
-        allFeatures.addChangeListener(WeakListeners.change(SelectionComponent.this, allFeatures));
-        selectedFeatures.addChangeListener(WeakListeners.change(SelectionComponent.this, selectedFeatures));
+        allItems.addChangeListener(WeakListeners.change(SelectionComponent.this, allItems));
+        selectedItems.addChangeListener(WeakListeners.change(SelectionComponent.this, selectedItems));
 
         registerMouseClickListener();
         checkButtonState();
     }
 
-    public ObservableList<DetectorProcess> getAllFeatures() {
-        return allFeatures;
+    public ObservableList<DetectorProcess> getAllItems() {
+        return allItems;
     }
 
-    public ObservableList<DetectorProcess> getSelectedFeatures() {
-        return selectedFeatures;
+    public ObservableList<DetectorProcess> getSelectedItems() {
+        return selectedItems;
     }
 
     private void registerMouseClickListener() {
@@ -106,8 +106,8 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     }
 
     private void checkButtonState() {
-        getToRightButton().setEnabled(!allFeatures.isEmpty());
-        getToLeftButton().setEnabled(!selectedFeatures.isEmpty());
+        getToRightButton().setEnabled(!allItems.isEmpty());
+        getToLeftButton().setEnabled(!selectedItems.isEmpty());
     }
 
     @Override
@@ -118,10 +118,10 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
                 for (Node node : selectedNodes) {
                     DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
                     if (detectorProcess != null) {
-                        allFeatures.add(detectorProcess);
+                        allItems.add(detectorProcess);
                     }
                 }
-                selectedFeatures.removeAll(allFeatures);
+                selectedItems.removeAll(allItems);
             }
         } else if (getToRightButton().equals(e.getSource())) {
             Node[] selectedNodes = getAllListExplorerManager().getSelectedNodes();
@@ -129,10 +129,10 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
                 for (Node node : selectedNodes) {
                     DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
                     if (detectorProcess != null) {
-                        selectedFeatures.add(detectorProcess);
+                        selectedItems.add(detectorProcess);
                     }
                 }
-                allFeatures.removeAll(selectedFeatures);
+                allItems.removeAll(selectedItems);
             }
         }
     }

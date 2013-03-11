@@ -14,6 +14,7 @@ import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcess
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.PostProcessors;
 import de.fub.mapsforge.project.detector.model.xmls.PreProcessors;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
@@ -94,16 +95,17 @@ public class Detector extends ModelSynchronizer {
                     }
                 }
             }
-//            PostProcessors postprocessors = detectorDescriptor.getPostprocessors();
-//            if (postprocessors != null) {
-//                Task task = null;
-//                for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
-//                    task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType());
-//                    if (task != null) {
-//                        getPostProcessorPipeline().add(task);
-//                    }
-//                }
-//            }
+
+            PostProcessors postprocessors = detectorDescriptor.getPostprocessors();
+            if (postprocessors != null) {
+                Task task = null;
+                for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
+                    task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType());
+                    if (task != null) {
+                        getPostProcessorPipeline().add(task);
+                    }
+                }
+            }
         }
     }
 
@@ -182,7 +184,7 @@ public class Detector extends ModelSynchronizer {
                 statisticProviders.add(((StatisticProvider) process));
             }
         }
-        for (Task<?, ?> process : getPostProcessorPipeline().getProcesses()) {
+        for (Task process : getPostProcessorPipeline().getProcesses()) {
             if (process instanceof StatisticProvider) {
                 statisticProviders.add(((StatisticProvider) process));
             }

@@ -44,6 +44,7 @@ public class MainWindow extends JFrame {
 
     protected class MenuBar extends JMenuBar {
 
+        private static final long serialVersionUID = 1L;
         //File Menu Begin
         private final JMenu fileMenu = new JMenu("File");
         private final JMenuItem openFile = new JMenuItem(openGPX);

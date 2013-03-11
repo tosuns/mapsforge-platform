@@ -74,11 +74,10 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         reinit();
     }
 
-    // TODO check properties for the specified processHandler.
-    // if not available use the default processHandler for
-    // the trainsingsDataset and inferenceDataset
     private void reinit() {
         if (getInferenceModelDescriptor() != null) {
+
+            // get all features description and instanciate the features.
             Features features = getInferenceModelDescriptor().getFeatures();
             if (features != null) {
                 FeatureProcess feature = null;
@@ -89,6 +88,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                     }
                 }
             }
+
+            // get all processHandler descriptions and instanciate the processhandlers
             ProcessHandlers inferenceModelProcessHandlers = getInferenceModelDescriptor().getInferenceModelProcessHandlers();
             if (inferenceModelProcessHandlers != null) {
                 InferenceModelProcessHandler processHandler = null;

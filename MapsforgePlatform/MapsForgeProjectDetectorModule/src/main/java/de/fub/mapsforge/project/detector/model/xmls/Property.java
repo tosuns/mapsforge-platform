@@ -19,13 +19,17 @@ public class Property extends Descriptor {
 
     @XmlAttribute(name = "value", required = true)
     private String value;
+    @XmlAttribute(name = "id", required = true)
+    private String id;
 
     public Property() {
     }
 
-    public Property(String javaType, String name, String description, String value) {
+    public Property(String id, String javaType, String name, String description, String value) {
         super(javaType, name, description);
+        assert id != null;
         this.value = value;
+        this.id = id;
     }
 
     public String getValue() {

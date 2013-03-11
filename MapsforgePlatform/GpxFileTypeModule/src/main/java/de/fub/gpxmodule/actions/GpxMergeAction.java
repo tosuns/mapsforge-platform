@@ -53,6 +53,7 @@ import org.openide.util.WeakListeners;
 })
 public final class GpxMergeAction extends AbstractAction implements ContextAwareAction, LookupListener {
 
+    private static final long serialVersionUID = 1L;
     private final Lookup context;
     private Lookup.Result<GPXDataObject> result;
 

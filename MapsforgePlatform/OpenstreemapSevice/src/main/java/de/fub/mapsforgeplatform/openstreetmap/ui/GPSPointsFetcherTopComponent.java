@@ -50,6 +50,7 @@ import org.openide.windows.TopComponent;
 })
 public final class GPSPointsFetcherTopComponent extends TopComponent implements ExplorerManager.Provider, LookupListener, ChangeListener {
 
+    private static final long serialVersionUID = 1L;
     private final Object MUTEX = new Object();
     private final ExplorerManager explorerManager = new ExplorerManager();
     private static final Logger LOG = Logger.getLogger(GPSPointsFetcherTopComponent.class.getName());
@@ -238,7 +239,7 @@ public final class GPSPointsFetcherTopComponent extends TopComponent implements 
     }// </editor-fold>//GEN-END:initComponents
 
     private void fetchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fetchButtonActionPerformed
-        // TODO add your handling code here:
+
         try {
             if (isInputValid()) {
                 controller.handleFetch();
@@ -273,25 +274,25 @@ public final class GPSPointsFetcherTopComponent extends TopComponent implements 
 
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        // add custom code on component opening
         resultChanged(new LookupEvent(result));
     }
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        // add custom code on component closing
     }
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
-        // TODO store your settings
+        //  store your settings
     }
 
     void readProperties(java.util.Properties p) {
 //        String version = p.getProperty("version");
-        // TODO read your settings according to their version
+        // read your settings according to their version
     }
 
     private boolean isInputValid() throws NumberFormatException, IllegalArgumentException {

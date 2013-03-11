@@ -58,6 +58,7 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
 
         beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
 
+        setPreferredSize(new java.awt.Dimension(400, 300));
         setLayout(new java.awt.BorderLayout());
 
         beanTreeView1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));

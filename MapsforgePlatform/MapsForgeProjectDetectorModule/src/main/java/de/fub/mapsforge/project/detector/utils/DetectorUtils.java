@@ -19,6 +19,10 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ui.OpenProjects;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -167,5 +171,37 @@ public class DetectorUtils {
         }
 
         return model;
+    }
+
+    public static FileObject findFileObject(FileObject detectorFileObject, String relativePathInProject) {
+        FileObject fileObject = null;
+        if (detectorFileObject != null && detectorFileObject.getParent() != null) {
+            try {
+                Project project = null;
+                while (project == null && !detectorFileObject.isRoot()) {
+                    try {
+                        project = ProjectManager.getDefault().findProject(detectorFileObject);
+                    } catch (IllegalArgumentException ex) {
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    detectorFileObject = detectorFileObject.getParent();
+                }
+
+                if (project != null) {
+                    fileObject = project.getProjectDirectory().getFileObject(relativePathInProject);
+                }
+            } catch (IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            for (Project project : OpenProjects.getDefault().getOpenProjects()) {
+                fileObject = project.getProjectDirectory().getFileObject(relativePathInProject);
+                if (fileObject != null) {
+                    break;
+                }
+            }
+        }
+        return fileObject;
     }
 }

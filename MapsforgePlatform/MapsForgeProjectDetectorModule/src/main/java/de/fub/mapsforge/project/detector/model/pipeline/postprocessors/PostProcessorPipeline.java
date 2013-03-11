@@ -11,7 +11,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
  *
  * @author Serdar
  */
-public class PostProcessorPipeline extends ProcessPipeline<Task<?, ?>> {
+public class PostProcessorPipeline extends ProcessPipeline<Task> {
 
     private final Detector detector;
 

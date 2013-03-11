@@ -4,7 +4,11 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
+import de.fub.mapsforge.project.detector.model.DetectorProcess;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.utilsmodule.Collections.ObservableList;
 import javax.swing.JPanel;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
@@ -27,6 +31,15 @@ public final class PostprocessorSelectionVisualPanel extends JPanel {
     private void init() {
         selectionComponent1.getAllItemListTitle().setText(Bundle.CLT_All_Available_Postprocessors());
         selectionComponent1.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Postprocessors());
+        getAllTasks().addAll(Lookup.getDefault().lookupResult(Task.class).allInstances());
+    }
+
+    public ObservableList<DetectorProcess> getAllTasks() {
+        return selectionComponent1.getAllItems();
+    }
+
+    public ObservableList<DetectorProcess> getSelectedTasks() {
+        return selectionComponent1.getSelectedItems();
     }
 
     @Override

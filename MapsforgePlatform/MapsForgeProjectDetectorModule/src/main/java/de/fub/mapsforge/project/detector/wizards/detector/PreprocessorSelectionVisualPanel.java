@@ -31,15 +31,15 @@ public final class PreprocessorSelectionVisualPanel extends JPanel {
     private void init() {
         selectionComponent.getAllItemListTitle().setText(Bundle.CLT_All_Available_Preprocessors());
         selectionComponent.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Preprocessors());
-        getAllFeatures().addAll(Lookup.getDefault().lookupResult(FilterProcess.class).allInstances());
+        getAllFilters().addAll(Lookup.getDefault().lookupResult(FilterProcess.class).allInstances());
     }
 
-    public ObservableList<DetectorProcess> getAllFeatures() {
-        return selectionComponent.getAllFeatures();
+    public ObservableList<DetectorProcess> getAllFilters() {
+        return selectionComponent.getAllItems();
     }
 
-    public ObservableList<DetectorProcess> getSelectedFeatures() {
-        return selectionComponent.getSelectedFeatures();
+    public ObservableList<DetectorProcess> getSelectedFilters() {
+        return selectionComponent.getSelectedItems();
     }
 
     @Override

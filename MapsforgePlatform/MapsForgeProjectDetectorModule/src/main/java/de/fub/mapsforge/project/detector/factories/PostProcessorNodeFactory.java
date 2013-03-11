@@ -14,7 +14,7 @@ import org.openide.nodes.Node;
  *
  * @author Serdar
  */
-public class PostProcessorNodeFactory extends ChildFactory<Task<?, ?>> {
+public class PostProcessorNodeFactory extends ChildFactory<Task> {
 
     private final Detector detector;
 
@@ -23,13 +23,13 @@ public class PostProcessorNodeFactory extends ChildFactory<Task<?, ?>> {
     }
 
     @Override
-    protected boolean createKeys(List<Task<?, ?>> toPopulate) {
+    protected boolean createKeys(List<Task> toPopulate) {
         toPopulate.addAll(detector.getPostProcessorPipeline().getProcesses());
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(Task<?, ?> task) {
+    protected Node createNodeForKey(Task task) {
         return task.getNodeDelegate();
     }
 }
