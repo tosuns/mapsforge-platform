@@ -12,7 +12,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "CLT_Preprocessors_Panel_Name=Preprocessor Filters",
+    "CLT_Preprocessors_Panel_Name=Preprocessors",
     "CLT_All_Available_Preprocessors=All Preprocessor Filters",
     "CLT_Selected_Preprocessors=Selected Preprocessor Filters"
 })
@@ -44,7 +44,7 @@ public final class PreprocessorSelectionVisualPanel extends JPanel {
 
     @Override
     public String getName() {
-        return Bundle.CLT_Postprocessor_Panel_Name();
+        return Bundle.CLT_Preprocessors_Panel_Name();
     }
 
     /**

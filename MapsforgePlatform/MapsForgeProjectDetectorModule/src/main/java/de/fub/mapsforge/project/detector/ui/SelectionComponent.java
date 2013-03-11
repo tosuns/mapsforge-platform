@@ -29,17 +29,12 @@ import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Serdar
  */
-@NbBundle.Messages({
-    "CLT_All_Features_Title=All Available Features",
-    "CLT_Selected_Features_Title=Selected Features"
-})
 public final class SelectionComponent extends javax.swing.JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     private static final long serialVersionUID = 1L;
@@ -62,9 +57,6 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
         getAllListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getAllListExplorerManager()));
         getSelectedListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getSelectedListExplorerManager()));
-
-        getAllItemListTitle().setText(Bundle.CLT_All_Features_Title());
-        getSelectedItemListTitle().setText(Bundle.CLT_Selected_Features_Title());
 
         getToLeftButton().addActionListener(WeakListeners.create(ActionListener.class, SelectionComponent.this, getToLeftButton()));
         getToRightButton().addActionListener(WeakListeners.create(ActionListener.class, SelectionComponent.this, getToRightButton()));

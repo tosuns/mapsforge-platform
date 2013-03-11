@@ -7,7 +7,9 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -29,7 +31,8 @@ import org.openide.windows.TopComponent;
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "DetectorInferenceModelVisual",
         position = 3000)
-@NbBundle.Messages("LBL_Detector_InferenceModel_VISUAL=Result")
+@NbBundle.Messages({
+    "LBL_Detector_InferenceModel_VISUAL=Result",})
 public class InferenceModelVisuaElement extends javax.swing.JPanel implements MultiViewElement {
 
     private static final long serialVersionUID = 1L;
@@ -54,6 +57,14 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
         if (detector != null) {
             inferenceModel = detector.getInferenceModel();
+            if (inferenceModel != null) {
+                contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
+                contentPanel.add(Box.createVerticalStrut(8));
+                contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE).getVisualRepresentation());
+                contentPanel.add(Box.createVerticalStrut(8));
+                contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
+                contentPanel.add(Box.createVerticalStrut(8));
+            }
         }
     }
 
@@ -73,34 +84,18 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
         jScrollPane1 = new javax.swing.JScrollPane();
         contentPanel = new javax.swing.JPanel();
-        trainingsEvaluationPanel = new de.fub.mapsforge.project.detector.model.inference.ui.EvalutationPanel();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 32767));
-        crossValidationEvaluationPanel = new de.fub.mapsforge.project.detector.model.inference.ui.EvalutationPanel();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 32767));
-        inferenceEvaluationPanel = new de.fub.mapsforge.project.detector.model.inference.ui.EvalutationPanel();
 
         setLayout(new java.awt.BorderLayout());
 
         contentPanel.setBackground(new java.awt.Color(255, 255, 255));
         contentPanel.setLayout(new javax.swing.BoxLayout(contentPanel, javax.swing.BoxLayout.Y_AXIS));
-        contentPanel.add(trainingsEvaluationPanel);
-        contentPanel.add(filler2);
-        contentPanel.add(crossValidationEvaluationPanel);
-        contentPanel.add(filler1);
-        contentPanel.add(inferenceEvaluationPanel);
-
         jScrollPane1.setViewportView(contentPanel);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
-    private de.fub.mapsforge.project.detector.model.inference.ui.EvalutationPanel crossValidationEvaluationPanel;
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
-    private de.fub.mapsforge.project.detector.model.inference.ui.EvalutationPanel inferenceEvaluationPanel;
     private javax.swing.JScrollPane jScrollPane1;
-    private de.fub.mapsforge.project.detector.model.inference.ui.EvalutationPanel trainingsEvaluationPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override

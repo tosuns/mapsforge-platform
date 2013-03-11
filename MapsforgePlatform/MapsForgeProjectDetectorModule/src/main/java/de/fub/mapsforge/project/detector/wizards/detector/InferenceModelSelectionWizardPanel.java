@@ -13,7 +13,7 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.WeakListeners;
 
-public class InferenceModelSelectionWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, PropertyChangeListener {
+public class InferenceModelSelectionWizardPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor>, PropertyChangeListener {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -79,5 +79,10 @@ public class InferenceModelSelectionWizardPanel implements WizardDescriptor.Pane
         if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
             cs.fireChange();
         }
+    }
+
+    @Override
+    public boolean isFinishPanel() {
+        return isValid();
     }
 }

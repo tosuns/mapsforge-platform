@@ -25,7 +25,7 @@ public class InferenceDataSetSelectionVisualPanel extends JPanel implements Expl
      */
     public InferenceDataSetSelectionVisualPanel() {
         initComponents();
-        outlineView.getOutline().setRootVisible(false);
+        beanTreeView1.setRootVisible(false);
     }
 
     @Override
@@ -42,16 +42,16 @@ public class InferenceDataSetSelectionVisualPanel extends JPanel implements Expl
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        outlineView = new org.openide.explorer.view.OutlineView();
+        beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
 
         setPreferredSize(new java.awt.Dimension(400, 300));
         setLayout(new java.awt.BorderLayout());
 
-        outlineView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        add(outlineView, java.awt.BorderLayout.CENTER);
+        beanTreeView1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        add(beanTreeView1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.openide.explorer.view.OutlineView outlineView;
+    private org.openide.explorer.view.BeanTreeView beanTreeView1;
     // End of variables declaration//GEN-END:variables
 
     @Override

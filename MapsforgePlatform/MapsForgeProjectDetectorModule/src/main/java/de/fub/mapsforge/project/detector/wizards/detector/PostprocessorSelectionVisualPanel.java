@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "CLT_Postprocessor_Panel_Name=Postprocessor tasks",
+    "CLT_Postprocessor_Panel_Name=Postprocessors",
     "CLT_All_Available_Postprocessors=All Postprocessor Tasks",
     "CLT_Selected_Postprocessors=Selected Postprocessor Tasks"
 })

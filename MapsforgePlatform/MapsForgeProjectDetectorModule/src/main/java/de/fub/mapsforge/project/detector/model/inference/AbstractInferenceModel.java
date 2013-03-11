@@ -163,7 +163,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
-    private InferenceModelProcessHandler getProcessHandlerInstance(InferenceMode inferenceMode1) {
+    public InferenceModelProcessHandler getProcessHandlerInstance(InferenceMode inferenceMode1) {
         InferenceModelProcessHandler processHandler = null;
         Class<? extends InferenceModelProcessHandler> clazz = processHandlerMap.get(inferenceMode1);
         if (clazz != null) {

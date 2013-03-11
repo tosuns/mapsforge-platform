@@ -8,7 +8,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
 
-public class InferenceModelFeatureSelectionWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
+public class InferenceModelFeatureSelectionWizardPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -62,5 +62,10 @@ public class InferenceModelFeatureSelectionWizardPanel implements WizardDescript
     @Override
     public void storeSettings(WizardDescriptor wiz) {
         // use wiz.putProperty to remember current panel state
+    }
+
+    @Override
+    public boolean isFinishPanel() {
+        return isValid();
     }
 }
