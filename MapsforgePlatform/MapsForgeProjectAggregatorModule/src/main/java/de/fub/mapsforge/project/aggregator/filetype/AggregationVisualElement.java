@@ -130,7 +130,8 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         setUpToolbar();
         outlineView1.getOutline().setRowHeight(300);
         outlineView1.getOutline().setRootVisible(false);
-        outlineView1.getOutline().getColumnModel().getColumn(0).setCellRenderer(new LayerTableCellRender());
+        outlineView1.getOutline().setDefaultRenderer(Object.class, new LayerTableCellRender());
+//        outlineView1.getOutline().getColumnModel().getColumn(0).setCellRenderer(new LayerTableCellRender());
         jSplitPane1.setDividerLocation(Integer.MAX_VALUE);
     }
 

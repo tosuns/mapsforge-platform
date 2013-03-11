@@ -5,6 +5,12 @@
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
@@ -27,4 +33,23 @@ public abstract class InferenceModelProcessHandler {
     }
 
     protected abstract void handle();
+
+    public JComponent getVisualRepresentation() {
+        return new DefaultRepresenter();
+    }
+
+    private static class DefaultRepresenter extends JPanel {
+
+        private static final long serialVersionUID = 1L;
+
+        public DefaultRepresenter() {
+            super(new BorderLayout());
+            setBackground(Color.white);
+            setMinimumSize(new Dimension(0, 300));
+            setPreferredSize(new Dimension(400, 300));
+            JLabel jLabel = new JLabel("<Visual representation not supported>");
+            add(jLabel, BorderLayout.CENTER);
+            jLabel.setForeground(Color.gray);
+        }
+    }
 }

@@ -12,7 +12,9 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 @NbBundle.Messages({
-    "CLT_InferenceModelFeatures_Name=Features"
+    "CLT_InferenceModelFeatures_Name=Features",
+    "CLT_All_Features_Title=All Available Features",
+    "CLT_Selected_Features_Title=Selected Features"
 })
 public final class InferenceModelFeatureSelectionVisualPanel extends JPanel {
 
@@ -24,6 +26,8 @@ public final class InferenceModelFeatureSelectionVisualPanel extends JPanel {
     public InferenceModelFeatureSelectionVisualPanel() {
         initComponents();
         getAllFeatures().addAll(Lookup.getDefault().lookupResult(FeatureProcess.class).allInstances());
+        selectionComponent.getAllItemListTitle().setText(Bundle.CLT_All_Features_Title());
+        selectionComponent.getSelectedItemListTitle().setText(Bundle.CLT_Selected_Features_Title());
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.openide.util.HelpCtx;
  *
  * @author Serdar
  */
-public class InferenceDataSetSelectionWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
+public class InferenceDataSetSelectionWizardPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -66,5 +66,10 @@ public class InferenceDataSetSelectionWizardPanel implements WizardDescriptor.Pa
     @Override
     public void storeSettings(WizardDescriptor wiz) {
         // use wiz.putProperty to remember current panel state
+    }
+
+    @Override
+    public boolean isFinishPanel() {
+        return isValid();
     }
 }

@@ -115,6 +115,11 @@ public class Detector extends ModelSynchronizer {
         synchronized (MUTEX_PROCESS_RUNNING) {
             final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Running_Process(getDetectorDescriptor().getName(), ""), new CancellableImpl());
             try {
+
+                for (FilterProcess<?, ?> filterProcess : getPreProcessorPipeline().getProcesses()) {
+                }
+
+
             } finally {
                 handle.finish();
             }
