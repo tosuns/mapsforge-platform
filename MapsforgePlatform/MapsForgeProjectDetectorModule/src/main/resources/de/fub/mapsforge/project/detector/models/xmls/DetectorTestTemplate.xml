@@ -1,32 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dec:detector name="Demo Detector"
-              description="A empty test detector"
-              xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
-    <inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.impl.J48InferenceModel"
-                    name="J48 Inference Model"
-                    description="Inference Model which uses a J48 classifier.">
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dec:detector name="Demo Detector" description="A empty test detector" xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
+    <inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.impl.J48InferenceModel" name="J48 Inference Model" description="Inference Model which uses a J48 classifier.">
         <features>
-            <feature javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAccelerationFeatureProcess"
-                     name="Average Acceleration Feature"
-                     description="Feature that computes the average acceleration which a gps track contains.">
+            <feature javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAccelerationFeatureProcess" name="Average Acceleration Feature" description="Feature that computes the average acceleration which a gps track contains.">
                 <properties>
-                    <property javaType="de.fub.dummy.path.Instance"
-                              value="true"
-                              name="Dummy Property"
-                              description="Dummy property for the propose of unit testing."/>
+                    <property value="true" id="feature.id" javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
                 </properties>
             </feature>
         </features>
         <inferenceModelProcessHandlers>
-            <processHandler javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler"
-                            inferenceMode="trainingsMode"
-                            name="trainingsProcessHandler"/>
-            <processHandler javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler"
-                            inferenceMode="crossvalidationMode"
-                            name="crossvalidationProcessHandler"/>
-            <processHandler javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler"
-                            inferenceMode="inferenceMode"
-                            name="inferenceModeProcessHandler"/>
+            <processHandler inferenceMode="trainingsMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler" name="trainingsProcessHandler"/>
+            <processHandler inferenceMode="crossvalidationMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler" name="crossvalidationProcessHandler"/>
+            <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler"/>
         </inferenceModelProcessHandlers>
     </inferencemodel>
     <datasets>
@@ -39,31 +24,43 @@
             </transportmode>
         </trainingset>
         <inferenceset>
-            <dataset url="file:\\somepath"/>
+            <dataset url="GPXDatasource/[24.11.2012 15.33.49.187]_13_52,517_13,38_52,526/Gpx_0.gpx"/>
         </inferenceset>
     </datasets>
     <preprocessors>
-        <filter javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.MinDistanceWaypointFilterProcess"
-                name="Minimum Distance Filter"
-                description="A dummy filter for the propose of unit testing.">
+        <filter javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.MinDistanceWaypointFilterProcess" name="Minimum Distance Filter" description="A dummy filter for the propose of unit testing.">
             <properties>
-                <property javaType="de.fub.dummy.path.Instance"
-                          value="1"
-                          name="Dummy Property"
-                          description="Dummy property for the propose of unit testing."/>
+                <property value="1" id="dummy" javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
             </properties>
         </filter>
     </preprocessors>
     <postprocessors>
-        <task javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer"
-              name="Map Renderer"
-              description="Renders Gps data with the help of an Aggregator.">
+        <task javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer" name="Map Renderer" description="Renders Gps data with the help of an Aggregator.">
             <properties>
-                <property javaType="java.lang.String"
-                          value="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/AggregationBuilders/agg2Graph.agg"
-                          name="Aggregator file path"
-                          description="The file path to the aggregator file."/>
+                <property value="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/AggregationBuilders/agg2Graph.agg" id="aggregator.file.path" javaType="java.lang.String" name="Aggregator file path" description="The file path to the aggregator file."/>
             </properties>
         </task>
     </postprocessors>
+    <propertysection>
+        <section id="dummy.section" name="dummy section" description="dummy section description">
+            <property value="dummy" id="dummy.id" javaType="dummy" name="Dummy" description="dummy description"/>
+        </section>
+    </propertysection>
+    <profiles activeProfile="PlainProfile2">
+        <profile name="default">
+            <preprocess active="true" mode="inference"/>
+            <inference changePointSequenceActive="false" mode="inference"/>
+            <postprocess active="true" mode="inference"/>
+        </profile>
+        <profile name="PlainProfile">
+            <preprocess active="true" mode="inference"/>
+            <inference changePointSequenceActive="false" mode="inference"/>
+            <postprocess active="true" mode="inference"/>
+        </profile>
+        <profile name="PlainProfile2">
+            <preprocess active="true" mode="inference"/>
+            <inference changePointSequenceActive="false" mode="inference"/>
+            <postprocess active="true" mode="inference"/>
+        </profile>
+    </profiles>
 </dec:detector>

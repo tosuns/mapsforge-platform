@@ -53,6 +53,7 @@ public class LimitWaypointFilterProcess extends FilterProcess<GPSTrack, GPSTrack
     @Override
     protected void start() {
         filter.reset();
+        GPSTrack gpsTrack;
     }
 
     @Override

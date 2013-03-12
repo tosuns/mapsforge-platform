@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<processunit javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer"
-             name="Map Renderer"
-             description="Renders Gps data with the help of an Aggregator.">
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema" javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer"
+    name="Map Renderer"
+    description="Renders Gps data with the help of an Aggregator.">
     <properties>
         <property javaType="java.lang.String"
                   value="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/AggregationBuilders/agg2Graph.agg"
                   name="Aggregator file path"
                   description="The file path to the aggregator file."/>
     </properties>
-</processunit>
+</dec:processunit>

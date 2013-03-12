@@ -7,9 +7,8 @@ package de.fub.mapsforge.project.detector.filetype;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.factories.nodes.DetectorNode;
-import java.io.File;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
@@ -126,6 +125,7 @@ public class DetectorDataObject extends MultiDataObject {
         ValidateXMLSupport validateXMLSupport = new ValidateXMLSupport(inputSource);
         getCookieSet().add(checkXMLSupport);
         getCookieSet().add(validateXMLSupport);
+        pf.addFileChangeListener(fileChangeListener);
     }
 
     @Override
@@ -155,39 +155,19 @@ public class DetectorDataObject extends MultiDataObject {
 
     public synchronized DetectorDescriptor getDetectorDescriptor() throws JAXBException, IOException {
         if (detectorDescriptor == null) {
-            InputStream inputStream = null;
-            inputStream = getPrimaryFile().getInputStream();
-            try {
-                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
-                javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-                detectorDescriptor = (DetectorDescriptor) unmarshaller.unmarshal(inputStream); //NOI18N
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            }
+            detectorDescriptor = DetectorUtils.getDetectorDescriptor(DetectorDataObject.this);
         }
         return detectorDescriptor;
     }
 
     public void save() {
-        FileUtil.runAtomicAction(new Runnable() {
-            @Override
-            public void run() {
-                File file = FileUtil.toFile(getPrimaryFile());
-                if (file != null) {
-                    try {
-                        javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
-                        javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-                        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-                        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                        marshaller.marshal(detectorDescriptor, file);
-                    } catch (javax.xml.bind.JAXBException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            }
-        });
+        try {
+            DetectorUtils.saveDetector(DetectorDataObject.this);
+        } catch (JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     public void modifySourceEditor() {

@@ -139,6 +139,7 @@
                         <publicPackage>de.fub.mapforgeproject.api.statistics</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.dataobject</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.nodes</publicPackage>
+                        <publicPackage>de.fub.mapforgeproject.utils</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.xml</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.xml.adapters</publicPackage>
                     </publicPackages>

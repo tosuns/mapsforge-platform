@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Serdar
  */
-@XmlType(name = "propertySection")
+@XmlType(name = "propertysection")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PropertySection {
 

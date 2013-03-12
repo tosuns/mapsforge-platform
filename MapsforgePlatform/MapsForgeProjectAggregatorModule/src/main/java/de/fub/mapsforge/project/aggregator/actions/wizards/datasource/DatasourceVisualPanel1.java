@@ -46,6 +46,7 @@ public final class DatasourceVisualPanel1 extends JPanel implements ExplorerMana
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         beanTreeView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        beanTreeView.setPreferredSize(new java.awt.Dimension(400, 300));
         beanTreeView.setRootVisible(false);
         jPanel1.add(beanTreeView, java.awt.BorderLayout.CENTER);
 

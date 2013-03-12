@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
-    xmlns="http://inf.fu-berlin.de/mapsforge/detector/schema"
     targetNamespace="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="detector" type="detectorDescriptor"/>
-
+    version="1.0"
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="detector" type="dec:detectorDescriptor"/>
+    <xs:element name="inferencemodel" type="dec:inferencemodel"/>
+    <xs:element name="processunit" type="dec:processunit"/>
+    <xs:element name="profile" type="dec:profile"/>
     <xs:complexType name="detectorDescriptor">
         <xs:sequence>
-            <xs:element name="inferencemodel" type="inferencemodel"/>
-            <xs:element name="datasets" type="datasets"/>
-            <xs:element name="preprocessors" type="preprocessors"/>
-            <xs:element name="postprocessors" type="postprocessors"/>
+            <xs:element name="inferencemodel" type="dec:inferencemodel"/>
+            <xs:element name="datasets" type="dec:datasets"/>
+            <xs:element name="preprocessors" type="dec:preprocessors"/>
+            <xs:element name="postprocessors" type="dec:postprocessors"/>
+            <xs:element minOccurs="0" name="propertysection" type="dec:propertysection"/>
+            <xs:element minOccurs="0" name="profiles" type="dec:profiles"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="description" type="xs:string"/>
     </xs:complexType>
     <xs:complexType name="inferencemodel">
         <xs:complexContent>
-            <xs:extension base="descriptor">
+            <xs:extension base="dec:descriptor">
                 <xs:sequence>
-                    <xs:element minOccurs="0" name="features" type="features"/>
+                    <xs:element minOccurs="0" name="features" type="dec:features"/>
                     <xs:element minOccurs="0"
-                                name="inferenceModelProcessHandlers" type="inferenceModelProcessHandlers"/>
+                                name="inferenceModelProcessHandlers" type="dec:inferenceModelProcessHandlers"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0"
+                                name="propertysection" type="dec:propertysection"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -35,12 +41,12 @@
     <xs:complexType name="features">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="feature" type="processunit"/>
+                        name="feature" type="dec:processunit"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="processunit">
         <xs:sequence>
-            <xs:element minOccurs="0" name="properties" type="properties"/>
+            <xs:element minOccurs="0" name="properties" type="dec:properties"/>
         </xs:sequence>
         <xs:attribute name="javaType" type="xs:string" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
@@ -49,47 +55,63 @@
     <xs:complexType name="properties">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="property" type="property"/>
+                        name="property" type="dec:property"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="property">
         <xs:complexContent>
-            <xs:extension base="descriptor">
+            <xs:extension base="dec:descriptor">
                 <xs:sequence/>
                 <xs:attribute name="value" type="xs:string" use="required"/>
+                <xs:attribute name="id" type="xs:string" use="required"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="inferenceModelProcessHandlers">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="processHandler" type="processHandler"/>
+                        name="processHandler" type="dec:processHandler"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="processHandler">
         <xs:complexContent>
-            <xs:extension base="descriptor">
+            <xs:extension base="dec:descriptor">
                 <xs:sequence/>
-                <xs:attribute name="inferenceMode" type="inferenceMode"/>
+                <xs:attribute name="inferenceMode" type="dec:inferenceMode"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+    <xs:complexType name="propertysection">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="section" type="dec:section"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="section">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0"
+                        name="property" type="dec:property"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string"/>
+    </xs:complexType>
     <xs:complexType name="datasets">
         <xs:sequence>
-            <xs:element name="trainingset" type="trainingset"/>
-            <xs:element name="inferenceset" type="inferenceset"/>
+            <xs:element name="trainingset" type="dec:trainingset"/>
+            <xs:element name="inferenceset" type="dec:inferenceset"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="trainingset">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="transportmode" type="transportmode"/>
+                        name="transportmode" type="dec:transportmode"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="transportmode">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="dataset" type="dataset"/>
+                        name="dataset" type="dec:dataset"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
@@ -100,26 +122,62 @@
     <xs:complexType name="inferenceset">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="dataset" type="dataset"/>
+                        name="dataset" type="dec:dataset"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="preprocessors">
         <xs:sequence>
             <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="filter" type="processunit"/>
+                        name="filter" type="dec:processunit"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="postprocessors">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="task" type="processunit"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="task" type="dec:processunit"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="profiles">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="profile" type="dec:profile"/>
+        </xs:sequence>
+        <xs:attribute name="activeProfile" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="profile">
+        <xs:sequence>
+            <xs:element name="preprocess" type="dec:preprocessor"/>
+            <xs:element name="inference" type="dec:inference"/>
+            <xs:element name="postprocess" type="dec:postprocess"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="preprocessor">
+        <xs:sequence/>
+        <xs:attribute name="active" type="xs:boolean" use="required"/>
+        <xs:attribute name="mode" type="dec:detectorMode"/>
+    </xs:complexType>
+    <xs:complexType name="inference">
+        <xs:sequence/>
+        <xs:attribute name="changePointSequenceActive" type="xs:boolean" use="required"/>
+        <xs:attribute name="mode" type="dec:detectorMode"/>
+    </xs:complexType>
+    <xs:complexType name="postprocess">
+        <xs:sequence/>
+        <xs:attribute name="active" type="xs:boolean" use="required"/>
+        <xs:attribute name="mode" type="dec:detectorMode" use="required"/>
     </xs:complexType>
     <xs:simpleType name="inferenceMode">
         <xs:restriction base="xs:string">
             <xs:enumeration value="trainingsMode"/>
             <xs:enumeration value="crossvalidationMode"/>
             <xs:enumeration value="inferenceMode"/>
-            <!--<xs:enumeration value="ALL_MODE"/>-->
+            <xs:enumeration value="ALL_MODE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="detectorMode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="training"/>
+            <xs:enumeration value="inference"/>
+            <xs:enumeration value="both"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<processunit javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.MinDistanceWaypointFilterProcess"
-             name="Minimum Distance Filter"
-             description="This filter check a GPSTack whether each pair of gps points exceeds the required minimum distance threshold. If a pair of gps point can't satisfy the requirement, then the track will be can't into two segments and the filter process continues with the filtering on the second segment until the end of the gps track is reached.">
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema" javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.MinDistanceWaypointFilterProcess"
+    name="Minimum Distance Filter"
+    description="This filter check a GPSTack whether each pair of gps points exceeds the required minimum distance threshold. If a pair of gps point can't satisfy the requirement, then the track will be can't into two segments and the filter process continues with the filtering on the second segment until the end of the gps track is reached.">
     <properties>
         <!-- value in meters -->
         <property value="2" javaType="java.lang.Integer" name="distance" description="distance in meters"/>
     </properties>
-</processunit>
+</dec:processunit>

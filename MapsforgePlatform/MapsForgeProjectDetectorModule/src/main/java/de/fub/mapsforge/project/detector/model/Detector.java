@@ -17,6 +17,7 @@ import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.PostProcessors;
 import de.fub.mapsforge.project.detector.model.xmls.PreProcessors;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.Profile;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
@@ -50,6 +51,8 @@ public class Detector extends ModelSynchronizer {
     private AbstractInferenceModel inferenceModel;
     private ProcessState detectorState = ProcessState.INACTIVE;
     private ModelSynchronizerClient dataObjectModelSynchronizerClient;
+    private ModelSynchronizerClient sourceEditorModelSynchronizerClient;
+    private Profile currentActiveProfile = null;
 
     public Detector(DetectorDataObject dataObject) {
         assert dataObject != null;
@@ -57,12 +60,24 @@ public class Detector extends ModelSynchronizer {
         init();
     }
 
+    /**
+     *
+     */
     private void init() {
-        // a dummy client to differenciate File change from the file system
+        // a client to delegate a file change listener
+        // to all other clients to update their model
         dataObjectModelSynchronizerClient = super.create(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                // do nothing
+                // for the editor
+            }
+        });
+
+        // source editor client to update the source editor.
+        sourceEditorModelSynchronizerClient = super.create(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+//                notifyModified();
             }
         });
 
@@ -76,18 +91,24 @@ public class Detector extends ModelSynchronizer {
         reinit();
     }
 
-    // TODO initialized this instance with the help of the detector descriptor.
+    /**
+     *
+     */
     private void reinit() {
         DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
         if (detectorDescriptor != null) {
+
+            // initialize the inference model
             InferenceModelDescriptor inferenceModelDescriptor = detectorDescriptor.getInferenceModel();
             if (inferenceModelDescriptor != null) {
                 inferenceModel = DetectorUtils.createInferenceModel(inferenceModelDescriptor, Detector.this);
             }
 
+            // initialize the preprocessors
             PreProcessors preprocessors = detectorDescriptor.getPreprocessors();
             if (preprocessors != null) {
                 FilterProcess filter = null;
+                getPreProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : preprocessors.getPreprocessorList()) {
                     filter = DetectorUtils.createInstance(FilterProcess.class, processDescriptor.getJavaType());
                     if (filter != null) {
@@ -96,9 +117,11 @@ public class Detector extends ModelSynchronizer {
                 }
             }
 
+            // initialize the postprocessors
             PostProcessors postprocessors = detectorDescriptor.getPostprocessors();
             if (postprocessors != null) {
                 Task task = null;
+                getPostProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
                     task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType());
                     if (task != null) {
@@ -106,54 +129,113 @@ public class Detector extends ModelSynchronizer {
                     }
                 }
             }
+
+            // determine active profile
+            if (!detectorDescriptor.getProfiles().getProfileList().isEmpty()) {
+                if (detectorDescriptor.getProfiles() == null) {
+                    currentActiveProfile = detectorDescriptor.getProfiles().getProfileList().iterator().next();
+                } else {
+
+                    for (Profile profile : detectorDescriptor.getProfiles().getProfileList()) {
+                        if (profile.getName() != null && detectorDescriptor.getProfiles().getActiveProfile().equals(profile.getName())) {
+                            currentActiveProfile = profile;
+                            break;
+                        }
+                    }
+                    if (currentActiveProfile == null) {
+                        currentActiveProfile = detectorDescriptor.getProfiles().getProfileList().iterator().next();
+                    }
+                }
+            }
         }
     }
 
+    /**
+     *
+     */
     @NbBundle.Messages({
         "# {0} - detectorName",
         "# {1} - processName",
         "CLT_Running_Process={0}: Running {1}..."})
     public void start() {
         synchronized (MUTEX_PROCESS_RUNNING) {
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Running_Process(getDetectorDescriptor().getName(), ""), new CancellableImpl());
-            try {
-
-                for (FilterProcess<?, ?> filterProcess : getPreProcessorPipeline().getProcesses()) {
-                }
-
-
-            } finally {
-                handle.finish();
-            }
+            new DetectorRunController(Detector.this).start();
         }
     }
 
+    /**
+     *
+     * @return
+     */
+    public Profile getCurrentActiveProfile() {
+        return currentActiveProfile;
+    }
+
+    /**
+     *
+     * @param currentActiveProfile
+     */
+    public void setCurrentActiveProfile(Profile currentActiveProfile) {
+        if (currentActiveProfile != null) {
+            getDetectorDescriptor().getProfiles().setActiveProfile(currentActiveProfile.getName());
+            this.currentActiveProfile = currentActiveProfile;
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
     public PreProcessorPipeline getPreProcessorPipeline() {
         return preProcessorPipeline;
     }
 
+    /**
+     *
+     * @return
+     */
     public PostProcessorPipeline getPostProcessorPipeline() {
         return postProcessorPipeline;
     }
 
+    /**
+     *
+     * @return
+     */
     public AbstractInferenceModel getInferenceModel() {
         return inferenceModel;
     }
 
+    /**
+     *
+     * @return
+     */
     public synchronized ProcessState getDetectorState() {
         return detectorState;
     }
 
-    public synchronized void setDetectorState(ProcessState detectorState) {
+    /**
+     *
+     * @param detectorState
+     */
+    synchronized void setDetectorState(ProcessState detectorState) {
         Object oldValue = this.detectorState;
         this.detectorState = detectorState;
         pcs.firePropertyChange(PROP_NAME_DETECTOR_STATE, oldValue, detectorState);
     }
 
+    /**
+     *
+     * @return
+     */
     public DetectorDataObject getDataObject() {
         return dataObject;
     }
 
+    /**
+     *
+     * @return
+     */
     public DetectorDescriptor getDetectorDescriptor() {
         try {
             return dataObject.getDetectorDescriptor();
@@ -165,18 +247,33 @@ public class Detector extends ModelSynchronizer {
         return null;
     }
 
+    /**
+     *
+     */
     public void notifyModified() {
         dataObject.modifySourceEditor();
     }
 
+    /**
+     *
+     * @param listener
+     */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
+    /**
+     *
+     * @param listener
+     */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<StatisticProvider> getStatistics() {
         List<StatisticProvider> statisticProviders = new ArrayList<StatisticProvider>();
         for (FilterProcess<?, ?> process : getPreProcessorPipeline().getProcesses()) {
@@ -192,16 +289,8 @@ public class Detector extends ModelSynchronizer {
         return statisticProviders;
     }
 
-    private static class CancellableImpl implements Cancellable {
-
-        public CancellableImpl() {
-        }
-
-        @Override
-        public boolean cancel() {
-            // TODO cancel process.
-            return false;
-
-        }
+    @Override
+    public String toString() {
+        return "Detector{ name=" + getDetectorDescriptor().getName() + ", description=" + getDetectorDescriptor().getDescription() + '}';
     }
 }

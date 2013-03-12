@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.utils;
 
+import de.fub.mapforgeproject.utils.MapsForgeProjectUtils;
 import de.fub.mapsforge.project.aggregator.factories.CategoryNodeFactory;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
@@ -24,7 +25,6 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.palette.DragAndDropHandler;
 import org.netbeans.spi.palette.PaletteActions;
 import org.netbeans.spi.palette.PaletteController;
@@ -142,19 +142,7 @@ public class AggregateUtils {
     }
 
     public static Project findProject(FileObject fileObject) {
-        Project project = null;
-
-        while (project == null && !fileObject.isRoot()) {
-            try {
-                project = ProjectManager.getDefault().findProject(fileObject);
-            } catch (IllegalArgumentException ex) {
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            fileObject = fileObject.getParent();
-        }
-
-        return project;
+        return MapsForgeProjectUtils.findProject(fileObject);
     }
 
     @NbBundle.Messages({"# {0} - filepath", "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"})

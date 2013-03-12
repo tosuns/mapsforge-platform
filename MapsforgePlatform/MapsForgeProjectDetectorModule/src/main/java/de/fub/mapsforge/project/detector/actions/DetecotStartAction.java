@@ -1,0 +1,65 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.fub.mapsforge.project.detector.actions;
+
+import de.fub.mapforgeproject.api.process.ProcessState;
+import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.utilsmodule.icons.IconRegister;
+import java.awt.event.ActionEvent;
+import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
+import org.openide.util.actions.Presenter;
+
+@ActionID(
+        category = "Detector",
+        id = "de.fub.mapsforge.project.detector.actions.DetecotStartAction")
+@ActionRegistration(
+        lazy = false,
+        displayName = "#CTL_DetecotStartAction")
+@ActionReference(path = "Loaders/text/detector+xml/Actions",
+        position = 250,
+        separatorAfter = 275)
+@Messages("CTL_DetecotStartAction=Start")
+public final class DetecotStartAction extends AbstractAction implements Presenter.Popup {
+
+    private static final long serialVersionUID = 1L;
+
+    public DetecotStartAction() {
+        super(Bundle.CTL_DetecotStartAction());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        // TODO use context
+    }
+
+    @Override
+    public JMenuItem getPopupPresenter() {
+        JMenu menu = new JMenu(DetecotStartAction.this);
+        Detector detector = Utilities.actionsGlobalContext().lookup(Detector.class);
+        if (detector != null) {
+
+            List<? extends Action> actionsForPath = Utilities.actionsForPath("Projects/org-mapsforge-project/Detector/Start/Actions");
+            JMenuItem item = null;
+            for (Action action : actionsForPath) {
+                item = new JMenuItem(action);
+                item.setEnabled(detector.getDetectorState() != ProcessState.RUNNING);
+                menu.add(item);
+            }
+        } else {
+            menu.setEnabled(false);
+        }
+        return menu;
+    }
+}

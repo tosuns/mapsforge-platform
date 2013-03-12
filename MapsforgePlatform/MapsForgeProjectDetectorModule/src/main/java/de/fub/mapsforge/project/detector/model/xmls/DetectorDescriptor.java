@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author Serdar
  */
 @XmlRootElement(name = "detector", namespace = "http://inf.fu-berlin.de/mapsforge/detector/schema")
-@XmlType(propOrder = {"name", "description", "inferencemodel", "datasets", "preprocessors", "postprocessors"})
+@XmlType(propOrder = {"name", "description", "inferencemodel", "datasets", "preprocessors", "postprocessors", "propertysection", "profiles"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DetectorDescriptor {
 
@@ -32,6 +32,10 @@ public class DetectorDescriptor {
     private PreProcessors preprocessors = new PreProcessors();
     @XmlElement(name = "postprocessors", required = true)
     private PostProcessors postprocessors = new PostProcessors();
+    @XmlElement(name = "propertysection")
+    private PropertySection propertysection = new PropertySection();
+    @XmlElement(name = "profiles")
+    private Profiles profiles = new Profiles();
 
     public DetectorDescriptor() {
     }
@@ -86,6 +90,14 @@ public class DetectorDescriptor {
 
     public PostProcessors getPostprocessors() {
         return postprocessors;
+    }
+
+    public PropertySection getPropertySection() {
+        return propertysection;
+    }
+
+    public Profiles getProfiles() {
+        return profiles;
     }
 
     @Override

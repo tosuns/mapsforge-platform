@@ -4,6 +4,8 @@
  */
 package de.fub.mapsforge.project.detector.model.xmls;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -14,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Serdar
  */
-@XmlRootElement(name = "inferencemodel")
+@XmlRootElement(name = "inferencemodel", namespace = "http://inf.fu-berlin.de/mapsforge/detector/schema")
 @XmlType(name = "inferencemodel")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class InferenceModelDescriptor extends Descriptor {
@@ -23,6 +25,8 @@ public class InferenceModelDescriptor extends Descriptor {
     private Features features = new Features();
     @XmlElement(name = "inferenceModelProcessHandlers")
     private ProcessHandlers inferenceModelProcessHandlers = new ProcessHandlers();
+    @XmlElement(name = "propertysection")
+    private List<PropertySection> propertysection = new ArrayList<PropertySection>();
 
     public InferenceModelDescriptor() {
     }
@@ -37,6 +41,10 @@ public class InferenceModelDescriptor extends Descriptor {
 
     public ProcessHandlers getInferenceModelProcessHandlers() {
         return inferenceModelProcessHandlers;
+    }
+
+    public List<PropertySection> getPropertySection() {
+        return propertysection;
     }
 
     @Override

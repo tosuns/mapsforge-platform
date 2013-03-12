@@ -6,36 +6,55 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JLabel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Serdar
  */
-public class BarChartPanel extends javax.swing.JPanel {
+public class ClassificationBarChart extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
     private final ChartPanel chartPanel;
-    private DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private final JFreeChart barChart;
     private final CategoryPlot plot;
 
     /**
-     * Creates new form BarChartPanel
+     * Creates new form ClassificationBarChart
      */
-    public BarChartPanel() {
+    public ClassificationBarChart() {
         super();
         initComponents();
-        barChart = ChartFactory.createBarChart(null, "Transport Modes", "Precision (%)", dataset, PlotOrientation.VERTICAL, true, true, true);
+        barChart = ChartFactory.createBarChart(
+                NbBundle.getMessage(ClassificationBarChart.class, "CLT_Chart_Classify_Name"),
+                NbBundle.getMessage(ClassificationBarChart.class, "CLT_Doman_Axis_Name"),
+                NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Axis_Name"),
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                true);
+        Font font = new JLabel().getFont().deriveFont(Font.BOLD, 14);
+        barChart.getTitle().setFont(font);
+        barChart.getTitle().setPaint(new Color(153, 153, 153));
         plot = barChart.getCategoryPlot();
+        NumberAxis preciAxis = new NumberAxis(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Axis_Name"));
+        plot.setRangeAxis(0, preciAxis);
+        plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
         chartPanel = new ChartPanel(barChart, true);
         chartPanel.setVerticalAxisTrace(false);

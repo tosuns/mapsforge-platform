@@ -4,15 +4,11 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 
-import de.fub.mapforgeproject.api.process.ProcessNode;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
-import de.fub.utilsmodule.icons.IconRegister;
-import java.awt.Image;
 import javax.swing.JComponent;
-import org.openide.nodes.Node;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -48,16 +44,6 @@ public class MapRenderer extends Task {
                 }
             }
         }
-    }
-
-    @Override
-    protected Node createNodeDelegate() {
-        return new ProcessNode(MapRenderer.this);
-    }
-
-    @Override
-    protected Image getDefaultImage() {
-        return IconRegister.findRegisteredIcon("processIconNormal.png");
     }
 
     @Override

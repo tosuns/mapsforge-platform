@@ -9,20 +9,25 @@ import de.fub.mapsforge.project.detector.factories.nodes.PostProcessorsNode;
 import de.fub.mapsforge.project.detector.factories.nodes.PreProcessorsNode;
 import de.fub.mapsforge.project.detector.factories.nodes.datasets.DataSetFolderNode;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 
 /**
  *
  * @author Serdar
  */
-public class DetectorSubNodeFactory extends ChildFactory<Node> {
+public class DetectorSubNodeFactory extends ChildFactory<Node> implements ChangeListener {
 
     private final Detector detector;
 
     public DetectorSubNodeFactory(Detector detector) {
         this.detector = detector;
+
     }
 
     @Override
@@ -38,6 +43,11 @@ public class DetectorSubNodeFactory extends ChildFactory<Node> {
 
     @Override
     protected Node createNodeForKey(Node node) {
-        return node;
+        return new FilterNode(node);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        refresh(true);
     }
 }

@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Serdar
  */
-@XmlRootElement(name = "processunit")
+@XmlRootElement(name = "processunit", namespace = "http://inf.fu-berlin.de/mapsforge/detector/schema")
 @XmlType(name = "processunit", propOrder = {"javaType", "name", "description", "properties"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ProcessDescriptor {

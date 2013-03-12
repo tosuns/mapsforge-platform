@@ -29,7 +29,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         outlineView.getOutline().setRootVisible(false);
     }
 
-    public BarChartPanel getBarChartPanel() {
+    public PrecisionRecallBarChartPanel getBarChartPanel() {
         return barChartPanel;
     }
 
@@ -59,7 +59,8 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.BarChartPanel();
+        classificationBarChart1 = new de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart();
+        barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel();
         outlineView = new org.openide.explorer.view.OutlineView("Transport Mode");
         jPanel3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
@@ -77,15 +78,16 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         jSeparator2 = new javax.swing.JSeparator();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 2));
-        setMaximumSize(new java.awt.Dimension(2147483647, 275));
-        setMinimumSize(new java.awt.Dimension(58, 275));
-        setPreferredSize(new java.awt.Dimension(801, 275));
+        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        setMaximumSize(new java.awt.Dimension(2147483647, 350));
+        setMinimumSize(new java.awt.Dimension(58, 350));
+        setPreferredSize(new java.awt.Dimension(801, 350));
         setLayout(new java.awt.BorderLayout(0, 8));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));
         jPanel2.setOpaque(false);
-        jPanel2.setLayout(new java.awt.GridLayout(1, 2));
+        jPanel2.setLayout(new java.awt.GridLayout(1, 3));
+        jPanel2.add(classificationBarChart1);
         jPanel2.add(barChartPanel);
 
         outlineView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(213, 213, 213)));
@@ -170,7 +172,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,7 +193,8 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         add(jPanel1, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private de.fub.mapsforge.project.detector.model.inference.ui.BarChartPanel barChartPanel;
+    private de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel barChartPanel;
+    private de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart classificationBarChart1;
     private javax.swing.JLabel correctClassifiedInstances;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel incorrectClassifiedInstances;

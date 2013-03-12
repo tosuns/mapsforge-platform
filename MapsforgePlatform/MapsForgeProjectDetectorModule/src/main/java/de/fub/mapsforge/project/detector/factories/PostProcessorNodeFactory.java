@@ -6,20 +6,26 @@ package de.fub.mapsforge.project.detector.factories;
 
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 
 /**
  *
  * @author Serdar
  */
-public class PostProcessorNodeFactory extends ChildFactory<Task> {
+public class PostProcessorNodeFactory extends ChildFactory<Task> implements ChangeListener {
 
     private final Detector detector;
+    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
     public PostProcessorNodeFactory(Detector detector) {
         this.detector = detector;
+        modelSynchronizerClient = detector.create(PostProcessorNodeFactory.this);
     }
 
     @Override
@@ -30,6 +36,11 @@ public class PostProcessorNodeFactory extends ChildFactory<Task> {
 
     @Override
     protected Node createNodeForKey(Task task) {
-        return task.getNodeDelegate();
+        return new FilterNode(task.getNodeDelegate());
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        refresh(true);
     }
 }
