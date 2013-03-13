@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import javax.swing.JComponent;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -23,7 +24,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public abstract class FeatureProcess extends AbstractDetectorProcess<GPSTrack, Double> {
+public abstract class FeatureProcess extends AbstractDetectorProcess<List<GPSTrack>, Double> {
 
     private static Image defaultImage;
 

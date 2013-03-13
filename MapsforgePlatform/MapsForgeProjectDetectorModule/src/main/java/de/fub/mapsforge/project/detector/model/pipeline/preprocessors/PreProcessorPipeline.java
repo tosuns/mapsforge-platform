@@ -11,7 +11,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
  *
  * @author Serdar
  */
-public class PreProcessorPipeline extends ProcessPipeline<FilterProcess<?, ?>> {
+public class PreProcessorPipeline extends ProcessPipeline<FilterProcess> {
 
     private final Detector detector;
 

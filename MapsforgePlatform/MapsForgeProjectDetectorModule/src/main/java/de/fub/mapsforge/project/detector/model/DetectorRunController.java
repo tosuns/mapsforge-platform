@@ -5,10 +5,11 @@
 package de.fub.mapsforge.project.detector.model;
 
 import de.fub.agg2graph.structs.GPSTrack;
-import de.fub.gpxmodule.xml.Gpx;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.detector.DetectorMode;
 import de.fub.mapsforge.project.detector.model.converter.DataConverter;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
+import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.Profile;
@@ -61,11 +62,6 @@ class DetectorRunController {
                     break;
             }
 
-
-
-
-
-
         } catch (Exception ex) {
             detector.setDetectorState(ProcessState.ERROR);
         } finally {
@@ -86,26 +82,34 @@ class DetectorRunController {
         if ((this.currentProfile.getPreprocess().getMode() == DetectorMode.TRAINING
                 || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)
                 && this.currentProfile.getPreprocess().isActive()) {
+
             List<GPSTrack> gpsTracks = new ArrayList<GPSTrack>();
 
             for (Entry<String, List<GPSTrack>> entry : trainingsMap.entrySet()) {
 
-                for (GPSTrack gpsTrack : entry.getValue()) {
-
-                    Object track = gpsTrack;
-                    for (FilterProcess filterProcess : detector.getPreProcessorPipeline().getProcesses()) {
-                        filterProcess.setInput(track);
-                        filterProcess.run();
-                        track = filterProcess.getResult();
-                    }
-                    if (track instanceof GPSTrack) {
-                        gpsTracks.add((GPSTrack) track);
-                    }
+                List<GPSTrack> tracks = entry.getValue();
+                for (FilterProcess filterProcess : detector.getPreProcessorPipeline().getProcesses()) {
+                    filterProcess.setInput(tracks);
+                    filterProcess.run();
+                    tracks = filterProcess.getResult();
                 }
+
+                gpsTracks.addAll(tracks);
                 // TOCO could lead to an infinity loop or to a concurrent modification exception!
                 trainingsMap.put(entry.getKey(), gpsTracks);
             }
         }
+
+        // convert GPSTracks to fileObjects
+        InferenceModelInputDataSet inferenceModelInputDataSet = new InferenceModelInputDataSet();
+        for (Entry<String, List<GPSTrack>> entry : trainingsMap.entrySet()) {
+            inferenceModelInputDataSet.putTrainingsData(entry.getKey(), entry.getValue());
+        }
+
+        detector.getInferenceModel().setInput(inferenceModelInputDataSet);
+        detector.getInferenceModel().setInferenceMode(InferenceMode.TRAININGS_MODE);
+        detector.getInferenceModel().run();
+
     }
 
     private void startInference() {

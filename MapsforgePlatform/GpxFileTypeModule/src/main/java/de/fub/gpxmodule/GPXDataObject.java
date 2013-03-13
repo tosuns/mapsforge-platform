@@ -6,10 +6,10 @@ package de.fub.gpxmodule;
 
 import de.fub.gpxmodule.nodes.GpxNode;
 import de.fub.gpxmodule.service.GPXProvider;
-import de.fub.gpxmodule.xml.Gpx;
-import de.fub.gpxmodule.xml.Trk;
-import de.fub.gpxmodule.xml.Trkseg;
-import de.fub.gpxmodule.xml.Trkseg.Trkpt;
+import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.gpx.Gpx.Trk;
+import de.fub.gpxmodule.xml.gpx.Trkseg;
+import de.fub.gpxmodule.xml.gpx.Wpt;
 import geofiletypeapi.GeoDataObject;
 import java.awt.geom.Rectangle2D;
 import java.beans.IntrospectionException;
@@ -17,15 +17,23 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.spi.xml.cookies.CheckXMLSupport;
 import org.netbeans.spi.xml.cookies.DataObjectAdapters;
+import org.netbeans.spi.xml.cookies.TransformableSupport;
 import org.netbeans.spi.xml.cookies.ValidateXMLSupport;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -51,11 +59,13 @@ import org.xml.sax.InputSource;
 @Messages({
     "LBL_GPX_LOADER=Files of GPX"
 })
-@MIMEResolver.ExtensionRegistration(
-        displayName = "#LBL_GPX_LOADER",
-        mimeType = "text/gpx+xml",
-        extension = {"gpx", "Gpx", "GPX"})
+//@MIMEResolver.ExtensionRegistration(
+//        displayName = "#LBL_GPX_LOADER",
+//        mimeType = "text/gpx+xml",
+//        extension = {"gpx", "Gpx", "GPX"})
 @MIMEResolver.NamespaceRegistration(
+        acceptedExtension = {"gpx"},
+        checkedExtension = {"gpx"},
         displayName = "#LBL_GPX_LOADER",
         elementNS = {"http://www.topografix.com/GPX/1/0"},
         elementName = "gpx",
@@ -124,6 +134,7 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
     protected transient final Set<ChangeListener> changeListenerSet = Collections.synchronizedSet(new HashSet<ChangeListener>());
     private Gpx gpx = null;
     private transient final PropertyChangeListener pcl = new PropertyChangeListenerImpl();
+    private GpxVersion gpxVersion = GpxVersion.GPX_1_1;
 
     public GPXDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
@@ -172,18 +183,50 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
         updateGpx(getPrimaryFile().getInputStream());
     }
 
+    @SuppressWarnings({"unchecked", "unchecked"})
     private void updateGpx(InputStream inputStream) throws IOException {
         try {
+            // parse gpx version 1.1
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(Gpx.class);
             javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-            gpx = (Gpx) unmarshaller.unmarshal(inputStream); //NOI18N
+            gpx = ((JAXBElement<Gpx>) unmarshaller.unmarshal(inputStream)).getValue();
         } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            inputStream = getPrimaryFile().getInputStream();
+            // fall back track to parse as gpx vsrsion 1.1
+            try {
+                StringWriter stringWriter = new StringWriter();
+                StreamResult streamResult = new StreamResult(stringWriter);
+
+                InputStream resourceAsStream = GPXDataObject.class.getResourceAsStream("/de/fub/gpxmodule/xslt/gpx10to11Transformer.xsl");
+                StreamSource streamSource = new StreamSource(resourceAsStream);
+                TransformableSupport transformableSupport = new TransformableSupport(new StreamSource(inputStream));
+
+                transformableSupport.transform(streamSource, streamResult, null);
+
+                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(Gpx.class);
+                javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
+
+                Object unmarshal = unmarshaller.unmarshal(new StringReader(stringWriter.toString()));
+                if (unmarshal instanceof JAXBElement<?>) {
+                    gpx = ((JAXBElement<Gpx>) unmarshal).getValue();
+                } else if (unmarshal instanceof Gpx) {
+                    gpx = (Gpx) unmarshal;
+                }
+                gpxVersion = GpxVersion.GPX_1_0;
+            } catch (TransformerException ex1) {
+                Exceptions.printStackTrace(ex1);
+            } catch (JAXBException ex1) {
+                Exceptions.printStackTrace(ex1);
+            }
         } finally {
             if (inputStream != null) {
                 inputStream.close();
             }
         }
+    }
+
+    public GpxVersion getGpxVersion() {
+        return gpxVersion;
     }
 
     @Override
@@ -235,12 +278,19 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
         Gpx gpxData = getGpx();
         if (gpxData != null) {
             for (Trk track : gpxData.getTrk()) {
-                for (Trkseg trackSegment : track.getTrkseg()) {
-                    for (Trkpt trackPoint : trackSegment.getTrkpt()) {
+                de.fub.gpxmodule.xml.gpx.Trk trk = track.getValue();
+                for (Trkseg tracksegment : trk.getTrkseg()) {
+                    for (Wpt trackPoint : tracksegment.getTrkpt()) {
                         if (boundingBox == null) {
-                            boundingBox = new Rectangle2D.Double(trackPoint.getLat(), trackPoint.getLon(), trackPoint.getLat(), trackPoint.getLon());
+                            boundingBox = new Rectangle2D.Double(
+                                    trackPoint.getLat().getValue().doubleValue(),
+                                    trackPoint.getLon().getValue().doubleValue(),
+                                    trackPoint.getLat().getValue().doubleValue(),
+                                    trackPoint.getLon().getValue().doubleValue());
                         } else {
-                            boundingBox.add(trackPoint.getLat(), trackPoint.getLon());
+                            boundingBox.add(
+                                    trackPoint.getLat().getValue().doubleValue(),
+                                    trackPoint.getLon().getValue().doubleValue());
                         }
                     }
                 }
@@ -266,5 +316,10 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
                 }
             }
         }
+    }
+
+    public enum GpxVersion {
+
+        GPX_1_0, GPX_1_1;
     }
 }

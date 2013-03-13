@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.MinPrecisionFeature;
 import de.fub.agg2graph.structs.GPSTrack;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -21,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MinPrecisionFeatureProcess extends FeatureProcess {
 
     private MinPrecisionFeature feature = new MinPrecisionFeature();
-    private GPSTrack gpsTrack;
+    private List<GPSTrack> gpsTrack;
 
     @Override
     protected void start() {
@@ -39,7 +40,7 @@ public class MinPrecisionFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(GPSTrack input) {
+    public void setInput(List<GPSTrack> input) {
         this.gpsTrack = input;
     }
 

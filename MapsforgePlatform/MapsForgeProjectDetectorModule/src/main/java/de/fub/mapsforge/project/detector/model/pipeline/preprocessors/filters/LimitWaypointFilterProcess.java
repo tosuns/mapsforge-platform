@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -26,10 +27,10 @@ import org.openide.util.lookup.ServiceProvider;
     + "second segment until it reaches the end of the track."
 })
 @ServiceProvider(service = FilterProcess.class)
-public class LimitWaypointFilterProcess extends FilterProcess<GPSTrack, GPSTrack> {
+public class LimitWaypointFilterProcess extends FilterProcess {
 
     private final static String PROPERTY_LIMIT = "limit";
-    private GPSTrack gpsTrack;
+    private List<GPSTrack> gpsTrack;
     private final LimitWaypointFilter filter = new LimitWaypointFilter();
 
     public LimitWaypointFilterProcess() {
@@ -53,7 +54,6 @@ public class LimitWaypointFilterProcess extends FilterProcess<GPSTrack, GPSTrack
     @Override
     protected void start() {
         filter.reset();
-        GPSTrack gpsTrack;
     }
 
     @Override
@@ -67,12 +67,12 @@ public class LimitWaypointFilterProcess extends FilterProcess<GPSTrack, GPSTrack
     }
 
     @Override
-    public void setInput(GPSTrack gpsTrack) {
+    public void setInput(List<GPSTrack> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
     @Override
-    public GPSTrack getResult() {
+    public List<GPSTrack> getResult() {
         return this.gpsTrack;
     }
 

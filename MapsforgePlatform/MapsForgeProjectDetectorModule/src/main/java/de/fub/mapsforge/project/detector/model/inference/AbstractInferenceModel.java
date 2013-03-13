@@ -11,6 +11,7 @@ import de.fub.mapsforge.project.detector.model.inference.processhandler.Training
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
+import static de.fub.mapsforge.project.detector.model.inference.InferenceMode.CROSS_VALIDATION_MODE;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler;
 import de.fub.mapsforge.project.detector.model.inference.ui.InferenceModelSettingForm;
 import de.fub.mapsforge.project.detector.model.xmls.Features;
@@ -25,16 +26,20 @@ import java.awt.Image;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import weka.classifiers.Classifier;
+import weka.core.Attribute;
 
 /**
  * comment 2 3
@@ -56,6 +61,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     private InferenceMode inferenceMode = InferenceMode.ALL_MODE;
     private Classifier classifier;
     private InferenceModelDescriptor inferenceModelDescriptor = null;
+    private ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+    private Map<String, Attribute> attibuteMap = new HashMap<String, Attribute>();
 
     public AbstractInferenceModel() {
         this(null);
@@ -120,48 +127,79 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
 
     @Override
     protected void start() {
-        InferenceModelProcessHandler processHandler = null;
         switch (inferenceMode) {
             case INFERENCE_MODE:
-                fireStartEvent(inferenceMode);
-                processHandler = getProcessHandlerInstance(inferenceMode);
-                processHandler.start();
-                fireFinishedEvent(inferenceMode);
-                break;
-            case CROSS_VALIDATION_MODE:
-                fireStartEvent(inferenceMode);
-                processHandler = getProcessHandlerInstance(inferenceMode);
-                processHandler.start();
-                fireFinishedEvent(inferenceMode);
+                startInference();
                 break;
             case TRAININGS_MODE:
-                fireStartEvent(inferenceMode);
-                processHandler = getProcessHandlerInstance(inferenceMode);
-                processHandler.start();
-                fireFinishedEvent(inferenceMode);
+                startTraining();
                 break;
             case ALL_MODE:
-                // first phase training
-                fireStartEvent(InferenceMode.TRAININGS_MODE);
-                processHandler = getProcessHandlerInstance(InferenceMode.TRAININGS_MODE);
-                processHandler.start();
-                fireFinishedEvent(InferenceMode.TRAININGS_MODE);
-
-                // second phase crossvalidation
-                fireStartEvent(InferenceMode.CROSS_VALIDATION_MODE);
-                processHandler = getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE);
-                processHandler.start();
-                fireFinishedEvent(InferenceMode.CROSS_VALIDATION_MODE);
-
-                // third phase inference
-                fireStartEvent(InferenceMode.INFERENCE_MODE);
-                processHandler = getProcessHandlerInstance(InferenceMode.INFERENCE_MODE);
-                processHandler.start();
-                fireFinishedEvent(InferenceMode.INFERENCE_MODE);
+                startTraining();
+                startInference();
+                break;
+            case CROSS_VALIDATION_MODE:
+                // TODO not supported anymore
                 break;
             default:
                 throw new IllegalArgumentException(inferenceMode + " not supported"); //NO18N
         }
+    }
+
+    public ArrayList<Attribute> getAttributeList() {
+        return attributeList;
+    }
+
+    public Map<String, Attribute> getAttributeMap() {
+        return attibuteMap;
+    }
+
+    private void initAttributes() {
+        attributeList.clear();
+        attibuteMap.clear();
+
+        // the class label attribute will be the first attribute
+        // in the list of attributes.
+        // this is more like a convention
+        Attribute attribute = new Attribute("class");
+        for (String transportModeName : inputDataSet.getTrainingsSet().keySet()) {
+            attribute.addStringValue(transportModeName);
+        }
+        attributeList.add(attribute);
+
+
+        for (FeatureProcess feature : getFeatureList()) {
+            attribute = new Attribute(feature.getName());
+            attibuteMap.put(feature.getName(), attribute);
+            attributeList.add(attribute);
+        }
+    }
+
+    private void startTraining() {
+        // build feature Array and Map
+        initAttributes();
+
+        InferenceModelProcessHandler processHandler = null;
+        // training with test of classifier
+        fireStartEvent(inferenceMode);
+        processHandler = getProcessHandlerInstance(inferenceMode);
+        processHandler.start();
+        fireFinishedEvent(inferenceMode);
+
+        // cross validation of classifier
+        fireStartEvent(inferenceMode);
+        processHandler = getProcessHandlerInstance(inferenceMode);
+        processHandler.start();
+        fireFinishedEvent(inferenceMode);
+    }
+
+    private void startInference() {
+        InferenceModelProcessHandler processHandler = null;
+        // third phase inference
+        fireStartEvent(InferenceMode.INFERENCE_MODE);
+        processHandler = getProcessHandlerInstance(InferenceMode.INFERENCE_MODE);
+        processHandler.start();
+        fireFinishedEvent(InferenceMode.INFERENCE_MODE);
     }
 
     public InferenceModelProcessHandler getProcessHandlerInstance(InferenceMode inferenceMode1) {

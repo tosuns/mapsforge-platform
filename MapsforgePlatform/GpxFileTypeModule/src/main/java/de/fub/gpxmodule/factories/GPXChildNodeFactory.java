@@ -6,10 +6,11 @@ package de.fub.gpxmodule.factories;
 
 import de.fub.gpxmodule.nodes.RteNode;
 import de.fub.gpxmodule.nodes.TrkNode;
-import de.fub.gpxmodule.xml.Gpx;
-import de.fub.gpxmodule.xml.Rte;
-import de.fub.gpxmodule.xml.Trk;
-import de.fub.gpxmodule.xml.Wpt;
+import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.gpx.Gpx.Rte;
+import de.fub.gpxmodule.xml.gpx.Gpx.Trk;
+import de.fub.gpxmodule.xml.gpx.Gpx.Wpt;
+
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.BeanNode;
@@ -40,8 +41,10 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
                 try {
                     list.add(
                             new TrkNode(
-                            trk,
-                            ((trk.getTrkseg() == null || trk.getTrkseg().isEmpty()) ? Children.LEAF : Children.create(new TrackSegmentNodeFactory(trk.getTrkseg()), true)),
+                            trk.getValue(),
+                            ((trk.getValue().getTrkseg() == null
+                            || trk.getValue().getTrkseg().isEmpty())
+                            ? Children.LEAF : Children.create(new TrackSegmentNodeFactory(trk.getValue().getTrkseg()), true)),
                             Lookup.EMPTY));
                 } catch (IntrospectionException ex) {
                     Exceptions.printStackTrace(ex);
@@ -62,7 +65,12 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
         if (gpx.getRte() != null) {
             for (Rte rte : gpx.getRte()) {
                 try {
-                    list.add(new RteNode(rte, rte.getRtept() == null || rte.getRtept().isEmpty() ? Children.LEAF : Children.create(new RteptNodeFactory(rte.getRtept()), true)));
+                    list.add(new RteNode(
+                            rte,
+                            rte.getValue().getRtept() == null
+                            || rte.getValue().getRtept().isEmpty()
+                            ? Children.LEAF
+                            : Children.create(new RteptNodeFactory(rte.getValue().getRtept()), true)));
                 } catch (IntrospectionException ex) {
                     Exceptions.printStackTrace(ex);
                 }

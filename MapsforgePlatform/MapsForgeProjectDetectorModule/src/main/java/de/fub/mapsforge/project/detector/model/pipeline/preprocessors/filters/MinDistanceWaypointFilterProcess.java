@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -23,10 +24,10 @@ import org.openide.util.lookup.ServiceProvider;
     + "can't satisfy the requirement, then the track will be can't into two segments and "
     + "the filter process continues with the filtering on the second segment until the end of the gps track is reached."})
 @ServiceProvider(service = FilterProcess.class)
-public class MinDistanceWaypointFilterProcess extends FilterProcess<GPSTrack, GPSTrack> {
+public class MinDistanceWaypointFilterProcess extends FilterProcess {
 
     private static final String PROPERTY_DISTANCE = "distance";
-    private GPSTrack gpsTrack;
+    private List<GPSTrack> gpsTrack;
     private final MinDistanceWaypointFilter filter = new MinDistanceWaypointFilter();
 
     public MinDistanceWaypointFilterProcess() {
@@ -64,12 +65,12 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess<GPSTrack, GP
     }
 
     @Override
-    public void setInput(GPSTrack gpsTrack) {
+    public void setInput(List<GPSTrack> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
     @Override
-    public GPSTrack getResult() {
+    public List<GPSTrack> getResult() {
         return gpsTrack;
     }
 

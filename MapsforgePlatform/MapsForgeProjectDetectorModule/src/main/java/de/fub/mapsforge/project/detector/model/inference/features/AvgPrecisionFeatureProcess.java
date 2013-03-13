@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgPrecisionFeature;
 import de.fub.agg2graph.structs.GPSTrack;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -21,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class AvgPrecisionFeatureProcess extends FeatureProcess {
 
     private final AvgPrecisionFeature feature = new AvgPrecisionFeature();
-    private GPSTrack gpsTrack;
+    private List<GPSTrack> gpsTrack;
 
     @Override
     protected void start() {
@@ -39,7 +40,7 @@ public class AvgPrecisionFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(GPSTrack gpsTrack) {
+    public void setInput(List<GPSTrack> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 

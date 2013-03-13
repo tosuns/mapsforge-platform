@@ -40,6 +40,14 @@ public class Property extends Descriptor {
         this.value = value;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Property{" + "javaType=" + getJavaType() + ", name=" + getName() + ", description=" + getDescription() + ", value=" + value + '}';

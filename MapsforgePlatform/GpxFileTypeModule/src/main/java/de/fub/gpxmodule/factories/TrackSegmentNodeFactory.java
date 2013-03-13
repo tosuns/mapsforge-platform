@@ -5,7 +5,7 @@
 package de.fub.gpxmodule.factories;
 
 import de.fub.gpxmodule.nodes.TrkSegNode;
-import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.gpx.Trkseg;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
@@ -33,11 +33,10 @@ public class TrackSegmentNodeFactory extends ChildFactory<Trkseg> {
     }
 
     @Override
-    protected Node createNodeForKey(Trkseg t) {
-
+    protected Node createNodeForKey(Trkseg trkseg) {
         Node node = null;
         try {
-            node = new TrkSegNode(t, t.getTrkpt() == null || t.getTrkpt().isEmpty() ? Children.LEAF : Children.create(new TrkpointNodeFactory(t.getTrkpt()), true));
+            node = new TrkSegNode(trkseg, trkseg.getTrkpt() == null || trkseg.getTrkpt().isEmpty() ? Children.LEAF : Children.create(new TrkpointNodeFactory(trkseg.getTrkpt()), true));
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }

@@ -29,9 +29,6 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -276,7 +273,7 @@ public class Detector extends ModelSynchronizer {
      */
     public List<StatisticProvider> getStatistics() {
         List<StatisticProvider> statisticProviders = new ArrayList<StatisticProvider>();
-        for (FilterProcess<?, ?> process : getPreProcessorPipeline().getProcesses()) {
+        for (FilterProcess process : getPreProcessorPipeline().getProcesses()) {
             if (process instanceof StatisticProvider) {
                 statisticProviders.add(((StatisticProvider) process));
             }

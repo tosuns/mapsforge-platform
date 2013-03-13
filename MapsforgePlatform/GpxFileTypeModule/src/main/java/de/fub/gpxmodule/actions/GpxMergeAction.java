@@ -6,7 +6,7 @@ package de.fub.gpxmodule.actions;
 
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.actions.ui.MergeForm;
-import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -129,7 +129,6 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
                 gpx.getTrk().addAll(toMergeGpx.getTrk());
                 gpx.getRte().addAll(toMergeGpx.getRte());
                 gpx.getWpt().addAll(toMergeGpx.getWpt());
-                gpx.getAny().addAll(toMergeGpx.getAny());
 
                 handle.progress(++workunit);
             }

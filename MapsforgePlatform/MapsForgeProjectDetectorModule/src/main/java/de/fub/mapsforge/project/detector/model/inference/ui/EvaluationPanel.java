@@ -4,10 +4,26 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
+import de.fub.mapsforge.project.detector.model.inference.EvaluationDetailPanel;
+import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
+import java.util.List;
 import javax.swing.JLabel;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.OutlineView;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.nodes.PropertySupport;
+import org.openide.nodes.Sheet;
 import org.openide.util.NbBundle;
+import weka.classifiers.Evaluation;
+import weka.core.Instances;
 
 /**
  *
@@ -18,8 +34,11 @@ import org.openide.util.NbBundle;
 })
 public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManager.Provider {
 
+    private static final String NUMBER_PATTERN = "{0, number, 000.00}";
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
+    private Evaluation evaluation;
+    private InferenceModelProcessHandler processHandler;
 
     /**
      * Creates new form EvaluationPanel
@@ -27,6 +46,11 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     public EvaluationPanel() {
         initComponents();
         outlineView.getOutline().setRootVisible(false);
+    }
+
+    public EvaluationPanel(InferenceModelProcessHandler processHandler) {
+        this();
+        this.processHandler = processHandler;
     }
 
     public PrecisionRecallBarChartPanel getBarChartPanel() {
@@ -147,6 +171,11 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         infoButton.setMaximumSize(new java.awt.Dimension(24, 30));
         infoButton.setPreferredSize(new java.awt.Dimension(32, 21));
         infoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        infoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                infoButtonActionPerformed(evt);
+            }
+        });
         toolBar.add(infoButton);
 
         jPanel5.add(toolBar, java.awt.BorderLayout.CENTER);
@@ -192,6 +221,14 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         add(jPanel1, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
+        // TODO add your handling code here:
+        if (evaluation != null) {
+            DialogDescriptor descriptor = new DialogDescriptor(new EvaluationDetailPanel(evaluation), "Detail Evaluation Statistics");
+            DialogDisplayer.getDefault().createDialog(descriptor).setVisible(true);
+        }
+    }//GEN-LAST:event_infoButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel barChartPanel;
     private de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart classificationBarChart1;
@@ -216,5 +253,96 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
+    }
+
+    public void updatePanel(Evaluation evaluation) {
+        DefaultCategoryDataset dataset = getBarChartPanel().getDataset();
+        dataset.clear();
+
+        this.evaluation = evaluation;
+        double correct = evaluation.pctCorrect();
+        double incorrect = evaluation.pctIncorrect();
+
+        getCorrectClassifiedInstances().setText(MessageFormat.format(NUMBER_PATTERN, correct));
+        getIncorrectClassifiedInstances().setText(MessageFormat.format(NUMBER_PATTERN, incorrect));
+
+        int numClasses = evaluation.getHeader().numClasses();
+        for (int classIndex = 0; classIndex < numClasses; classIndex++) {
+            double precision = evaluation.precision(classIndex);
+            double recall = evaluation.recall(classIndex);
+            dataset.addValue(precision, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Precision_Text"), evaluation.getHeader().classAttribute().value(classIndex));
+            dataset.addValue(recall, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Recall_Text"), evaluation.getHeader().classAttribute().value(classIndex));
+        }
+
+        getExplorerManager().setRootContext(new AbstractNode(Children.create(new EvaluationNodeFactory(evaluation), true)));
+    }
+
+    private static class EvaluationNodeFactory extends ChildFactory<SimpleEvaluationNode> {
+
+        private final Evaluation evaluation;
+
+        public EvaluationNodeFactory(Evaluation evaluation) {
+            this.evaluation = evaluation;
+        }
+
+        @Override
+        protected boolean createKeys(List<SimpleEvaluationNode> toPopulate) {
+            Instances header = evaluation.getHeader();
+            int numClasses = header.numClasses();
+            for (int index = 0; index < numClasses; index++) {
+                toPopulate.add(new SimpleEvaluationNode(evaluation, index));
+            }
+
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(SimpleEvaluationNode node) {
+            return node;
+        }
+    }
+
+    private static class SimpleEvaluationNode extends AbstractNode implements Comparable<SimpleEvaluationNode> {
+
+        private final Evaluation evaluation;
+        private final int classIndex;
+
+        public SimpleEvaluationNode(Evaluation evaluation, int classIndex) {
+            super(Children.LEAF);
+            this.evaluation = evaluation;
+            this.classIndex = classIndex;
+            setDisplayName(evaluation.getHeader().classAttribute().value(classIndex));
+        }
+
+        @Override
+        protected Sheet createSheet() {
+            Sheet sheet = Sheet.createDefault();
+            Sheet.Set set = Sheet.createPropertiesSet();
+            sheet.put(set);
+
+            Property<?> property = new PropertySupport.ReadOnly<Double>("precision", Double.class, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Precision_Text"), "The precision value that this classifier obtained for the given label.") {
+                @Override
+                public Double getValue() throws IllegalAccessException, InvocationTargetException {
+                    return evaluation.precision(classIndex);
+                }
+            };
+            set.put(property);
+
+
+            property = new PropertySupport.ReadOnly<Double>("recall", Double.class, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Recall_Text"), "The recall value that this classifier obtained for the given label.") {
+                @Override
+                public Double getValue() throws IllegalAccessException, InvocationTargetException {
+                    return evaluation.recall(classIndex);
+                }
+            };
+            set.put(property);
+
+            return sheet;
+        }
+
+        @Override
+        public int compareTo(SimpleEvaluationNode evaluationNode) {
+            return getDisplayName().compareToIgnoreCase(evaluationNode.getDisplayName());
+        }
     }
 }

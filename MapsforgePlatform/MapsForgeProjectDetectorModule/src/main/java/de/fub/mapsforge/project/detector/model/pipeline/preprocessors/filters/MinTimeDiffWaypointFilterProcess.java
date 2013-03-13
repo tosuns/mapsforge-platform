@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -28,10 +29,10 @@ import org.openide.util.lookup.ServiceProvider;
     + "gps track is reached."
 })
 @ServiceProvider(service = FilterProcess.class)
-public class MinTimeDiffWaypointFilterProcess extends FilterProcess<GPSTrack, GPSTrack> {
+public class MinTimeDiffWaypointFilterProcess extends FilterProcess {
 
     private static final String PROPERTY_TIME_DIFF = "timeDiff";
-    private GPSTrack gpsTrack = null;
+    private List<GPSTrack> gpsTrack = null;
     private MinTimeDiffWaypointFilter filter = new MinTimeDiffWaypointFilter();
 
     public MinTimeDiffWaypointFilterProcess() {
@@ -68,12 +69,12 @@ public class MinTimeDiffWaypointFilterProcess extends FilterProcess<GPSTrack, GP
     }
 
     @Override
-    public void setInput(GPSTrack gpsTrack) {
+    public void setInput(List<GPSTrack> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
     @Override
-    public GPSTrack getResult() {
+    public List<GPSTrack> getResult() {
         return this.gpsTrack;
     }
 

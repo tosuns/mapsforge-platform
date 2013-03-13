@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.MIMEResolver;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -22,7 +26,15 @@ public class IdentityConverter implements DataConverter {
     @Override
     public boolean isFileTypeSupported(FileObject fileObject) {
         boolean result = false;
+
         if (fileObject != null) {
+            try {
+                DataObject dataObject = DataObject.find(fileObject);
+            } catch (DataObjectNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+
             if ("text/gpx+xml".equals(fileObject.getMIMEType())) {
                 result = true;
             } else {

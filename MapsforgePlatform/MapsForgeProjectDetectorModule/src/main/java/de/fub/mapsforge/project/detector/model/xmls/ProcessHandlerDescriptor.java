@@ -8,6 +8,7 @@ import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -20,6 +21,8 @@ public class ProcessHandlerDescriptor extends Descriptor {
 
     @XmlAttribute(name = "inferenceMode")
     private InferenceMode inferenceMode;
+    @XmlElement(name = "properties")
+    private Properties properties = new Properties();
 
     public ProcessHandlerDescriptor() {
     }
@@ -35,6 +38,10 @@ public class ProcessHandlerDescriptor extends Descriptor {
 
     public void setInferenceMode(InferenceMode inferenceMode) {
         this.inferenceMode = inferenceMode;
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 
     @Override

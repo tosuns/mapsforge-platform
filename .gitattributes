@@ -180,12 +180,6 @@ MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/LayerPanel.java -
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/LayerStackPanel.form -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/LayerStackPanel.java -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/MapViewListener.java -text
-MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/CleanAction.java -text
-MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/DelegateActionNode.java -text
-MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/LoadAction.java -text
-MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/NodeAction.java -text
-MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/OSMExportAction.java -text
-MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/RoadGenAction.java -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/agg/panel/popup/AdjustThickness.java -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/agg/panel/popup/DisplayLayerLabelsAction.java -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/actions/agg/panel/popup/RepaintAction.java -text
@@ -238,6 +232,7 @@ MapsforgePlatform/GpxFileTypeModule/src/main/java/de/fub/gpxmodule/package-info.
 MapsforgePlatform/GpxFileTypeModule/src/main/java/de/fub/gpxmodule/service/GPXProvider.java -text
 MapsforgePlatform/GpxFileTypeModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/Bundle.properties -text
+MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/GPX11Template.gpx -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/GPXTemplate.gpx -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/actions/ui/Bundle.properties -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/gpx.png -text
@@ -247,6 +242,7 @@ MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/icons/gp
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/icons/gpxmerge32.png -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx.xsd -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx11.xsd -text
+MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xslt/gpx10to11Transformer.xsl -text
 MapsforgePlatform/JFreeChartLib/pom.xml -text
 MapsforgePlatform/JFreeChartLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/JFreeChartLib/src/main/resources/de/fub/mapsforge/jfreechartlib/Bundle.properties -text
@@ -461,6 +457,9 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/Detector.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/DetectorProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/AbstractInferenceModel.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/EvaluationBean.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/EvaluationDetailPanel.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/EvaluationDetailPanel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceMode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceModelInputDataSet.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceModelListener.java -text

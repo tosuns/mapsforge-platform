@@ -18,7 +18,7 @@ import org.openide.nodes.Node;
  *
  * @author Serdar
  */
-public class PreProcessorNodeFactory extends ChildFactory<FilterProcess<?, ?>> implements ChangeListener {
+public class PreProcessorNodeFactory extends ChildFactory<FilterProcess> implements ChangeListener {
 
     private final Detector detector;
     private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
@@ -29,13 +29,13 @@ public class PreProcessorNodeFactory extends ChildFactory<FilterProcess<?, ?>> i
     }
 
     @Override
-    protected boolean createKeys(List<FilterProcess<?, ?>> toPopulate) {
+    protected boolean createKeys(List<FilterProcess> toPopulate) {
         toPopulate.addAll(detector.getPreProcessorPipeline().getProcesses());
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(FilterProcess<?, ?> filter) {
+    protected Node createNodeForKey(FilterProcess filter) {
         return new FilterNode(filter.getNodeDelegate());
     }
 

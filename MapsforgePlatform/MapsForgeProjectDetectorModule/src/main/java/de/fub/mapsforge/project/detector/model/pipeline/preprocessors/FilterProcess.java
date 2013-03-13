@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
+import de.fub.agg2graph.structs.GPSTrack;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.utilsmodule.icons.IconRegister;
@@ -14,6 +15,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import javax.swing.JComponent;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -27,7 +29,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public abstract class FilterProcess<I, O> extends AbstractDetectorProcess<I, O> implements Cancellable {
+public abstract class FilterProcess extends AbstractDetectorProcess<List<GPSTrack>, List<GPSTrack>> implements Cancellable {
 
     private static Image defaultImage;
 
@@ -71,9 +73,9 @@ public abstract class FilterProcess<I, O> extends AbstractDetectorProcess<I, O> 
 
     private static class FilterProcessNode extends AbstractNode implements PropertyChangeListener {
 
-        private final FilterProcess<?, ?> filterProcess;
+        private final FilterProcess filterProcess;
 
-        public FilterProcessNode(FilterProcess<?, ?> filterProcess) {
+        public FilterProcessNode(FilterProcess filterProcess) {
             super(Children.LEAF, Lookups.fixed(filterProcess));
             this.filterProcess = filterProcess;
             this.filterProcess.addPropertyChangeListener(WeakListeners.propertyChange(FilterProcessNode.this, this.filterProcess));

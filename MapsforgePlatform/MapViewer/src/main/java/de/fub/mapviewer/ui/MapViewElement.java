@@ -6,10 +6,10 @@ package de.fub.mapviewer.ui;
 
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.service.GPXProvider;
-import de.fub.gpxmodule.xml.Gpx;
-import de.fub.gpxmodule.xml.Trk;
-import de.fub.gpxmodule.xml.Trkseg;
-import de.fub.gpxmodule.xml.Trkseg.Trkpt;
+import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.gpx.Gpx.Trk;
+import de.fub.gpxmodule.xml.gpx.Trkseg;
+import de.fub.gpxmodule.xml.gpx.Wpt;
 import java.awt.Color;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -69,9 +69,13 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
             if (gpx != null) {
 
                 for (Trk trk : gpx.getTrk()) {
-                    for (Trkseg trkseg : trk.getTrkseg()) {
-                        for (Trkpt trkpt : trkseg.getTrkpt()) {
-                            abstractMapViewer1.addMapMarker(new MapMarkerDot(Color.blue, trkpt.getLat(), trkpt.getLon()));
+                    for (Trkseg trkseg : trk.getValue().getTrkseg()) {
+                        for (Wpt trkpt : trkseg.getTrkpt()) {
+                            abstractMapViewer1.addMapMarker(
+                                    new MapMarkerDot(
+                                    Color.blue,
+                                    trkpt.getLat().getValue().doubleValue(),
+                                    trkpt.getLon().getValue().doubleValue()));
                         }
                     }
                 }

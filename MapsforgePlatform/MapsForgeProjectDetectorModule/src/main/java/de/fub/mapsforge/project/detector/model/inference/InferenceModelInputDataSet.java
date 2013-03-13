@@ -4,12 +4,12 @@
  */
 package de.fub.mapsforge.project.detector.model.inference;
 
+import de.fub.agg2graph.structs.GPSTrack;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -18,30 +18,30 @@ import org.openide.filesystems.FileObject;
 public class InferenceModelInputDataSet {
 
     // map for the trainings dataset. the key ist the name of the transport mode and the value is a list of gpx files
-    private final HashMap<String, HashSet<FileObject>> trainingsSet = new HashMap<String, HashSet<FileObject>>();
+    private final HashMap<String, HashSet<GPSTrack>> trainingsSet = new HashMap<String, HashSet<GPSTrack>>();
     // set of gpx files
-    private final HashSet<FileObject> inferenceSet = new HashSet<FileObject>();
+    private final HashSet<GPSTrack> inferenceSet = new HashSet<GPSTrack>();
 
     public InferenceModelInputDataSet() {
     }
 
-    public InferenceModelInputDataSet(Map<String, HashSet<FileObject>> trainingsSet, Set<FileObject> inferenceSet) {
+    public InferenceModelInputDataSet(Map<String, HashSet<GPSTrack>> trainingsSet, Set<GPSTrack> inferenceSet) {
         this.trainingsSet.putAll(trainingsSet);
         this.inferenceSet.addAll(inferenceSet);
     }
 
-    private HashMap<String, HashSet<FileObject>> getTrainingsSet(String transportModeName) {
+    private HashMap<String, HashSet<GPSTrack>> getTrainingsSet(String transportModeName) {
         if (!trainingsSet.containsKey(transportModeName)) {
-            trainingsSet.put(transportModeName, new HashSet<FileObject>());
+            trainingsSet.put(transportModeName, new HashSet<GPSTrack>());
         }
         return trainingsSet;
     }
 
-    public void putTrainingData(String transportModeName, FileObject gpxFile) {
+    public void putTrainingData(String transportModeName, GPSTrack gpxFile) {
         getTrainingsSet(transportModeName).get(transportModeName).add(gpxFile);
     }
 
-    public void putTrainingsData(String transportModeName, Collection<FileObject> gpxFiles) {
+    public void putTrainingsData(String transportModeName, Collection<GPSTrack> gpxFiles) {
         getTrainingsSet(transportModeName).get(transportModeName).addAll(gpxFiles);
     }
 
@@ -53,11 +53,11 @@ public class InferenceModelInputDataSet {
         trainingsSet.clear();
     }
 
-    public void putInferenceData(FileObject gpxFile) {
+    public void putInferenceData(GPSTrack gpxFile) {
         inferenceSet.add(gpxFile);
     }
 
-    public void putInferenceData(Collection<FileObject> gpxfiles) {
+    public void putInferenceData(Collection<GPSTrack> gpxfiles) {
         inferenceSet.addAll(gpxfiles);
     }
 
@@ -65,11 +65,11 @@ public class InferenceModelInputDataSet {
         inferenceSet.clear();
     }
 
-    public HashMap<String, HashSet<FileObject>> getTrainingsSet() {
+    public HashMap<String, HashSet<GPSTrack>> getTrainingsSet() {
         return trainingsSet;
     }
 
-    public HashSet<FileObject> getInferenceSet() {
+    public HashSet<GPSTrack> getInferenceSet() {
         return inferenceSet;
     }
 }

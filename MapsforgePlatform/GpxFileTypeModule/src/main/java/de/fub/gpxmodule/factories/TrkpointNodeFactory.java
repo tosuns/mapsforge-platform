@@ -5,7 +5,7 @@
 package de.fub.gpxmodule.factories;
 
 import de.fub.gpxmodule.nodes.TrkPointNode;
-import de.fub.gpxmodule.xml.Trkseg.Trkpt;
+import de.fub.gpxmodule.xml.gpx.Wpt;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
@@ -16,23 +16,23 @@ import org.openide.util.Exceptions;
  *
  * @author Serdar
  */
-public class TrkpointNodeFactory extends ChildFactory<Trkpt> {
+public class TrkpointNodeFactory extends ChildFactory<Wpt> {
 
-    private final List<Trkpt> trkptList;
+    private final List<Wpt> trkptList;
 
-    public TrkpointNodeFactory(List<Trkpt> list) {
+    public TrkpointNodeFactory(List<Wpt> list) {
         assert list != null;
         this.trkptList = list;
     }
 
     @Override
-    protected boolean createKeys(List<Trkpt> list) {
+    protected boolean createKeys(List<Wpt> list) {
         list.addAll(this.trkptList);
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(Trkpt t) {
+    protected Node createNodeForKey(Wpt t) {
         Node node = null;
         try {
             node = new TrkPointNode(t);

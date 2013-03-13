@@ -4,8 +4,7 @@
  */
 package de.fub.gpxmodule.nodes;
 
-
-import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.gpx.Trkseg;
 import java.beans.IntrospectionException;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;

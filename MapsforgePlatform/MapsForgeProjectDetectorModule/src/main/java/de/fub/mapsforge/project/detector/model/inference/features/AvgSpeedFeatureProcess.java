@@ -9,6 +9,7 @@ import de.fub.agg2graph.structs.GPSTrack;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -23,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = FeatureProcess.class)
 public class AvgSpeedFeatureProcess extends FeatureProcess {
 
-    private GPSTrack gpsTrack;
+    private List<GPSTrack> gpsTrack;
     private final AvgSpeedFeature feature = new AvgSpeedFeature();
 
     public AvgSpeedFeatureProcess() {
@@ -61,7 +62,7 @@ public class AvgSpeedFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(GPSTrack gpsTrack) {
+    public void setInput(List<GPSTrack> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
