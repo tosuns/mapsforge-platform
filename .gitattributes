@@ -204,6 +204,7 @@ MapsforgePlatform/Agg2GraphUI/src/main/nbm/manifest.mf -text
 MapsforgePlatform/Agg2GraphUI/src/main/resources/de/fub/agg2graphui/Bundle.properties -text
 MapsforgePlatform/ApacheBatikLib/pom.xml -text
 MapsforgePlatform/ApacheBatikLib/src/main/nbm/manifest.mf -text
+MapsforgePlatform/ApacheBatikLib/src/main/resources/de/fub/mapsforge/apache/batiklib/Bundle.properties -text
 MapsforgePlatform/CacheModule/pom.xml -text
 MapsforgePlatform/CacheModule/src/main/java/de/fub/cachemodule/CacheManager.java -text
 MapsforgePlatform/CacheModule/src/main/java/de/fub/cachemodule/cache/Cache.java -text
