@@ -203,6 +203,7 @@ MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/layers/RoadNetwor
 MapsforgePlatform/Agg2GraphUI/src/main/nbm/manifest.mf -text
 MapsforgePlatform/Agg2GraphUI/src/main/resources/de/fub/agg2graphui/Bundle.properties -text
 MapsforgePlatform/ApacheBatikLib/pom.xml -text
+MapsforgePlatform/ApacheBatikLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/CacheModule/pom.xml -text
 MapsforgePlatform/CacheModule/src/main/java/de/fub/cachemodule/CacheManager.java -text
 MapsforgePlatform/CacheModule/src/main/java/de/fub/cachemodule/cache/Cache.java -text
@@ -269,6 +270,7 @@ MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx.
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx11.xsd -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xslt/gpx10to11Transformer.xsl -text
 MapsforgePlatform/ITextLib/pom.xml -text
+MapsforgePlatform/ITextLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/JFreeChartLib/pom.xml -text
 MapsforgePlatform/JFreeChartLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/JFreeChartLib/src/main/resources/de/fub/mapsforge/jfreechartlib/Bundle.properties -text
@@ -318,6 +320,7 @@ MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wiza
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/xml/mapsforge.xml -text
 MapsforgePlatform/MapForgeProject/src/test/java/de/fub/mapforgeproject/xml/MapsForgeXmlTest.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/pom.xml -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/Bundle.properties -text
 MapsforgePlatform/MapViewer/pom.xml -text
 MapsforgePlatform/MapViewer/src/main/java/de/fub/mapviewer/shapes/OsmRectangle.java -text
