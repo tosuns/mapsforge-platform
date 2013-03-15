@@ -271,6 +271,7 @@ MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx1
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xslt/gpx10to11Transformer.xsl -text
 MapsforgePlatform/ITextLib/pom.xml -text
 MapsforgePlatform/ITextLib/src/main/nbm/manifest.mf -text
+MapsforgePlatform/ITextLib/src/main/resources/de/fub/mapsforge/itextlib/Bundle.properties -text
 MapsforgePlatform/JFreeChartLib/pom.xml -text
 MapsforgePlatform/JFreeChartLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/JFreeChartLib/src/main/resources/de/fub/mapsforge/jfreechartlib/Bundle.properties -text
