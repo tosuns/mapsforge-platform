@@ -4,13 +4,12 @@
  */
 package de.fub.mapsforge.project.detector.model.converter;
 
-import de.fub.agg2graph.input.GPXReader;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.GPXDataObject;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
@@ -45,17 +44,27 @@ public class IdentityConverter implements DataConverter {
     }
 
     @Override
-    public synchronized List<GPSTrack> convert(FileObject fileObject) throws DataConverterException {
-        List<GPSTrack> gpxtrack = new ArrayList<GPSTrack>();
-
+    public synchronized List<Gpx> convert(FileObject fileObject) throws DataConverterException {
+        List<Gpx> gpxList = new ArrayList<Gpx>();
+        Gpx gpx = null;
         if (fileObject != null) {
-            gpxtrack = GPXReader.getTracks(FileUtil.toFile(fileObject));
-            if (gpxtrack == null) {
-                throw new DataConverterException("Failed to convert specified file: " + fileObject.getPath());
+            try {
+                DataObject dataObject = DataObject.find(fileObject);
+                if (dataObject instanceof GPXDataObject) {
+                    gpx = ((GPXDataObject) dataObject).getGpx();
+
+                }
+                if (gpx == null) {
+                    throw new DataConverterException("Failed to convert specified file: " + fileObject.getPath());
+                } else {
+                    gpxList = Arrays.asList(gpx);
+                }
+            } catch (DataObjectNotFoundException ex) {
+                throw new DataConverterException("Couldn't convert file to gpx because !");
             }
         } else {
-            throw new DataConverterException("Couldn't convert file because file == null!");
+            throw new DataConverterException("Couldn't convert file gpx because file == null!");
         }
-        return gpxtrack;
+        return gpxList;
     }
 }

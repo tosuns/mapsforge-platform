@@ -23,8 +23,8 @@ public class TrkPointNode extends BeanNode<Wpt> {
     public TrkPointNode(Wpt trackPoint) throws IntrospectionException {
         super(trackPoint);
         setDisplayName(MessageFormat.format("Track Point: {0}/{1} [{2}]",
-                trackPoint.getLat().getValue().doubleValue(),
-                trackPoint.getLon().getValue().doubleValue(),
+                trackPoint.getLat().doubleValue(),
+                trackPoint.getLon().doubleValue(),
                 trackPoint.getTime() != null
                 ? formatter.format(trackPoint.getTime())
                 : Bundle.CLT_time_not_available()));

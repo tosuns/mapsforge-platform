@@ -13,6 +13,7 @@ import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import static de.fub.mapsforge.project.detector.model.inference.InferenceMode.CROSS_VALIDATION_MODE;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler;
+import de.fub.mapsforge.project.detector.model.inference.ui.DefaultInferenceModelVisualRepresenterComponent;
 import de.fub.mapsforge.project.detector.model.inference.ui.InferenceModelSettingForm;
 import de.fub.mapsforge.project.detector.model.xmls.Features;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
@@ -48,21 +49,24 @@ import weka.core.Attribute;
  */
 public abstract class AbstractInferenceModel extends DetectorProcess<InferenceModelInputDataSet, InferenceModelResultDataSet> {
 
+    private static final JComponent DEFAULT_VISUAL_REPRESENTER = new DefaultInferenceModelVisualRepresenterComponent();
+    public static final String CLASSES_ATTRIBUTE_NAME = "classes";
     public static final String PROP_NAME_FEATURE_LIST = "abstractInferenceMode.featureList";
     public static final String PROP_NAME_INFERENCE_MODE = "abstractInferenceMode.inferenceMode";
     private static final String ICON_NAME = "inferenceModelIcon.png";
     private final Object INFERENCE_MODEL_LISTENER_MUTEX = new Object();
     private final InferenceModelResultDataSet outputDataSet = new InferenceModelResultDataSet();
     private final EnumMap<InferenceMode, Class<? extends InferenceModelProcessHandler>> processHandlerMap = new EnumMap<InferenceMode, Class<? extends InferenceModelProcessHandler>>(InferenceMode.class);
+    private final EnumMap<InferenceMode, InferenceModelProcessHandler> processHandlerInstanceMap = new EnumMap<InferenceMode, InferenceModelProcessHandler>(InferenceMode.class);
     private final HashSet<InferenceModelListener> listenerSet = new HashSet<InferenceModelListener>();
     private final HashSet<FeatureProcess> featureList = new HashSet<FeatureProcess>();
+    private final ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
+    private final Map<String, Attribute> attibuteMap = new HashMap<String, Attribute>();
     protected ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private InferenceModelInputDataSet inputDataSet;
     private InferenceMode inferenceMode = InferenceMode.ALL_MODE;
     private Classifier classifier;
     private InferenceModelDescriptor inferenceModelDescriptor = null;
-    private ArrayList<Attribute> attributeList = new ArrayList<Attribute>();
-    private Map<String, Attribute> attibuteMap = new HashMap<String, Attribute>();
 
     public AbstractInferenceModel() {
         this(null);
@@ -81,8 +85,13 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         reinit();
     }
 
+    /**
+     *
+     */
     private void reinit() {
         if (getInferenceModelDescriptor() != null) {
+            featureList.clear();
+            processHandlerMap.clear();
 
             // get all features description and instanciate the features.
             Features features = getInferenceModelDescriptor().getFeatures();
@@ -110,6 +119,10 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public InferenceModelDescriptor getInferenceModelDescriptor() {
         if (inferenceModelDescriptor == null) {
             if (getDetector() == null) {
@@ -125,6 +138,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         return inferenceModelDescriptor;
     }
 
+    /**
+     *
+     */
     @Override
     protected void start() {
         switch (inferenceMode) {
@@ -146,14 +162,25 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<Attribute> getAttributeList() {
         return attributeList;
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<String, Attribute> getAttributeMap() {
         return attibuteMap;
     }
 
+    /**
+     *
+     */
     private void initAttributes() {
         attributeList.clear();
         attibuteMap.clear();
@@ -161,11 +188,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         // the class label attribute will be the first attribute
         // in the list of attributes.
         // this is more like a convention
-        Attribute attribute = new Attribute("class");
-        for (String transportModeName : inputDataSet.getTrainingsSet().keySet()) {
-            attribute.addStringValue(transportModeName);
-        }
+        Attribute attribute = new Attribute("class", new ArrayList<String>(inputDataSet.getTrainingsSet().keySet()));
         attributeList.add(attribute);
+        attibuteMap.put(CLASSES_ATTRIBUTE_NAME, attribute);
 
 
         for (FeatureProcess feature : getFeatureList()) {
@@ -175,24 +200,30 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     *
+     */
     private void startTraining() {
         // build feature Array and Map
         initAttributes();
 
         InferenceModelProcessHandler processHandler = null;
         // training with test of classifier
-        fireStartEvent(inferenceMode);
-        processHandler = getProcessHandlerInstance(inferenceMode);
+        fireStartEvent(InferenceMode.TRAININGS_MODE);
+        processHandler = getProcessHandlerInstance(InferenceMode.TRAININGS_MODE);
         processHandler.start();
-        fireFinishedEvent(inferenceMode);
+        fireFinishedEvent(InferenceMode.TRAININGS_MODE);
 
         // cross validation of classifier
-        fireStartEvent(inferenceMode);
-        processHandler = getProcessHandlerInstance(inferenceMode);
+        fireStartEvent(CROSS_VALIDATION_MODE);
+        processHandler = getProcessHandlerInstance(CROSS_VALIDATION_MODE);
         processHandler.start();
-        fireFinishedEvent(inferenceMode);
+        fireFinishedEvent(CROSS_VALIDATION_MODE);
     }
 
+    /**
+     *
+     */
     private void startInference() {
         InferenceModelProcessHandler processHandler = null;
         // third phase inference
@@ -202,45 +233,54 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         fireFinishedEvent(InferenceMode.INFERENCE_MODE);
     }
 
-    public InferenceModelProcessHandler getProcessHandlerInstance(InferenceMode inferenceMode1) {
-        InferenceModelProcessHandler processHandler = null;
-        Class<? extends InferenceModelProcessHandler> clazz = processHandlerMap.get(inferenceMode1);
-        if (clazz != null) {
-            try {
-                Constructor<? extends InferenceModelProcessHandler> constructor = clazz.getConstructor(AbstractInferenceModel.class);
-                processHandler = constructor.newInstance(AbstractInferenceModel.this);
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (SecurityException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InstantiationException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalArgumentException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InvocationTargetException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-        // fall back to default process handlers
+    /**
+     *
+     * @param infMode1
+     * @return
+     */
+    public InferenceModelProcessHandler getProcessHandlerInstance(InferenceMode infMode1) {
+        InferenceModelProcessHandler processHandler = processHandlerInstanceMap.get(infMode1);
         if (processHandler == null) {
-            switch (inferenceMode1) {
-                case TRAININGS_MODE:
-                    processHandler = new TrainingsDataProcessHandler(AbstractInferenceModel.this);
-                    break;
-                case CROSS_VALIDATION_MODE:
-                    processHandler = new CrossValidationProcessHandler(AbstractInferenceModel.this);
-                    break;
-                case INFERENCE_MODE:
-                    processHandler = new InferenceDataProcessHandler(AbstractInferenceModel.this);
-                    break;
-                default:
-                    throw new IllegalArgumentException(inferenceMode1 + " not supported!"); // NO18N
+            Class<? extends InferenceModelProcessHandler> clazz = processHandlerMap.get(infMode1);
+            if (clazz != null) {
+                try {
+                    Constructor<? extends InferenceModelProcessHandler> constructor = clazz.getConstructor(AbstractInferenceModel.class);
+                    processHandler = constructor.newInstance(AbstractInferenceModel.this);
+                } catch (NoSuchMethodException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (SecurityException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (InstantiationException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalAccessException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalArgumentException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (InvocationTargetException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+
+            // fall back to default process handlers
+            if (processHandler == null) {
+                switch (infMode1) {
+                    case TRAININGS_MODE:
+                        processHandler = new TrainingsDataProcessHandler(AbstractInferenceModel.this);
+                        break;
+                    case CROSS_VALIDATION_MODE:
+                        processHandler = new CrossValidationProcessHandler(AbstractInferenceModel.this);
+                        break;
+                    case INFERENCE_MODE:
+                        processHandler = new InferenceDataProcessHandler(AbstractInferenceModel.this);
+                        break;
+                    default:
+                        throw new IllegalArgumentException(infMode1 + " not supported!"); // NO18N
+                }
+                processHandlerInstanceMap.put(infMode1, processHandler);
+            } else {
+                processHandlerInstanceMap.put(infMode1, processHandler);
             }
         }
-
         return processHandler;
     }
 
@@ -310,15 +350,27 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         pcs.firePropertyChange(PROP_NAME_INFERENCE_MODE, oldValue, this.inferenceMode);
     }
 
+    /**
+     *
+     * @param inputDataset
+     */
     @Override
     public void setInput(InferenceModelInputDataSet inputDataset) {
         this.inputDataSet = inputDataset;
     }
 
+    /**
+     *
+     * @return
+     */
     public InferenceModelInputDataSet getInput() {
         return inputDataSet;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public InferenceModelResultDataSet getResult() {
         return this.outputDataSet;
@@ -335,16 +387,28 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public JComponent getSettingsView() {
         return new InferenceModelSettingForm(AbstractInferenceModel.this);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     protected Node createNodeDelegate() {
-        return new InferenceModelNode(AbstractInferenceModel.this);
+        return getDetector() == null ? new InferenceModelNode(AbstractInferenceModel.this) : new InferenceModelNode(getDetector());
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     protected Image getDefaultImage() {
         return IconRegister.findRegisteredIcon(ICON_NAME);
@@ -381,14 +445,27 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int featureListSize() {
         return featureList.size();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isfeatureListEmpty() {
         return featureList.isEmpty();
     }
 
+    /**
+     *
+     * @param e
+     * @return
+     */
     public boolean addFeature(FeatureProcess e) {
         boolean result = featureList.add(e);
         if (result) {
@@ -397,6 +474,11 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         return result;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     public boolean removeFeature(FeatureProcess o) {
         boolean result = featureList.remove(o);
         if (result) {
@@ -405,11 +487,19 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         return result;
     }
 
+    /**
+     *
+     */
     public void clearFeatureList() {
         featureList.clear();
         pcs.firePropertyChange(PROP_NAME_FEATURE_LIST, null, featureList);
     }
 
+    /**
+     *
+     * @param c
+     * @return
+     */
     public boolean removeAllFeatures(Collection<?> c) {
         boolean result = featureList.removeAll(c);
         if (result) {
@@ -418,6 +508,11 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         return result;
     }
 
+    /**
+     *
+     * @param c
+     * @return
+     */
     public boolean addAllFeatures(Collection<? extends FeatureProcess> c) {
         boolean result = featureList.addAll(c);
         if (result) {
@@ -426,10 +521,18 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
     public Collection<FeatureProcess> getFeatureList() {
         return Collections.unmodifiableCollection(featureList);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean cancel() {
         return false;
@@ -441,4 +544,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      * @return Classifier - a weka classifier. null not permitted.
      */
     protected abstract Classifier createClassifier();
+
+    public JComponent getVisualRepresenter() {
+        return DEFAULT_VISUAL_REPRESENTER;
+    }
 }

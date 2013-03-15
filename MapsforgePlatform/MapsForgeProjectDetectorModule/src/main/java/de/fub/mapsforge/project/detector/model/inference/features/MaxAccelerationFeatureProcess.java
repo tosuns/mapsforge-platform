@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.MaxAccelerationFeature;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MaxAccelerationFeatureProcess extends FeatureProcess {
 
     private final MaxAccelerationFeature feature = new MaxAccelerationFeature();
-    private List<GPSTrack> gpxTrack;
+    private List<Gpx> gpxTrack;
 
     @Override
     protected void start() {
@@ -40,7 +40,7 @@ public class MaxAccelerationFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> input) {
+    public void setInput(List<Gpx> input) {
         this.gpxTrack = input;
     }
 

@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.ui.controller;
 
-import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.datasource.service.GPXImportService;
 import de.fub.mapsforgeplatform.openstreetmap.service.LocationBoundingBoxService.BoundingBox;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;

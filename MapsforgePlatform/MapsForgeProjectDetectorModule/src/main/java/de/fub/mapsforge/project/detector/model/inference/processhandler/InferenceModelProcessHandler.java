@@ -52,4 +52,28 @@ public abstract class InferenceModelProcessHandler {
             jLabel.setForeground(Color.gray);
         }
     }
+
+    public static class InferenceModelClassifyException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public InferenceModelClassifyException() {
+        }
+
+        public InferenceModelClassifyException(String message) {
+            super(message);
+        }
+
+        public InferenceModelClassifyException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public InferenceModelClassifyException(Throwable cause) {
+            super(cause);
+        }
+
+        public InferenceModelClassifyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+            super(message, cause, enableSuppression, writableStackTrace);
+        }
+    }
 }

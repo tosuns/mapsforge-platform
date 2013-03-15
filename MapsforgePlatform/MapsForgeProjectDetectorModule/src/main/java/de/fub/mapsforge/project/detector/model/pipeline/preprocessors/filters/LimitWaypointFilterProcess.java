@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.filter.LimitWaypointFilter;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -30,7 +30,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class LimitWaypointFilterProcess extends FilterProcess {
 
     private final static String PROPERTY_LIMIT = "limit";
-    private List<GPSTrack> gpsTrack;
+    private List<Gpx> gpsTrack;
     private final LimitWaypointFilter filter = new LimitWaypointFilter();
 
     public LimitWaypointFilterProcess() {
@@ -67,12 +67,12 @@ public class LimitWaypointFilterProcess extends FilterProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> gpsTrack) {
+    public void setInput(List<Gpx> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
     @Override
-    public List<GPSTrack> getResult() {
+    public List<Gpx> getResult() {
         return this.gpsTrack;
     }
 

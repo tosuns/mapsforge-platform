@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.filter.MinDistanceWaypointFilter;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -27,7 +27,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MinDistanceWaypointFilterProcess extends FilterProcess {
 
     private static final String PROPERTY_DISTANCE = "distance";
-    private List<GPSTrack> gpsTrack;
+    private List<Gpx> gpsTrack;
     private final MinDistanceWaypointFilter filter = new MinDistanceWaypointFilter();
 
     public MinDistanceWaypointFilterProcess() {
@@ -65,12 +65,12 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> gpsTrack) {
+    public void setInput(List<Gpx> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
     @Override
-    public List<GPSTrack> getResult() {
+    public List<Gpx> getResult() {
         return gpsTrack;
     }
 

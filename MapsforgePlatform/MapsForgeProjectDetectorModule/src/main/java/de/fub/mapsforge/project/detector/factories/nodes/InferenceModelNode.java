@@ -4,26 +4,141 @@
  */
 package de.fub.mapsforge.project.detector.factories.nodes;
 
-import de.fub.mapforgeproject.api.process.ProcessNode;
+import de.fub.mapforgeproject.api.process.ProcessPipeline;
+import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.utilsmodule.icons.IconRegister;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
  * @author Serdar
  */
-public class InferenceModelNode extends ProcessNode {
+@NbBundle.Messages({
+    "CLT_No_InferenceModel_Name=<No Inference Model>",
+    "CLT_No_InferenceModel_Description=Without an inference model the classifcation process can not be run."
+})
+public class InferenceModelNode extends AbstractNode implements ChangeListener, ProcessPipeline.ProcessListener, PropertyChangeListener {
 
+    private static final String ICON_NAME = "inferenceModelIcon.png";
     public static final String ACTION_PATH = "MapsForge/Detector/inferenceModel/Actions";
-    private Image image = null;
-    private final AbstractInferenceModel inferenceModel;
+    private AbstractInferenceModel inferenceModel;
+    private InstanceContent content = null;
+    private Detector detector;
+    private ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
+    public InferenceModelNode(Detector detector) {
+        this(detector, new InstanceContent());
+    }
+
+    private InferenceModelNode(Detector detector, InstanceContent content) {
+        super(Children.LEAF, new AbstractLookup(content));
+        if (detector != null) {
+            this.content = content;
+            this.detector = detector;
+            modelSynchronizerClient = detector.create(InferenceModelNode.this);
+            updateNode();
+        }
+    }
+
+    /**
+     * Constructor for the stand alone case, when the inference model does not
+     * have a Detector instance as parent.
+     *
+     * @param inferenceModel
+     */
     public InferenceModelNode(AbstractInferenceModel inferenceModel) {
-        super(inferenceModel);
+        this(inferenceModel, new InstanceContent());
+    }
+
+    private InferenceModelNode(AbstractInferenceModel inferenceModel, InstanceContent content) {
+        super(Children.LEAF, new AbstractLookup(content));
+        assert inferenceModel != null;
+        this.content = content;
         this.inferenceModel = inferenceModel;
+        this.content.add(inferenceModel);
+        updateNode();
+    }
+
+    private void updateNode() {
+        if (detector != null) {
+
+            AbstractInferenceModel oldInferenceModel = getLookup().lookup(AbstractInferenceModel.class);
+            if (oldInferenceModel != null) {
+                content.remove(oldInferenceModel);
+                oldInferenceModel.removeProcessListener(InferenceModelNode.this);
+                oldInferenceModel.removePropertyChangeListener(InferenceModelNode.this);
+            }
+            inferenceModel = detector.getInferenceModel();
+            if (inferenceModel != null) {
+                content.add(inferenceModel);
+                setDisplayName(inferenceModel.getName());
+                setShortDescription(inferenceModel.getDescription());
+                inferenceModel.addProcessListener(InferenceModelNode.this);
+                inferenceModel.addPropertyChangeListener(InferenceModelNode.this);
+            }
+        }
+        fireIconChange();
+    }
+
+    @Override
+    public String getDisplayName() {
+        if (inferenceModel != null) {
+            return inferenceModel.getName();
+        }
+        return Bundle.CLT_No_InferenceModel_Name();
+    }
+
+    @Override
+    public String getShortDescription() {
+        if (inferenceModel != null) {
+            return inferenceModel.getDescription();
+        }
+        return Bundle.CLT_No_InferenceModel_Description();
+    }
+
+    @Override
+    public Image getOpenedIcon(int type) {
+        return getIcon(type);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        fireIconChange();
+    }
+
+    @Override
+    public void changed(ProcessPipeline.ProcessEvent event) {
+        fireIconChange();
+    }
+
+    @Override
+    public void started() {
+        fireIconChange();
+    }
+
+    @Override
+    public void canceled() {
+        fireIconChange();
+    }
+
+    @Override
+    public void finished() {
+        fireIconChange();
     }
 
     @Override
@@ -34,9 +149,19 @@ public class InferenceModelNode extends ProcessNode {
 
     @Override
     public Image getIcon(int type) {
-        if (image == null) {
+        Image image = null;
+        if (inferenceModel != null) {
             image = inferenceModel.getIcon();
+        } else {
+            image = IconRegister.findRegisteredIcon(ICON_NAME);
+            image = ImageUtilities.createDisabledImage(image);
+//            image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("errorHintIcon.png"), 0, 0);
         }
         return image != null ? image : super.getIcon(type);
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        updateNode();
     }
 }

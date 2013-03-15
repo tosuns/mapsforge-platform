@@ -17,6 +17,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.openide.util.NbBundle;
@@ -56,6 +57,8 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
         plot.setRangeAxis(0, preciAxis);
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
+        BarRenderer barRenderer = new BarRenderer();
+        plot.setRenderer(barRenderer);
         chartPanel = new ChartPanel(barChart, true);
         chartPanel.setVerticalAxisTrace(false);
         add(chartPanel, BorderLayout.CENTER);

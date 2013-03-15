@@ -11,10 +11,13 @@ import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.ui.actions.SaveAsHtmlAction;
 import de.fub.mapsforge.project.detector.model.inference.ui.actions.SaveAsPdfAction;
 import de.fub.mapsforge.project.detector.model.inference.ui.actions.SaveAsSvgAction;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -37,11 +40,12 @@ import org.openide.windows.TopComponent;
         position = 3000)
 @NbBundle.Messages({
     "LBL_Detector_InferenceModel_VISUAL=Evaluation",})
-public class InferenceModelVisuaElement extends javax.swing.JPanel implements MultiViewElement {
+public class InferenceModelVisuaElement extends javax.swing.JPanel implements MultiViewElement, ChangeListener {
 
     private static final long serialVersionUID = 1L;
     private final DetectorDataObject obj;
     private final JToolBar toolbar = new JToolBar();
+    private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private AbstractInferenceModel inferenceModel;
     private Detector detector;
     private MultiViewElementCallback callback;
@@ -50,16 +54,18 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
      * Creates new form InferenceModelVisuaElement
      */
     public InferenceModelVisuaElement(Lookup lkp) {
-        obj = lkp.lookup(DetectorDataObject.class);
-        assert obj != null;
         initComponents();
         addToolbarActions();
+        obj = lkp.lookup(DetectorDataObject.class);
+        assert obj != null;
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
+        detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
+        modelSynchronizerClient = detector.create(InferenceModelVisuaElement.this);
         init();
     }
 
     private void init() {
-        jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
-        detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
+        contentPanel.removeAll();
         if (detector != null) {
             inferenceModel = detector.getInferenceModel();
             if (inferenceModel != null) {
@@ -168,5 +174,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     @Override
     public CloseOperationState canCloseElement() {
         return CloseOperationState.STATE_OK;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        init();
     }
 }

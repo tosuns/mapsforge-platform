@@ -4,8 +4,13 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
 import de.fub.mapsforge.project.detector.model.inference.ui.EvaluationPanel;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import javax.swing.JComponent;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -30,7 +35,12 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
     @Override
     protected void handle() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public HashSet<Gpx> getInferenceDataSet() {
+        InferenceModelInputDataSet input = getInferenceModel().getInput();
+        HashSet<Gpx> dataset = input.getInferenceSet();
+        return dataset;
     }
 
     @Override

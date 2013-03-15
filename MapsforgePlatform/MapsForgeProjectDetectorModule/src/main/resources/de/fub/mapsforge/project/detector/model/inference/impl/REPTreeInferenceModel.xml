@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.REPTreeInferenceModel"
-                name="REP Tree Inference Model"
-                description="Inference Model which uses a REPTree classifiere that builds a decision/regression tree using information gain/variance and prunes it using reduced-error pruning (with backfitting). Only sorts values for numeric attributes once. Missing values are dealt with by splitting the corresponding instances into pieces (i.e. as in C4.5).">
+<dec:inferencemodel xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+                    javaType="de.fub.mapsforge.project.detector.model.inference.impl.REPTreeInferenceModel"
+                    name="REP Tree Inference Model"
+                    description="Inference Model which uses a REPTree classifiere that builds a decision/regression tree using information gain/variance and prunes it using reduced-error pruning (with backfitting). Only sorts values for numeric attributes once. Missing values are dealt with by splitting the corresponding instances into pieces (i.e. as in C4.5).">
     <features/>
-</inferencemodel>
+    <inferenceModelProcessHandlers>
+        <processHandler inferenceMode="trainingsMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler" name="trainingsProcessHandler">
+            <properties>
+                <property value="0.75" id="trainings.set.ratio" javaType="java.lang.Double" name="Training set size" description="This property indicates the ratio the trainings set will be divides for the actual training and for successive the test."/>
+            </properties>
+        </processHandler>
+        <processHandler inferenceMode="crossvalidationMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler" name="crossvalidationProcessHandler">
+            <properties>
+                <property value="10" id="trainings.set.crossvalidation.fold" javaType="java.lang.Integer" name="Crossvalidation Folds" description="This property indicates the amoung of folds for the crossvalidation evaluation"/>
+            </properties>
+        </processHandler>
+        <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler">
+            <properties/>
+        </processHandler>
+    </inferenceModelProcessHandlers>
+</dec:inferencemodel>

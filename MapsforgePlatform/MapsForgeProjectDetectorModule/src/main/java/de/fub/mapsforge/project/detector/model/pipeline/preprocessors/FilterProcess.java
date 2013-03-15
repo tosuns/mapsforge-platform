@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.utilsmodule.icons.IconRegister;
@@ -29,7 +29,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public abstract class FilterProcess extends AbstractDetectorProcess<List<GPSTrack>, List<GPSTrack>> implements Cancellable {
+public abstract class FilterProcess extends AbstractDetectorProcess<List<Gpx>, List<Gpx>> implements Cancellable {
 
     private static Image defaultImage;
 

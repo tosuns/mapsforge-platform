@@ -30,7 +30,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class SourceNode extends FilterNode {
 
-    private final static String HTML_PATTERN = "<html><font color='gray'><i>{0}</i></font></html>";
+    private final static String HTML_PATTERN = "<html><font color='808080'><i>&lt;{0}&gt;</i></font></html>";
 
     public SourceNode(Source source, Aggregator aggregator) throws DataObjectNotFoundException, URISyntaxException {
         this(new AggregatorSource(aggregator, source));

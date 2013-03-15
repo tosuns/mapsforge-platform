@@ -9,7 +9,7 @@
     <artifactId>OpenstreemapSevice</artifactId>
     <packaging>nbm</packaging>
 
-    <name>OpenstreemapSevice</name>
+    <name>MapsForge Project Openstreemap Sevice Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

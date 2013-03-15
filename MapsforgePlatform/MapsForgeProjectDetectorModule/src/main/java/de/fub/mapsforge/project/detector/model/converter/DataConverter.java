@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.converter;
 
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.List;
 import org.openide.filesystems.FileObject;
 
@@ -34,7 +34,7 @@ public interface DataConverter {
      * @throws
      * de.fub.mapsforge.project.detector.model.converter.DataConverter.DataConverterException
      */
-    public List<GPSTrack> convert(FileObject fileObject) throws DataConverterException;
+    public List<Gpx> convert(FileObject fileObject) throws DataConverterException;
 
     public static class DataConverterException extends Exception {
 

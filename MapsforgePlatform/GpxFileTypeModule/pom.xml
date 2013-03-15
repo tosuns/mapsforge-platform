@@ -12,7 +12,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>Gpx File Type Module</name>
+    <name>MapsForge Project Gpx File Type Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -117,12 +117,18 @@
             <artifactId>GeoFileTypeApi</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>org-openide-explorer</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
 
-            <plugin>
+<!--            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <version>1.5</version>
@@ -150,11 +156,12 @@
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
+
                 </executions>
                 <configuration>
                     <schemaDirectory>${project.basedir}/src/main/resources/de/fub/gpxmodule/xsd</schemaDirectory>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

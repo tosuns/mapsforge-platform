@@ -58,6 +58,7 @@ public class EvaluationDetailPanel extends javax.swing.JPanel implements Explore
 
         propertySheetView1 = new org.openide.explorer.propertysheet.PropertySheetView();
 
+        setPreferredSize(new java.awt.Dimension(500, 600));
         setLayout(new java.awt.BorderLayout());
 
         propertySheetView1.setPreferredSize(new java.awt.Dimension(350, 600));

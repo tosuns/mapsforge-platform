@@ -7,11 +7,11 @@ and open the template in the editor.
 
 <dec:processunit
     xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.LimitWaypointFilterProcess"
+    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.LimitWaypointFilterProcess"
     name="Limit Waypoints Filter"
     description="THis filter is responsible to check the number of gps points that a gps track contains. If the number of gps points exceeds a given threshold, then the track gets seperated into two segments and the filter continous the filtering process with the second segment until it reaches the end of the track.">
     <properties>
         <!-- value in meters -->
-        <property value="2" javaType="java.lang.Integer" name="limit" description="count of gps points."/>
+        <property value="2" id="limit" javaType="java.lang.Integer" name="limit" description="count of gps points."/>
     </properties>
 </dec:processunit>

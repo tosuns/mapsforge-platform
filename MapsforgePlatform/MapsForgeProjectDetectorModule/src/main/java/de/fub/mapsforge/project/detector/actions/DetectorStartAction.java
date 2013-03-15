@@ -6,12 +6,10 @@ package de.fub.mapsforge.project.detector.actions;
 
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import org.openide.awt.ActionID;
@@ -23,7 +21,7 @@ import org.openide.util.actions.Presenter;
 
 @ActionID(
         category = "Detector",
-        id = "de.fub.mapsforge.project.detector.actions.DetecotStartAction")
+        id = "de.fub.mapsforge.project.detector.actions.DetectorStartAction")
 @ActionRegistration(
         lazy = false,
         displayName = "#CTL_DetecotStartAction")
@@ -31,11 +29,11 @@ import org.openide.util.actions.Presenter;
         position = 250,
         separatorAfter = 275)
 @Messages("CTL_DetecotStartAction=Start")
-public final class DetecotStartAction extends AbstractAction implements Presenter.Popup {
+public final class DetectorStartAction extends AbstractAction implements Presenter.Popup {
 
     private static final long serialVersionUID = 1L;
 
-    public DetecotStartAction() {
+    public DetectorStartAction() {
         super(Bundle.CTL_DetecotStartAction());
     }
 
@@ -46,7 +44,7 @@ public final class DetecotStartAction extends AbstractAction implements Presente
 
     @Override
     public JMenuItem getPopupPresenter() {
-        JMenu menu = new JMenu(DetecotStartAction.this);
+        JMenu menu = new JMenu(DetectorStartAction.this);
         Detector detector = Utilities.actionsGlobalContext().lookup(Detector.class);
         if (detector != null) {
 
@@ -57,6 +55,7 @@ public final class DetecotStartAction extends AbstractAction implements Presente
                 item.setEnabled(detector.getDetectorState() != ProcessState.RUNNING);
                 menu.add(item);
             }
+            menu.setEnabled(detector.getInferenceModel() != null);
         } else {
             menu.setEnabled(false);
         }

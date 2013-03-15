@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dec:processunit
-    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema" javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer"
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema" javaType="de.fub.mapsforge.plugins.tasks.MapRenderer"
     name="Map Renderer"
     description="Renders Gps data with the help of an Aggregator.">
     <properties>

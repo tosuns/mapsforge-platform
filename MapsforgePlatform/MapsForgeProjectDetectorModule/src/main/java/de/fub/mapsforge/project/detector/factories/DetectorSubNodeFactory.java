@@ -9,7 +9,7 @@ import de.fub.mapsforge.project.detector.factories.nodes.PostProcessorsNode;
 import de.fub.mapsforge.project.detector.factories.nodes.PreProcessorsNode;
 import de.fub.mapsforge.project.detector.factories.nodes.datasets.DataSetFolderNode;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -32,12 +32,13 @@ public class DetectorSubNodeFactory extends ChildFactory<Node> implements Change
 
     @Override
     protected boolean createKeys(List<Node> toPopulate) {
-        toPopulate.add(new DataSetFolderNode(detector));
-        toPopulate.add(new PreProcessorsNode(detector));
-        if (detector.getInferenceModel() != null) {
-            toPopulate.add(new InferenceModelNode(detector.getInferenceModel()));
+        DetectorDescriptor detectorDescriptor = detector.getDetectorDescriptor();
+        if (detectorDescriptor != null) {
+            toPopulate.add(new DataSetFolderNode(detector));
+            toPopulate.add(new PreProcessorsNode(detector));
+            toPopulate.add(new InferenceModelNode(detector));
+            toPopulate.add(new PostProcessorsNode(detector));
         }
-        toPopulate.add(new PostProcessorsNode(detector));
         return true;
     }
 

@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgTransportationDistanceFeature;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -21,7 +21,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = FeatureProcess.class)
 public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
 
-    private List<GPSTrack> gpxTrack;
+    private List<Gpx> gpxTrack;
     private final AvgTransportationDistanceFeature feature = new AvgTransportationDistanceFeature();
 
     @Override
@@ -39,7 +39,7 @@ public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> gpxTrack) {
+    public void setInput(List<Gpx> gpxTrack) {
         this.gpxTrack = gpxTrack;
     }
 

@@ -288,6 +288,21 @@
             <artifactId>JFreeChartLib</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>de.fub.mapsforge</groupId>
+            <artifactId>MapForgeProjectPlugInsModule</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fub.mapsforge</groupId>
+            <artifactId>ApacheBatikLib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fub.mapsforge</groupId>
+            <artifactId>ITextLib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

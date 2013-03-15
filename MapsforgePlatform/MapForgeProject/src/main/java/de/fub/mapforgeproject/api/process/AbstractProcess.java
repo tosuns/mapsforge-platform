@@ -152,6 +152,11 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
         return section;
     }
 
+    @Override
+    public int compareTo(Process<?, ?> process) {
+        return getName().compareTo(process.getName());
+    }
+
     protected abstract void start();
 
     public abstract Image getIcon();

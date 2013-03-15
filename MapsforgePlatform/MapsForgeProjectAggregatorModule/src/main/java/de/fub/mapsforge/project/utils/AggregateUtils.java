@@ -4,13 +4,18 @@
  */
 package de.fub.mapsforge.project.utils;
 
+import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.gpx.ObjectFactory;
 import de.fub.mapforgeproject.utils.MapsForgeProjectUtils;
 import de.fub.mapsforge.project.aggregator.factories.CategoryNodeFactory;
+import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
+import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Color;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +28,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import javax.xml.bind.JAXBException;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.palette.DragAndDropHandler;
@@ -30,6 +36,8 @@ import org.netbeans.spi.palette.PaletteActions;
 import org.netbeans.spi.palette.PaletteController;
 import org.netbeans.spi.palette.PaletteFactory;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
@@ -55,6 +63,19 @@ public class AggregateUtils {
 
     public static PaletteController getProcessPalette() {
         return palette;
+    }
+
+    public static Aggregator createAggregator(FileObject fileObject) {
+        try {
+            DataObject dataObject = DataObject.find(fileObject);
+            if (dataObject instanceof AggregatorDataObject) {
+                AggregatorDataObject aggregatorDataObject = (AggregatorDataObject) dataObject;
+                return aggregatorDataObject.getNodeDelegate().getLookup().lookup(Aggregator.class);
+            }
+        } catch (DataObjectNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -165,6 +186,14 @@ public class AggregateUtils {
         }
 
         return descriptor;
+    }
+
+    public static void saveGpxToFile(File destFile, Gpx content) throws JAXBException {
+        javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(ObjectFactory.class);
+        javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.marshal(content, destFile);
     }
 
     private static class PaletteDragAndDropHandler extends DragAndDropHandler {

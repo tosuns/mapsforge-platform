@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -30,6 +32,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -39,6 +42,7 @@ import org.openide.util.NbBundle;
 public class DetectorUtils {
 
     private static final Object DETECTOR_FILE_OPERATION_MUTEX = new Object();
+    private static final Logger LOG = Logger.getLogger(DetectorUtils.class.getName());
 
     @SuppressWarnings("unchecked")
     public static <T> T createInstance(Class<T> clazz, String className) {
@@ -52,7 +56,19 @@ public class DetectorUtils {
         } catch (IllegalAccessException ex) {
             Exceptions.printStackTrace(ex);
         } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            Lookup.Result<T> lookupResult = Lookup.getDefault().lookupResult(clazz);
+            for (T task : lookupResult.allInstances()) {
+                if (task.getClass().getName().equals(className)) {
+                    try {
+                        instance = (T) task.getClass().newInstance();
+                        break;
+                    } catch (InstantiationException ex1) {
+                        Exceptions.printStackTrace(ex1);
+                    } catch (IllegalAccessException ex1) {
+                        Exceptions.printStackTrace(ex1);
+                    }
+                }
+            }
         }
         return instance;
     }
@@ -132,19 +148,26 @@ public class DetectorUtils {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (NoSuchMethodException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (SecurityException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (IllegalArgumentException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (InvocationTargetException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         }
 
         return model;
@@ -163,19 +186,26 @@ public class DetectorUtils {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (NoSuchMethodException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (SecurityException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (IllegalArgumentException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         } catch (InvocationTargetException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.FINE, ex.getMessage(), ex);
+//            Exceptions.printStackTrace(ex);
         }
 
         return model;

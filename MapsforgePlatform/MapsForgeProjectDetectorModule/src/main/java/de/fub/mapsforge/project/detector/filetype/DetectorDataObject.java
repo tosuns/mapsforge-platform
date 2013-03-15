@@ -136,7 +136,13 @@ public class DetectorDataObject extends MultiDataObject {
     @Override
     protected Node createNodeDelegate() {
         if (delegateNode == null) {
-            delegateNode = new DetectorNode(new Detector(this));
+            Detector detector = new Detector(this);
+            DetectorDescriptor detectorDescriptor = detector.getDetectorDescriptor();
+            if (detectorDescriptor != null) {
+                delegateNode = new DetectorNode(detector);
+            } else {
+            }
+
         }
         return delegateNode;
     }

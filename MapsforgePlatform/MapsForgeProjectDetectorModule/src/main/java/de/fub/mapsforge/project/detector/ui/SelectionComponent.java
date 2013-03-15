@@ -15,6 +15,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -112,15 +114,18 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        ArrayList<DetectorProcess> newList = new ArrayList<DetectorProcess>();
         if (getToLeftButton().equals(e.getSource())) {
             Node[] selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
             if (selectedNodes.length > 0) {
                 for (Node node : selectedNodes) {
                     DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
                     if (detectorProcess != null) {
-                        allItems.add(detectorProcess);
+
+                        newList.add(detectorProcess);
                     }
                 }
+                allItems.addAll(newList);
                 selectedItems.removeAll(allItems);
             }
         } else if (getToRightButton().equals(e.getSource())) {
@@ -129,9 +134,10 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
                 for (Node node : selectedNodes) {
                     DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
                     if (detectorProcess != null) {
-                        selectedItems.add(detectorProcess);
+                        newList.add(detectorProcess);
                     }
                 }
+                selectedItems.addAll(newList);
                 allItems.removeAll(selectedItems);
             }
         }
@@ -354,6 +360,7 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
         @Override
         protected boolean createKeys(List<DetectorProcess> toPopulate) {
             toPopulate.addAll(list);
+            Collections.sort(toPopulate);
             return true;
         }
 

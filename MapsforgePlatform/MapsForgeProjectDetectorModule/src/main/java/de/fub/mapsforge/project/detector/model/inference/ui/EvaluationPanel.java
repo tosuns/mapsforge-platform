@@ -6,6 +6,11 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.EvaluationDetailPanel;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.List;
@@ -70,7 +75,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     }
 
     public JLabel getIncorrectClassifiedInstances() {
-        return incorrectClassifiedInstances;
+        return jLabel2;
     }
 
     /**
@@ -83,7 +88,6 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        classificationBarChart1 = new de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart();
         barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel();
         outlineView = new org.openide.explorer.view.OutlineView("Transport Mode");
         jPanel3 = new javax.swing.JPanel();
@@ -92,8 +96,8 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         correctClassifiedInstances = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         incorrectClassifiedInstances = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         toolBar = new javax.swing.JToolBar();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -110,12 +114,12 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));
         jPanel2.setOpaque(false);
-        jPanel2.setLayout(new java.awt.GridLayout(1, 3));
-        jPanel2.add(classificationBarChart1);
+        jPanel2.setLayout(new java.awt.GridLayout(1, 2));
         jPanel2.add(barChartPanel);
 
         outlineView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(213, 213, 213)));
         outlineView.setPropertyColumns(new String[] {"precision", "Precision", "recall", "Recall"});
+        outlineView.setWheelScrollingEnabled(false);
         jPanel2.add(outlineView);
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -151,13 +155,13 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         org.openide.awt.Mnemonics.setLocalizedText(correctClassifiedInstances, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.correctClassifiedInstances.text")); // NOI18N
         correctClassifiedInstances.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 8));
 
-        incorrectClassifiedInstances.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(incorrectClassifiedInstances, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.incorrectClassifiedInstances.text")); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.jLabel2.text")); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.jLabel4.text")); // NOI18N
-        jLabel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 8));
+        incorrectClassifiedInstances.setFont(new java.awt.Font("Monospaced", 0, 11)); // NOI18N
+        incorrectClassifiedInstances.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        org.openide.awt.Mnemonics.setLocalizedText(incorrectClassifiedInstances, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.incorrectClassifiedInstances.text")); // NOI18N
+        incorrectClassifiedInstances.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 8));
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
@@ -195,9 +199,9 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(incorrectClassifiedInstances)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
+                .addComponent(incorrectClassifiedInstances)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -209,8 +213,8 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(correctClassifiedInstances, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(incorrectClassifiedInstances, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jSeparator1)
                     .addComponent(jSeparator2))
@@ -231,13 +235,12 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     }//GEN-LAST:event_infoButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel barChartPanel;
-    private de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart classificationBarChart1;
     private javax.swing.JLabel correctClassifiedInstances;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel incorrectClassifiedInstances;
     private javax.swing.JButton infoButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -275,6 +278,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         }
 
         getExplorerManager().setRootContext(new AbstractNode(Children.create(new EvaluationNodeFactory(evaluation), true)));
+        repaint();
     }
 
     private static class EvaluationNodeFactory extends ChildFactory<SimpleEvaluationNode> {
@@ -306,6 +310,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         private final Evaluation evaluation;
         private final int classIndex;
+        private static final Image EMPTY_IMAGE = getEmptyImage();
 
         public SimpleEvaluationNode(Evaluation evaluation, int classIndex) {
             super(Children.LEAF);
@@ -341,8 +346,27 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         }
 
         @Override
+        public Image getIcon(int type) {
+            return EMPTY_IMAGE;
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
+        }
+
+        @Override
         public int compareTo(SimpleEvaluationNode evaluationNode) {
             return getDisplayName().compareToIgnoreCase(evaluationNode.getDisplayName());
+        }
+
+        private static Image getEmptyImage() {
+            BufferedImage bufferedImage = new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics2D g2d = bufferedImage.createGraphics();
+            g2d.setPaint(new Color(255, 255, 255, 0));
+            g2d.fill(new Rectangle(bufferedImage.getWidth(), bufferedImage.getHeight()));
+            g2d.dispose();
+            return bufferedImage;
         }
     }
 }

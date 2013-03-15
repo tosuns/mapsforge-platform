@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.filter.MinTimeDiffWaypointFilter;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MinTimeDiffWaypointFilterProcess extends FilterProcess {
 
     private static final String PROPERTY_TIME_DIFF = "timeDiff";
-    private List<GPSTrack> gpsTrack = null;
+    private List<Gpx> gpsTrack = null;
     private MinTimeDiffWaypointFilter filter = new MinTimeDiffWaypointFilter();
 
     public MinTimeDiffWaypointFilterProcess() {
@@ -69,12 +69,12 @@ public class MinTimeDiffWaypointFilterProcess extends FilterProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> gpsTrack) {
+    public void setInput(List<Gpx> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 
     @Override
-    public List<GPSTrack> getResult() {
+    public List<Gpx> getResult() {
         return this.gpsTrack;
     }
 

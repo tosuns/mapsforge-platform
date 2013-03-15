@@ -10,7 +10,7 @@ import java.awt.datatransfer.DataFlavor;
  *
  * @author Serdar
  */
-public interface Process<I, O> extends Runnable {
+public interface Process<I, O> extends Runnable, Comparable<Process<?, ?>> {
 
     public static final DataFlavor PROCESS_FLAVOR = new DataFlavor(Process.class, "Process");
 

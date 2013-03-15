@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgBearingChangeFeature;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class AvgBearingChangeFeatureProcess extends FeatureProcess {
 
     private final AvgBearingChangeFeature feature = new AvgBearingChangeFeature();
-    private List<GPSTrack> gpsTack;
+    private List<Gpx> gpsTack;
 
     @Override
     protected void start() {
@@ -41,7 +41,7 @@ public class AvgBearingChangeFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> gpsTrack) {
+    public void setInput(List<Gpx> gpsTrack) {
         this.gpsTack = gpsTrack;
     }
 

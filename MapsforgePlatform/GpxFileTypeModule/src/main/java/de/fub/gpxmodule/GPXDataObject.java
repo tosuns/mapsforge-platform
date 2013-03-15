@@ -7,7 +7,7 @@ package de.fub.gpxmodule;
 import de.fub.gpxmodule.nodes.GpxNode;
 import de.fub.gpxmodule.service.GPXProvider;
 import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Gpx.Trk;
+import de.fub.gpxmodule.xml.gpx.Trk;
 import de.fub.gpxmodule.xml.gpx.Trkseg;
 import de.fub.gpxmodule.xml.gpx.Wpt;
 import geofiletypeapi.GeoDataObject;
@@ -244,10 +244,14 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
     @Override
     protected Node createNodeDelegate() {
         Node node = null;
-        try {
-            node = new GpxNode(GPXDataObject.this);
-        } catch (IntrospectionException ex) {
-            Exceptions.printStackTrace(ex);
+        if (getGpx() == null) {
+            node = new ErrorGPXDataNode(this, Children.LEAF);
+        } else {
+            try {
+                node = new GpxNode(GPXDataObject.this);
+            } catch (IntrospectionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         return node != null ? node : new DataNode(this, Children.LEAF);
     }
@@ -278,19 +282,18 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
         Gpx gpxData = getGpx();
         if (gpxData != null) {
             for (Trk track : gpxData.getTrk()) {
-                de.fub.gpxmodule.xml.gpx.Trk trk = track.getValue();
-                for (Trkseg tracksegment : trk.getTrkseg()) {
+                for (Trkseg tracksegment : track.getTrkseg()) {
                     for (Wpt trackPoint : tracksegment.getTrkpt()) {
                         if (boundingBox == null) {
                             boundingBox = new Rectangle2D.Double(
-                                    trackPoint.getLat().getValue().doubleValue(),
-                                    trackPoint.getLon().getValue().doubleValue(),
-                                    trackPoint.getLat().getValue().doubleValue(),
-                                    trackPoint.getLon().getValue().doubleValue());
+                                    trackPoint.getLat().doubleValue(),
+                                    trackPoint.getLon().doubleValue(),
+                                    trackPoint.getLat().doubleValue(),
+                                    trackPoint.getLon().doubleValue());
                         } else {
                             boundingBox.add(
-                                    trackPoint.getLat().getValue().doubleValue(),
-                                    trackPoint.getLon().getValue().doubleValue());
+                                    trackPoint.getLat().doubleValue(),
+                                    trackPoint.getLon().doubleValue());
                         }
                     }
                 }
@@ -321,5 +324,12 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
     public enum GpxVersion {
 
         GPX_1_0, GPX_1_1;
+    }
+
+    private static class ErrorGPXDataNode extends DataNode {
+
+        public ErrorGPXDataNode(DataObject obj, Children ch) {
+            super(obj, ch);
+        }
     }
 }

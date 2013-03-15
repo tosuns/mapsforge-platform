@@ -1,10 +1,13 @@
 MapsforgePlatform/Agg2Graph/target
 MapsforgePlatform/Agg2GraphUI/target
+MapsforgePlatform/ApacheBatikLib/target
 MapsforgePlatform/CacheModule/target
 MapsforgePlatform/GeoFileTypeApi/target
 MapsforgePlatform/GpxFileTypeModule/target
+MapsforgePlatform/ITextLib/target
 MapsforgePlatform/JFreeChartLib/target
 MapsforgePlatform/MapForgeProject/target
+MapsforgePlatform/MapForgeProjectPlugInsModule/target
 MapsforgePlatform/MapViewer/target
 MapsforgePlatform/MapsForgeProjectAggregatorModule/target
 MapsforgePlatform/MapsForgeProjectDataSourceModule/target

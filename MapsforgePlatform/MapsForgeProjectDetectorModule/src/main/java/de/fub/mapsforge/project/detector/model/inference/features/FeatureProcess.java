@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.features;
 
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.utilsmodule.icons.IconRegister;
@@ -24,7 +24,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public abstract class FeatureProcess extends AbstractDetectorProcess<List<GPSTrack>, Double> {
+public abstract class FeatureProcess extends AbstractDetectorProcess<List<Gpx>, Double> {
 
     private static Image defaultImage;
 

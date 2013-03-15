@@ -12,6 +12,7 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
 
 @ActionID(
         category = "Detector",
@@ -30,8 +31,12 @@ public final class StartTrainingAndClusteringAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        // TODO use context
-        detector.getInferenceModel().setInferenceMode(InferenceMode.ALL_MODE);
-        detector.start();
+        RequestProcessor.getDefault().post(new Runnable() {
+            @Override
+            public void run() {
+                detector.getInferenceModel().setInferenceMode(InferenceMode.ALL_MODE);
+                detector.start();
+            }
+        });
     }
 }

@@ -53,7 +53,7 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
 
     @Override
     public String getDisplayName() {
-        if (detector != null) {
+        if (detector != null && detector.getDetectorDescriptor() != null) {
             return detector.getDetectorDescriptor().getName();
         }
         return super.getDisplayName();
@@ -61,7 +61,7 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
 
     @Override
     public String getShortDescription() {
-        if (detector != null) {
+        if (detector != null && detector.getDetectorDescriptor() != null) {
             return detector.getDetectorDescriptor().getDescription();
         }
         return super.getShortDescription();

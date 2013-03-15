@@ -237,6 +237,14 @@
                 <extensions>true</extensions>
                 <configuration>
                     <useOSGiDependencies>true</useOSGiDependencies>
+                    <publicPackages>
+                        <publicPackage>de.fub.mapsforge.project.aggregator.pipeline</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.aggregator.pipeline.processes</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.aggregator.xml</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.aggregator.xml.adapter</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.models</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.utils</publicPackage>
+                    </publicPackages>
                 </configuration>
             </plugin>
 

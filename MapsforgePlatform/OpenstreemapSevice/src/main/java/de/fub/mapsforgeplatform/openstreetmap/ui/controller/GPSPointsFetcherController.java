@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.ui.controller;
 
-import de.fub.gpxmodule.xml.*;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
 import de.fub.mapsforgeplatform.openstreetmap.ui.GPSPointsFetcherTopComponent;
 import java.io.File;
@@ -76,7 +76,7 @@ public class GPSPointsFetcherController {
             if (!busy) {
                 busy = true;
                 view.lockInputFields(busy);
-                RequestProcessor.getDefault().post(new Runnable() {
+                requestProcessor.post(new Runnable() {
                     @Override
                     public void run() {
                         factory.clear();

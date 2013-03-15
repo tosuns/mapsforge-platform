@@ -27,7 +27,7 @@ import org.openide.util.Lookup;
  */
 public class DataSetNode extends AbstractNode {
 
-    private final static String HTML_PATTERN = "<html><font color='gray'><i>{0}</i></font></html>";
+    private final static String HTML_PATTERN = "<html><font color='808080'><i>&lt;{0}&gt;</i></font></html>";
     private final DataSet dataSet;
     private final Detector detector;
     private boolean fileValied = true;

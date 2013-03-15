@@ -48,7 +48,6 @@ public class Detector extends ModelSynchronizer {
     private AbstractInferenceModel inferenceModel;
     private ProcessState detectorState = ProcessState.INACTIVE;
     private ModelSynchronizerClient dataObjectModelSynchronizerClient;
-    private ModelSynchronizerClient sourceEditorModelSynchronizerClient;
     private Profile currentActiveProfile = null;
 
     public Detector(DetectorDataObject dataObject) {
@@ -70,14 +69,6 @@ public class Detector extends ModelSynchronizer {
             }
         });
 
-        // source editor client to update the source editor.
-        sourceEditorModelSynchronizerClient = super.create(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-//                notifyModified();
-            }
-        });
-
         this.dataObject.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -92,6 +83,7 @@ public class Detector extends ModelSynchronizer {
      *
      */
     private void reinit() {
+        setDetectorState(ProcessState.INACTIVE);
         DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
         if (detectorDescriptor != null) {
 
@@ -144,6 +136,8 @@ public class Detector extends ModelSynchronizer {
                     }
                 }
             }
+        } else {
+            setDetectorState(ProcessState.ERROR);
         }
     }
 
@@ -234,14 +228,18 @@ public class Detector extends ModelSynchronizer {
      * @return
      */
     public DetectorDescriptor getDetectorDescriptor() {
+        DetectorDescriptor detectorDescriptor = null;
         try {
-            return dataObject.getDetectorDescriptor();
+            detectorDescriptor = dataObject.getDetectorDescriptor();
+//            getDataObject().getNodeDelegate().setShortDescription(detectorDescriptor.getDescription());
         } catch (JAXBException ex) {
-            Exceptions.printStackTrace(ex);
+            setDetectorState(ProcessState.ERROR);
+//            getDataObject().getNodeDelegate().setShortDescription(ex.getMessage());
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            setDetectorState(ProcessState.ERROR);
+//            getDataObject().getNodeDelegate().setShortDescription(ex.getMessage());
         }
-        return null;
+        return detectorDescriptor;
     }
 
     /**

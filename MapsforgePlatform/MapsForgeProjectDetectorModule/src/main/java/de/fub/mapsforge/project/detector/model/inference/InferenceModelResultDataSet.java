@@ -5,8 +5,11 @@
 package de.fub.mapsforge.project.detector.model.inference;
 
 import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +19,7 @@ import java.util.Set;
  */
 public class InferenceModelResultDataSet {
 
-    private final Map<String, GPSTrack> gpsTrackMap = new HashMap<String, GPSTrack>();
+    private final Map<String, List<Gpx>> gpsTrackMap = new HashMap<String, List<Gpx>>();
 
     public int size() {
         return gpsTrackMap.size();
@@ -30,19 +33,19 @@ public class InferenceModelResultDataSet {
         return gpsTrackMap.containsKey(key);
     }
 
-    public boolean containsValue(GPSTrack value) {
+    public boolean containsValue(List<Gpx> value) {
         return gpsTrackMap.containsValue(value);
     }
 
-    public GPSTrack get(String key) {
+    public List<Gpx> get(String key) {
         return gpsTrackMap.get(key);
     }
 
-    public GPSTrack put(String key, GPSTrack value) {
+    public List<Gpx> put(String key, List<Gpx> value) {
         return gpsTrackMap.put(key, value);
     }
 
-    public GPSTrack remove(String key) {
+    public List<Gpx> remove(String key) {
         return gpsTrackMap.remove(key);
     }
 
@@ -51,14 +54,14 @@ public class InferenceModelResultDataSet {
     }
 
     public Set<String> keySet() {
-        return gpsTrackMap.keySet();
+        return Collections.unmodifiableSet(gpsTrackMap.keySet());
     }
 
-    public Collection<GPSTrack> values() {
-        return gpsTrackMap.values();
+    public Collection<List<Gpx>> values() {
+        return Collections.unmodifiableCollection(gpsTrackMap.values());
     }
 
-    public Set<Map.Entry<String, GPSTrack>> entrySet() {
-        return gpsTrackMap.entrySet();
+    public Set<Map.Entry<String, List<Gpx>>> entrySet() {
+        return Collections.unmodifiableSet(gpsTrackMap.entrySet());
     }
 }

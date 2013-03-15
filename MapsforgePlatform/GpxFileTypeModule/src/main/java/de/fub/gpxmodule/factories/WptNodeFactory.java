@@ -4,7 +4,7 @@
  */
 package de.fub.gpxmodule.factories;
 
-import de.fub.gpxmodule.xml.gpx.RteType.Rtept;
+import de.fub.gpxmodule.xml.gpx.Wpt;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.BeanNode;
@@ -16,26 +16,26 @@ import org.openide.util.Exceptions;
  *
  * @author Serdar
  */
-public class RteptNodeFactory extends ChildFactory<Rtept> {
+public class WptNodeFactory extends ChildFactory<Wpt> {
 
-    private final List<Rtept> rteptList;
+    private final List<Wpt> rteptList;
 
-    public RteptNodeFactory(List<Rtept> list) {
+    public WptNodeFactory(List<Wpt> list) {
         assert list != null;
         this.rteptList = list;
     }
 
     @Override
-    protected boolean createKeys(List<Rtept> list) {
+    protected boolean createKeys(List<Wpt> list) {
         list.addAll(this.rteptList);
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(Rtept t) {
+    protected Node createNodeForKey(Wpt t) {
         Node node = null;
         try {
-            node = new BeanNode<Rtept>(t);
+            node = new BeanNode<Wpt>(t);
         } catch (IntrospectionException ex) {
             Exceptions.printStackTrace(ex);
         }

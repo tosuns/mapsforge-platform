@@ -32,7 +32,7 @@ public class DetectorDescriptorTest {
     public void unmarshallTest() {
         DetectorDescriptor detectorDescriptor = null;
         try {
-            detectorDescriptor = unmarshall(DetectorDescriptor.class, "/de/fub/mapsforge/project/detector/models/xmls/DetectorTestTemplate.xml");
+            detectorDescriptor = unmarshall(DetectorDescriptor.class, "/de/fub/mapsforge/project/detector/model/xmls/DetectorTestTemplate.xml");
         } catch (JAXBException ex) {
             LOG.log(Level.INFO, ex.getMessage(), ex);
             Assert.fail(ex.getMessage());
@@ -81,7 +81,7 @@ public class DetectorDescriptorTest {
 
     @Test
     public void marshallTest() {
-        marshall(DetectorDescriptor.class, "/de/fub/mapsforge/project/detector/models/xmls/DetectorTestTemplate.xml");
+        marshall(DetectorDescriptor.class, "/de/fub/mapsforge/project/detector/model/xmls/DetectorTestTemplate.xml");
     }
 
     @Test
@@ -103,7 +103,7 @@ public class DetectorDescriptorTest {
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinTimeDiffWaypointFilterProcess.xml");
 
         // task
-        marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/MapRenderer.xml");
+//        marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/MapRenderer.xml");
     }
 
     public void marshallInferenceModelTest() {

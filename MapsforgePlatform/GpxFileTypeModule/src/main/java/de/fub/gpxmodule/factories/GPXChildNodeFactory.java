@@ -7,12 +7,13 @@ package de.fub.gpxmodule.factories;
 import de.fub.gpxmodule.nodes.RteNode;
 import de.fub.gpxmodule.nodes.TrkNode;
 import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Gpx.Rte;
-import de.fub.gpxmodule.xml.gpx.Gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Gpx.Wpt;
+import de.fub.gpxmodule.xml.gpx.Rte;
+import de.fub.gpxmodule.xml.gpx.Trk;
+import de.fub.gpxmodule.xml.gpx.Wpt;
 
 import java.beans.IntrospectionException;
 import java.util.List;
+import org.openide.nodes.AbstractNode;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
@@ -41,10 +42,10 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
                 try {
                     list.add(
                             new TrkNode(
-                            trk.getValue(),
-                            ((trk.getValue().getTrkseg() == null
-                            || trk.getValue().getTrkseg().isEmpty())
-                            ? Children.LEAF : Children.create(new TrackSegmentNodeFactory(trk.getValue().getTrkseg()), true)),
+                            trk,
+                            ((trk.getTrkseg() == null
+                            || trk.getTrkseg().isEmpty())
+                            ? Children.LEAF : Children.create(new TrackSegmentNodeFactory(trk.getTrkseg()), true)),
                             Lookup.EMPTY));
                 } catch (IntrospectionException ex) {
                     Exceptions.printStackTrace(ex);
@@ -53,13 +54,7 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
         }
 
         if (gpx.getWpt() != null) {
-            for (Wpt wpt : gpx.getWpt()) {
-                try {
-                    list.add(new BeanNode<Wpt>(wpt));
-                } catch (IntrospectionException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
+            list.add(new WptRootNode(gpx.getWpt()));
         }
 
         if (gpx.getRte() != null) {
@@ -67,10 +62,10 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
                 try {
                     list.add(new RteNode(
                             rte,
-                            rte.getValue().getRtept() == null
-                            || rte.getValue().getRtept().isEmpty()
+                            rte.getRtept() == null
+                            || rte.getRtept().isEmpty()
                             ? Children.LEAF
-                            : Children.create(new RteptNodeFactory(rte.getValue().getRtept()), true)));
+                            : Children.create(new WptNodeFactory(rte.getRtept()), true)));
                 } catch (IntrospectionException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -83,5 +78,14 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
     @Override
     protected Node createNodeForKey(Node t) {
         return t;
+    }
+
+    private static class WptRootNode extends AbstractNode {
+
+        public WptRootNode(List<Wpt> wpts) {
+            super(Children.create(new WptNodeFactory(wpts), true));
+            setDisplayName("Waypoints"); // NO18N
+
+        }
     }
 }

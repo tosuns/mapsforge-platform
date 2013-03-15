@@ -96,7 +96,10 @@
         <module>SettingsModule</module>
         <module>MapsForgeProjectDetectorModule</module>
         <module>JFreeChartLib</module>
-    </modules>
+    <module>MapForgeProjectPlugInsModule</module>
+    <module>ITextLib</module>
+    <module>ApacheBatikLib</module>
+  </modules>
 
     <properties>
         <netbeans.version>RELEASE73</netbeans.version>

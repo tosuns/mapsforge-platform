@@ -8,7 +8,6 @@ import de.fub.mapforgeproject.api.process.AbstractProcess;
 import static de.fub.mapforgeproject.api.process.ProcessState.ERROR;
 import static de.fub.mapforgeproject.api.process.ProcessState.INACTIVE;
 import static de.fub.mapforgeproject.api.process.ProcessState.RUNNING;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
 import org.openide.nodes.Node;

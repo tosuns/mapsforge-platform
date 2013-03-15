@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.MaxPrecisionFeature;
-import de.fub.agg2graph.structs.GPSTrack;
+import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MaxPrecisionFeatureProcess extends FeatureProcess {
 
     private MaxPrecisionFeature feature = new MaxPrecisionFeature();
-    private List<GPSTrack> gpsTrack;
+    private List<Gpx> gpsTrack;
 
     @Override
     protected void start() {
@@ -40,7 +40,7 @@ public class MaxPrecisionFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(List<GPSTrack> gpsTrack) {
+    public void setInput(List<Gpx> gpsTrack) {
         this.gpsTrack = gpsTrack;
     }
 

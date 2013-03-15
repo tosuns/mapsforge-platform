@@ -12,6 +12,10 @@
             <jxb:globalBindings>
                 <jxb:javaType name="int" xmlType="xsd:nonNegativeInteger" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt"/>
                 <jxb:javaType name="java.util.Date" xmlType="xsd:dateTime" parseMethod="de.fub.gpxmodule.DateAdapter.parseDate" printMethod="de.fub.gpxmodule.DateAdapter.printDate" />
+                <jxb:javaType name="java.math.BigDecimal" xmlType="latitudeType" parseMethod="de.fub.gpxmodule.DegreeAdapter.parseDegree" printMethod="de.fub.gpxmodule.DegreeAdapter.printDegree" />
+                <jxb:javaType name="java.math.BigDecimal" xmlType="longitudeType" parseMethod="de.fub.gpxmodule.DegreeAdapter.parseDegree" printMethod="de.fub.gpxmodule.DegreeAdapter.printDegree" />
+                <jxb:javaType name="java.math.BigDecimal" xmlType="degreesType" parseMethod="de.fub.gpxmodule.DegreeAdapter.parseDegree" printMethod="de.fub.gpxmodule.DegreeAdapter.printDegree" />
+                <jxb:javaType name="int" xmlType="dgpsStationType" parseMethod="javax.xml.bind.DatatypeConverter.parseInt" printMethod="javax.xml.bind.DatatypeConverter.printInt" />
             </jxb:globalBindings>
         </xsd:appinfo>
         <xsd:documentation>
@@ -42,9 +46,6 @@
         <xsd:sequence>
             <xsd:element name="metadata"	type="metadataType"	minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Metadata"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         Metadata about the file.
                     </xsd:documentation>
@@ -52,9 +53,6 @@
             </xsd:element>
             <xsd:element name="wpt"			type="wptType"	minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Wpt"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         A list of waypoints.
                     </xsd:documentation>
@@ -62,9 +60,6 @@
             </xsd:element>
             <xsd:element name="rte"			type="rteType"	minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Rte"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         A list of routes.
                     </xsd:documentation>
@@ -72,9 +67,6 @@
             </xsd:element>
             <xsd:element name="trk"			type="trkType"	minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Trk"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         A list of tracks.
                     </xsd:documentation>
@@ -82,9 +74,6 @@
             </xsd:element>
             <xsd:element name="extensions"	type="extensionsType"	minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Extensions"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         You can add extend GPX by adding your own elements from another schema here.
                     </xsd:documentation>
@@ -115,6 +104,9 @@
                 Information about the GPX file, author, and copyright restrictions goes in the metadata section.  Providing rich,
                 meaningful information about your GPX files allows others to search for and use your GPS data.
             </xsd:documentation>
+            <xsd:appinfo>
+                <jxb:class name="Metadata"/>
+            </xsd:appinfo>
         </xsd:annotation>
         <xsd:sequence>	<!-- elements must appear in this order -->
             <xsd:element name="name"		type="xsd:string"		minOccurs="0">
@@ -133,9 +125,6 @@
             </xsd:element>
             <xsd:element name="author"		type="personType"		minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Author"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         The person or organization who created the GPX file.
                     </xsd:documentation>
@@ -143,9 +132,6 @@
             </xsd:element>
             <xsd:element name="copyright"	type="copyrightType"	minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Copyright"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         Copyright and license information governing use of the file.
                     </xsd:documentation>
@@ -153,9 +139,6 @@
             </xsd:element>
             <xsd:element name="link"		type="linkType"			minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Link"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         URLs associated with the location described in the file.
                     </xsd:documentation>
@@ -177,9 +160,6 @@
             </xsd:element>
             <xsd:element name="bounds"		type="boundsType"		minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Bounds"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         Minimum and maximum coordinates which describe the extent of the coordinates in the file.
                     </xsd:documentation>
@@ -223,9 +203,9 @@
             </xsd:element>
             <xsd:element name="magvar"		type="degreesType"		minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
+                    <!--                    <xsd:appinfo>
                         <jxb:class name="Magvar"/>
-                    </xsd:appinfo>
+                    </xsd:appinfo>-->
                     <xsd:documentation>
                         Magnetic variation (in degrees) at the point
                     </xsd:documentation>
@@ -293,9 +273,6 @@
             <!-- Accuracy info -->
             <xsd:element name="fix"			type="fixType"			minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Fix"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         Type of GPX fix.
                     </xsd:documentation>
@@ -338,9 +315,6 @@
             </xsd:element>
             <xsd:element name="dgpsid"		type="dgpsStationType"	minOccurs="0">
                 <xsd:annotation>
-                    <xsd:appinfo>
-                        <jxb:class name="Dgpsid"/>
-                    </xsd:appinfo>
                     <xsd:documentation>
                         ID of DGPS station used in differential correction.
                     </xsd:documentation>
@@ -375,7 +349,7 @@
     <xsd:complexType name="rteType">
         <xsd:annotation>
             <xsd:appinfo>
-                <jxb:class name="RteType"/>
+                <jxb:class name="Rte"/>
             </xsd:appinfo>
             <xsd:documentation>
                 rte represents route - an ordered list of waypoints representing a series of turn points leading to a destination.
@@ -442,9 +416,9 @@
 
             <xsd:element name="rtept"	type="wptType" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
-                    <xsd:appinfo>
+                    <!--                    <xsd:appinfo>
                         <jxb:class name="Rtept"/>
-                    </xsd:appinfo>
+                    </xsd:appinfo>-->
                     <xsd:documentation>
                         A list of route points.
                     </xsd:documentation>
@@ -811,7 +785,8 @@
     <xsd:simpleType name="latitudeType">
         <xsd:annotation>
             <xsd:appinfo>
-                <jxb:class name="Latitude"/>
+                <!--<jxb:class name="Latitude"/>-->
+                <!--<jxb:javaType name="java.math.BigDecimal"  parseMethod="de.fub.gpxmodule.LatitudeAdapter.parseLatitude" printMethod="de.fub.gpxmodule.LatitudeAdapter.printLatitude" />-->
             </xsd:appinfo>
             <xsd:documentation>
                 The latitude of the point.  Decimal degrees, WGS84 datum.
@@ -826,7 +801,8 @@
     <xsd:simpleType name="longitudeType">
         <xsd:annotation>
             <xsd:appinfo>
-                <jxb:class name="Longitude"/>
+                <!--<jxb:class name="Longitude"/>-->
+
             </xsd:appinfo>
             <xsd:documentation>
                 The longitude of the point.  Decimal degrees, WGS84 datum.
@@ -841,7 +817,7 @@
     <xsd:simpleType name="degreesType">
         <xsd:annotation>
             <xsd:appinfo>
-                <jxb:class name="Degrees"/>
+                <!--<jxb:class name="Degrees"/>-->
             </xsd:appinfo>
             <xsd:documentation>
                 Used for bearing, heading, course.  Units are decimal degrees, true (not magnetic).
@@ -856,7 +832,13 @@
     <xsd:simpleType name="fixType">
         <xsd:annotation>
             <xsd:appinfo>
-                <jxb:class name="Fix"/>
+                <jxb:typesafeEnumClass name="Fix">
+                    <jxb:typesafeEnumMember value="none" name="NONE"/>
+                    <jxb:typesafeEnumMember value="2d" name="TWO_D"/>
+                    <jxb:typesafeEnumMember value="3d" name="THREE_D"/>
+                    <jxb:typesafeEnumMember value="dgps" name="DGPS"/>
+                    <jxb:typesafeEnumMember value="pps" name="PPS"/>
+                </jxb:typesafeEnumClass>
             </xsd:appinfo>
             <xsd:documentation>
                 Type of GPS fix.  none means GPS had no fix.  To signify "the fix info is unknown, leave out fixType entirely. pps = military signal used
@@ -873,9 +855,7 @@
 
     <xsd:simpleType name="dgpsStationType">
         <xsd:annotation>
-            <xsd:appinfo>
-                <jxb:class name="DgpsStation"/>
-            </xsd:appinfo>
+
             <xsd:documentation>
                 Represents a differential GPS station.
             </xsd:documentation>
