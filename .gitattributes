@@ -487,6 +487,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/AbstractDetectorProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/Detector.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/DetectorProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/gpx/GpxWayPoint.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/gpx/TrackSegment.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/AbstractInferenceModel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/EvaluationBean.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/EvaluationDetailPanel.form -text
@@ -528,6 +530,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/LimitWaypointFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinDistanceWaypointFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinTimeDiffWaypointFilterProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/RemoveUnusableTrkSegFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/DataSet.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/DataSets.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Descriptor.java -text
@@ -557,6 +560,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/customizer/PostProcessorCustomizer.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/customizer/PreProcessorCustomizer.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/utils/DetectorUtils.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/utils/GPSUtils.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/CommonDetectorInformationVisualPanel1.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/CommonDetectorInformationVisualPanel1.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/CommonDetectorInformationWizardPanel1.java -text
@@ -597,6 +601,11 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/wizards/detector/Bundle.properties -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/test/java/de/fub/mapsforge/project/detector/models/xmls/DetectorDescriptorGeneratorTest.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/test/java/de/fub/mapsforge/project/detector/models/xmls/DetectorDescriptorTest.java -text
+MapsforgePlatform/MapsForgeSnapShotModule/pom.xml -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/api/ComponentSnapShotExporter.java -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/impl/SvgSnapShotExporter.java -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/nbm/manifest.mf -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/resources/de/fub/mapsforge/snapshot/Bundle.properties -text
 MapsforgePlatform/OpenstreemapSevice/pom.xml -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/LocationBoundingBoxService.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/OpenstreetMapService.java -text
