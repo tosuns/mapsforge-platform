@@ -5,8 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.features.AvgAccelerationFeature;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import java.util.List;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -22,7 +21,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class AvgAccelerationFeatureProcess extends FeatureProcess {
 
     private final AvgAccelerationFeature feature = new AvgAccelerationFeature();
-    private List<Gpx> gpsTrack;
+    private TrackSegment gpsTrack;
 
     @Override
     protected void start() {
@@ -40,7 +39,7 @@ public class AvgAccelerationFeatureProcess extends FeatureProcess {
     }
 
     @Override
-    public void setInput(List<Gpx> gpstrack) {
+    public void setInput(TrackSegment gpstrack) {
         this.gpsTrack = gpstrack;
     }
 

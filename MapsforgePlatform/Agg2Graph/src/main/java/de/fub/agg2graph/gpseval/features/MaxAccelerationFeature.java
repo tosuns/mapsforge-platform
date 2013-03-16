@@ -16,14 +16,14 @@ public class MaxAccelerationFeature extends Feature {
     public void addWaypoint(Waypoint entry) {
         // If segment has changed, use current waypoint as new "start"-waypoint
         // for following calculations.
-        if (entry.getmSegment() != mLastSegment) {
+        if (entry.getSegment() != mLastSegment) {
             mLastWaypoint = null;
-            mLastSegment = entry.getmSegment();
+            mLastSegment = entry.getSegment();
         }
 
         if (mLastWaypoint != null) {
-            double timeDiff = ((double) (entry.getmDate().getTime() - mLastWaypoint.getmDate().getTime())) / 1000;
-            double speedDiff = entry.getmSpeed() - mLastWaypoint.getmSpeed();
+            double timeDiff = ((double) (entry.getTimestamp().getTime() - mLastWaypoint.getTimestamp().getTime())) / 1000;
+            double speedDiff = entry.getSpeed() - mLastWaypoint.getSpeed();
 
             if (timeDiff > 0) {
                 double acc = speedDiff / timeDiff;

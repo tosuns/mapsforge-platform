@@ -19,7 +19,7 @@ public class AvgTransportationDistanceFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        mSumDistance += TransportationDistance.getInstance().getNearestDistance(entry.getmLat(), entry.getmLon());
+        mSumDistance += TransportationDistance.getInstance().getNearestDistance(entry.getLat(), entry.getLon());
         ++mCount;
     }
 

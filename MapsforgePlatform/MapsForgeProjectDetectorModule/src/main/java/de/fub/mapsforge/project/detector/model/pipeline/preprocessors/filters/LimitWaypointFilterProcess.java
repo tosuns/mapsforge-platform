@@ -4,12 +4,14 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
+import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.data.filter.LimitWaypointFilter;
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -30,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class LimitWaypointFilterProcess extends FilterProcess {
 
     private final static String PROPERTY_LIMIT = "limit";
-    private List<Gpx> gpsTrack;
+    private List<TrackSegment> gpxTracks;
     private final LimitWaypointFilter filter = new LimitWaypointFilter();
 
     public LimitWaypointFilterProcess() {
@@ -54,6 +56,14 @@ public class LimitWaypointFilterProcess extends FilterProcess {
     @Override
     protected void start() {
         filter.reset();
+        for (TrackSegment trackSegment : gpxTracks) {
+            ArrayList<Waypoint> arrayList = new ArrayList<Waypoint>(trackSegment.getWayPointList());
+            for (Waypoint waypoint : arrayList) {
+                if (!filter.filter(waypoint)) {
+                    trackSegment.getWayPointList().remove(waypoint);
+                }
+            }
+        }
     }
 
     @Override
@@ -67,13 +77,13 @@ public class LimitWaypointFilterProcess extends FilterProcess {
     }
 
     @Override
-    public void setInput(List<Gpx> gpsTrack) {
-        this.gpsTrack = gpsTrack;
+    public void setInput(List<TrackSegment> gpsTrack) {
+        this.gpxTracks = gpsTrack;
     }
 
     @Override
-    public List<Gpx> getResult() {
-        return this.gpsTrack;
+    public List<TrackSegment> getResult() {
+        return this.gpxTracks;
     }
 
     @Override

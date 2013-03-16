@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.inference;
 
-import de.fub.agg2graph.structs.GPSTrack;
 import de.fub.gpxmodule.xml.gpx.Gpx;
 import java.util.Collection;
 import java.util.Collections;

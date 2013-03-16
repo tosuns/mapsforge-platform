@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.ui.EvaluationPanel;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import javax.swing.JComponent;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import weka.classifiers.Classifier;
@@ -44,37 +46,52 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
 
     @Override
     protected void handle() {
-        ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
-        Instances trainingSet = new Instances("Classes", attributeList, 0);
-        trainingSet.setClassIndex(0);
+        final ProgressHandle handle = ProgressHandleFactory.createHandle("Trainings");
+        try {
+            handle.start();
+            ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
+            Instances trainingSet = new Instances("Classes", attributeList, 0);
+            trainingSet.setClassIndex(0);
 
-        Instances testingSet = new Instances("Classes", attributeList, 0);
-        testingSet.setClassIndex(0);
+            Instances testingSet = new Instances("Classes", attributeList, 0);
+            testingSet.setClassIndex(0);
 
-        HashMap<String, HashSet<Gpx>> dataset = getInferenceModel().getInput().getTrainingsSet();
+            HashMap<String, HashSet<TrackSegment>> dataset = getInferenceModel().getInput().getTrainingsSet();
 
-        for (Entry<String, HashSet<Gpx>> entry : dataset.entrySet()) {
 
-            int trainingsSetSize = (int) Math.ceil(entry.getValue().size() * getTrainingsSetRatioParameter());
-
-            for (int index = 0; index < entry.getValue().size(); index++) {
-                Instance instance = getInstance(entry.getKey(), new ArrayList<Gpx>(entry.getValue()));
-
-                if (index < trainingsSetSize) {
-                    trainingSet.add(instance);
-                } else {
-                    testingSet.add(instance);
+            int datasetCount = 0;
+            for (HashSet<TrackSegment> list : dataset.values()) {
+                for (TrackSegment trackSegment : list) {
+                    datasetCount += trackSegment.getWayPointList().size();
                 }
+            }
+            handle.switchToDeterminate(datasetCount);
+            int trackCount = 0;
+            for (Entry<String, HashSet<TrackSegment>> entry : dataset.entrySet()) {
 
+                int trainingsSetSize = (int) Math.ceil(entry.getValue().size() * getTrainingsSetRatioParameter());
+
+                for (TrackSegment trackSegment : entry.getValue()) {
+                    for (int index = 0; index < trackSegment.getWayPointList().size(); index++) {
+                        Instance instance = getInstance(entry.getKey(), trackSegment);
+
+                        if (index < trainingsSetSize) {
+                            trainingSet.add(instance);
+                        } else {
+                            testingSet.add(instance);
+                        }
+                        handle.progress(trackCount++);
+                    }
+                }
             }
 
+            assert trainingSet.numInstances() > 0 : "Training set is empty and has no instances"; //NO18N
+            assert testingSet.numInstances() > 0 : "Testing set is empty and has no instances"; //NO18N
+            handle.switchToIndeterminate();
+            evaluate(trainingSet, testingSet);
+        } finally {
+            handle.finish();
         }
-
-        assert trainingSet.numInstances() > 0 : "Training set is empty and has no instances"; //NO18N
-        assert testingSet.numInstances() > 0 : "Testing set is empty and has no instances"; //NO18N
-
-        evaluate(trainingSet, testingSet);
-
     }
 
     private void evaluate(Instances trainingSet, Instances testingSet) {

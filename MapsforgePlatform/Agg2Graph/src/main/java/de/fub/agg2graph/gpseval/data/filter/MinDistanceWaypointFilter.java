@@ -26,14 +26,14 @@ public class MinDistanceWaypointFilter extends WaypointFilter {
     @Override
     public boolean filter(Waypoint gpsData) {
         if (!mReset) {
-            double distance = GPSCalc.getDistVincentyFast(mLastAcceptedLat, mLastAcceptedLon, gpsData.getmLat(), gpsData.getmLon());
+            double distance = GPSCalc.getDistVincentyFast(mLastAcceptedLat, mLastAcceptedLon, gpsData.getLat(), gpsData.getLon());
             if (distance < mDistance) {
                 return false;
             }
         }
         mReset = false;
-        mLastAcceptedLat = gpsData.getmLat();
-        mLastAcceptedLon = gpsData.getmLon();
+        mLastAcceptedLat = gpsData.getLat();
+        mLastAcceptedLon = gpsData.getLon();
         return true;
     }
 }

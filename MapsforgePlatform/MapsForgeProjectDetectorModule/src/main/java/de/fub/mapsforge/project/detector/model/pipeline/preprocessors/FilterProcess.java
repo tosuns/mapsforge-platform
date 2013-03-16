@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -29,7 +29,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-public abstract class FilterProcess extends AbstractDetectorProcess<List<Gpx>, List<Gpx>> implements Cancellable {
+public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSegment>, List<TrackSegment>> implements Cancellable {
 
     private static Image defaultImage;
 
@@ -69,6 +69,11 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<Gpx>, L
             }
         }
         return defaultImage;
+    }
+
+    @Override
+    public boolean cancel() {
+        return false;
     }
 
     private static class FilterProcessNode extends AbstractNode implements PropertyChangeListener {

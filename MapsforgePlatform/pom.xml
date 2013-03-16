@@ -99,6 +99,7 @@
     <module>MapForgeProjectPlugInsModule</module>
     <module>ITextLib</module>
     <module>ApacheBatikLib</module>
+    <module>MapsForgeSnapShotModule</module>
   </modules>
 
     <properties>

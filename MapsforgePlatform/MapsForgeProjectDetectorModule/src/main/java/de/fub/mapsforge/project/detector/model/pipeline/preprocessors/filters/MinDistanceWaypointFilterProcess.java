@@ -4,12 +4,14 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
+import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.data.filter.MinDistanceWaypointFilter;
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -27,7 +29,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class MinDistanceWaypointFilterProcess extends FilterProcess {
 
     private static final String PROPERTY_DISTANCE = "distance";
-    private List<Gpx> gpsTrack;
+    private List<TrackSegment> gpsTracks;
     private final MinDistanceWaypointFilter filter = new MinDistanceWaypointFilter();
 
     public MinDistanceWaypointFilterProcess() {
@@ -51,7 +53,14 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess {
     @Override
     protected void start() {
         filter.reset();
-        //TODO;
+        for (TrackSegment trackSegment : gpsTracks) {
+            ArrayList<Waypoint> arrayList = new ArrayList<Waypoint>(trackSegment.getWayPointList());
+            for (Waypoint waypoint : arrayList) {
+                if (!filter.filter(waypoint)) {
+                    trackSegment.remove(waypoint);
+                }
+            }
+        }
     }
 
     @Override
@@ -65,13 +74,13 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess {
     }
 
     @Override
-    public void setInput(List<Gpx> gpsTrack) {
-        this.gpsTrack = gpsTrack;
+    public void setInput(List<TrackSegment> gpsTrack) {
+        this.gpsTracks = gpsTrack;
     }
 
     @Override
-    public List<Gpx> getResult() {
-        return gpsTrack;
+    public List<TrackSegment> getResult() {
+        return gpsTracks;
     }
 
     @Override

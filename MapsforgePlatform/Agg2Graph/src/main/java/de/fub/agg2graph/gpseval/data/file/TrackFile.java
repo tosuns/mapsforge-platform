@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 /**
  * This is the base-class for all TrackFiles.
- * 
+ *
  * <p>
  * It handles the filtering of data using WaypointFilters.
  * </p>
@@ -23,100 +23,100 @@ import java.util.Iterator;
  */
 public abstract class TrackFile implements Iterable<Waypoint> {
 
-	private Path mDataFile;
-	private ArrayList<WaypointFilter> mFilters = new ArrayList<>();
+    private Path mDataFile;
+    private ArrayList<WaypointFilter> mFilters = new ArrayList<>();
 
-	/**
-	 * Get the Iterator for the unfiltered Waypoints.
-	 * 
-	 * To get only filtered Waypoints you should use iterator() instead.
-	 * 
-	 * @return
-	 */
-	protected abstract Iterator<Waypoint> rawIterator();
+    /**
+     * Get the Iterator for the unfiltered Waypoints.
+     *
+     * To get only filtered Waypoints you should use iterator() instead.
+     *
+     * @return
+     */
+    protected abstract Iterator<Waypoint> rawIterator();
 
-	/**
-	 * Add a waypoint filter that is used by the Iterator returned by
-	 * iterator().
-	 * 
-	 * @param filter
-	 */
-	public void addWaypointFilter(WaypointFilter filter) {
-		mFilters.add(filter);
-	}
+    /**
+     * Add a waypoint filter that is used by the Iterator returned by
+     * iterator().
+     *
+     * @param filter
+     */
+    public void addWaypointFilter(WaypointFilter filter) {
+        mFilters.add(filter);
+    }
 
-	/**
-	 * Set the path for the GPS-data-file.
-	 * 
-	 * @param dataFile
-	 */
-	public void setDataFile(Path dataFile) {
-		mDataFile = dataFile;
-	}
+    /**
+     * Set the path for the GPS-data-file.
+     *
+     * @param dataFile
+     */
+    public void setDataFile(Path dataFile) {
+        mDataFile = dataFile;
+    }
 
-	/**
-	 * Get the path of the GPS-data-file.
-	 * 
-	 * @return
-	 */
-	public Path getDataFile() {
-		return mDataFile;
-	}
+    /**
+     * Get the path of the GPS-data-file.
+     *
+     * @return
+     */
+    public Path getDataFile() {
+        return mDataFile;
+    }
 
-	/**
-	 * Returns an Iterator that uses WaypointFilters to filter the Waypoints
-	 * which are returned.
-	 */
-	@Override
-	public Iterator<Waypoint> iterator() {
-		return new FilteredGPSDataIterator();
-	}
+    /**
+     * Returns an Iterator that uses WaypointFilters to filter the Waypoints
+     * which are returned.
+     */
+    @Override
+    public Iterator<Waypoint> iterator() {
+        return new FilteredGPSDataIterator();
+    }
 
-	/**
-	 * This Itreator returns only those Waypoints which passes all waypoint
-	 * filters.
-	 */
-	private class FilteredGPSDataIterator implements Iterator<Waypoint> {
+    /**
+     * This Itreator returns only those Waypoints which passes all waypoint
+     * filters.
+     */
+    private class FilteredGPSDataIterator implements Iterator<Waypoint> {
 
-		private Iterator<Waypoint> mRawIterator;
-		private Waypoint nextGpsData = null;
+        private Iterator<Waypoint> mRawIterator;
+        private Waypoint nextGpsData = null;
 
-		public FilteredGPSDataIterator() {
-			mRawIterator = rawIterator();
-		}
+        public FilteredGPSDataIterator() {
+            mRawIterator = rawIterator();
+        }
 
-		@Override
-		public boolean hasNext() {
-			nextGpsData = null;
+        @Override
+        public boolean hasNext() {
+            nextGpsData = null;
 
-			while (mRawIterator.hasNext()) {
-				Waypoint gpsData = mRawIterator.next();
+            while (mRawIterator.hasNext()) {
+                Waypoint gpsData = mRawIterator.next();
 
-				// check if the waypoint passes each waypoint filter
-				boolean passedAllFilter = true;
-				for (WaypointFilter filter : mFilters) {
-					if (!filter.filter(gpsData)) {
-						passedAllFilter = false;
-						break;
-					}
-				}
-				if (passedAllFilter) {
-					nextGpsData = gpsData;
-					return true;
-				}
-			}
+                // check if the waypoint passes each waypoint filter
+                boolean passedAllFilter = true;
+                for (WaypointFilter filter : mFilters) {
+                    if (!filter.filter(gpsData)) {
+                        passedAllFilter = false;
+                        break;
+                    }
+                }
+                if (passedAllFilter) {
+                    nextGpsData = gpsData;
+                    return true;
+                }
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException("Not supported.");
-		}
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported.");
+        }
 
-		@Override
-		public Waypoint next() {
-			return nextGpsData;
-		}
-	}
+        @Override
+        public Waypoint next() {
+            return nextGpsData;
+        }
+    }
 }

@@ -55,6 +55,18 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <artifactId>batik-dom</artifactId>
+            <groupId>batik</groupId>
+            <type>jar</type>
+            <version>1.6-1</version>
+        </dependency>
+        <dependency>
+            <artifactId>xmlParserAPIs</artifactId>
+            <groupId>xml-apis</groupId>
+            <type>jar</type>
+            <version>2.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -64,6 +76,30 @@
                 <artifactId>nbm-maven-plugin</artifactId>
                 <version>3.8</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>org.apache.batik.svggen</publicPackage>
+                        <publicPackage>org.apache.batik.svggen.font</publicPackage>
+                        <publicPackage>org.apache.batik.svggen.font.resources</publicPackage>
+                        <publicPackage>org.apache.batik.svggen.font.table</publicPackage>
+
+                        <publicPackage>org.apache.batik.dom</publicPackage>
+                        <publicPackage>org.apache.batik.dom.events</publicPackage>
+                        <publicPackage>org.apache.batik.dom.resources</publicPackage>
+                        <publicPackage>org.apache.batik.dom.traversal</publicPackage>
+                        <publicPackage>org.apache.batik.dom.util</publicPackage>
+
+                        <publicPackage>javax.xml.parsers</publicPackage>
+                        <publicPackage>org.w3c.dom</publicPackage>
+                        <publicPackage>org.w3c.dom.events</publicPackage>
+                        <publicPackage>org.w3c.dom.html</publicPackage>
+                        <publicPackage>org.w3c.dom.ranges</publicPackage>
+                        <publicPackage>org.w3c.dom.traversal</publicPackage>
+                        <publicPackage>org.xml.sax</publicPackage>
+                        <publicPackage>org.xml.sax.ext</publicPackage>
+                        <publicPackage>org.xml.sax.helpers</publicPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>

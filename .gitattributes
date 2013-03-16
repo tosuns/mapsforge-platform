@@ -45,9 +45,7 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/WekaEval.java
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/WekaResult.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/AggregatedData.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/DataLoader.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/GPXWayPoint.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/Waypoint.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/file/GPXTrackFile.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/file/MyTracksCSVFile.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/file/TrackFile.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/file/TrackFileFactory.java -text

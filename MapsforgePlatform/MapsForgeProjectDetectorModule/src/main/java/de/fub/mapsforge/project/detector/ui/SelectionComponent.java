@@ -16,7 +16,6 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -115,7 +114,29 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     @Override
     public void actionPerformed(ActionEvent e) {
         ArrayList<DetectorProcess> newList = new ArrayList<DetectorProcess>();
-        if (getToLeftButton().equals(e.getSource())) {
+
+        if (getMoveUpButton().equals(e.getSource())) {
+            Node[] selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
+            if (selectedNodes.length == 1) {
+                DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
+                int indexOf = selectedItems.indexOf(detectorProcess);
+                if (indexOf > 0) {
+                    selectedItems.remove(detectorProcess);
+                    selectedItems.set(--indexOf, detectorProcess);
+                }
+            }
+
+        } else if (getMoveDownButton().equals(e.getSource())) {
+            Node[] selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
+            if (selectedNodes.length == 1) {
+                DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
+                int indexOf = selectedItems.indexOf(detectorProcess);
+                if (indexOf < selectedItems.size() - 1) {
+                    selectedItems.remove(detectorProcess);
+                    selectedItems.set(++indexOf, detectorProcess);
+                }
+            }
+        } else if (getToLeftButton().equals(e.getSource())) {
             Node[] selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
             if (selectedNodes.length > 0) {
                 for (Node node : selectedNodes) {
@@ -160,17 +181,30 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
                 selectedNodes = getAllListExplorerManager().getSelectedNodes();
             } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
                 selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
+
+                if (selectedNodes.length == 1) {
+                    DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
+                    int indexOf = selectedItems.indexOf(detectorProcess);
+                    getMoveUpButton().setEnabled(indexOf != 0);
+                    getMoveDownButton().setEnabled(indexOf != selectedItems.size() - 1);
+                } else if (selectedNodes.length == 0) {
+                    getMoveUpButton().setEnabled(false);
+                    getMoveDownButton().setEnabled(false);
+                }
             }
             if (selectedNodes.length == 1) {
                 DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
-                if (detectorProcess != null) {
+                if (detectorProcess
+                        != null) {
                     getDescription().setText(detectorProcess.getDescription());
                 }
             } else if (selectedNodes.length > 1) {
                 StringBuilder stringBuilder = new StringBuilder();
+
                 for (Node node : selectedNodes) {
                     DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
-                    if (detectorProcess != null) {
+                    if (detectorProcess
+                            != null) {
                         stringBuilder.append(detectorProcess.toString()).append("/\n");
                     }
                 }
@@ -198,9 +232,13 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        moveUpButton = new javax.swing.JButton();
+        filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
         toRightButton = new javax.swing.JButton();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
         toLeftButton = new javax.swing.JButton();
+        filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
+        moveDownButton = new javax.swing.JButton();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -232,12 +270,27 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.PAGE_AXIS));
         jPanel4.add(filler1);
 
+        org.openide.awt.Mnemonics.setLocalizedText(moveUpButton, org.openide.util.NbBundle.getMessage(SelectionComponent.class, "SelectionComponent.moveUpButton.text")); // NOI18N
+        moveUpButton.setEnabled(false);
+        moveUpButton.setMaximumSize(new java.awt.Dimension(49, 23));
+        moveUpButton.setPreferredSize(new java.awt.Dimension(49, 23));
+        jPanel4.add(moveUpButton);
+        jPanel4.add(filler5);
+
         org.openide.awt.Mnemonics.setLocalizedText(toRightButton, org.openide.util.NbBundle.getMessage(SelectionComponent.class, "SelectionComponent.toRightButton.text")); // NOI18N
         jPanel4.add(toRightButton);
         jPanel4.add(filler3);
 
         org.openide.awt.Mnemonics.setLocalizedText(toLeftButton, org.openide.util.NbBundle.getMessage(SelectionComponent.class, "SelectionComponent.toLeftButton.text")); // NOI18N
         jPanel4.add(toLeftButton);
+        jPanel4.add(filler4);
+
+        org.openide.awt.Mnemonics.setLocalizedText(moveDownButton, org.openide.util.NbBundle.getMessage(SelectionComponent.class, "SelectionComponent.moveDownButton.text")); // NOI18N
+        moveDownButton.setEnabled(false);
+        moveDownButton.setMaximumSize(new java.awt.Dimension(49, 23));
+        moveDownButton.setMinimumSize(new java.awt.Dimension(49, 23));
+        moveDownButton.setPreferredSize(new java.awt.Dimension(49, 23));
+        jPanel4.add(moveDownButton);
         jPanel4.add(filler2);
 
         jPanel3.add(jPanel4, new java.awt.GridBagConstraints());
@@ -301,6 +354,8 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
+    private javax.swing.Box.Filler filler4;
+    private javax.swing.Box.Filler filler5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -308,6 +363,8 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton moveDownButton;
+    private javax.swing.JButton moveUpButton;
     private javax.swing.JButton toLeftButton;
     private javax.swing.JButton toRightButton;
     // End of variables declaration//GEN-END:variables
@@ -348,6 +405,14 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
         return toRightButton;
     }
 
+    public JButton getMoveDownButton() {
+        return moveDownButton;
+    }
+
+    public JButton getMoveUpButton() {
+        return moveUpButton;
+    }
+
     private static class DetectorProcessNodeFactory extends ChildFactory<DetectorProcess> implements ChangeListener {
 
         private final ObservableList<DetectorProcess> list;
@@ -360,7 +425,6 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
         @Override
         protected boolean createKeys(List<DetectorProcess> toPopulate) {
             toPopulate.addAll(list);
-            Collections.sort(toPopulate);
             return true;
         }
 

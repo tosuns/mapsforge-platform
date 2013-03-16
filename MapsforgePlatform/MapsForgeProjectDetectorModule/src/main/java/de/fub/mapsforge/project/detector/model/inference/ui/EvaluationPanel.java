@@ -39,7 +39,7 @@ import weka.core.Instances;
 })
 public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManager.Provider {
 
-    private static final String NUMBER_PATTERN = "{0, number, 000.00}";
+    private static final String NUMBER_PATTERN = "{0, number, 000.00} %";
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private Evaluation evaluation;
@@ -75,7 +75,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     }
 
     public JLabel getIncorrectClassifiedInstances() {
-        return jLabel2;
+        return incorrectClassifiedInstances;
     }
 
     /**

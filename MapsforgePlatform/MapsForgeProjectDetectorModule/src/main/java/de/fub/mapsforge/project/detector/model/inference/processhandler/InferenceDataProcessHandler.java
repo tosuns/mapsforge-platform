@@ -4,13 +4,11 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
 import de.fub.mapsforge.project.detector.model.inference.ui.EvaluationPanel;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import javax.swing.JComponent;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -35,11 +33,12 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
     @Override
     protected void handle() {
+        // TODO convert TrakSegment list to GPX
     }
 
-    public HashSet<Gpx> getInferenceDataSet() {
+    public HashSet<TrackSegment> getInferenceDataSet() {
         InferenceModelInputDataSet input = getInferenceModel().getInput();
-        HashSet<Gpx> dataset = input.getInferenceSet();
+        HashSet<TrackSegment> dataset = input.getInferenceSet();
         return dataset;
     }
 

@@ -20,7 +20,7 @@ public class SegmentsFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        mSegments.add(entry.getmSegment());
+        mSegments.add(entry.getSegment());
     }
 
     @Override

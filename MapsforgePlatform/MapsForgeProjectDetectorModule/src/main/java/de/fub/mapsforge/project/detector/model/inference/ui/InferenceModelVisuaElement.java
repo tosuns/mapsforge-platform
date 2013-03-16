@@ -25,6 +25,8 @@ import org.openide.awt.Toolbar;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 /**
@@ -49,12 +51,14 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     private AbstractInferenceModel inferenceModel;
     private Detector detector;
     private MultiViewElementCallback callback;
+    private Lookup lookup;
 
     /**
      * Creates new form InferenceModelVisuaElement
      */
     public InferenceModelVisuaElement(Lookup lkp) {
         initComponents();
+        lookup = new ProxyLookup(lkp, Lookups.singleton(contentPanel));
         addToolbarActions();
         obj = lkp.lookup(DetectorDataObject.class);
         assert obj != null;
@@ -129,12 +133,12 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public Action[] getActions() {
-        return new Action[0];
+        return new Action[]{};
     }
 
     @Override
     public Lookup getLookup() {
-        return obj.getLookup();
+        return lookup;
     }
 
     @Override

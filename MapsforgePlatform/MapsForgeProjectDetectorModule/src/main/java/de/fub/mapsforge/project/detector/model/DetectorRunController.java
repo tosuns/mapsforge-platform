@@ -4,10 +4,10 @@
  */
 package de.fub.mapsforge.project.detector.model;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.detector.DetectorMode;
 import de.fub.mapsforge.project.detector.model.converter.DataConverter;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
@@ -38,8 +38,8 @@ import org.openide.util.NbBundle;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_Trainings_Process_Running=Running Training...",
-    "CLT_Inference_Process_Running=Running Clustering..."
+    "CLT_Trainings_Process_Running=Running Training",
+    "CLT_Inference_Process_Running=Running Clustering"
 })
 class DetectorRunController {
 
@@ -66,13 +66,17 @@ class DetectorRunController {
 
             switch (detector.getInferenceModel().getInferenceMode()) {
                 case TRAININGS_MODE:
+                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
                     startTraining();
                     break;
                 case INFERENCE_MODE:
+                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
                     startInference();
                     break;
                 case ALL_MODE:
+                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
                     startTraining();
+                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
                     startInference();
                     break;
             }
@@ -89,53 +93,49 @@ class DetectorRunController {
      *
      */
     private void startTraining() {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Trainings_Process_Running());
-        final ProgressHandle filterHandle = ProgressHandleFactory.createHandle("Applying Preprocessors...");
-        try {
-            handle.start();
-            Map<String, List<Gpx>> trainingsMap = getTrainingsSet();
 
-            if (this.currentProfile.getPreprocess().isActive()
-                    && (this.currentProfile.getPreprocess().getMode() == DetectorMode.TRAINING
-                    || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)) {
-                Set<Entry<String, List<Gpx>>> entrySet = trainingsMap.entrySet();
-                filterHandle.start(entrySet.size());
-                int index = 0;
-                for (Entry<String, List<Gpx>> entry : entrySet) {
-                    List<Gpx> tracks = entry.getValue();
+        Map<String, List<TrackSegment>> trainingsMap = getTrainingsSet();
+        if (this.currentProfile.getPreprocess().isActive()
+                && (this.currentProfile.getPreprocess().getMode() == DetectorMode.TRAINING
+                || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)) {
+            final ProgressHandle filterHandle = ProgressHandleFactory.createHandle("Applying Preprocessors...");
+            Set<Entry<String, List<TrackSegment>>> entrySet = trainingsMap.entrySet();
+            filterHandle.start(entrySet.size());
+            int index = 0;
+            try {
+                for (Entry<String, List<TrackSegment>> entry : entrySet) {
+                    List<TrackSegment> tracks = entry.getValue();
                     // TOCO could lead to an infinity loop or to a concurrent modification exception!
                     trainingsMap.put(entry.getKey(), applyPreProcessors(tracks));
                     filterHandle.progress(index++);
                 }
+            } finally {
                 filterHandle.finish();
             }
-
-            // convert GPSTracks to fileObjects
-            InferenceModelInputDataSet inferenceModelInputDataSet = new InferenceModelInputDataSet();
-            for (Entry<String, List<Gpx>> entry : trainingsMap.entrySet()) {
-                inferenceModelInputDataSet.putTrainingsData(entry.getKey(), entry.getValue());
-            }
-
-            detector.getInferenceModel().setInput(inferenceModelInputDataSet);
-
-            // start training & crossvalidation
-            detector.getInferenceModel().setInferenceMode(InferenceMode.TRAININGS_MODE);
-            detector.getInferenceModel().run();
-        } finally {
-            filterHandle.finish();
-            handle.finish();
         }
+
+        // convert GPSTracks to fileObjects
+        InferenceModelInputDataSet inferenceModelInputDataSet = new InferenceModelInputDataSet();
+        for (Entry<String, List<TrackSegment>> entry : trainingsMap.entrySet()) {
+            inferenceModelInputDataSet.putTrainingsData(entry.getKey(), entry.getValue());
+        }
+
+        detector.getInferenceModel().setInput(inferenceModelInputDataSet);
+
+        // start training & crossvalidation
+        detector.getInferenceModel().setInferenceMode(InferenceMode.TRAININGS_MODE);
+        detector.getInferenceModel().run();
+
     }
 
     /**
      *
      */
     private void startInference() {
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Trainings_Process_Running());
-        try {
-            handle.start();
 
-            List<Gpx> inferenceSet = getInferenceSet();
+        try {
+
+            List<TrackSegment> inferenceSet = getInferenceSet();
 
             // apply pre precossers
             if (this.currentProfile.getPreprocess().isActive()
@@ -174,7 +174,6 @@ class DetectorRunController {
                 }
             }
         } finally {
-            handle.finish();
         }
     }
 
@@ -183,9 +182,9 @@ class DetectorRunController {
      * @param dataset
      * @return
      */
-    private List<Gpx> applyPreProcessors(List<Gpx> dataset) {
-        List<Gpx> gpsTracks = new ArrayList<Gpx>();
-        List<Gpx> tracks = dataset;
+    private List<TrackSegment> applyPreProcessors(List<TrackSegment> dataset) {
+        List<TrackSegment> gpsTracks = new ArrayList<TrackSegment>();
+        List<TrackSegment> tracks = dataset;
         for (FilterProcess filterProcess : detector.getPreProcessorPipeline().getProcesses()) {
             filterProcess.setInput(tracks);
             filterProcess.run();
@@ -200,17 +199,17 @@ class DetectorRunController {
      *
      * @return
      */
-    private Map<String, List<Gpx>> getTrainingsSet() {
-        HashMap<String, List<Gpx>> trainingsSet = new HashMap<String, List<Gpx>>();
+    private Map<String, List<TrackSegment>> getTrainingsSet() {
+        HashMap<String, List<TrackSegment>> trainingsSet = new HashMap<String, List<TrackSegment>>();
         for (TransportMode transportMode : detector.getDetectorDescriptor().getDatasets().getTrainingSet().getTransportModeList()) {
             if (!trainingsSet.containsKey(transportMode.getName())) {
-                trainingsSet.put(transportMode.getName(), new ArrayList<Gpx>());
+                trainingsSet.put(transportMode.getName(), new ArrayList<TrackSegment>());
             }
             for (DataSet dataSet : transportMode.getDataset()) {
                 FileObject datasetFileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
                 if (datasetFileObject != null && datasetFileObject.isValid()) {
                     try {
-                        List<Gpx> gpsTrackList = convertFileObject(datasetFileObject);
+                        List<TrackSegment> gpsTrackList = convertFileObject(datasetFileObject);
                         trainingsSet.get(transportMode.getName()).addAll(gpsTrackList);
                     } catch (DataConverter.DataConverterException ex) {
                         Exceptions.printStackTrace(ex);
@@ -226,14 +225,14 @@ class DetectorRunController {
      *
      * @return
      */
-    private List<Gpx> getInferenceSet() {
-        List<Gpx> inferenceSet = new ArrayList<Gpx>();
+    private List<TrackSegment> getInferenceSet() {
+        List<TrackSegment> inferenceSet = new ArrayList<TrackSegment>();
 
         for (DataSet dataset : detector.getDetectorDescriptor().getDatasets().getInferenceSet().getDatasetList()) {
             FileObject datasetFileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataset.getUrl());
             if (datasetFileObject != null && datasetFileObject.isValid()) {
                 try {
-                    List<Gpx> dataList = convertFileObject(datasetFileObject);
+                    List<TrackSegment> dataList = convertFileObject(datasetFileObject);
                     inferenceSet.addAll(dataList);
                 } catch (DataConverter.DataConverterException ex) {
                     Exceptions.printStackTrace(ex);
@@ -251,8 +250,8 @@ class DetectorRunController {
      * @throws
      * de.fub.mapsforge.project.detector.model.converter.DataConverter.DataConverterException
      */
-    private List<Gpx> convertFileObject(FileObject fileObject) throws DataConverter.DataConverterException {
-        List<Gpx> gpsTrackList = new ArrayList<Gpx>();
+    private List<TrackSegment> convertFileObject(FileObject fileObject) throws DataConverter.DataConverterException {
+        List<TrackSegment> gpsTrackList = new ArrayList<TrackSegment>();
         for (DataConverter converter : converterList) {
             if (converter.isFileTypeSupported(fileObject)) {
                 gpsTrackList = converter.convert(fileObject);

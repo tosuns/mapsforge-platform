@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.ui.EvaluationPanel;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -47,11 +47,13 @@ public class CrossValidationProcessHandler extends EvaluationProcessHandler {
         Instances trainingSet = new Instances("Classes", attributeList, 9);
         trainingSet.setClassIndex(0);
 
-        HashMap<String, HashSet<Gpx>> dataset = getInferenceModel().getInput().getTrainingsSet();
+        HashMap<String, HashSet<TrackSegment>> dataset = getInferenceModel().getInput().getTrainingsSet();
 
-        for (Entry<String, HashSet<Gpx>> entry : dataset.entrySet()) {
-            Instance instance = getInstance(entry.getKey(), new ArrayList<Gpx>(entry.getValue()));
-            trainingSet.add(instance);
+        for (Entry<String, HashSet<TrackSegment>> entry : dataset.entrySet()) {
+            for (TrackSegment trackSegment : entry.getValue()) {
+                Instance instance = getInstance(entry.getKey(), trackSegment);
+                trainingSet.add(instance);
+            }
         }
 
         assert trainingSet.numInstances() > 0 : "Training set is empty and has no instances"; //NO18N

@@ -59,8 +59,9 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
         plot.setBackgroundPaint(Color.white);
         BarRenderer barRenderer = new BarRenderer();
         plot.setRenderer(barRenderer);
-        chartPanel = new ChartPanel(barChart, true);
+        chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);
+
         add(chartPanel, BorderLayout.CENTER);
     }
 

@@ -48,7 +48,7 @@ public class MaxNSpeedFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        priorityQueue.add(entry.getmSpeed());
+        priorityQueue.add(entry.getSpeed());
         if (priorityQueue.size() > n) {
             priorityQueue.poll();
             assert priorityQueue.size() <= 3;
