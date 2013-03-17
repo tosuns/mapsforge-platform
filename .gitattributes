@@ -523,6 +523,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceModelSettingForm.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceModelVisuaElement.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceModelVisuaElement.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/actions/SnapShotExporterDelegateAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/PostProcessorPipeline.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/Task.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/FilterProcess.java -text
@@ -591,6 +592,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/processhandler/InferenceDataProcessHandler.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/processhandler/TrainingsDataProcessHandler.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/ui/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/ui/binaryTreeIcon.png -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/ui/exportIcon.png -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/LimitWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinDistanceWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinTimeDiffWaypointFilterProcess.xml -text
@@ -602,10 +605,16 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/test/java/de/fub/mapsforge/project/detector/models/xmls/DetectorDescriptorGeneratorTest.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/test/java/de/fub/mapsforge/project/detector/models/xmls/DetectorDescriptorTest.java -text
 MapsforgePlatform/MapsForgeSnapShotModule/pom.xml -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/api/AbstractComponentSnapShotExporter.java -text
 MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/api/ComponentSnapShotExporter.java -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/impl/HtmlSnapShotExporter.java -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/impl/PdfSnapShotExporter.java -text
 MapsforgePlatform/MapsForgeSnapShotModule/src/main/java/de/fub/mapsforge/snapshot/impl/SvgSnapShotExporter.java -text
 MapsforgePlatform/MapsForgeSnapShotModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapsForgeSnapShotModule/src/main/resources/de/fub/mapsforge/snapshot/Bundle.properties -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/resources/de/fub/mapsforge/snapshot/impl/html5Icon.png -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/resources/de/fub/mapsforge/snapshot/impl/pdfIcon.png -text
+MapsforgePlatform/MapsForgeSnapShotModule/src/main/resources/de/fub/mapsforge/snapshot/impl/svgIcon.png -text
 MapsforgePlatform/OpenstreemapSevice/pom.xml -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/LocationBoundingBoxService.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/OpenstreetMapService.java -text
@@ -658,6 +667,7 @@ MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorH
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/playHintIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/layer.xml -text
 MapsforgePlatform/WekaLibModule/pom.xml -text
+MapsforgePlatform/WekaLibModule/src/main/java/de/fub/weka/lib/module/DisableWeakPackageManager.java -text
 MapsforgePlatform/WekaLibModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/WekaLibModule/src/main/resources/de/fub/weka/lib/module/Bundle.properties -text
 MapsforgePlatform/XmlCatalogModule/pom.xml -text

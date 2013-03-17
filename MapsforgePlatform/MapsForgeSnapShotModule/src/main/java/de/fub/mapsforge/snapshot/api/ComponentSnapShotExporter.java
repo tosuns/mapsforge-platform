@@ -11,9 +11,11 @@ import java.awt.Image;
  *
  * @author Serdar
  */
-public interface ComponentSnapShotExporter {
+public interface ComponentSnapShotExporter extends Comparable<ComponentSnapShotExporter> {
 
     public Image getIconImage();
+
+    public String getName();
 
     public String getShortDescription();
 

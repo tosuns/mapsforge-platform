@@ -13,7 +13,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import javax.swing.JComponent;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

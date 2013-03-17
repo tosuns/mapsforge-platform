@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.features;
 
+import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.AvgTransportationDistanceFeature;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
@@ -25,6 +26,10 @@ public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
 
     @Override
     protected void start() {
+        feature.reset();
+        for (Waypoint waypoint : gpxTrack.getWayPointList()) {
+            feature.addWaypoint(waypoint);
+        }
     }
 
     @Override

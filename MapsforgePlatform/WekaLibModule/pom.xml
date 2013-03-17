@@ -51,6 +51,30 @@
             <artifactId>weka-dev</artifactId>
             <version>3.7.8</version>
         </dependency>
+        <dependency>
+            <artifactId>pentaho-package-manager</artifactId>
+            <groupId>org.pentaho.pentaho-commons</groupId>
+            <type>jar</type>
+            <version>1.0.5</version>
+        </dependency>
+        <dependency>
+            <artifactId>java-cup</artifactId>
+            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
+            <type>jar</type>
+            <version>0.11a</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-modules</artifactId>
+            <version>RELEASE73</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>org-openide-util</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -164,6 +188,13 @@
                         <publicPackage>weka.gui.visualize</publicPackage>
                         <publicPackage>weka.gui.visualize.messages</publicPackage>
                         <publicPackage>weka.gui.visualize.plugins</publicPackage>
+
+                        <publicPackage>java_cup</publicPackage>
+                        <publicPackage>java_cup.anttask</publicPackage>
+                        <publicPackage>java_cup.runtime</publicPackage>
+                        <publicPackage>org.bounce</publicPackage>
+                        <publicPackage>org.bounce.net</publicPackage>
+                        <publicPackage>org.pentaho.packageManagement</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

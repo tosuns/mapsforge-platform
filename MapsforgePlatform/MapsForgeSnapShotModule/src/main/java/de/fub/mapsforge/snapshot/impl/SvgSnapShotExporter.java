@@ -4,35 +4,45 @@
  */
 package de.fub.mapsforge.snapshot.impl;
 
+import de.fub.mapsforge.snapshot.api.AbstractComponentSnapShotExporter;
 import de.fub.mapsforge.snapshot.api.ComponentSnapShotExporter;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
-import javax.swing.filechooser.FileFilter;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
-import org.openide.filesystems.FileChooserBuilder;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
 @NbBundle.Messages({
-    "CLT_SvgSnapShotExporter_Description=Exports a swing component as svg file."
+    "CLT_SvgSnapShotExporter_Description=Exports a swing component as svg file.",
+    "CLT_SvgSnapShotExporter_Name=Svg"
 })
-public final class SvgSnapShotExporter implements ComponentSnapShotExporter {
+@ServiceProvider(service = ComponentSnapShotExporter.class)
+public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter {
 
+    @StaticResource
+    private static final String ICON_PATH = "de/fub/mapsforge/snapshot/impl/svgIcon.png";
     private static final long serialVersionUID = 1L;
 
     @Override
     public Image getIconImage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ImageUtilities.loadImage(ICON_PATH, false);
+    }
+
+    @Override
+    public String getName() {
+        return Bundle.CLT_SvgSnapShotExporter_Name();
     }
 
     @Override
@@ -42,33 +52,49 @@ public final class SvgSnapShotExporter implements ComponentSnapShotExporter {
 
     @Override
     public void export(Component component) {
-        FileChooserBuilder fileChooserBuilder = new FileChooserBuilder(ComponentSnapShotExporter.class).addFileFilter(new SvgFileFilter());
-        handleExport(null, component);
+        File selectedFile = showFileChoose("svg");
+        if (selectedFile != null) {
+            handleExport(selectedFile, component);
+        }
+
     }
 
     private void handleExport(File file, Component component) {
         if (component != null) {
             Writer out = null;
+            FileOutputStream fileOutputSream = null;
+            SVGGraphics2D svgGenerator = null;
             try {
-                DOMImplementation domImpl =
-                        GenericDOMImplementation.getDOMImplementation();
+                DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
+
                 // Create an instance of org.w3c.dom.Document.
                 String svgNS = "http://www.w3.org/2000/svg";
                 Document document = domImpl.createDocument(svgNS, "svg", null);
+
                 // Create an instance of the SVG Generator.
-                SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+                svgGenerator = new SVGGraphics2D(document);
+
                 // Ask the test to render into the SVG Graphics2D implementation.
                 component.paintAll(svgGenerator);
+
                 // Finally, stream out SVG to the standard output using
                 // UTF-8 encoding.
                 boolean useCSS = true; // we want to use CSS style attributes
-                out = new StringWriter();
-//                        new OutputStreamWriter(System.out, "UTF-8");
+                fileOutputSream = new FileOutputStream(file);
+                out = new OutputStreamWriter(fileOutputSream, "UTF-8");
                 svgGenerator.stream(out, useCSS);
             } catch (SVGGraphics2DIOException ex) {
                 Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             } finally {
+                if (svgGenerator != null) {
+                    svgGenerator.dispose();
+                }
                 try {
+                    if (fileOutputSream != null) {
+                        fileOutputSream.close();
+                    }
                     if (out != null) {
                         out.close();
                     }
@@ -77,27 +103,6 @@ public final class SvgSnapShotExporter implements ComponentSnapShotExporter {
                 }
             }
 
-        }
-    }
-
-    private static class SvgFileFilter extends FileFilter {
-
-        public SvgFileFilter() {
-        }
-
-        @Override
-        public boolean accept(File file) {
-            FileObject fileObject = FileUtil.toFileObject(file);
-            if (fileObject != null) {
-                return fileObject.isFolder() || fileObject.isData() && "svg".equalsIgnoreCase(fileObject.getExt());
-            } else {
-                return file.isDirectory() || "svg".equalsIgnoreCase(file.getName().substring(file.getName().lastIndexOf(".") + 1));
-            }
-        }
-
-        @Override
-        public String getDescription() {
-            return "Scalable Vector Graphic (*.svg)";
         }
     }
 }

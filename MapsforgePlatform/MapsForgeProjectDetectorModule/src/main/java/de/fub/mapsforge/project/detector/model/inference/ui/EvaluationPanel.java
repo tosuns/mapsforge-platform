@@ -124,27 +124,27 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
 
-        jPanel3.setBackground(new java.awt.Color(249, 249, 249));
+        jPanel3.setBackground(new java.awt.Color(255, 216, 178));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
         jPanel3.setMinimumSize(new java.awt.Dimension(0, 32));
         jPanel3.setPreferredSize(new java.awt.Dimension(100, 32));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         title.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        title.setForeground(new java.awt.Color(153, 153, 153));
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(title, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.title.text")); // NOI18N
         jPanel3.add(title, java.awt.BorderLayout.CENTER);
 
         add(jPanel3, java.awt.BorderLayout.NORTH);
 
-        jPanel1.setBackground(new java.awt.Color(249, 249, 249));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(2, 0, 0, 0, new java.awt.Color(204, 204, 204)));
         jPanel1.setMaximumSize(new java.awt.Dimension(32767, 32));
         jPanel1.setMinimumSize(new java.awt.Dimension(10, 32));
         jPanel1.setPreferredSize(new java.awt.Dimension(10, 32));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jPanel4.setBackground(new java.awt.Color(255, 216, 178));
         jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 8, 1, 8));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -163,16 +163,19 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         org.openide.awt.Mnemonics.setLocalizedText(incorrectClassifiedInstances, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.incorrectClassifiedInstances.text")); // NOI18N
         incorrectClassifiedInstances.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 8));
 
+        jPanel5.setOpaque(false);
         jPanel5.setLayout(new java.awt.BorderLayout());
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
+        toolBar.setOpaque(false);
         toolBar.add(filler1);
 
         org.openide.awt.Mnemonics.setLocalizedText(infoButton, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.infoButton.text")); // NOI18N
         infoButton.setFocusable(false);
         infoButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         infoButton.setMaximumSize(new java.awt.Dimension(24, 30));
+        infoButton.setOpaque(false);
         infoButton.setPreferredSize(new java.awt.Dimension(32, 21));
         infoButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         infoButton.addActionListener(new java.awt.event.ActionListener() {

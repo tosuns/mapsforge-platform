@@ -8,9 +8,7 @@ import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
-import de.fub.mapsforge.project.detector.model.inference.ui.actions.SaveAsHtmlAction;
-import de.fub.mapsforge.project.detector.model.inference.ui.actions.SaveAsPdfAction;
-import de.fub.mapsforge.project.detector.model.inference.ui.actions.SaveAsSvgAction;
+import de.fub.mapsforge.project.detector.model.inference.ui.actions.SnapShotExporterDelegateAction;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -58,29 +56,42 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
      */
     public InferenceModelVisuaElement(Lookup lkp) {
         initComponents();
-        lookup = new ProxyLookup(lkp, Lookups.singleton(contentPanel));
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
         addToolbarActions();
         obj = lkp.lookup(DetectorDataObject.class);
         assert obj != null;
-        jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
+
+        lookup = new ProxyLookup(lkp, Lookups.singleton(contentPanel));
+
         detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
+        assert detector != null;
         modelSynchronizerClient = detector.create(InferenceModelVisuaElement.this);
-        init();
+
     }
 
     private void init() {
         contentPanel.removeAll();
-        if (detector != null) {
-            inferenceModel = detector.getInferenceModel();
-            if (inferenceModel != null) {
-                contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
-                contentPanel.add(Box.createVerticalStrut(32));
-                contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE).getVisualRepresentation());
-                contentPanel.add(Box.createVerticalStrut(32));
-                contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
-                contentPanel.add(Box.createVerticalStrut(32));
-            }
+
+        if (inferenceModel != null && inferenceModel.getToolbarRepresenter() != null) {
+            toolbar.remove(inferenceModel.getToolbarRepresenter());
         }
+        inferenceModel = detector.getInferenceModel();
+
+        if (inferenceModel != null) {
+            if (inferenceModel.getToolbarRepresenter() != null) {
+                toolbar.add(inferenceModel.getToolbarRepresenter());
+                toolbar.invalidate();
+            }
+            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
+            contentPanel.add(Box.createVerticalStrut(32));
+            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE).getVisualRepresentation());
+            contentPanel.add(Box.createVerticalStrut(32));
+            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
+            contentPanel.add(Box.createVerticalStrut(32));
+            contentPanel.invalidate();
+            repaint();
+        }
+
     }
 
     @Override
@@ -89,11 +100,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     }
 
     private void addToolbarActions() {
-        Action[] actions = new Action[]{new SaveAsPdfAction(contentPanel), new SaveAsSvgAction(contentPanel), new SaveAsHtmlAction(contentPanel)};
+        toolbar.setFloatable(false);
         toolbar.add(new Toolbar.Separator());
-        for (Action action : actions) {
-            toolbar.add(action);
-        }
+        toolbar.add(new SnapShotExporterDelegateAction().getPresenter());
+        toolbar.add(new Toolbar.Separator());
     }
 
     /**
@@ -143,6 +153,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public void componentOpened() {
+        init();
     }
 
     @Override

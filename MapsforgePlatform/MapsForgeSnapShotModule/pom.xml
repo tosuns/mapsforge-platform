@@ -12,7 +12,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>MapsForgeSnapShotModule</name>
+    <name>MapsForge Project SnapShot Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -54,6 +54,28 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>ApacheBatikLib</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>org-openide-filesystems</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-dialogs</artifactId>
+            <version>RELEASE73</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>ITextLib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>itextpdf</artifactId>
+            <groupId>com.itextpdf</groupId>
+            <type>jar</type>
+            <version>5.4.0</version>
         </dependency>
     </dependencies>
 

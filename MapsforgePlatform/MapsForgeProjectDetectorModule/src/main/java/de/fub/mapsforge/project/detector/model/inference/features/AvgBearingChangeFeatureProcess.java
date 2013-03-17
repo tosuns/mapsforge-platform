@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.features;
 
+import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.AvgBearingChangeFeature;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
@@ -21,12 +22,14 @@ import org.openide.util.lookup.ServiceProvider;
 public class AvgBearingChangeFeatureProcess extends FeatureProcess {
 
     private final AvgBearingChangeFeature feature = new AvgBearingChangeFeature();
-    private TrackSegment gpsTack;
+    private TrackSegment gpsTrack;
 
     @Override
     protected void start() {
         feature.reset();
-
+        for (Waypoint waypoint : gpsTrack.getWayPointList()) {
+            feature.addWaypoint(waypoint);
+        }
     }
 
     @Override
@@ -41,7 +44,7 @@ public class AvgBearingChangeFeatureProcess extends FeatureProcess {
 
     @Override
     public void setInput(TrackSegment gpsTrack) {
-        this.gpsTack = gpsTrack;
+        this.gpsTrack = gpsTrack;
     }
 
     @Override

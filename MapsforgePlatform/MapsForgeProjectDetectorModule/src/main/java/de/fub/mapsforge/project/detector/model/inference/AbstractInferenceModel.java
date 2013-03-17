@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import javax.swing.JComponent;
+import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Node;
@@ -544,6 +545,10 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      * @return Classifier - a weka classifier. null not permitted.
      */
     protected abstract Classifier createClassifier();
+
+    public JToolBar getToolbarRepresenter() {
+        return null;
+    }
 
     public JComponent getVisualRepresenter() {
         return DEFAULT_VISUAL_REPRESENTER;

@@ -45,6 +45,12 @@
             <artifactId>itextpdf</artifactId>
             <version>5.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.itextpdf.tool</groupId>
+            <artifactId>xmlworker</artifactId>
+            <version>1.1.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -54,6 +60,53 @@
                 <artifactId>nbm-maven-plugin</artifactId>
                 <version>3.8</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>com.itextpdf.awt</publicPackage>
+                        <publicPackage>com.itextpdf.awt.geom</publicPackage>
+                        <publicPackage>com.itextpdf.awt.geom.gl</publicPackage>
+                        <publicPackage>com.itextpdf.awt.geom.misc</publicPackage>
+                        <publicPackage>com.itextpdf.text</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.api</publicPackage>
+                        <publicPackage>com.itextpdf.text.error_messages</publicPackage>
+                        <publicPackage>com.itextpdf.text.exceptions</publicPackage>
+                        <publicPackage>com.itextpdf.text.factories</publicPackage>
+                        <publicPackage>com.itextpdf.text.html</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.html.simpleparser</publicPackage>
+                        <publicPackage>com.itextpdf.text.io</publicPackage>
+                        <publicPackage>com.itextpdf.text.l10n.error</publicPackage>
+                        <publicPackage>com.itextpdf.text.log</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.pdf.codec</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.codec.wmf</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.collection</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.crypto</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.draw</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.pdf.events</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.fonts</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.fonts.cmaps</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.fonts.otf</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.hyphenation</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.pdf.hyphenation.hyph</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.interfaces</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.internal</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.languages</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.parser</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.pdf.qrcode</publicPackage>
+                        <publicPackage>com.itextpdf.text.pdf.security</publicPackage>
+                        <publicPackage>com.itextpdf.text.xml</publicPackage>
+                        <publicPackage>com.itextpdf.text.xml.simpleparser</publicPackage>
+                        <publicPackage>com.itextpdf.text.xml.simpleparser.handler</publicPackage>
+
+                        <publicPackage>com.itextpdf.text.xml.xmp</publicPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>
