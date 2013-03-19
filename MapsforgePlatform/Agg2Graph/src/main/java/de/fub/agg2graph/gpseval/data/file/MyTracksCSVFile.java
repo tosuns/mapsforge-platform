@@ -2,7 +2,6 @@ package de.fub.agg2graph.gpseval.data.file;
 
 import au.com.bytecode.opencsv.CSVReader;
 import de.fub.agg2graph.gpseval.data.Waypoint;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;

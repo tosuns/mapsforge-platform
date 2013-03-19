@@ -17,16 +17,15 @@
  */
 package de.fub.agg2graph.roadgen;
 
+import de.fub.agg2graph.agg.AggConnection;
+import de.fub.agg2graph.agg.AggContainer;
+import de.fub.agg2graph.agg.AggNode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import de.fub.agg2graph.agg.AggConnection;
-import de.fub.agg2graph.agg.AggContainer;
-import de.fub.agg2graph.agg.AggNode;
 
 /**
  * Methods for finding and processing intersections in the aggregated data in

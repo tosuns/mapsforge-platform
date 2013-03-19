@@ -1,7 +1,6 @@
 package de.fub.agg2graph.gpseval.data;
 
 import de.fub.agg2graph.gpseval.features.Feature;
-
 import java.util.HashMap;
 import java.util.Map;
 

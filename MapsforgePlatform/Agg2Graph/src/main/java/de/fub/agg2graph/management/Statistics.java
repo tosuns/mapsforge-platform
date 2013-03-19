@@ -15,14 +15,13 @@
 ******************************************************************************/
 package de.fub.agg2graph.management;
 
+import de.fub.agg2graph.roadgen.Intersection;
+import de.fub.agg2graph.roadgen.Road;
+import de.fub.agg2graph.roadgen.RoadNetwork;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import de.fub.agg2graph.roadgen.Intersection;
-import de.fub.agg2graph.roadgen.Road;
-import de.fub.agg2graph.roadgen.RoadNetwork;
 
 public class Statistics {
 	/**

@@ -10,14 +10,14 @@ import de.fub.agg2graph.input.GPSCleaner;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.layers.GPSSegmentLayer;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapforgeproject.api.process.ProcessPipeline.ProcessEvent;
+import de.fub.mapforgeproject.api.statistics.StatisticProvider;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
-import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Color;
@@ -25,7 +25,6 @@ import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
@@ -99,7 +98,6 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
                 if (name.equals(propertySet.getName())) {
                     return propertySet;
                 }
-
             }
         }
         return null;

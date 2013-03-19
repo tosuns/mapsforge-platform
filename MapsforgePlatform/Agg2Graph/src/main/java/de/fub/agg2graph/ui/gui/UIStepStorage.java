@@ -15,10 +15,6 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
 import de.fub.agg2graph.input.CleaningOptions;
@@ -30,6 +26,9 @@ import de.fub.agg2graph.ui.StepStorage;
 import de.fub.agg2graph.ui.gui.RenderingOptions.RenderingType;
 import de.fub.agg2graph.ui.gui.jmv.Layer;
 import de.fub.agg2graph.ui.gui.jmv.TestUI;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UIStepStorage extends StepStorage {
 	// data

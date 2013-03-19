@@ -16,7 +16,6 @@
 package de.fub.agg2graph.ui.gui;
 
 import java.awt.FlowLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;

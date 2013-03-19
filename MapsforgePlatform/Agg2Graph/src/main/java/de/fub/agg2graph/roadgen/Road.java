@@ -17,9 +17,6 @@
  */
 package de.fub.agg2graph.roadgen;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.structs.AbstractEdge;
@@ -27,6 +24,8 @@ import de.fub.agg2graph.structs.Hideable;
 import de.fub.agg2graph.structs.IEdge;
 import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graph.structs.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Road extends AbstractEdge<Intersection> implements Hideable {
 

@@ -15,12 +15,11 @@
 ******************************************************************************/
 package de.fub.agg2graph.roadgen;
 
-import java.util.Set;
-import java.util.logging.Logger;
-
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
+import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Filtering methods for the aggregated data. Used to strip unreliable

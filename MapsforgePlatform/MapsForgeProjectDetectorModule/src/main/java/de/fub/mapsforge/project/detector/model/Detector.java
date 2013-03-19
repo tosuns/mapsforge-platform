@@ -4,14 +4,14 @@
  */
 package de.fub.mapsforge.project.detector.model;
 
-import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
-import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.PostProcessorPipeline;
-import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcessorPipeline;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcessorPipeline;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.PostProcessors;
@@ -29,7 +29,6 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -65,7 +64,8 @@ public class Detector extends ModelSynchronizer {
         dataObjectModelSynchronizerClient = super.create(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                // for the editor
+                // for the editornew
+                dataObject.updateEditor();
             }
         });
 
@@ -99,7 +99,7 @@ public class Detector extends ModelSynchronizer {
                 FilterProcess filter = null;
                 getPreProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : preprocessors.getPreprocessorList()) {
-                    filter = DetectorUtils.createInstance(FilterProcess.class, processDescriptor.getJavaType());
+                    filter = DetectorUtils.createInstance(FilterProcess.class, processDescriptor.getJavaType(), Detector.this);
                     if (filter != null) {
                         getPreProcessorPipeline().add(filter);
                     }
@@ -112,7 +112,7 @@ public class Detector extends ModelSynchronizer {
                 Task task = null;
                 getPostProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
-                    task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType());
+                    task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType(), Detector.this);
                     if (task != null) {
                         getPostProcessorPipeline().add(task);
                     }
@@ -287,5 +287,10 @@ public class Detector extends ModelSynchronizer {
     @Override
     public String toString() {
         return "Detector{ name=" + getDetectorDescriptor().getName() + ", description=" + getDetectorDescriptor().getDescription() + '}';
+    }
+
+    @Override
+    protected void synchronizeModel() {
+        notifyModified();
     }
 }

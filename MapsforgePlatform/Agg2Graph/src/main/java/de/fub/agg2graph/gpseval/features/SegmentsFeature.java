@@ -1,7 +1,6 @@
 package de.fub.agg2graph.gpseval.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
-
 import java.util.HashSet;
 import java.util.Set;
 

@@ -2,13 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.factories.nodes;
+package de.fub.mapsforge.project.detector.factories.nodes.inference;
 
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
+import de.fub.mapsforge.project.detector.factories.inference.InferenceNodeChildFactory;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import de.fub.utilsmodule.text.StringUtils;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -18,6 +20,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -40,13 +43,14 @@ public class InferenceModelNode extends AbstractNode implements ChangeListener, 
     private InstanceContent content = null;
     private Detector detector;
     private ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+    private Sheet sheet;
 
     public InferenceModelNode(Detector detector) {
         this(detector, new InstanceContent());
     }
 
     private InferenceModelNode(Detector detector, InstanceContent content) {
-        super(Children.LEAF, new AbstractLookup(content));
+        super(Children.create(new InferenceNodeChildFactory(detector), true), new AbstractLookup(content));
         if (detector != null) {
             this.content = content;
             this.detector = detector;
@@ -87,12 +91,29 @@ public class InferenceModelNode extends AbstractNode implements ChangeListener, 
             if (inferenceModel != null) {
                 content.add(inferenceModel);
                 setDisplayName(inferenceModel.getName());
-                setShortDescription(inferenceModel.getDescription());
+                setShortDescription(StringUtils.StringAsHtmlWrapString(inferenceModel.getDescription()));
                 inferenceModel.addProcessListener(InferenceModelNode.this);
                 inferenceModel.addPropertyChangeListener(InferenceModelNode.this);
+                updateSheet();
             }
         }
         fireIconChange();
+    }
+
+    @Override
+    protected Sheet createSheet() {
+        if (sheet == null) {
+            sheet = Sheet.createDefault();
+        }
+        updateSheet();
+        return sheet;
+    }
+
+    private void updateSheet() {
+        if (inferenceModel != null) {
+            Sheet.Set set = null;
+
+        }
     }
 
     @Override

@@ -15,6 +15,10 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.tiling;
 
+import de.fub.agg2graph.agg.AggConnection;
+import de.fub.agg2graph.agg.AggContainer;
+import de.fub.agg2graph.agg.AggNode;
+import de.fub.agg2graph.input.FileHandler;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.io.File;
@@ -26,16 +30,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import org.xml.sax.SAXException;
-
-import de.fub.agg2graph.agg.AggConnection;
-import de.fub.agg2graph.agg.AggContainer;
-import de.fub.agg2graph.agg.AggNode;
-import de.fub.agg2graph.input.FileHandler;
 
 /**
  * Cache management for tiles.

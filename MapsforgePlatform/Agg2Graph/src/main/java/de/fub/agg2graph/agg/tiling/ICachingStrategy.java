@@ -15,16 +15,15 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.tiling;
 
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
-import java.util.List;
-import java.util.Set;
-
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.structs.IEdge;
 import de.fub.agg2graph.structs.ILocation;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Strategy for caching data. Includes methods for adding, removing, loading,

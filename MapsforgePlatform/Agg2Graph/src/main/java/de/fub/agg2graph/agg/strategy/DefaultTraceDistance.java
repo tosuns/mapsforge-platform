@@ -15,11 +15,6 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.strategy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.agg.IMergeHandler;
 import de.fub.agg2graph.agg.ITraceDistance;
@@ -28,6 +23,10 @@ import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.ILocation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DefaultTraceDistance implements ITraceDistance {
 	private static final Logger logger = Logger

@@ -7,7 +7,6 @@ import de.fub.agg2graph.gpseval.data.filter.WaypointFilterFactory;
 import de.fub.agg2graph.gpseval.features.Feature;
 import de.fub.agg2graph.gpseval.features.FeatureFactory;
 import de.fub.agg2graph.gpseval.utils.Parameterizable;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;

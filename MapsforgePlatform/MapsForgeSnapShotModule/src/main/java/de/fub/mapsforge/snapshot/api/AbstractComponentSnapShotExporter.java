@@ -4,8 +4,16 @@
  */
 package de.fub.mapsforge.snapshot.api;
 
+import de.fub.utilsmodule.beans.BeanUtil;
+import java.awt.Component;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.MessageFormat;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -50,6 +58,133 @@ public abstract class AbstractComponentSnapShotExporter implements ComponentSnap
             }
         }
         return selectedFile;
+    }
+
+    protected Component copyComponent3(Component component) {
+        Component componentCopy = null;
+        componentCopy = BeanUtil.copyBean(component);
+        return componentCopy;
+    }
+
+    protected Component copyComponent2(Component component) {
+
+        Component copy = null;
+        if (component != null) {
+            ObjectOutputStream out = null;
+            ByteArrayOutputStream bos = null;
+            ByteArrayInputStream bis = null;
+            ObjectInputStream in = null;
+            try {
+
+                bos = new ByteArrayOutputStream();
+
+                out = new ObjectOutputStream(bos);
+
+                out.writeObject(component);
+                out.flush();
+                out.close();
+
+                bis = new ByteArrayInputStream(bos.toByteArray());
+                in = new ObjectInputStream(bis);
+                Object readObject = in.readObject();
+                if (readObject instanceof Component) {
+                    copy = (Component) readObject;
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (ClassNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            } finally {
+                try {
+                    if (bos != null) {
+                        bos.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                try {
+                    if (bis != null) {
+                        bis.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        return copy;
+    }
+
+    protected Component copyComponent(Component component) {
+
+        Component copy = null;
+        if (component != null) {
+            ObjectOutputStream out = null;
+            ByteArrayOutputStream bos = null;
+            ByteArrayInputStream bis = null;
+            ObjectInputStream in = null;
+            try {
+                XMLEncoder ee = new XMLEncoder(System.out);
+                ee.writeObject(component);
+                ee.close();
+                bos = new ByteArrayOutputStream();
+                XMLEncoder e = new XMLEncoder(bos);
+                e.writeObject(component);
+                e.close();
+
+
+                bis = new ByteArrayInputStream(bos.toByteArray());
+                XMLDecoder d = new XMLDecoder(bis);
+                Object readObject = d.readObject();
+
+                if (readObject instanceof Component) {
+                    copy = (Component) readObject;
+                }
+            } finally {
+                try {
+                    if (bos != null) {
+                        bos.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                try {
+                    if (bis != null) {
+                        bis.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        return copy;
     }
 
     private static class FileFilterImpl extends FileFilter {

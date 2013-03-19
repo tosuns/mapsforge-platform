@@ -15,14 +15,13 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import de.fub.agg2graph.input.CleaningOptions;
 import de.fub.agg2graph.structs.CartesianCalc;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.ILocation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Class for cleaning a path in the {@link AggContainer} using give

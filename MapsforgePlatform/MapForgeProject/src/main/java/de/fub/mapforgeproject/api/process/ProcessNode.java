@@ -4,6 +4,7 @@
  */
 package de.fub.mapforgeproject.api.process;
 
+import de.fub.mapforgeproject.api.process.Process;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

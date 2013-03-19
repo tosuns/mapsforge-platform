@@ -15,10 +15,9 @@
 ******************************************************************************/
 package de.fub.agg2graph.ui.gui;
 
-import java.util.List;
-
 import de.fub.agg2graph.ui.gui.jmv.Layer;
 import de.fub.agg2graph.ui.gui.jmv.TestUI;
+import java.util.List;
 
 public interface IRenderingPanel {
 	public List<Layer> getLayers();

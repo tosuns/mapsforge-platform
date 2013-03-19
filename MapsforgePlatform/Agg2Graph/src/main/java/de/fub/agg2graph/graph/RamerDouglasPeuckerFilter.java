@@ -17,9 +17,6 @@
  */
 package de.fub.agg2graph.graph;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
@@ -29,6 +26,8 @@ import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graph.structs.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Filters data using Ramer-Douglas-Peucker algorithm with specified tolerance

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui;
 
+import de.fub.agg2graph.structs.ClassObjectEditor;
+import de.fub.agg2graph.structs.EditableObject;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,7 +24,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,9 +35,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-
-import de.fub.agg2graph.structs.ClassObjectEditor;
-import de.fub.agg2graph.structs.EditableObject;
 
 public class VisualObjectEditor extends JPanel {
 	private static final long serialVersionUID = 2126207635038022187L;

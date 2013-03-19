@@ -16,8 +16,10 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -41,6 +43,7 @@ import org.openide.util.WeakListeners;
  */
 public final class SelectionComponent extends javax.swing.JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
+    private static final Logger LOG = Logger.getLogger(SelectionComponent.class.getName());
     private static final long serialVersionUID = 1L;
     private final ObservableList<DetectorProcess> allItems = new ObservableArrayList<DetectorProcess>();
     private final ObservableList<DetectorProcess> selectedItems = new ObservableArrayList<DetectorProcess>();
@@ -206,7 +209,7 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
             } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
                 Object newValue = evt.getNewValue();
                 Object oldValue = evt.getOldValue();
-                System.out.println(newValue + ". " + oldValue);
+                LOG.info(MessageFormat.format("{0}. {1}", newValue, oldValue));
             }
         } else if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
             Node[] selectedNodes = new Node[0];
@@ -227,8 +230,7 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
             }
             if (selectedNodes.length == 1) {
                 DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
-                if (detectorProcess
-                        != null) {
+                if (detectorProcess != null) {
                     getDescription().setText(detectorProcess.getDescription());
                 }
             } else if (selectedNodes.length > 1) {
@@ -236,8 +238,7 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
                 for (Node node : selectedNodes) {
                     DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
-                    if (detectorProcess
-                            != null) {
+                    if (detectorProcess != null) {
                         stringBuilder.append(detectorProcess.toString()).append("/\n");
                     }
                 }

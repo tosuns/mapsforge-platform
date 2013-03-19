@@ -15,6 +15,15 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.tiling;
 
+import de.fub.agg2graph.agg.AggConnection;
+import de.fub.agg2graph.agg.AggContainer;
+import de.fub.agg2graph.agg.AggNode;
+import de.fub.agg2graph.input.FileHandler;
+import de.fub.agg2graph.structs.GPSCalc;
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.structs.IEdge;
+import de.fub.agg2graph.structs.ILocation;
+import de.fub.agg2graph.structs.projection.OsmProjection;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
@@ -26,20 +35,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
-
-import de.fub.agg2graph.agg.AggConnection;
-import de.fub.agg2graph.agg.AggContainer;
-import de.fub.agg2graph.agg.AggNode;
-import de.fub.agg2graph.input.FileHandler;
-import de.fub.agg2graph.structs.GPSCalc;
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.structs.IEdge;
-import de.fub.agg2graph.structs.ILocation;
-import de.fub.agg2graph.structs.projection.OsmProjection;
 
 /**
  * Managing tiles: adding and removing nodes, proximity searches.

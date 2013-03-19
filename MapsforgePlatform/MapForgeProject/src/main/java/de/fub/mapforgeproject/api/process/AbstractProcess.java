@@ -4,6 +4,7 @@
  */
 package de.fub.mapforgeproject.api.process;
 
+import de.fub.mapforgeproject.api.process.Process;
 import de.fub.mapforgeproject.api.process.ProcessPipeline.ProcessListener;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider.StatisticSection;

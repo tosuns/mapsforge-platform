@@ -15,13 +15,12 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.tiling;
 
+import de.fub.agg2graph.structs.ILocation;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import de.fub.agg2graph.structs.ILocation;
 
 /**
  * A tile in the tiled structure of the spatial data.

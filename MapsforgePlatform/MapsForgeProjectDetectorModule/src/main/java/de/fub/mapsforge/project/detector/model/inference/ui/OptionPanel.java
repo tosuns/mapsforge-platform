@@ -8,13 +8,16 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
  *
  * @author Serdar
  */
-public class DefaultInferenceModelVisualRepresenterComponent extends javax.swing.JPanel {
+public class OptionPanel extends javax.swing.JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Creates new form DefaultInferenceModelVisualRepresenterComponent
+     * Creates new form OptionPanel
      */
-    public DefaultInferenceModelVisualRepresenterComponent() {
+    public OptionPanel() {
         initComponents();
+        propertySheetView1.setDescriptionAreaVisible(false);
     }
 
     /**
@@ -26,17 +29,16 @@ public class DefaultInferenceModelVisualRepresenterComponent extends javax.swing
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        propertySheetView1 = new org.openide.explorer.propertysheet.PropertySheetView();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setForeground(new java.awt.Color(161, 161, 146));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(DefaultInferenceModelVisualRepresenterComponent.class, "DefaultInferenceModelVisualRepresenterComponent.jLabel1.text")); // NOI18N
-        add(jLabel1, java.awt.BorderLayout.CENTER);
+        propertySheetView1.setDescriptionAreaVisible(false);
+        propertySheetView1.setDisabledPropertyColor(javax.swing.UIManager.getDefaults().getColor("Button.foreground"));
+        add(propertySheetView1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private org.openide.explorer.propertysheet.PropertySheetView propertySheetView1;
     // End of variables declaration//GEN-END:variables
 }

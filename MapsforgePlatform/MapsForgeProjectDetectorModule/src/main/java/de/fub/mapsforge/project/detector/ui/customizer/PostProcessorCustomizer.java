@@ -5,7 +5,6 @@
 package de.fub.mapsforge.project.detector.ui.customizer;
 
 import de.fub.mapsforge.project.detector.ui.PostprocessorComponent;
-import de.fub.mapsforge.project.detector.ui.PreprocessorComponent;
 import javax.swing.JComponent;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;

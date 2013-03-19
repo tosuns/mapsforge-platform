@@ -15,10 +15,9 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
-import java.util.List;
-
 import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.structs.GPSSegment;
+import java.util.List;
 
 /**
  * Strategy for aggregating new {@link GPSSegment}s to an {@link AggContainer}.

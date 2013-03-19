@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
@@ -55,7 +56,7 @@ public class DetectorDescriptorTest {
                 inputStream.close();
             }
         } else {
-            throw new FileNotFoundException("Couldn't find DetectorTestTemplate.xml file.");
+            throw new FileNotFoundException(MessageFormat.format("Couldn't find {0} file.", resourcePath));
         }
         return detector;
     }
@@ -102,6 +103,11 @@ public class DetectorDescriptorTest {
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinDistanceWaypointFilterProcess.xml");
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinTimeDiffWaypointFilterProcess.xml");
 
+
+        //Classifiers
+        marshall(InferenceModelDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/impl/J48InferenceModel.xml");
+        marshall(InferenceModelDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/impl/REPTreeInferenceModel.xml");
+        marshall(InferenceModelDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/impl/RandomForestInferenceModel.xml");
         // task
 //        marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/MapRenderer.xml");
     }

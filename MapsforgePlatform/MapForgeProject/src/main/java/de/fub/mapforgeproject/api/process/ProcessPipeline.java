@@ -4,6 +4,7 @@
  */
 package de.fub.mapforgeproject.api.process;
 
+import de.fub.mapforgeproject.api.process.Process;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventListener;

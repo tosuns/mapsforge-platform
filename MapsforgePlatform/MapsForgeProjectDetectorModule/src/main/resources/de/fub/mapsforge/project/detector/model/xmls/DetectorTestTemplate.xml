@@ -9,10 +9,35 @@
             </feature>
         </features>
         <inferenceModelProcessHandlers>
-            <processHandler inferenceMode="trainingsMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler" name="trainingsProcessHandler"/>
-            <processHandler inferenceMode="crossvalidationMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler" name="crossvalidationProcessHandler"/>
-            <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler"/>
+            <processHandler inferenceMode="trainingsMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler" name="trainingsProcessHandler">
+                <properties>
+                    <property value="0.75" id="trainings.set.ratio" javaType="java.lang.Double" name="Training set size" description="This property indicates the ratio the trainings set will be divides for the actual training and for successive the test."/>
+                </properties>
+            </processHandler>
+            <processHandler inferenceMode="crossvalidationMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler" name="crossvalidationProcessHandler">
+                <properties>
+                    <property value="10" id="trainings.set.crossvalidation.fold" javaType="java.lang.Integer" name="Crossvalidation Folds" description="This property indicates the amoung of folds for the crossvalidation evaluation"/>
+                </properties>
+            </processHandler>
+            <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler">
+                <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler">
+                    <properties/>
+                </processHandler>
+            </processHandler>
         </inferenceModelProcessHandlers>
+        <propertysection>
+            <section id="j48.inference.model.option" name="Options" description="Options to tune the classifier">
+                <property id="j48.unpruned" value="false" javaType="java.lang.Boolean" name="use unpruned tree" description="Specifies to use an unpruned tree"/>
+                <property id="j48.confidence" value="0.25" javaType="java.lang.Double" name="Confidence" description="Specifies confidence threshold for pruning. (Default: 0.25)"/>
+                <property id="j48.minimum.instances.per.leaf" value="2" javaType="java.lang.Integer" name="Minumum Instances" description="Specifies the minimum number of instances per leaf. (Default: 2)"/>
+                <property id="j48.reduced.error.pruning" value="false" javaType="java.lang.Boolean" name="Reduced error pruning" description="Specifies to use reduced error pruning. No subtree raising is performed"/>
+                <property id="j48.folds" javaType="java.lang.Integer" value="3" name="Number of folds" description="Specifies the number of folds for reduced error pruning. One fold is used as the pruning set. (Default: 3)"/>
+                <property id="j48.binary.splits" value="false" javaType="java.lang.Boolean" name="Use binary splits" description="Specifies to Use binary splits for nominal attributes."/>
+                <property id="j48.no.subtree.raising" javaType="java.lang.Boolean" value="false" name="Don't raise subtree" description="Specifies to not to perform subtree raising"/>
+                <property id="j48.no.clean.up" value="false" javaType="java.lang.Boolean" name="Don't clean up" description="Specifies not not clean up after the tree has been built. -A If set, Laplace smoothing is used for predicted probabilites."/>
+                <property id="j48.seed" value="1" javaType="java.lang.Integer" name="Seed" description="Specifies the seed for reduced-error pruning"/>
+            </section>
+        </propertysection>
     </inferencemodel>
     <datasets>
         <trainingset>

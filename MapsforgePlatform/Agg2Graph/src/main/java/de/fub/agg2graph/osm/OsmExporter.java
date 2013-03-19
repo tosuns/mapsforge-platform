@@ -15,6 +15,11 @@
 ******************************************************************************/
 package de.fub.agg2graph.osm;
 
+import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
+import de.fub.agg2graph.roadgen.Road;
+import de.fub.agg2graph.roadgen.RoadNetwork;
+import de.fub.agg2graph.structs.ClassObjectEditor;
+import de.fub.agg2graph.structs.ILocation;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -27,12 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
-import de.fub.agg2graph.roadgen.Road;
-import de.fub.agg2graph.roadgen.RoadNetwork;
-import de.fub.agg2graph.structs.ClassObjectEditor;
-import de.fub.agg2graph.structs.ILocation;
 
 /**
  * Export a {@link RoadNetwork} to an xml file as accepted by OpenStreetMap.

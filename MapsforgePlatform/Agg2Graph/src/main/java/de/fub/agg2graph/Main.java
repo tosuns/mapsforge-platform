@@ -15,6 +15,10 @@
 ******************************************************************************/
 package de.fub.agg2graph;
 
+import de.fub.agg2graph.ui.cli.CLI;
+import de.fub.agg2graph.ui.gui.jmv.AutoTest;
+import de.fub.agg2graph.ui.gui.jmv.DrawGPX;
+import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -23,11 +27,6 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import de.fub.agg2graph.ui.cli.CLI;
-import de.fub.agg2graph.ui.gui.jmv.AutoTest;
-import de.fub.agg2graph.ui.gui.jmv.DrawGPX;
-import de.fub.agg2graph.ui.gui.jmv.TestUI;
 
 public class Main {
 	private static final String VERSION = "0.1";

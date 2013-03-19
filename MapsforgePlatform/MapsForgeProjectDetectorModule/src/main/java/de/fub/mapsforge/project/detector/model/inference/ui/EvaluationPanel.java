@@ -16,6 +16,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JLabel;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.netbeans.swing.outline.Outline;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.explorer.ExplorerManager;
@@ -41,16 +42,19 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
     private static final String NUMBER_PATTERN = "{0, number, 000.00} %";
     private static final long serialVersionUID = 1L;
-    private final ExplorerManager explorerManager = new ExplorerManager();
-    private Evaluation evaluation;
-    private InferenceModelProcessHandler processHandler;
+    private transient final ExplorerManager explorerManager = new ExplorerManager();
+    private transient Evaluation evaluation;
+    private transient InferenceModelProcessHandler processHandler;
 
     /**
      * Creates new form EvaluationPanel
      */
     public EvaluationPanel() {
         initComponents();
-        outlineView.getOutline().setRootVisible(false);
+        outlineView.getActionMap().clear();
+        Outline outline = outlineView.getOutline();
+        outline.getActionMap().clear();
+        outline.setRootVisible(false);
     }
 
     public EvaluationPanel(InferenceModelProcessHandler processHandler) {
@@ -108,7 +112,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
         setMaximumSize(new java.awt.Dimension(2147483647, 350));
-        setMinimumSize(new java.awt.Dimension(58, 350));
+        setMinimumSize(new java.awt.Dimension(58, 100));
         setPreferredSize(new java.awt.Dimension(801, 350));
         setLayout(new java.awt.BorderLayout(0, 8));
 
@@ -370,6 +374,20 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
             g2d.fill(new Rectangle(bufferedImage.getWidth(), bufferedImage.getHeight()));
             g2d.dispose();
             return bufferedImage;
+        }
+    }
+
+    private static class MyOutlineView extends OutlineView {
+
+        private static final long serialVersionUID = 1L;
+
+        public MyOutlineView() {
+            getActionMap().clear();
+        }
+
+        public MyOutlineView(String nodesColumnLabel) {
+            super(nodesColumnLabel);
+            getActionMap().clear();
         }
     }
 }

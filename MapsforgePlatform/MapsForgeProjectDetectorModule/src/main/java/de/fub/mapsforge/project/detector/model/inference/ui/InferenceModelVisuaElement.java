@@ -14,6 +14,7 @@ import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -66,10 +67,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
         assert detector != null;
         modelSynchronizerClient = detector.create(InferenceModelVisuaElement.this);
-
+        reinit();
     }
 
-    private void init() {
+    private void reinit() {
         contentPanel.removeAll();
 
         if (inferenceModel != null && inferenceModel.getToolbarRepresenter() != null) {
@@ -80,7 +81,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         if (inferenceModel != null) {
             if (inferenceModel.getToolbarRepresenter() != null) {
                 toolbar.add(inferenceModel.getToolbarRepresenter());
-                toolbar.invalidate();
+                toolbar.revalidate();
             }
             contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
             contentPanel.add(Box.createVerticalStrut(32));
@@ -88,7 +89,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
             contentPanel.add(Box.createVerticalStrut(32));
             contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
             contentPanel.add(Box.createVerticalStrut(32));
-            contentPanel.invalidate();
+            contentPanel.revalidate();
             repaint();
         }
 
@@ -153,7 +154,6 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public void componentOpened() {
-        init();
     }
 
     @Override
@@ -193,6 +193,11 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        init();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                reinit();
+            }
+        });
     }
 }

@@ -205,7 +205,7 @@ public class InferenceModelComponent extends javax.swing.JPanel implements Explo
             if (selectedNodes.length == 1) {
                 AbstractInferenceModel abstractInferenceModel = selectedNodes[0].getLookup().lookup(AbstractInferenceModel.class);
                 if (abstractInferenceModel != null) {
-                    JComponent visualRepresenter = abstractInferenceModel.getVisualRepresenter();
+                    JComponent visualRepresenter = abstractInferenceModel.getSettingsView();
                     if (visualRepresenter != null) {
                         settingsPanelContainer.add(visualRepresenter, BorderLayout.CENTER);
                     }
@@ -214,7 +214,7 @@ public class InferenceModelComponent extends javax.swing.JPanel implements Explo
             } else {
                 applyButton.setEnabled(false);
             }
-            settingsPanelContainer.invalidate();
+            settingsPanelContainer.revalidate();
             repaint();
         }
     }

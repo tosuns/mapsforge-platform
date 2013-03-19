@@ -18,18 +18,15 @@ package de.fub.agg2graph.gpsk.gui;
 
 import de.fub.agg2graph.gpsk.Main;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.UIManager;
-
 import static java.awt.event.ActionEvent.CTRL_MASK;
 import static java.awt.event.KeyEvent.VK_O;
 import java.io.File;
+import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-import static javax.swing.KeyStroke.getKeyStroke;
-import javax.swing.filechooser.FileFilter;
-
-
 import static javax.swing.JFileChooser.APPROVE_OPTION;
+import static javax.swing.KeyStroke.getKeyStroke;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
 
 /**
  *

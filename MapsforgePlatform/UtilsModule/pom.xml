@@ -80,6 +80,23 @@
             <artifactId>org-netbeans-libs-xerces</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>uk.com.robust-it</groupId>
+            <artifactId>cloning</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>objenesis</artifactId>
+            <groupId>org.objenesis</groupId>
+            <type>jar</type>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -90,16 +107,20 @@
                 <version>3.8</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <useOSGiDependencies>true</useOSGiDependencies>
+                    <useOSGiDependencies>false</useOSGiDependencies>
                     <publicPackages>
                         <publicPackage>de.fub.utilsmodule.Collections</publicPackage>
                         <publicPackage>de.fub.utilsmodule.Collections.awt</publicPackage>
                         <publicPackage>de.fub.utilsmodule.NodeFactories</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.beans</publicPackage>
                         <publicPackage>de.fub.utilsmodule.icons</publicPackage>
                         <publicPackage>de.fub.utilsmodule.installer</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.node</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.node.property.editors</publicPackage>
                         <publicPackage>de.fub.utilsmodule.process</publicPackage>
                         <publicPackage>de.fub.utilsmodule.profiling</publicPackage>
                         <publicPackage>de.fub.utilsmodule.propertyeditors</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.reflection</publicPackage>
                         <publicPackage>de.fub.utilsmodule.synchronizer</publicPackage>
                         <publicPackage>de.fub.utilsmodule.text</publicPackage>
                         <publicPackage>de.fub.utilsmodule.xml.adapters</publicPackage>

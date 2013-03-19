@@ -4,30 +4,23 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
-import de.fub.mapsforge.project.detector.factories.FeatureNodeFactory;
+import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
-import de.fub.utilsmodule.Collections.ObservableArrayList;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
-import org.openide.explorer.ExplorerManager;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
+import org.openide.DialogDescriptor;
 import org.openide.util.Lookup;
-import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Serdar
  */
-public class InferenceModelSettingForm extends javax.swing.JPanel implements PropertyChangeListener {
+public class InferenceModelSettingForm extends javax.swing.JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private final AbstractInferenceModel inferenecModel;
-    private final ObservableArrayList<FeatureProcess> allFeatureList;
-    private final ObservableArrayList<FeatureProcess> selectedFeatureList;
 
     /**
      * Creates new form InferenceModelSettingForm
@@ -40,28 +33,23 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Pro
         assert inferenceModel != null;
         initComponents();
 
-        selectionComponent1.getAllListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(InferenceModelSettingForm.this, selectionComponent1.getAllListExplorerManager()));
-        selectionComponent1.getSelectedListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(InferenceModelSettingForm.this, selectionComponent1.getSelectedListExplorerManager()));
         this.inferenecModel = inferenceModel;
 
         selectionComponent1.getAllItemListTitle().setText("All Features"); //NO18N
         selectionComponent1.getSelectedItemListTitle().setText("Selected Features"); // NO18N
 
-        allFeatureList = new ObservableArrayList<FeatureProcess>(Lookup.getDefault().lookupResult(FeatureProcess.class).allInstances());
-        selectedFeatureList = new ObservableArrayList<FeatureProcess>();
+        selectionComponent1.getAllItems().addAll(Lookup.getDefault().lookupResult(FeatureProcess.class).allInstances());
         Collection<FeatureProcess> featureList = inferenceModel.getFeatureList();
 
-        for (FeatureProcess feature : featureList) {
-            for (FeatureProcess f : allFeatureList) {
+        for (DetectorProcess feature : featureList) {
+            for (DetectorProcess f : selectionComponent1.getAllItems()) {
                 if (feature.getClass().equals(f.getClass())) {
-                    selectedFeatureList.add(f);
+                    selectionComponent1.getSelectedItems().add(f);
                 }
             }
         }
-        allFeatureList.removeAll(selectedFeatureList);
+        selectionComponent1.getAllItems().removeAll(selectionComponent1.getSelectedItems());
 
-        selectionComponent1.getAllListExplorerManager().setRootContext(new AbstractNode(Children.create(new FeatureNodeFactory(allFeatureList), true)));
-        selectionComponent1.getSelectedListExplorerManager().setRootContext(new AbstractNode(Children.create(new FeatureNodeFactory(selectedFeatureList), true)));
     }
 
     /**
@@ -73,56 +61,40 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Pro
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        optionPanel1 = new de.fub.mapsforge.project.detector.model.inference.ui.OptionPanel();
         selectionComponent1 = new de.fub.mapsforge.project.detector.ui.SelectionComponent();
+        jPanel1 = new javax.swing.JPanel();
+        processHandlerPanel1 = new de.fub.mapsforge.project.detector.model.inference.ui.ProcessHandlerPanel();
 
         setLayout(new java.awt.BorderLayout());
 
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(700, 450));
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(InferenceModelSettingForm.class, "InferenceModelSettingForm.optionPanel1.TabConstraints.tabTitle"), optionPanel1); // NOI18N
+
         selectionComponent1.setPreferredSize(new java.awt.Dimension(400, 450));
-        add(selectionComponent1, java.awt.BorderLayout.CENTER);
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(InferenceModelSettingForm.class, "InferenceModelSettingForm.selectionComponent1.TabConstraints.tabTitle"), selectionComponent1); // NOI18N
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.add(processHandlerPanel1, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(InferenceModelSettingForm.class, "InferenceModelSettingForm.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+
+        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private de.fub.mapsforge.project.detector.model.inference.ui.OptionPanel optionPanel1;
+    private de.fub.mapsforge.project.detector.model.inference.ui.ProcessHandlerPanel processHandlerPanel1;
     private de.fub.mapsforge.project.detector.ui.SelectionComponent selectionComponent1;
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
-            Node[] allSelectedNodes = selectionComponent1.getAllListExplorerManager().getSelectedNodes();
-            Node[] selectedNodes = selectionComponent1.getSelectedListExplorerManager().getSelectedNodes();
-
-            if (allSelectedNodes.length == 0 && selectedNodes.length == 0) {
-                selectionComponent1.getDescription().setText(null);
-            } else if (allSelectedNodes.length > 0 || selectedNodes.length > 0) {
-
-                if (allSelectedNodes.length == 1) {
-                    FeatureProcess feature = allSelectedNodes[0].getLookup().lookup(FeatureProcess.class);
-                    if (feature != null) {
-                        selectionComponent1.getDescription().setText(feature.getDescription());
-                    }
-                } else if (selectedNodes.length == 1) {
-                    FeatureProcess feature = selectedNodes[0].getLookup().lookup(FeatureProcess.class);
-                    if (feature != null) {
-                        selectionComponent1.getDescription().setText(feature.getDescription());
-                    }
-                } else {
-                    Node[] nodes = null;
-                    if (selectionComponent1.getAllItemList().isFocusOwner()) {
-                        nodes = allSelectedNodes;
-                    } else if (selectionComponent1.getSelectedItemList().isFocusOwner()) {
-                        nodes = selectedNodes;
-                    }
-                    if (nodes != null) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (Node node : nodes) {
-                            FeatureProcess feature = node.getLookup().lookup(FeatureProcess.class);
-                            if (feature != null) {
-                                stringBuilder.append(feature.toString()).append("\n");
-                            }
-                        }
-                        selectionComponent1.getDescription().setText(stringBuilder.toString());
-                    }
-                }
-            }
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
+        } else if (e.getSource().equals(DialogDescriptor.CANCEL_OPTION)) {
         }
     }
 }

@@ -15,12 +15,11 @@
 ******************************************************************************/
 package de.fub.agg2graph.input;
 
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.structs.GPSSegment;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.structs.GPSSegment;
 
 /**
  * Save {@link GPSSegment} data to a gpx file.

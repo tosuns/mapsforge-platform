@@ -5,12 +5,19 @@
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
+import de.fub.utilsmodule.node.CustomAbstractnode;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -19,25 +26,91 @@ import javax.swing.JPanel;
 public abstract class InferenceModelProcessHandler {
 
     private final AbstractInferenceModel inferenceModel;
+    private Node nodeDelegate;
+    private ProcessHandlerDescriptor descriptor = null;
 
     public InferenceModelProcessHandler(AbstractInferenceModel inferenceModel) {
         this.inferenceModel = inferenceModel;
     }
 
+    /**
+     *
+     * @return
+     */
     protected AbstractInferenceModel getInferenceModel() {
         return inferenceModel;
     }
 
+    /**
+     *
+     */
     public void start() {
         handle();
     }
 
-    protected abstract void handle();
-
+    /**
+     *
+     * @return
+     */
     public JComponent getVisualRepresentation() {
         return new DefaultRepresenter();
     }
 
+    public Node getNodeDelegate() {
+        if (nodeDelegate == null) {
+            nodeDelegate = createNodeDelegate();
+        }
+        return nodeDelegate;
+    }
+
+    protected Node createNodeDelegate() {
+        return new ProcessHandlerNode(InferenceModelProcessHandler.this);
+    }
+
+    public ProcessHandlerDescriptor getDescriptor() {
+        if (descriptor == null) {
+            if (getInferenceModel() != null) {
+                AbstractInferenceModel inferenceModel = getInferenceModel();
+                for (ProcessHandlerDescriptor desc : inferenceModel.getInferenceModelDescriptor().getInferenceModelProcessHandlers().getProcessHandlerList()) {
+                    if (desc.getJavaType().equals(getClass().getName())) {
+                        descriptor = desc;
+                        break;
+                    }
+                }
+            } else {
+                DetectorUtils.createProcessHandler(getClass());
+            }
+        }
+        return descriptor;
+    }
+
+    protected abstract void handle();
+
+    private static class ProcessHandlerNode extends CustomAbstractnode {
+
+        private final InferenceModelProcessHandler processHandler;
+
+        private ProcessHandlerNode(InferenceModelProcessHandler processHandler) {
+            super(Children.LEAF, Lookups.fixed(processHandler));
+            this.processHandler = processHandler;
+            updateNode();
+        }
+
+        private void updateNode() {
+            AbstractInferenceModel inferenceModel1 = processHandler.getInferenceModel();
+            for (InferenceMode mode : InferenceMode.values()) {
+                InferenceModelProcessHandler processHandlerInstance = inferenceModel1.getProcessHandlerInstance(mode);
+                if (processHandler.equals(processHandlerInstance)) {
+                    setDisplayName(mode.getDisplayName());
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     */
     private static class DefaultRepresenter extends JPanel {
 
         private static final long serialVersionUID = 1L;
@@ -53,6 +126,9 @@ public abstract class InferenceModelProcessHandler {
         }
     }
 
+    /**
+     *
+     */
     public static class InferenceModelClassifyException extends RuntimeException {
 
         private static final long serialVersionUID = 1L;

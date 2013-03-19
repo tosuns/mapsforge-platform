@@ -2,7 +2,6 @@ package de.fub.agg2graph.gpseval.output;
 
 import de.fub.agg2graph.gpseval.TestResult;
 import de.fub.agg2graph.gpseval.WekaResult;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

@@ -17,6 +17,12 @@
  */
 package de.fub.agg2graph.ui.gui;
 
+import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
+import de.fub.agg2graph.input.GPSCleaner;
+import de.fub.agg2graph.input.GPXReader;
+import de.fub.agg2graph.management.MiniProfiler;
+import de.fub.agg2graph.structs.GPSSegment;
+import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
@@ -27,15 +33,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.SwingUtilities;
-
-import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
-import de.fub.agg2graph.input.GPSCleaner;
-import de.fub.agg2graph.input.GPXReader;
-import de.fub.agg2graph.management.MiniProfiler;
-import de.fub.agg2graph.structs.GPSSegment;
-import de.fub.agg2graph.ui.gui.jmv.TestUI;
 
 public class CalcThread extends Thread {
 

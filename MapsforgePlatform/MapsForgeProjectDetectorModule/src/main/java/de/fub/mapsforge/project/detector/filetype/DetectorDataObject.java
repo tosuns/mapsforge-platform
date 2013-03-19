@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.detector.filetype;
 
+import de.fub.mapsforge.project.detector.factories.nodes.DetectorNode;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
-import de.fub.mapsforge.project.detector.factories.nodes.DetectorNode;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -137,8 +137,8 @@ public class DetectorDataObject extends MultiDataObject {
     protected Node createNodeDelegate() {
         if (delegateNode == null) {
             Detector detector = new Detector(this);
-            DetectorDescriptor detectorDescriptor = detector.getDetectorDescriptor();
-            if (detectorDescriptor != null) {
+            DetectorDescriptor detectorDescr = detector.getDetectorDescriptor();
+            if (detectorDescr != null) {
                 delegateNode = new DetectorNode(detector);
             } else {
             }
@@ -209,6 +209,29 @@ public class DetectorDataObject extends MultiDataObject {
 
             }
         });
+    }
+
+    public void updateEditor() {
+        DataEditorSupport editorSupport = getLookup().lookup(DataEditorSupport.class);
+
+        try {
+            if (editorSupport.isDocumentLoaded()) {
+                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
+                javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+                StringWriter stringWriter = new StringWriter();
+                marshaller.marshal(detectorDescriptor, stringWriter);
+                StyledDocument document = editorSupport.getDocument();
+                document.remove(0, document.getLength());
+                document.insertString(0, stringWriter.toString(), null);
+            }
+        } catch (javax.xml.bind.JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     public void addChangeListener(ChangeListener listener) {

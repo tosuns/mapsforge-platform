@@ -5,10 +5,13 @@
 package de.fub.utilsmodule.synchronizer;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.ChangeSupport;
+import org.openide.util.WeakSet;
 
 /**
  *
@@ -16,21 +19,43 @@ import org.openide.util.ChangeSupport;
  */
 public abstract class ModelSynchronizer {
 
-    private final Set<ModelSynchronizerClient> listenerSet = new HashSet<ModelSynchronizerClient>();
+    // set for weak references
+    private final WeakSet<ModelSynchronizerClient> listenerSet = new WeakSet<ModelSynchronizerClient>();
+    // map to hold order information in which the mscs are created
+    private final SortedMap<Integer, ModelSynchronizerClient> listenerMap = new TreeMap<Integer, ModelSynchronizerClient>();
+    private final Object MUTEX = new Object();
 
-    public final synchronized void modelChanged(ModelSynchronizerClient client) {
-        for (ModelSynchronizerClient modelSynchronizerClient : listenerSet) {
-            if (!modelSynchronizerClient.equals(client)) {
-                modelSynchronizerClient.updateModel();
+    public final void modelChanged(ModelSynchronizerClient client) {
+        synchronized (MUTEX) {
+            // get current msc from the map
+            HashSet<ModelSynchronizerClient> hashSet = new HashSet<ModelSynchronizerClient>(listenerMap.values());
+
+            // filter all mscs that are already GC
+            for (ModelSynchronizerClient modelSynchronizerClient : hashSet) {
+                if (!listenerSet.contains(modelSynchronizerClient)) {
+                    listenerMap.values().remove(modelSynchronizerClient);
+                }
+            }
+
+            // iterate in order through all mscs
+            for (Entry<Integer, ModelSynchronizerClient> entry : listenerMap.entrySet()) {
+                if (!entry.getValue().equals(client)) {
+                    entry.getValue().updateModel();
+                }
             }
         }
     }
 
-    public final synchronized ModelSynchronizerClient create(ChangeListener changeListener) {
-        ModelSynchronizerClient modelSynchronizerClient = new ModelSynchronizerClient(changeListener, ModelSynchronizer.this);
-        listenerSet.add(modelSynchronizerClient);
-        return modelSynchronizerClient;
+    public final ModelSynchronizerClient create(ChangeListener changeListener) {
+        synchronized (MUTEX) {
+            ModelSynchronizerClient modelSynchronizerClient = new ModelSynchronizerClient(changeListener, ModelSynchronizer.this);
+            listenerSet.add(modelSynchronizerClient);
+            listenerMap.put(listenerSet.size() - 1, modelSynchronizerClient);
+            return modelSynchronizerClient;
+        }
     }
+
+    protected abstract void synchronizeModel();
 
     public static class ModelSynchronizerClient {
 

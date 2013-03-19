@@ -2,7 +2,6 @@ package de.fub.agg2graph.gpseval.data.file;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.data.filter.WaypointFilter;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;

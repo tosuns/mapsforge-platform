@@ -10,25 +10,6 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui.jmv;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.JComponent;
-
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
@@ -48,6 +29,22 @@ import de.fub.agg2graph.ui.gui.LayerManager;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graph.ui.gui.RenderingOptions.LabelRenderingType;
 import de.fub.agg2graph.ui.gui.RenderingOptions.RenderingType;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.swing.JComponent;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class Layer implements Hideable {
 	private RenderingOptions options;

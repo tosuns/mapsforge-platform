@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.factories;
 
-import de.fub.mapsforge.project.detector.factories.nodes.InferenceModelNode;
+import de.fub.mapsforge.project.detector.factories.nodes.inference.InferenceModelNode;
 import de.fub.mapsforge.project.detector.factories.nodes.PostProcessorsNode;
 import de.fub.mapsforge.project.detector.factories.nodes.PreProcessorsNode;
 import de.fub.mapsforge.project.detector.factories.nodes.datasets.DataSetFolderNode;

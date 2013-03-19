@@ -1,5 +1,6 @@
 package com.viniciusfortuna.transit.gtfs;
 
+import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +14,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Class to read a GTFS specification file and return the data in a structured format.

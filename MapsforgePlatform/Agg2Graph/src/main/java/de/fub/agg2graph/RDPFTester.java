@@ -15,6 +15,10 @@
 ******************************************************************************/
 package de.fub.agg2graph;
 
+import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
+import de.fub.agg2graph.input.FileHandler;
+import de.fub.agg2graph.input.GPXReader;
+import de.fub.agg2graph.structs.GPSSegment;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -22,11 +26,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
-import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
-import de.fub.agg2graph.input.FileHandler;
-import de.fub.agg2graph.input.GPXReader;
-import de.fub.agg2graph.structs.GPSSegment;
 
 public class RDPFTester {
 

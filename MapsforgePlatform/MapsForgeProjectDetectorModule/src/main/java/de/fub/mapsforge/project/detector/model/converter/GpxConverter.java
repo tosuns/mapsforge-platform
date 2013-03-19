@@ -13,7 +13,6 @@ import de.fub.gpxmodule.xml.gpx.Wpt;
 import de.fub.mapsforge.project.detector.model.gpx.GpxWayPoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.utils.GPSUtils;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

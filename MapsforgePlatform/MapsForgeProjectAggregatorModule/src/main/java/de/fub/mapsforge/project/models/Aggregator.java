@@ -4,20 +4,20 @@
  */
 package de.fub.mapsforge.project.models;
 
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.IAggregationStrategy;
 import de.fub.agg2graph.agg.tiling.ICachingStrategy;
 import de.fub.mapforgeproject.api.process.Process;
+import de.fub.mapforgeproject.api.process.ProcessPipeline.PipelineListener;
+import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
-import de.fub.mapforgeproject.api.process.ProcessPipeline.PipelineListener;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
-import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -225,6 +225,11 @@ public class Aggregator extends ModelSynchronizer {
             }
         }
         return statisticProviders;
+    }
+
+    @Override
+    protected void synchronizeModel() {
+        notifyModified();
     }
 
     public enum AggregatorState {

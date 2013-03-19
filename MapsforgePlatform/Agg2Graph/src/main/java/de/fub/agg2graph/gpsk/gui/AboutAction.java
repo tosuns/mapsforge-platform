@@ -16,10 +16,9 @@
  */
 package de.fub.agg2graph.gpsk.gui;
 
+import static de.fub.agg2graph.gpsk.Main.*;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-
-import static de.fub.agg2graph.gpsk.Main.*;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 /**

@@ -8,6 +8,7 @@ import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.utilsmodule.icons.IconRegister;
+import de.fub.utilsmodule.text.StringUtils;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,6 +18,7 @@ import javax.swing.JComponent;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.nodes.Sheet;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -78,7 +80,12 @@ public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegmen
             super(Children.LEAF, Lookups.fixed(filterProcess));
             this.filterProcess = filterProcess;
             setDisplayName(filterProcess.getName());
-            setShortDescription(filterProcess.getDescription());
+            setShortDescription(StringUtils.StringAsHtmlWrapString(filterProcess.getDescription()));
+        }
+
+        @Override
+        protected Sheet createSheet() {
+            return super.createSheet(); //To change body of generated methods, choose Tools | Templates.
         }
     }
 }

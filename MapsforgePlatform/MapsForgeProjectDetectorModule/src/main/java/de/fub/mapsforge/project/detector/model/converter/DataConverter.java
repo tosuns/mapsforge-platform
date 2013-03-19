@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.converter;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import java.util.List;
 import org.openide.filesystems.FileObject;

@@ -20,11 +20,10 @@ import de.fub.agg2graph.gpsk.Main;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.structs.GPSTrack;
 import java.awt.*;
-import java.util.List;
-import javax.swing.JPanel;
-
 import static java.awt.Color.WHITE;
 import java.util.LinkedList;
+import java.util.List;
+import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 
 /**

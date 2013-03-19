@@ -15,9 +15,8 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
-import java.util.Set;
-
 import de.fub.agg2graph.structs.ILocation;
+import java.util.Set;
 
 /**
  * Shallow version of an {@link AggNode}. A ShallowAggNode cannot have any

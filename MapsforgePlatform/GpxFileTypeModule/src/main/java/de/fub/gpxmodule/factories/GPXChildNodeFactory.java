@@ -10,11 +10,9 @@ import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.gpxmodule.xml.gpx.Rte;
 import de.fub.gpxmodule.xml.gpx.Trk;
 import de.fub.gpxmodule.xml.gpx.Wpt;
-
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.AbstractNode;
-import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;

@@ -15,19 +15,6 @@
 ******************************************************************************/
 package de.fub.agg2graph.ui.cli;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggregationStrategyFactory;
 import de.fub.agg2graph.agg.IAggregationStrategy;
@@ -50,6 +37,18 @@ import de.fub.agg2graph.ui.DSL;
 import de.fub.agg2graph.ui.StepStorage;
 import de.fub.agg2graph.ui.Token;
 import de.fub.agg2graph.ui.gui.CalcThread;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class CLI {
 	private static final Logger logger = Logger.getLogger("agg2graph.cli");

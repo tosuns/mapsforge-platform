@@ -17,10 +17,24 @@ import javax.xml.bind.annotation.XmlType;
 public enum InferenceMode {
 
     @XmlEnumValue("trainingsMode")
-    TRAININGS_MODE,
+    TRAININGS_MODE("Training"),
     @XmlEnumValue("crossvalidationMode")
-    CROSS_VALIDATION_MODE,
+    CROSS_VALIDATION_MODE("Crossvalidation"),
     @XmlEnumValue("inferenceMode")
-    INFERENCE_MODE,
-    ALL_MODE;
+    INFERENCE_MODE("Inference"),
+    ALL_MODE("All Mode");
+    private String displayName;
+
+    private InferenceMode(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
 }

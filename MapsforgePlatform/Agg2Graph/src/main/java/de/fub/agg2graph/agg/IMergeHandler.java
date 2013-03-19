@@ -15,11 +15,10 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
-import java.util.List;
-
 import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.structs.GPSEdge;
 import de.fub.agg2graph.structs.GPSPoint;
+import java.util.List;
 
 /**
  * Class for handling the merge of a set of {@link GPSPoint}s from the trace

@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 import org.apache.log4j.Logger;

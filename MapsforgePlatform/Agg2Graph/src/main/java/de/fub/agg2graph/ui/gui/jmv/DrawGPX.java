@@ -10,6 +10,9 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui.jmv;
 
+import de.fub.agg2graph.input.GPXWriter;
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.structs.GPSSegment;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,18 +32,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-
-import de.fub.agg2graph.input.GPXWriter;
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.structs.GPSSegment;
 
 public class DrawGPX {
 	private Rectangle2D.Double area = new Rectangle2D.Double(0, 0, 1, 1);

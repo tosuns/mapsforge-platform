@@ -15,8 +15,6 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.strategy;
 
-import java.util.List;
-
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.agg.IMergeHandler;
@@ -25,6 +23,7 @@ import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.GPSEdge;
 import de.fub.agg2graph.structs.GPSPoint;
+import java.util.List;
 
 public class GpxmergeTraceDistance implements ITraceDistance {
 

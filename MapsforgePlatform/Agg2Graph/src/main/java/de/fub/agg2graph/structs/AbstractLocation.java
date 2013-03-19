@@ -15,11 +15,10 @@
 ******************************************************************************/
 package de.fub.agg2graph.structs;
 
-import java.util.Arrays;
-import java.util.Locale;
-
 import de.fub.agg2graph.agg.tiling.TileManager;
 import de.fub.agg2graph.structs.projection.OsmProjection;
+import java.util.Arrays;
+import java.util.Locale;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**

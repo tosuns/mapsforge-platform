@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<processHandler inferenceMode="inferenceMode"
+<processHandler xmlns="http://inf.fu-berlin.de/mapsforge/detector/schema"
+                inferenceMode="inferenceMode"
                 javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler"
                 name="inferenceModeProcessHandler">
     <properties/>

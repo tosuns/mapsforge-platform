@@ -15,9 +15,6 @@
 ******************************************************************************/
 package de.fub.agg2graph.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
 import de.fub.agg2graph.input.GPSCleaner;
@@ -25,6 +22,8 @@ import de.fub.agg2graph.osm.IExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.ui.gui.CalcThread;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StepStorage {
 	protected AggContainer aggContainer;

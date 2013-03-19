@@ -4,8 +4,8 @@
  */
 package de.fub.mapsforge.project.aggregator.factories.nodes;
 
-import de.fub.mapsforge.project.aggregator.factories.AggregatorNodeFactory;
 import de.fub.mapforgeproject.MapsForgeProject;
+import de.fub.mapsforge.project.aggregator.factories.AggregatorNodeFactory;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.Action;

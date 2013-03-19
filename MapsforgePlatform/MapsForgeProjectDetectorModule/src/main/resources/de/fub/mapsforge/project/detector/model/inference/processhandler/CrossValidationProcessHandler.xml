@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<processHandler inferenceMode="crossvalidationMode"
-                javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler"
-                name="crossvalidationProcessHandler">
+<processHandler  xmlns="http://inf.fu-berlin.de/mapsforge/detector/schema"
+                 inferenceMode="crossvalidationMode"
+                 javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler"
+                 name="crossvalidationProcessHandler">
     <properties>
         <property value="10"
                   id="trainings.set.crossvalidation.fold"

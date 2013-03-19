@@ -15,18 +15,17 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
+import de.fub.agg2graph.agg.tiling.ICachingStrategy;
+import de.fub.agg2graph.agg.tiling.Tile;
+import de.fub.agg2graph.roadgen.Intersection;
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.structs.ILocation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import de.fub.agg2graph.agg.tiling.ICachingStrategy;
-import de.fub.agg2graph.agg.tiling.Tile;
-import de.fub.agg2graph.roadgen.Intersection;
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.structs.ILocation;
 
 /**
  * Node in the aggregation. A node can have multiple incoming and outgoing

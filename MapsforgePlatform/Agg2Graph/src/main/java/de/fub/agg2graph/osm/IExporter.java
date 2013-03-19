@@ -15,11 +15,10 @@
 ******************************************************************************/
 package de.fub.agg2graph.osm;
 
-import java.io.File;
-import java.util.List;
-
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.agg2graph.structs.ClassObjectEditor;
+import java.io.File;
+import java.util.List;
 
 public interface IExporter {
 

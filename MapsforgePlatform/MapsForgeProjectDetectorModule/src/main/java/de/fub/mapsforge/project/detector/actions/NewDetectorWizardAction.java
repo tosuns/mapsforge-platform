@@ -8,9 +8,9 @@ import de.fub.mapsforge.project.detector.wizards.detector.CommonDetectorInformat
 import de.fub.mapsforge.project.detector.wizards.detector.InferenceDataSetSelectionWizardPanel;
 import de.fub.mapsforge.project.detector.wizards.detector.InferenceModelFeatureSelectionWizardPanel;
 import de.fub.mapsforge.project.detector.wizards.detector.InferenceModelSelectionWizardPanel;
-import de.fub.mapsforge.project.detector.wizards.detector.TrainingSetSelectionWizardPanel;
 import de.fub.mapsforge.project.detector.wizards.detector.PostprocessorSelectionWizardPanel;
 import de.fub.mapsforge.project.detector.wizards.detector.PreprocessorSelectionWizardPanel;
+import de.fub.mapsforge.project.detector.wizards.detector.TrainingSetSelectionWizardPanel;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

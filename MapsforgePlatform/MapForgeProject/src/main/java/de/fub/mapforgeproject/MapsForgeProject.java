@@ -23,7 +23,6 @@ import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.filesystems.FileAlreadyLockedException;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileEvent;
@@ -123,40 +122,40 @@ public class MapsForgeProject extends FileChangeAdapter implements Project, Mode
 
     @Override
     public void modelChanged(Object o, MapsForge mapsForge) {
-        synchronized (MUTEX) {
-            OutputStream outputStream = null;
-            try {
-                FileObject projectFile = getProjectFile();
-                outputStream = projectFile.getOutputStream();
-                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(MapsForge.class);
-                javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                marshaller.marshal(mapsForge, outputStream);
-                mapsForgeProjectData = mapsForge;
-                fireChangeEvent(o);
-            } catch (FileAlreadyLockedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (javax.xml.bind.JAXBException ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
-                if (outputStream != null) {
-                    try {
-                        outputStream.close();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+        OutputStream outputStream = null;
+        try {
+            FileObject projectFile = getProjectFile();
+            outputStream = projectFile.getOutputStream();
+            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(MapsForge.class);
+            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(mapsForge, outputStream);
+            mapsForgeProjectData = mapsForge;
+            fireChangeEvent(o);
+        } catch (FileAlreadyLockedException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (javax.xml.bind.JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
         }
     }
 
     private void fireChangeEvent(Object o) {
-        for (ChangeListener listener : cs) {
-            if (listener != o) {
-                listener.stateChanged(new ChangeEvent(MapsForgeProject.this));
+        synchronized (MUTEX) {
+            for (ChangeListener listener : cs) {
+                if (listener != o) {
+                    listener.stateChanged(new ChangeEvent(MapsForgeProject.this));
+                }
             }
         }
     }

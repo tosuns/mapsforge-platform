@@ -10,6 +10,14 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui.jmv;
 
+import de.fub.agg2graph.input.FileHandler;
+import de.fub.agg2graph.input.Globals;
+import de.fub.agg2graph.structs.ClassObjectEditor;
+import de.fub.agg2graph.structs.DoubleRect;
+import de.fub.agg2graph.ui.DSL;
+import de.fub.agg2graph.ui.Token;
+import de.fub.agg2graph.ui.cli.CLI;
+import de.fub.agg2graph.ui.gui.CalcThread;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -25,17 +33,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
-
-import de.fub.agg2graph.input.FileHandler;
-import de.fub.agg2graph.input.Globals;
-import de.fub.agg2graph.structs.ClassObjectEditor;
-import de.fub.agg2graph.structs.DoubleRect;
-import de.fub.agg2graph.ui.DSL;
-import de.fub.agg2graph.ui.Token;
-import de.fub.agg2graph.ui.cli.CLI;
-import de.fub.agg2graph.ui.gui.CalcThread;
 
 public class AutoTest extends CLI {
 	private TestUI testUI;

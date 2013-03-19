@@ -17,16 +17,15 @@
  */
 package de.fub.agg2graph.roadgen;
 
+import de.fub.agg2graph.agg.AggNode;
+import de.fub.agg2graph.structs.GPSCalc;
+import de.fub.agg2graph.structs.IEdge;
+import de.fub.agg2graph.structs.ILocation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import de.fub.agg2graph.agg.AggNode;
-import de.fub.agg2graph.structs.GPSCalc;
-import de.fub.agg2graph.structs.IEdge;
-import de.fub.agg2graph.structs.ILocation;
 
 public class DefaultRoadObjectMerger implements IRoadObjectMerger {
 

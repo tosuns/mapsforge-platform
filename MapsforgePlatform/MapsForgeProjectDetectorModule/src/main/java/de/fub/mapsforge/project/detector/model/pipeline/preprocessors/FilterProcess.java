@@ -4,10 +4,13 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
+import de.fub.mapsforge.project.detector.factories.nodes.ProcessProperty;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.utilsmodule.icons.IconRegister;
+import de.fub.utilsmodule.node.CustomAbstractnode;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,11 +20,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.JComponent;
-import org.openide.nodes.AbstractNode;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.nodes.Sheet;
 import org.openide.util.Cancellable;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
@@ -76,9 +82,12 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
         return false;
     }
 
-    private static class FilterProcessNode extends AbstractNode implements PropertyChangeListener {
+    @NbBundle.Messages({"CLT_Filter_Parameter=Parameters"})
+    private static class FilterProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
 
         private final FilterProcess filterProcess;
+        private Sheet.Set set;
+        private ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
         public FilterProcessNode(FilterProcess filterProcess) {
             super(Children.LEAF, Lookups.fixed(filterProcess));
@@ -86,6 +95,29 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
             this.filterProcess.addPropertyChangeListener(WeakListeners.propertyChange(FilterProcessNode.this, this.filterProcess));
             setDisplayName(filterProcess.getName());
             setShortDescription(filterProcess.getDescription());
+
+        }
+
+        @Override
+        protected Sheet createSheet() {
+            Sheet sheet = Sheet.createDefault();
+            if (filterProcess.getDetector() != null) {
+                modelSynchronizerClient = filterProcess.getDetector().create(FilterProcessNode.this);
+                set = Sheet.createPropertiesSet();
+                set.setDisplayName(Bundle.CLT_Filter_Parameter());
+                sheet.put(set);
+                reinitSet();
+            }
+            return sheet;
+        }
+
+        private void reinitSet() {
+            List<de.fub.mapsforge.project.detector.model.xmls.Property> propertyList = filterProcess.getProcessDescriptor().getProperties().getPropertyList();
+            ProcessProperty property = null;
+            for (de.fub.mapsforge.project.detector.model.xmls.Property xmlProperty : propertyList) {
+                property = new ProcessProperty(modelSynchronizerClient, xmlProperty);
+                set.put(property);
+            }
         }
 
         @Override
@@ -127,6 +159,13 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
         public void propertyChange(PropertyChangeEvent evt) {
             if (FilterProcess.PROP_NAME_PROCESS_STATE.equals(evt.getPropertyName())) {
                 fireIconChange();
+            }
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            if (modelSynchronizerClient != null) {
+                reinitSet();
             }
         }
     }

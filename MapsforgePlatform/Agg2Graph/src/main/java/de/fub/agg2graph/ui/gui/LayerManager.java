@@ -15,6 +15,9 @@
 ******************************************************************************/
 package de.fub.agg2graph.ui.gui;
 
+import de.fub.agg2graph.ui.gui.jmv.Layer;
+import de.fub.agg2graph.ui.gui.jmv.MainRenderingPanel;
+import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -24,13 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
-import de.fub.agg2graph.ui.gui.jmv.Layer;
-import de.fub.agg2graph.ui.gui.jmv.MainRenderingPanel;
-import de.fub.agg2graph.ui.gui.jmv.TestUI;
 
 public class LayerManager {
 	private final List<Layer> layers = new ArrayList<Layer>();

@@ -10,6 +10,28 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui.jmv;
 
+import de.fub.agg2graph.agg.AggContainer;
+import de.fub.agg2graph.agg.AggNode;
+import de.fub.agg2graph.agg.AggregationStrategyFactory;
+import de.fub.agg2graph.agg.IAggregationStrategy;
+import de.fub.agg2graph.agg.tiling.CachingStrategyFactory;
+import de.fub.agg2graph.agg.tiling.DefaultCachingStrategy;
+import de.fub.agg2graph.agg.tiling.ICachingStrategy;
+import de.fub.agg2graph.agg.tiling.TileCache;
+import de.fub.agg2graph.agg.tiling.TileManager;
+import de.fub.agg2graph.input.FileHandler;
+import de.fub.agg2graph.input.Globals;
+import de.fub.agg2graph.management.MiniProfiler;
+import de.fub.agg2graph.structs.ClassObjectEditor;
+import de.fub.agg2graph.structs.DoubleRect;
+import de.fub.agg2graph.structs.ILocation;
+import de.fub.agg2graph.ui.gui.CalcThread;
+import de.fub.agg2graph.ui.gui.IRenderingPanel;
+import de.fub.agg2graph.ui.gui.JLabeledComponentPanel;
+import de.fub.agg2graph.ui.gui.LayerManager;
+import de.fub.agg2graph.ui.gui.ObjectSelectionComboBox;
+import de.fub.agg2graph.ui.gui.UIStepStorage;
+import de.fub.agg2graph.ui.gui.VisualObjectEditor;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -34,7 +56,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -51,31 +72,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
-
-import de.fub.agg2graph.agg.AggContainer;
-import de.fub.agg2graph.agg.AggNode;
-import de.fub.agg2graph.agg.AggregationStrategyFactory;
-import de.fub.agg2graph.agg.IAggregationStrategy;
-import de.fub.agg2graph.agg.tiling.CachingStrategyFactory;
-import de.fub.agg2graph.agg.tiling.DefaultCachingStrategy;
-import de.fub.agg2graph.agg.tiling.ICachingStrategy;
-import de.fub.agg2graph.agg.tiling.TileCache;
-import de.fub.agg2graph.agg.tiling.TileManager;
-import de.fub.agg2graph.input.FileHandler;
-import de.fub.agg2graph.input.Globals;
-import de.fub.agg2graph.management.MiniProfiler;
-import de.fub.agg2graph.structs.ClassObjectEditor;
-import de.fub.agg2graph.structs.DoubleRect;
-import de.fub.agg2graph.structs.ILocation;
-import de.fub.agg2graph.ui.gui.CalcThread;
-import de.fub.agg2graph.ui.gui.IRenderingPanel;
-import de.fub.agg2graph.ui.gui.JLabeledComponentPanel;
-import de.fub.agg2graph.ui.gui.LayerManager;
-import de.fub.agg2graph.ui.gui.ObjectSelectionComboBox;
-import de.fub.agg2graph.ui.gui.UIStepStorage;
-import de.fub.agg2graph.ui.gui.VisualObjectEditor;
 
 public class TestUI {
 	public JFrame frmTestui;

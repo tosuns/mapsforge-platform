@@ -15,10 +15,9 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
-import java.util.List;
-
 import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.structs.GPSPoint;
+import java.util.List;
 
 public interface ITraceDistance {
 	/**

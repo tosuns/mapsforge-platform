@@ -25,14 +25,14 @@ public abstract class AbstractDetectorProcess<I, O> extends DetectorProcess<I, O
         if (processDescriptor == null) {
             if (getDetector() == null) {
                 try {
-                    processDescriptor = DetectorUtils.getProcessDescriptor(getClass());
+                    processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             } else {
                 for (ProcessDescriptor filterDescriptor : getDetector().getDetectorDescriptor().getPreprocessors().getPreprocessorList()) {
                     if (filterDescriptor != null
-                            && DetectorProcess.class.getName().equals(filterDescriptor.getJavaType())
+                            && getClass().getName().equals(filterDescriptor.getJavaType())
                             && getName().equals(filterDescriptor.getName())) {
                         processDescriptor = filterDescriptor;
                         break;

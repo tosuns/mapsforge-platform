@@ -1,7 +1,6 @@
 package de.fub.agg2graph.gpseval.output;
 
 import de.fub.agg2graph.gpseval.TestResult;
-
 import java.nio.file.Path;
 import java.util.List;
 

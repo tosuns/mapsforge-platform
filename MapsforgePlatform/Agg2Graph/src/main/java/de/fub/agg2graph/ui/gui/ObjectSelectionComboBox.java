@@ -20,7 +20,6 @@ package de.fub.agg2graph.ui.gui;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;

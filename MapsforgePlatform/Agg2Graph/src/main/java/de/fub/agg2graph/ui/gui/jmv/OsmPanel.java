@@ -20,19 +20,17 @@
  */
 package de.fub.agg2graph.ui.gui.jmv;
 
+import de.fub.agg2graph.structs.DoubleRect;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.DefaultMapController;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.Tile;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
-
-import de.fub.agg2graph.structs.DoubleRect;
 
 /**
  * A panel showing OSM data based on {@link JMapViewer}.

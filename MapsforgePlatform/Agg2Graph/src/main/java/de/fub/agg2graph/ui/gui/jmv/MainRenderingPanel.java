@@ -10,6 +10,12 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui.jmv;
 
+import de.fub.agg2graph.input.Globals;
+import de.fub.agg2graph.management.Statistics;
+import de.fub.agg2graph.structs.GPSPoint;
+import de.fub.agg2graph.ui.gui.IRenderingPanel;
+import de.fub.agg2graph.ui.gui.LayerManager;
+import de.fub.agg2graph.ui.gui.RenderingOptions.LabelRenderingType;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -26,20 +32,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-
-import de.fub.agg2graph.input.Globals;
-import de.fub.agg2graph.management.Statistics;
-import de.fub.agg2graph.structs.GPSPoint;
-import de.fub.agg2graph.ui.gui.IRenderingPanel;
-import de.fub.agg2graph.ui.gui.LayerManager;
-import de.fub.agg2graph.ui.gui.RenderingOptions.LabelRenderingType;
 
 public class MainRenderingPanel extends OsmPanel implements IRenderingPanel {
 	private static final long serialVersionUID = 1199223710435106007L;

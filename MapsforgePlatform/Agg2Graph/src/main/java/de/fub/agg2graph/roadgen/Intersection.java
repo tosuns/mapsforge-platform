@@ -17,10 +17,9 @@
  */
 package de.fub.agg2graph.roadgen;
 
+import de.fub.agg2graph.agg.AggNode;
 import java.util.HashSet;
 import java.util.Set;
-
-import de.fub.agg2graph.agg.AggNode;
 
 /**
  * An intersection in the {@link RoadNetwork} which can be either a real

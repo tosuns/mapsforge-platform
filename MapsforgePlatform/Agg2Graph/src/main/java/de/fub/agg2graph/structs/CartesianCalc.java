@@ -16,7 +16,6 @@
 package de.fub.agg2graph.structs;
 
 import java.util.List;
-
 import org.jscience.mathematics.vector.Float64Vector;
 
 /**

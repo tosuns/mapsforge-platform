@@ -5,7 +5,6 @@ import de.fub.agg2graph.gpseval.data.file.TrackFileFactory;
 import de.fub.agg2graph.gpseval.data.filter.TrackFilter;
 import de.fub.agg2graph.gpseval.data.filter.WaypointFilter;
 import de.fub.agg2graph.gpseval.features.Feature;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;

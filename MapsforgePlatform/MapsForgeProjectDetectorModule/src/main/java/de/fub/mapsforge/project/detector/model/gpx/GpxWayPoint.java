@@ -5,6 +5,12 @@
 package de.fub.mapsforge.project.detector.model.gpx;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
+import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_BEARING;
+import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_LATITUDE;
+import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_LONGITUDE;
+import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_PRECISION;
+import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_SEGEMENTS;
+import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_SPEED;
 import de.fub.gpxmodule.xml.gpx.Fix;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,8 +52,6 @@ public class GpxWayPoint extends Waypoint {
     }
 
     public GpxWayPoint(Map<String, String> propertyMap) {
-        super(propertyMap);
-
         for (Entry<String, String> entry : propertyMap.entrySet()) {
             if (entry.getValue() != null) {
                 try {
@@ -73,6 +77,23 @@ public class GpxWayPoint extends Waypoint {
                         dgpsId = Integer.parseInt(entry.getValue());
                     } else if (PROP_NAME_TIMESTAMP.equals(entry.getKey())) {
                         timestamp = new Date(Long.parseLong(entry.getValue()));
+                    } else if (PROP_NAME_BEARING.equals(entry.getKey())) {
+                        bearing = Double.parseDouble(entry.getValue().replaceFirst(",", "."));
+
+                    } else if (PROP_NAME_LATITUDE.equals(entry.getKey())) {
+                        lat = Double.parseDouble(entry.getValue().replaceFirst(",", "."));
+
+                    } else if (PROP_NAME_LONGITUDE.equals(entry.getKey())) {
+                        lon = Double.parseDouble(entry.getValue().replaceFirst(",", "."));
+
+                    } else if (PROP_NAME_PRECISION.equals(entry.getKey())) {
+                        Integer.parseInt(entry.getValue());
+
+                    } else if (PROP_NAME_SEGEMENTS.equals(entry.getKey())) {
+                        segment = Integer.parseInt(entry.getValue());
+
+                    } else if (PROP_NAME_SPEED.equals(entry.getKey())) {
+                        speed = Double.parseDouble(entry.getValue().replaceFirst(",", "."));
                     }
                 } catch (IllegalArgumentException ex) {
                     LOG.log(Level.SEVERE, ex.getMessage(), ex);

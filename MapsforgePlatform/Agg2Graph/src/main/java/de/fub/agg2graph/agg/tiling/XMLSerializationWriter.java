@@ -15,10 +15,11 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg.tiling;
 
+import de.fub.agg2graph.agg.AggConnection;
+import de.fub.agg2graph.agg.AggNode;
 import java.io.File;
 import java.util.Set;
 import java.util.logging.Logger;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,12 +28,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import de.fub.agg2graph.agg.AggConnection;
-import de.fub.agg2graph.agg.AggNode;
 
 /**
  * Class for writing tiles to XML data format.

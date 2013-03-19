@@ -15,6 +15,8 @@
  ******************************************************************************/
 package de.fub.agg2graph.ui.gui;
 
+import de.fub.agg2graph.ui.gui.jmv.Layer;
+import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -23,11 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import javax.swing.JPanel;
-
-import de.fub.agg2graph.ui.gui.jmv.Layer;
-import de.fub.agg2graph.ui.gui.jmv.TestUI;
 
 public class RenderingPanel extends JPanel implements IRenderingPanel {
 	private static final long serialVersionUID = 1199223710435106007L;

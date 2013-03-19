@@ -1,7 +1,6 @@
 package de.fub.agg2graph.gpseval.data.filter;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
-
 import java.util.Date;
 
 /**

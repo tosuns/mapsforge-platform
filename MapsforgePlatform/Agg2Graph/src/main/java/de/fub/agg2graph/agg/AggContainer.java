@@ -15,6 +15,14 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
+import de.fub.agg2graph.agg.tiling.CachingStrategyFactory;
+import de.fub.agg2graph.agg.tiling.DefaultCachingStrategy;
+import de.fub.agg2graph.agg.tiling.ICachingStrategy;
+import de.fub.agg2graph.agg.tiling.TileManager;
+import de.fub.agg2graph.input.GPXReader;
+import de.fub.agg2graph.structs.CartesianCalc;
+import de.fub.agg2graph.structs.GPSSegment;
+import de.fub.agg2graph.structs.ILocation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,17 +32,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
-
-import de.fub.agg2graph.agg.tiling.CachingStrategyFactory;
-import de.fub.agg2graph.agg.tiling.DefaultCachingStrategy;
-import de.fub.agg2graph.agg.tiling.ICachingStrategy;
-import de.fub.agg2graph.agg.tiling.TileManager;
-import de.fub.agg2graph.input.GPXReader;
-import de.fub.agg2graph.structs.CartesianCalc;
-import de.fub.agg2graph.structs.GPSSegment;
-import de.fub.agg2graph.structs.ILocation;
 
 /**
  * Container class for an aggregation graph. Contains a number of

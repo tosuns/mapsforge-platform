@@ -7,12 +7,10 @@ package de.fub.mapsforge.project.detector.utils;
 import de.fub.mapforgeproject.utils.MapsForgeProjectUtils;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
-import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.awt.Color;
@@ -23,6 +21,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
@@ -44,13 +43,27 @@ public class DetectorUtils {
     private static final Object DETECTOR_FILE_OPERATION_MUTEX = new Object();
     private static final Logger LOG = Logger.getLogger(DetectorUtils.class.getName());
 
-    @SuppressWarnings("unchecked")
     public static <T> T createInstance(Class<T> clazz, String className) {
+        return createInstance(clazz, className, (Object[]) null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T createInstance(Class<T> clazz, String className, Object... arguments) {
         T instance = null;
         try {
             Class<?> forName = Class.forName(className);
             Class<T> cl = (Class<T>) forName;
-            instance = cl.newInstance();
+
+            if (arguments == null || arguments.length == 0) {
+                instance = cl.newInstance();
+            } else {
+                ArrayList<Class<?>> argumentTypes = new ArrayList<Class<?>>();
+                for (Object object : arguments) {
+                    argumentTypes.add(object.getClass());
+                }
+                Constructor<T> constructor = cl.getConstructor(argumentTypes.toArray(new Class[argumentTypes.size()]));
+                instance = constructor.newInstance(arguments);
+            }
         } catch (InstantiationException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {
@@ -69,6 +82,14 @@ public class DetectorUtils {
                     }
                 }
             }
+        } catch (NoSuchMethodException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (SecurityException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IllegalArgumentException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (InvocationTargetException ex) {
+            Exceptions.printStackTrace(ex);
         }
         return instance;
     }
@@ -88,21 +109,29 @@ public class DetectorUtils {
             instance = (T) new Color(Integer.parseInt(property.getValue(), 16));
         } else if (clazz.getName().equals(Long.class.getName())) {
             instance = (T) Long.valueOf(property.getValue());
+        } else if (clazz.isEnum()) {
+            T[] enumConstants = clazz.getEnumConstants();
+            for (T enu : enumConstants) {
+                if (enu.toString().equals(property.getValue())) {
+                    instance = enu;
+                    break;
+                }
+            }
         }
-
         return instance;
     }
 
     @NbBundle.Messages({"# {0} - filepath", "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"})
-    public static ProcessDescriptor getProcessDescriptor(Class<? extends DetectorProcess> processClass) throws IOException {
-        ProcessDescriptor descriptor = null;
-        String filePatn = MessageFormat.format("/{0}.xml", processClass.getName().replaceAll("\\.", "/"));
-        InputStream resourceAsStream = processClass.getResourceAsStream(filePatn);
+    @SuppressWarnings("unchecked")
+    public static <T> T getXmlDescriptor(Class<T> destClass, Class<?> sourceClass) throws IOException {
+        T descriptor = null;
+        String filePatn = MessageFormat.format("/{0}.xml", sourceClass.getName().replaceAll("\\.", "/"));
+        InputStream resourceAsStream = sourceClass.getResourceAsStream(filePatn);
         if (resourceAsStream != null) {
             try {
-                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(ProcessDescriptor.class);
+                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(destClass);
                 javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-                descriptor = (ProcessDescriptor) unmarshaller.unmarshal(resourceAsStream); //NOI18N
+                descriptor = (T) unmarshaller.unmarshal(resourceAsStream); //NOI18N
             } catch (javax.xml.bind.JAXBException ex) {
                 throw new IOException(ex);
             } finally {
@@ -111,27 +140,12 @@ public class DetectorUtils {
         } else {
             throw new FileNotFoundException(Bundle.CLT_File_not_found(filePatn));
         }
-
         return descriptor;
     }
 
-    public static InferenceModelDescriptor getInferenceModelDescriptor(Class<? extends AbstractInferenceModel> inferenceModelClass) throws IOException {
-        InferenceModelDescriptor descriptor = null;
-        String filePatn = MessageFormat.format("/{0}.xml", inferenceModelClass.getName().replaceAll("\\.", "/"));
-        InputStream resourceAsStream = inferenceModelClass.getResourceAsStream(filePatn);
-        if (resourceAsStream != null) {
-            try {
-                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(InferenceModelDescriptor.class);
-                javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-                descriptor = (InferenceModelDescriptor) unmarshaller.unmarshal(resourceAsStream); //NOI18N
-            } catch (javax.xml.bind.JAXBException ex) {
-                throw new IOException(ex);
-            } finally {
-                resourceAsStream.close();
-            }
-        } else {
-            throw new FileNotFoundException(Bundle.CLT_File_not_found(filePatn));
-        }
+    public static ProcessHandlerDescriptor createProcessHandler(Class<? extends InferenceModelProcessHandler> aClass) {
+        ProcessHandlerDescriptor descriptor = null;
+
         return descriptor;
     }
 
@@ -141,7 +155,9 @@ public class DetectorUtils {
         try {
             if (descriptor != null && detector != null) {
                 Class<?> clazz = Class.forName(descriptor.getJavaType());
-                if (AbstractInferenceModel.class.isAssignableFrom(clazz)) {
+
+                if (AbstractInferenceModel.class
+                        .isAssignableFrom(clazz)) {
                     Class<? extends InferenceModelProcessHandler> abstractInferenceModel = (Class<? extends InferenceModelProcessHandler>) clazz;
                     Constructor<? extends InferenceModelProcessHandler> constructor = abstractInferenceModel.getConstructor(Detector.class);
                     model = constructor.newInstance(detector);
@@ -179,7 +195,9 @@ public class DetectorUtils {
         try {
             if (descriptor != null && detector != null) {
                 Class<?> clazz = Class.forName(descriptor.getJavaType());
-                if (AbstractInferenceModel.class.isAssignableFrom(clazz)) {
+
+                if (AbstractInferenceModel.class
+                        .isAssignableFrom(clazz)) {
                     Class<? extends AbstractInferenceModel> abstractInferenceModel = (Class<? extends AbstractInferenceModel>) clazz;
                     Constructor<? extends AbstractInferenceModel> constructor = abstractInferenceModel.getConstructor(Detector.class);
                     model = constructor.newInstance(detector);
@@ -187,25 +205,18 @@ public class DetectorUtils {
             }
         } catch (ClassNotFoundException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         } catch (NoSuchMethodException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         } catch (SecurityException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         } catch (InstantiationException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         } catch (IllegalArgumentException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         } catch (InvocationTargetException ex) {
             LOG.log(Level.FINE, ex.getMessage(), ex);
-//            Exceptions.printStackTrace(ex);
         }
 
         return model;
@@ -264,12 +275,16 @@ public class DetectorUtils {
                 @Override
                 public void run() {
                     File file = FileUtil.toFile(fileObject);
+
                     if (file != null) {
                         try {
                             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
                             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+
+                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING,
+                                    "UTF-8"); //NOI18N
                             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
                             marshaller.marshal(descriptor, file);
                         } catch (javax.xml.bind.JAXBException ex) {
                             Exceptions.printStackTrace(ex);
@@ -289,6 +304,7 @@ public class DetectorUtils {
             DetectorDescriptor detectorDescriptor = null;
             InputStream inputStream = null;
             inputStream = fileObject.getInputStream();
+
             try {
                 javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
                 javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
@@ -315,7 +331,7 @@ public class DetectorUtils {
             DataObject dataObject = DataObject.find(fileObject);
             copy = dataObject.getNodeDelegate().getLookup().lookup(Detector.class);
             if (copy == null) {
-                throw new DetectorCopyException("Failed to create a copy of detector " + detector.getDetectorDescriptor().getName());
+                throw new DetectorCopyException(MessageFormat.format("Failed to create a copy of detector {0}", detector.getDetectorDescriptor().getName()));
             }
         } catch (IOException ex) {
             throw new DetectorCopyException(ex.getMessage(), ex);

@@ -3,7 +3,6 @@ package de.fub.agg2graph.gpseval;
 import de.fub.agg2graph.gpseval.TestCase.NoDataException;
 import de.fub.agg2graph.gpseval.output.DetailedHTMLOutput;
 import de.fub.agg2graph.gpseval.output.TestResultsOutput;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;

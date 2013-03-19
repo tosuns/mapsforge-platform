@@ -15,6 +15,14 @@
 ******************************************************************************/
 package de.fub.agg2graph.pt;
 
+import com.infomatiq.jsi.Point;
+import com.infomatiq.jsi.Rectangle;
+import com.infomatiq.jsi.SpatialIndex;
+import com.infomatiq.jsi.rtree.RTree;
+import com.viniciusfortuna.transit.gtfs.GtfsReader;
+import com.viniciusfortuna.transit.gtfs.GtfsSpec;
+import com.viniciusfortuna.transit.gtfs.Stop;
+import de.fub.agg2graph.structs.GPSCalc;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,21 +32,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-
-import com.infomatiq.jsi.Point;
-import com.infomatiq.jsi.Rectangle;
-import com.infomatiq.jsi.SpatialIndex;
-import com.infomatiq.jsi.rtree.RTree;
-import com.viniciusfortuna.transit.gtfs.GtfsReader;
-import com.viniciusfortuna.transit.gtfs.GtfsSpec;
-import com.viniciusfortuna.transit.gtfs.Stop;
-
-import de.fub.agg2graph.structs.GPSCalc;
 
 /**
  * @author Sebastian Müller

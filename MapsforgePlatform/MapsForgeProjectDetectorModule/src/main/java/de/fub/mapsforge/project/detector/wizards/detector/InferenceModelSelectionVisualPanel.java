@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import java.beans.PropertyChangeEvent;

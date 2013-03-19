@@ -20,14 +20,11 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="org.openide.explorer.propertysheet.PropertySheetView" name="propertySheetView1">
       <Properties>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="92" green="a1" red="a1" type="rgb"/>
-        </Property>
-        <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="de/fub/mapsforge/project/detector/model/inference/ui/Bundle.properties" key="DefaultInferenceModelVisualRepresenterComponent.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        <Property name="descriptionAreaVisible" type="boolean" value="false"/>
+        <Property name="disabledPropertyColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" id="Button.foreground" palette="3" red="0" type="palette"/>
         </Property>
       </Properties>
       <Constraints>

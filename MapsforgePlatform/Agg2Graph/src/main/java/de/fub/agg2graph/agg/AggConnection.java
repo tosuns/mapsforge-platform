@@ -15,14 +15,13 @@
 ******************************************************************************/
 package de.fub.agg2graph.agg;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fub.agg2graph.agg.tiling.DefaultCachingStrategy;
 import de.fub.agg2graph.agg.tiling.Tile;
 import de.fub.agg2graph.agg.tiling.TileCache;
 import de.fub.agg2graph.agg.tiling.TileManager;
 import de.fub.agg2graph.structs.AbstractEdge;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A connection between two {@link AggNode}s. The connection can have
