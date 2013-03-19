@@ -26,7 +26,10 @@ public class AvgAccelerationFeature extends Feature {
 
     @Override
     public void addWaypoint(Waypoint entry) {
-        if (lastWaypoint != null) {
+        if (lastWaypoint != null
+                && entry != null
+                && entry.getTimestamp() != null
+                && lastWaypoint.getTimestamp() != null) {
             double timeDiff = ((double) (entry.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime())) / 1000;
             double speedDiff = entry.getSpeed() - lastWaypoint.getSpeed();
 

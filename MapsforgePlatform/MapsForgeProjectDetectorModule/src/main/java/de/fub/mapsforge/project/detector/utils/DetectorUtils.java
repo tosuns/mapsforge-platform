@@ -61,8 +61,16 @@ public class DetectorUtils {
                 for (Object object : arguments) {
                     argumentTypes.add(object.getClass());
                 }
-                Constructor<T> constructor = cl.getConstructor(argumentTypes.toArray(new Class[argumentTypes.size()]));
-                instance = constructor.newInstance(arguments);
+                Constructor<T> constructor = null;
+
+                while (cl != null && instance == null) {
+                    try {
+                        constructor = cl.getConstructor(argumentTypes.toArray(new Class[argumentTypes.size()]));
+                        instance = constructor.newInstance(arguments);
+                    } catch (NoSuchMethodException ex) {
+                        cl = (Class<T>) cl.getSuperclass();
+                    }
+                }
             }
         } catch (InstantiationException ex) {
             Exceptions.printStackTrace(ex);
@@ -82,8 +90,6 @@ public class DetectorUtils {
                     }
                 }
             }
-        } catch (NoSuchMethodException ex) {
-            Exceptions.printStackTrace(ex);
         } catch (SecurityException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IllegalArgumentException ex) {
@@ -116,6 +122,23 @@ public class DetectorUtils {
                     instance = enu;
                     break;
                 }
+            }
+        } else {
+            try {
+                Constructor<T> constructor = clazz.getDeclaredConstructor(String.class);
+                instance = constructor.newInstance(property.getValue());
+            } catch (NoSuchMethodException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (SecurityException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (InstantiationException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (InvocationTargetException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
         return instance;

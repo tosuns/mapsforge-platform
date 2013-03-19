@@ -223,6 +223,28 @@ public class AggregatorDataObject extends MultiDataObject {
         });
     }
 
+    public void updateSourceEditor() {
+        DataEditorSupport editorSupport = getLookup().lookup(DataEditorSupport.class);
+        if (editorSupport.isDocumentLoaded()) {
+            try {
+                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(AggregatorDescriptor.class);
+                javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+                marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+                StringWriter stringWriter = new StringWriter();
+                marshaller.marshal(aggregator, stringWriter);
+                StyledDocument document = editorSupport.getDocument();
+                document.remove(0, document.getLength());
+                document.insertString(0, stringWriter.toString(), null);
+            } catch (JAXBException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
     @MultiViewElement.Registration(
             displayName = "#LBL_AggregationBuilder_EDITOR",
             iconBase = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png",

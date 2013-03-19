@@ -51,7 +51,6 @@ import weka.gui.treevisualizer.TreeVisualizer;
 public class J48InferenceModel extends AbstractInferenceModel {
 
     private static final Logger LOG = Logger.getLogger(J48InferenceModel.class.getName());
-    protected static final String PROPERTY_SECTION = "j48.inference.model.option";
     protected static final String PROPERTY_UNPRUNED = "j48.unpruned";
     protected static final String PROPERTY_CONFIDENCE = "j48.confidence";
     protected static final String PROPERTY_MINIMUM_INSTANCES = "j48.minimum.instances.per.leaf";
@@ -97,7 +96,7 @@ public class J48InferenceModel extends AbstractInferenceModel {
         InferenceModelDescriptor inferenceModelDescriptor = getInferenceModelDescriptor();
         if (inferenceModelDescriptor != null) {
             for (Section propertySection : inferenceModelDescriptor.getPropertySection().getSectionList()) {
-                if (PROPERTY_SECTION.equals(propertySection.getId())) {
+                if (OPTIONS_PROPERTY_SECTION.equals(propertySection.getId())) {
                     ArrayList<String> optionList = new ArrayList<String>();
                     for (Property property : propertySection.getPropertyList()) {
                         try {

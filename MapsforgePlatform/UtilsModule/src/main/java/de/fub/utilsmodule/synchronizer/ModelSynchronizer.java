@@ -55,7 +55,11 @@ public abstract class ModelSynchronizer {
         }
     }
 
-    protected abstract void synchronizeModel();
+    protected void synchronize() {
+        updateSource();
+    }
+
+    public abstract void updateSource();
 
     public static class ModelSynchronizerClient {
 
@@ -71,8 +75,13 @@ public abstract class ModelSynchronizer {
             changeSupport.addChangeListener(listener);
         }
 
-        public void modelChanged() {
+        public void modelChangedFromGui() {
+            synchornizer.updateSource();
+        }
+
+        public void modelChangedFromSource() {
             synchornizer.modelChanged(ModelSynchronizerClient.this);
+
         }
 
         protected void updateModel() {

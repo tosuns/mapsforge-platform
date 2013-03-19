@@ -21,6 +21,7 @@ import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -39,6 +40,7 @@ public class ProcessSelectionComponent extends javax.swing.JPanel implements Exp
     public ProcessSelectionComponent() {
         initComponents();
         explorerManager.setRootContext(new AbstractNode(Children.create(new ProcessHandlerFactory(processHandlerList), true)));
+        explorerManager.addPropertyChangeListener(WeakListeners.propertyChange(ProcessSelectionComponent.this, explorerManager));
         listView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
@@ -104,7 +106,7 @@ public class ProcessSelectionComponent extends javax.swing.JPanel implements Exp
         if (selectedNodes.length == 1) {
             selectedProcessHandler = selectedNodes[0].getLookup().lookup(InferenceModelProcessHandler.class);
             if (selectedProcessHandler != null) {
-                currentProcessHandlerName.setText(selectedProcessHandler.getDescriptor().getName());
+                setSelectedProcessHandler(selectedProcessHandler);
             }
         }
     }//GEN-LAST:event_selectButtonActionPerformed
@@ -127,6 +129,11 @@ public class ProcessSelectionComponent extends javax.swing.JPanel implements Exp
 
     public void setSelectedProcessHandler(InferenceModelProcessHandler selectedProcessHandler) {
         this.selectedProcessHandler = selectedProcessHandler;
+        if (this.selectedProcessHandler != null) {
+            currentProcessHandlerName.setText(this.selectedProcessHandler.getDescriptor().getName());
+        } else {
+            currentProcessHandlerName.setText(null);
+        }
     }
 
     public JButton getSelectButton() {

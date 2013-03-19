@@ -457,7 +457,6 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/EditInferenceModelAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/EditPostProcessorsAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/EditPreprocessorsAction.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/InferenceModelSettingsAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/NewDetectorWizardAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/RunAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/DataSetCategoryNodeFactory.java -text

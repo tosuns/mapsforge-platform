@@ -5,6 +5,7 @@
         <folder name="Detector">
             <file name="de-fub-mapsforge-project-detector-actions-DetecotStartAction.instance_hidden"/>
             <file name="de-fub-mapsforge-project-detector-actions-DetectorStartAction.instance"/>
+            <file name="de-fub-mapsforge-project-detector-actions-InferenceModelSettingsAction.instance_hidden"/>
         </folder>
         <folder name="MapsForge">
             <file name="de-fub-mapsforge-project-detector-actions-RunAction.instance_hidden"/>

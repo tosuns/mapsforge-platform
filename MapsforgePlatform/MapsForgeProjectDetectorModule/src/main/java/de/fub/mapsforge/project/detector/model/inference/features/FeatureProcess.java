@@ -4,18 +4,23 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.features;
 
+import de.fub.mapsforge.project.detector.factories.nodes.ProcessProperty;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.utilsmodule.icons.IconRegister;
-import de.fub.utilsmodule.text.StringUtils;
+import de.fub.utilsmodule.node.CustomAbstractnode;
+import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
-import org.openide.nodes.AbstractNode;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
@@ -28,10 +33,6 @@ import org.openide.util.lookup.Lookups;
 public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegment, Double> {
 
     private static Image defaultImage;
-
-    public FeatureProcess() {
-        super(null);
-    }
 
     public FeatureProcess(Detector detector) {
         super(detector);
@@ -72,20 +73,36 @@ public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegmen
         return false;
     }
 
-    private static class FeatureNode extends AbstractNode {
+    private static class FeatureNode extends CustomAbstractnode implements ChangeListener {
 
         private final FeatureProcess filterProcess;
 
         public FeatureNode(FeatureProcess filterProcess) {
             super(Children.LEAF, Lookups.fixed(filterProcess));
             this.filterProcess = filterProcess;
-            setDisplayName(filterProcess.getName());
-            setShortDescription(StringUtils.StringAsHtmlWrapString(filterProcess.getDescription()));
+            setDisplayName(filterProcess.getProcessDescriptor().getName());
+            setShortDescription(filterProcess.getProcessDescriptor().getDescription());
         }
 
         @Override
         protected Sheet createSheet() {
-            return super.createSheet(); //To change body of generated methods, choose Tools | Templates.
+            Sheet sheet = Sheet.createDefault();
+            Sheet.Set set = Sheet.createPropertiesSet();
+            sheet.put(set);
+            if (filterProcess.getDetector() != null) {
+                ModelSynchronizer.ModelSynchronizerClient msClient = filterProcess.getDetector().create(FeatureNode.this);
+                ProcessDescriptor processDescriptor = filterProcess.getProcessDescriptor();
+                if (processDescriptor != null) {
+                    for (de.fub.mapsforge.project.detector.model.xmls.Property property : processDescriptor.getProperties().getPropertyList()) {
+                        new ProcessProperty(msClient, property);
+                    }
+                }
+            }
+            return sheet;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
         }
     }
 }

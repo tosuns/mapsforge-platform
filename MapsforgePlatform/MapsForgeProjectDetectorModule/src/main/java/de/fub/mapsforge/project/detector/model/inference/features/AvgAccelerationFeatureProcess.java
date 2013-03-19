@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.AvgAccelerationFeature;
+import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -23,6 +24,14 @@ public class AvgAccelerationFeatureProcess extends FeatureProcess {
 
     private final AvgAccelerationFeature feature = new AvgAccelerationFeature();
     private TrackSegment gpsTrack;
+
+    public AvgAccelerationFeatureProcess() {
+        super(null);
+    }
+
+    public AvgAccelerationFeatureProcess(Detector detector) {
+        super(detector);
+    }
 
     @Override
     protected void start() {

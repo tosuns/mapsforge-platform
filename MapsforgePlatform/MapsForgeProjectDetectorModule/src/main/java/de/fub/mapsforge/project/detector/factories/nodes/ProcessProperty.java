@@ -5,39 +5,68 @@
 package de.fub.mapsforge.project.detector.factories.nodes;
 
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.lang.reflect.InvocationTargetException;
 import org.openide.nodes.PropertySupport;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Serdar
  */
-public class ProcessProperty extends PropertySupport.ReadWrite<String> {
+public class ProcessProperty extends PropertySupport.ReadWrite<Object> {
 
     private final ModelSynchronizer.ModelSynchronizerClient clientSynchronizer;
     private final Property property;
+    private Object value = null;
 
     @SuppressWarnings("unchecked")
     public ProcessProperty(ModelSynchronizer.ModelSynchronizerClient clientSynchronizer, Property property) {
-        super(property.getName(), String.class, property.getName(), property.getDescription());
+        super(property.getName(), getClassOf(property), property.getName(), property.getDescription());
         this.clientSynchronizer = clientSynchronizer;
         this.property = property;
+        initValue();
+    }
+
+    private void initValue() {
+        try {
+            value = DetectorUtils.getValue(Class.forName(property.getJavaType()), property);
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     @Override
-    public String getValue() throws IllegalAccessException, InvocationTargetException {
-        return property.getValue();
+    public Object getValue() throws IllegalAccessException, InvocationTargetException {
+        return value;
     }
 
     @Override
-    public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void setValue(Object val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        value = val;
         if (val != null && !val.equals(property.getValue())) {
             property.setValue(String.valueOf(val));
-            clientSynchronizer.modelChanged();
+            notifyModel();
         } else {
             property.setValue(null);
-            clientSynchronizer.modelChanged();
+            notifyModel();
         }
+    }
+
+    private void notifyModel() {
+        if (clientSynchronizer != null) {
+            clientSynchronizer.modelChangedFromGui();
+        }
+    }
+
+    private static Class getClassOf(Property property) {
+        Class<?> clazz = Object.class;
+        try {
+            clazz = Class.forName(property.getJavaType());
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return clazz;
     }
 }

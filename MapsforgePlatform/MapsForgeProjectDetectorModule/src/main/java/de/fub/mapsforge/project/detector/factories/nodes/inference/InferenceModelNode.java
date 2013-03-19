@@ -6,8 +6,11 @@ package de.fub.mapsforge.project.detector.factories.nodes.inference;
 
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapsforge.project.detector.factories.inference.InferenceNodeChildFactory;
+import de.fub.mapsforge.project.detector.factories.nodes.ProcessProperty;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.Section;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import de.fub.utilsmodule.text.StringUtils;
@@ -54,7 +57,6 @@ public class InferenceModelNode extends AbstractNode implements ChangeListener, 
         if (detector != null) {
             this.content = content;
             this.detector = detector;
-            modelSynchronizerClient = detector.create(InferenceModelNode.this);
             updateNode();
         }
     }
@@ -109,10 +111,30 @@ public class InferenceModelNode extends AbstractNode implements ChangeListener, 
         return sheet;
     }
 
-    private void updateSheet() {
-        if (inferenceModel != null) {
-            Sheet.Set set = null;
+    private ModelSynchronizer.ModelSynchronizerClient getModelSynchronizerClient() {
+        if (modelSynchronizerClient == null && detector != null) {
+            modelSynchronizerClient = detector.create(InferenceModelNode.this);
+        }
+        return modelSynchronizerClient;
+    }
 
+    @SuppressWarnings("unchecked")
+    private void updateSheet() {
+        if (sheet != null && inferenceModel != null && inferenceModel.getInferenceModelDescriptor() != null) {
+            InferenceModelDescriptor inferenceModelDescriptor = inferenceModel.getInferenceModelDescriptor();
+            Sheet.Set set = Sheet.createPropertiesSet();
+            sheet.put(set);
+            for (Section section : inferenceModelDescriptor.getPropertySection().getSectionList()) {
+                if (AbstractInferenceModel.OPTIONS_PROPERTY_SECTION.equals(section.getId())) {
+                    for (de.fub.mapsforge.project.detector.model.xmls.Property property : section.getPropertyList()) {
+                        if (getModelSynchronizerClient() != null) {
+                            set.put(new ProcessProperty(getModelSynchronizerClient(), property));
+                        } else {
+                            set.put(new ProcessProperty(getModelSynchronizerClient(), property));
+                        }
+                    }
+                }
+            }
         }
     }
 

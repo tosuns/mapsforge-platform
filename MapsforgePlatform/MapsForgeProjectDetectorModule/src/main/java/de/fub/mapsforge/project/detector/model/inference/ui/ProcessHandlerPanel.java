@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -47,9 +48,13 @@ public final class ProcessHandlerPanel extends javax.swing.JPanel implements Mou
                 }
             }
         }
-        getCrossvalidationProcessSelectionComponent().getListView().addMouseListener(ProcessHandlerPanel.this);
-        getInferenceProcessSelectionComponent().getListView().addMouseListener(ProcessHandlerPanel.this);
-        getTrainingProcessSelectionComponent().getListView().addMouseListener(ProcessHandlerPanel.this);
+        getTrainingProcessSelectionComponent().getTitle().setText(NbBundle.getMessage(ProcessHandlerPanel.class, "ProcessHandlerPanel.trainings.title"));
+        getCrossvalidationProcessSelectionComponent().getTitle().setText(NbBundle.getMessage(ProcessHandlerPanel.class, "ProcessHandlerPanel.crossvalidation.title"));
+        getInferenceProcessSelectionComponent().getTitle().setText(NbBundle.getMessage(ProcessHandlerPanel.class, "ProcessHandlerPanel.inference.title"));
+
+        getCrossvalidationProcessSelectionComponent().getListView().getViewport().getView().addMouseListener(ProcessHandlerPanel.this);
+        getInferenceProcessSelectionComponent().getListView().getViewport().getView().addMouseListener(ProcessHandlerPanel.this);
+        getTrainingProcessSelectionComponent().getListView().getViewport().getView().addMouseListener(ProcessHandlerPanel.this);
 
     }
 
@@ -148,11 +153,11 @@ public final class ProcessHandlerPanel extends javax.swing.JPanel implements Mou
     @Override
     public void mouseClicked(MouseEvent e) {
         ExplorerManager explorerManager = null;
-        if (e.getSource().equals(getTrainingProcessSelectionComponent().getListView())) {
+        if (e.getSource().equals(getTrainingProcessSelectionComponent().getListView().getViewport().getView())) {
             explorerManager = getTrainingProcessSelectionComponent().getExplorerManager();
-        } else if (e.getSource().equals(getInferenceProcessSelectionComponent().getListView())) {
+        } else if (e.getSource().equals(getInferenceProcessSelectionComponent().getListView().getViewport().getView())) {
             explorerManager = getInferenceProcessSelectionComponent().getExplorerManager();
-        } else if (e.getSource().equals(getCrossvalidationProcessSelectionComponent().getListView())) {
+        } else if (e.getSource().equals(getCrossvalidationProcessSelectionComponent().getListView().getViewport().getView())) {
             explorerManager = getCrossvalidationProcessSelectionComponent().getExplorerManager();
         }
 
@@ -161,7 +166,7 @@ public final class ProcessHandlerPanel extends javax.swing.JPanel implements Mou
             if (selectedNodes.length == 1) {
                 InferenceModelProcessHandler processHandler = selectedNodes[0].getLookup().lookup(InferenceModelProcessHandler.class);
                 if (processHandler != null) {
-                    getDescription().setText(processHandler.getDescriptor().getDescription());
+                    getDescription().setText(processHandler.getDescriptor().getName());
                 }
             } else {
                 getDescription().setText(null);

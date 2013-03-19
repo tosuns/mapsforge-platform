@@ -4,13 +4,22 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
+import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import java.beans.PropertyVetoException;
+import org.openide.explorer.ExplorerManager;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
+
 /**
  *
  * @author Serdar
  */
-public class OptionPanel extends javax.swing.JPanel {
+public class OptionPanel extends javax.swing.JPanel implements ExplorerManager.Provider {
 
     private static final long serialVersionUID = 1L;
+    private final ExplorerManager explorerManager = new ExplorerManager();
+    private AbstractInferenceModel inferenceModel = null;
 
     /**
      * Creates new form OptionPanel
@@ -41,4 +50,24 @@ public class OptionPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.openide.explorer.propertysheet.PropertySheetView propertySheetView1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return explorerManager;
+    }
+
+    public void setInferenceModel(AbstractInferenceModel inferenceModel) {
+        this.inferenceModel = inferenceModel;
+        if (this.inferenceModel != null) {
+            try {
+                FilterNode filterNode = new FilterNode(inferenceModel.getNodeDelegate());
+                getExplorerManager().setRootContext(filterNode);
+                getExplorerManager().setSelectedNodes(new Node[]{filterNode});
+            } catch (PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            getExplorerManager().setRootContext(Node.EMPTY);
+        }
+    }
 }

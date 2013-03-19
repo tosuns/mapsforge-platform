@@ -64,8 +64,7 @@ public class Aggregator extends ModelSynchronizer {
     }
 
     private void init() {
-        // a dummy client to differenciate File change from the file system
-        dataObjectModelSynchonizerClient = super.create(new ChangeListener() {
+        dataObjectModelSynchonizerClient = create(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 // do nothing
@@ -76,7 +75,7 @@ public class Aggregator extends ModelSynchronizer {
             @Override
             public void stateChanged(ChangeEvent e) {
                 setUpPipeline();
-                dataObjectModelSynchonizerClient.modelChanged();
+                dataObjectModelSynchonizerClient.modelChangedFromSource();
             }
         });
         setUpPipeline();
@@ -228,8 +227,10 @@ public class Aggregator extends ModelSynchronizer {
     }
 
     @Override
-    protected void synchronizeModel() {
-        notifyModified();
+    public void updateSource() {
+        if (dataObject != null) {
+            dataObject.modifySourceEditor();
+        }
     }
 
     public enum AggregatorState {

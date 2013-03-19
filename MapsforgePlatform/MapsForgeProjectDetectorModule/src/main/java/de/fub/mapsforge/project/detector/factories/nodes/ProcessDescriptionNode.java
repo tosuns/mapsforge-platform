@@ -24,6 +24,8 @@ public class ProcessDescriptionNode extends CustomAbstractnode {
         super(Children.LEAF, Lookups.fixed(processDesciptor));
         this.processDescriptor = processDesciptor;
         this.msClient = msClient;
+        setDisplayName(processDesciptor.getName());
+        setShortDescription(processDesciptor.getDescription());
     }
 
     @Override

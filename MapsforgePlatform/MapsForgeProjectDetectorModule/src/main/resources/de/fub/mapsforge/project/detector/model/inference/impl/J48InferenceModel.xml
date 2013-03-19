@@ -21,7 +21,7 @@
         </processHandler>
     </inferenceModelProcessHandlers>
     <propertysection>
-        <section id="j48.inference.model.option" name="Options" description="Options to tune the classifier">
+        <section id="inference.model.option" name="Options" description="Options to tune the classifier">
             <property id="j48.unpruned" value="false" javaType="java.lang.Boolean" name="use unpruned tree" description="Specifies to use an unpruned tree"/>
             <property id="j48.confidence" value="0.25" javaType="java.lang.Double" name="Confidence" description="Specifies confidence threshold for pruning. (Default: 0.25)"/>
             <property id="j48.minimum.instances.per.leaf" value="2" javaType="java.lang.Integer" name="Minumum Instances" description="Specifies the minimum number of instances per leaf. (Default: 2)"/>

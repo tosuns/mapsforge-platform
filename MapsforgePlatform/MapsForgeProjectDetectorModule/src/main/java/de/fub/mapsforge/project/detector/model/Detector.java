@@ -39,7 +39,7 @@ public class Detector extends ModelSynchronizer {
 
     public static final String PROP_NAME_DETECTOR_STATE = "detector.state";
     private static final Logger LOG = Logger.getLogger(Detector.class.getName());
-    private final DetectorDataObject dataObject;
+    private DetectorDataObject dataObject;
     private final PreProcessorPipeline preProcessorPipeline = new PreProcessorPipeline(this);
     private final PostProcessorPipeline postProcessorPipeline = new PostProcessorPipeline(this);
     private final Object MUTEX_PROCESS_RUNNING = new Object();
@@ -59,21 +59,12 @@ public class Detector extends ModelSynchronizer {
      *
      */
     private void init() {
-        // a client to delegate a file change listener
-        // to all other clients to update their model
-        dataObjectModelSynchronizerClient = super.create(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                // for the editornew
-                dataObject.updateEditor();
-            }
-        });
 
         this.dataObject.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 reinit();
-                dataObjectModelSynchronizerClient.modelChanged();
+                modelChanged(null);
             }
         });
         reinit();
@@ -231,13 +222,10 @@ public class Detector extends ModelSynchronizer {
         DetectorDescriptor detectorDescriptor = null;
         try {
             detectorDescriptor = dataObject.getDetectorDescriptor();
-//            getDataObject().getNodeDelegate().setShortDescription(detectorDescriptor.getDescription());
         } catch (JAXBException ex) {
             setDetectorState(ProcessState.ERROR);
-//            getDataObject().getNodeDelegate().setShortDescription(ex.getMessage());
         } catch (IOException ex) {
             setDetectorState(ProcessState.ERROR);
-//            getDataObject().getNodeDelegate().setShortDescription(ex.getMessage());
         }
         return detectorDescriptor;
     }
@@ -290,7 +278,9 @@ public class Detector extends ModelSynchronizer {
     }
 
     @Override
-    protected void synchronizeModel() {
-        notifyModified();
+    public void updateSource() {
+        if (dataObject != null) {
+            dataObject.modifySourceEditor();
+        }
     }
 }

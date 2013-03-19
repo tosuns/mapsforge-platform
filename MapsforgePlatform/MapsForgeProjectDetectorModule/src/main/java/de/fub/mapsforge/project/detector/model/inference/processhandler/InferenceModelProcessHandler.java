@@ -6,17 +6,23 @@ package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
+import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlers;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -69,16 +75,23 @@ public abstract class InferenceModelProcessHandler {
 
     public ProcessHandlerDescriptor getDescriptor() {
         if (descriptor == null) {
-            if (getInferenceModel() != null) {
-                AbstractInferenceModel inferenceModel = getInferenceModel();
-                for (ProcessHandlerDescriptor desc : inferenceModel.getInferenceModelDescriptor().getInferenceModelProcessHandlers().getProcessHandlerList()) {
+            AbstractInferenceModel inferenceMdl = getInferenceModel();
+            if (inferenceMdl != null) {
+                InferenceModelDescriptor inferenceModelDescriptor = inferenceMdl.getInferenceModelDescriptor();
+                ProcessHandlers inferenceModelProcessHandlers = inferenceModelDescriptor.getInferenceModelProcessHandlers();
+                List<ProcessHandlerDescriptor> processHandlerList = inferenceModelProcessHandlers.getProcessHandlerList();
+                for (ProcessHandlerDescriptor desc : processHandlerList) {
                     if (desc.getJavaType().equals(getClass().getName())) {
                         descriptor = desc;
                         break;
                     }
                 }
             } else {
-                DetectorUtils.createProcessHandler(getClass());
+                try {
+                    descriptor = DetectorUtils.getXmlDescriptor(ProcessHandlerDescriptor.class, getClass());
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         return descriptor;
@@ -97,13 +110,9 @@ public abstract class InferenceModelProcessHandler {
         }
 
         private void updateNode() {
-            AbstractInferenceModel inferenceModel1 = processHandler.getInferenceModel();
-            for (InferenceMode mode : InferenceMode.values()) {
-                InferenceModelProcessHandler processHandlerInstance = inferenceModel1.getProcessHandlerInstance(mode);
-                if (processHandler.equals(processHandlerInstance)) {
-                    setDisplayName(mode.getDisplayName());
-                    break;
-                }
+            if (processHandler != null && processHandler.getDescriptor() != null) {
+                String name = processHandler.getDescriptor().getName();
+                setDisplayName(name);
             }
         }
     }

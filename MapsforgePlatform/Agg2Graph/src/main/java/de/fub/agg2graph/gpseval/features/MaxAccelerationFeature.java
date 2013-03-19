@@ -21,7 +21,9 @@ public class MaxAccelerationFeature extends Feature {
             mLastSegment = entry.getSegment();
         }
 
-        if (mLastWaypoint != null) {
+        if (mLastWaypoint != null
+                && entry.getTimestamp() != null
+                && mLastWaypoint.getTimestamp() != null) {
             double timeDiff = ((double) (entry.getTimestamp().getTime() - mLastWaypoint.getTimestamp().getTime())) / 1000;
             double speedDiff = entry.getSpeed() - mLastWaypoint.getSpeed();
 

@@ -6,18 +6,25 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
+import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
-import org.openide.DialogDescriptor;
+import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.util.Lookup;
+import org.openide.util.WeakListeners;
 
 /**
  *
  * @author Serdar
  */
-public class InferenceModelSettingForm extends javax.swing.JPanel implements ActionListener {
+public class InferenceModelSettingForm extends javax.swing.JPanel implements ActionListener, ChangeListener {
 
     private static final long serialVersionUID = 1L;
     private final AbstractInferenceModel inferenecModel;
@@ -34,6 +41,8 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
         initComponents();
 
         this.inferenecModel = inferenceModel;
+        optionPanel1.setInferenceModel(inferenceModel);
+
 
         selectionComponent1.getAllItemListTitle().setText("All Features"); //NO18N
         selectionComponent1.getSelectedItemListTitle().setText("Selected Features"); // NO18N
@@ -49,6 +58,29 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
             }
         }
         selectionComponent1.getAllItems().removeAll(selectionComponent1.getSelectedItems());
+        selectionComponent1.getSelectedItems().addChangeListener(WeakListeners.change(InferenceModelSettingForm.this, selectionComponent1.getSelectedListExplorerManager()));
+
+        for (InferenceMode mode : InferenceMode.values()) {
+            InferenceModelProcessHandler processHandlerInstance = inferenceModel.getProcessHandlerInstance(mode);
+            if (processHandlerInstance != null) {
+                switch (mode) {
+                    case TRAININGS_MODE:
+                        processHandlerPanel1.getTrainingProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
+                        break;
+                    case CROSS_VALIDATION_MODE:
+                        processHandlerPanel1.getCrossvalidationProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
+                        break;
+                    case INFERENCE_MODE:
+                        processHandlerPanel1.getInferenceProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
+                        break;
+                    case ALL_MODE: // do nothing in this case
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+        }
+
 
     }
 
@@ -93,8 +125,24 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(DialogDescriptor.OK_OPTION)) {
-        } else if (e.getSource().equals(DialogDescriptor.CANCEL_OPTION)) {
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent evt) {
+        if (evt.getSource().equals(selectionComponent1.getSelectedItems())) {
+            List<ProcessDescriptor> featureList = inferenecModel.getInferenceModelDescriptor().getFeatures().getFeatureList();
+            featureList.clear();
+
+            for (DetectorProcess item : selectionComponent1.getSelectedItems()) {
+                if (item instanceof FeatureProcess) {
+                    FeatureProcess featureProcess = (FeatureProcess) item;
+                    ProcessDescriptor processDescriptor = featureProcess.getProcessDescriptor();
+                    if (processDescriptor != null) {
+                        featureList.add(processDescriptor);
+                    }
+                }
+            }
+
         }
     }
 }

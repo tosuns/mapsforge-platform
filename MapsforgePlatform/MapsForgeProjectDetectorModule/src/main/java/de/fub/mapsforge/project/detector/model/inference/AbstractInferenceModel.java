@@ -51,10 +51,7 @@ import weka.core.Attribute;
  */
 public abstract class AbstractInferenceModel extends DetectorProcess<InferenceModelInputDataSet, InferenceModelResultDataSet> {
 
-    /**
-     *
-     */
-    private static JComponent DEFAULT_VISUAL_REPRESENTER;
+    public static final String OPTIONS_PROPERTY_SECTION = "inference.model.option";
     /**
      *
      */
@@ -155,7 +152,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
             if (features != null) {
                 FeatureProcess feature = null;
                 for (ProcessDescriptor featureDescriptor : features.getFeatureList()) {
-                    feature = DetectorUtils.createInstance(FeatureProcess.class, featureDescriptor.getJavaType(), AbstractInferenceModel.this);
+                    feature = DetectorUtils.createInstance(FeatureProcess.class, featureDescriptor.getJavaType(), getDetector());
                     if (feature != null) {
                         addFeature(feature);
                     }
@@ -344,6 +341,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                         break;
                     case INFERENCE_MODE:
                         processHandler = new InferenceDataProcessHandler(AbstractInferenceModel.this);
+                        break;
+                    case ALL_MODE: // do nothing
                         break;
                     default:
                         throw new IllegalArgumentException(MessageFormat.format("{0} not supported!", infMode1)); // NO18N
