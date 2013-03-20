@@ -12,8 +12,8 @@ import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Section;
 import de.fub.utilsmodule.icons.IconRegister;
+import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
-import de.fub.utilsmodule.text.StringUtils;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,7 +21,6 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
@@ -38,7 +37,7 @@ import org.openide.util.lookup.InstanceContent;
     "CLT_No_InferenceModel_Name=<No Inference Model>",
     "CLT_No_InferenceModel_Description=Without an inference model the classifcation process can not be run."
 })
-public class InferenceModelNode extends AbstractNode implements ChangeListener, ProcessPipeline.ProcessListener, PropertyChangeListener {
+public class InferenceModelNode extends CustomAbstractnode implements ChangeListener, ProcessPipeline.ProcessListener, PropertyChangeListener {
 
     private static final String ICON_NAME = "inferenceModelIcon.png";
     public static final String ACTION_PATH = "MapsForge/Detector/inferenceModel/Actions";
@@ -93,7 +92,7 @@ public class InferenceModelNode extends AbstractNode implements ChangeListener, 
             if (inferenceModel != null) {
                 content.add(inferenceModel);
                 setDisplayName(inferenceModel.getName());
-                setShortDescription(StringUtils.StringAsHtmlWrapString(inferenceModel.getDescription()));
+                setShortDescription(inferenceModel.getDescription());
                 inferenceModel.addProcessListener(InferenceModelNode.this);
                 inferenceModel.addPropertyChangeListener(InferenceModelNode.this);
                 updateSheet();

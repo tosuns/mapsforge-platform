@@ -161,7 +161,7 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
         editButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        listView1 = new org.openide.explorer.view.ListView();
+        listView1 = new CustomListView();
         jLabel5 = new javax.swing.JLabel();
 
         setMinimumSize(new java.awt.Dimension(460, 370));

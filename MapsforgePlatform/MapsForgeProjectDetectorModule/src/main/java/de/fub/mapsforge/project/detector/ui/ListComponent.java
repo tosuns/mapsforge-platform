@@ -34,7 +34,7 @@ public class ListComponent extends javax.swing.JPanel implements ExplorerManager
     private void initComponents() {
 
         title = new javax.swing.JLabel();
-        listView = new org.openide.explorer.view.ListView();
+        listView = new CustomListView();
 
         setLayout(new java.awt.BorderLayout(4, 4));
 

@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
+import de.fub.mapsforge.project.detector.ui.CustomListView;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -54,7 +55,7 @@ public class ProcessSelectionComponent extends javax.swing.JPanel implements Exp
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        listView = new org.openide.explorer.view.ListView();
+        listView = new CustomListView();
         currentProcessHandlerName = new javax.swing.JTextField();
         selectButton = new javax.swing.JButton();
         title = new javax.swing.JLabel();

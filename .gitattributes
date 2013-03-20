@@ -158,14 +158,8 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/OsmPanel.j
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/ui/gui/jmv/TestUI.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/utils/MathUtil.java -text
 MapsforgePlatform/Agg2Graph/src/main/nbm/manifest.mf -text
-MapsforgePlatform/Agg2Graph/src/main/resources/Aggregation[!!-~]\[agg2graph\].log -text
-MapsforgePlatform/Agg2Graph/src/main/resources/Aggregation[!!-~]\[mapsforge\].log -text
-MapsforgePlatform/Agg2Graph/src/main/resources/Cleaning[!!-~]\[agg2graph\].log -text
-MapsforgePlatform/Agg2Graph/src/main/resources/Cleaning[!!-~]\[mapsforge\].log -text
-MapsforgePlatform/Agg2Graph/src/main/resources/Data[!!-~]\[agg2graph\].log -text
-MapsforgePlatform/Agg2Graph/src/main/resources/Data[!!-~]\[mapsforge\].log -text
+MapsforgePlatform/Agg2Graph/src/main/resources/com/viniciusfortuna/transit/gtfs/BVG.zip -text
 MapsforgePlatform/Agg2Graph/src/main/resources/de/fub/agg2graph/Bundle.properties -text
-MapsforgePlatform/Agg2Graph/src/main/resources/mapsforge2.log -text
 MapsforgePlatform/Agg2GraphUI/pom.xml -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/AggContentPanel.form -text
 MapsforgePlatform/Agg2GraphUI/src/main/java/de/fub/agg2graphui/AggContentPanel.java -text
@@ -557,6 +551,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Properties.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Property.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/TrainingsSet.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/CustomListView.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/InferenceModelComponent.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/InferenceModelComponent.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/ListComponent.form -text
