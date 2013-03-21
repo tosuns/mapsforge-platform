@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
@@ -107,8 +108,13 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
     }
 
     @Override
-    protected void updateVisualRepresentation(Evaluation evaluation) {
-        getEvaluationPanel().updatePanel(evaluation);
+    protected void updateVisualRepresentation(final Evaluation evaluation) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                getEvaluationPanel().updatePanel(evaluation);
+            }
+        });
     }
 
     private double getTrainingsSetRatioParameter() {

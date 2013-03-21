@@ -19,7 +19,7 @@ public class ProfileCustomizer implements ProjectCustomizer.CompositeCategoryPro
     private static final String GENERAL = "Profiles";
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
-            projectType = "org-mapsforge-project/Detector", position = 10)
+            projectType = "org-mapsforge-project/Detector", position = 400)
     public static ProfileCustomizer createGeneral() {
         return new ProfileCustomizer();
     }

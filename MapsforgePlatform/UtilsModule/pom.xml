@@ -81,17 +81,6 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>uk.com.robust-it</groupId>
-            <artifactId>cloning</artifactId>
-            <version>1.9.0</version>
-        </dependency>
-        <dependency>
-            <artifactId>objenesis</artifactId>
-            <groupId>org.objenesis</groupId>
-            <type>jar</type>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
             <artifactId>org-openide-util-lookup</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>

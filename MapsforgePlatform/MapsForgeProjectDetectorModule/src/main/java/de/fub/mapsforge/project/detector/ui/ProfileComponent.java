@@ -416,11 +416,10 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
         if (this.profile != null && detector.getDetectorDescriptor().getProfiles().getProfileList().contains(this.profile)) {
             readValues();
         }
-        // TODO detector notify modified
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
+
         if (this.profile != null && detector.getDetectorDescriptor().getProfiles().getProfileList().contains(this.profile)) {
             this.detector.getDetectorDescriptor().getProfiles().getProfileList().remove(this.profile);
             profileList.remove(this.profile);

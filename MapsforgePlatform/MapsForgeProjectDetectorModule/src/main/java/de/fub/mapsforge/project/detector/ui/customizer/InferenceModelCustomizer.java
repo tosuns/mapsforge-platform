@@ -19,7 +19,7 @@ public class InferenceModelCustomizer implements ProjectCustomizer.CompositeCate
     private static final String GENERAL = "Inference Models";
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
-            projectType = "org-mapsforge-project/Detector", position = 10)
+            projectType = "org-mapsforge-project/Detector", position = 100)
     public static InferenceModelCustomizer createGeneral() {
         return new InferenceModelCustomizer();
     }

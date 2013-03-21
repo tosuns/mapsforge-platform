@@ -57,11 +57,14 @@ public class AggregateUtils {
     public static final String ICON_PATH_BUSY = "de/fub/mapsforge/project/aggregator/aggregatorIconBusy.png";
     @StaticResource
     public static final String ICON_PATH_ERROR = "de/fub/mapsforge/project/aggregator/aggregatorIconError.png";
-    private static final PaletteController palette = PaletteFactory.createPalette(
-            new AbstractNode(Children.create(new CategoryNodeFactory(), true)),
-            new EmptyPaletteAction(), null, new PaletteDragAndDropHandler());
+    private static PaletteController palette;
 
     public static PaletteController getProcessPalette() {
+        if (palette == null) {
+            palette = PaletteFactory.createPalette(
+                    new AbstractNode(Children.create(new CategoryNodeFactory(), true)),
+                    new EmptyPaletteAction(), null, new PaletteDragAndDropHandler());
+        }
         return palette;
     }
 

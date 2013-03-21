@@ -19,7 +19,7 @@ public class PostProcessorCustomizer implements ProjectCustomizer.CompositeCateg
     private static final String GENERAL = "Postprocessors";
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
-            projectType = "org-mapsforge-project/Detector", position = 10)
+            projectType = "org-mapsforge-project/Detector", position = 300)
     public static PostProcessorCustomizer createGeneral() {
         return new PostProcessorCustomizer();
     }

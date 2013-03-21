@@ -99,7 +99,7 @@ public class AggregatorWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
                 getComponent().getAggregatorLocation().setText(
                         MessageFormat.format("{0}/",
                         dataObject.getPrimaryFile().getPath()));
-            } else if (getComponent().getAggregatorName() != null && getComponent().getAggregatorName().getText().length() > 0) {
+            } else if (getComponent().getAggregatorName().getText() != null && getComponent().getAggregatorName().getText().length() > 0) {
                 getComponent().getAggregatorLocation().setText(
                         MessageFormat.format("{0}/{1}.agg",
                         dataObject.getPrimaryFile().getPath(),

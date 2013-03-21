@@ -6,7 +6,6 @@ package de.fub.utilsmodule.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;

@@ -236,7 +236,6 @@
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <useOSGiDependencies>true</useOSGiDependencies>
                     <publicPackages>
                         <publicPackage>de.fub.mapsforge.project.aggregator.pipeline</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.aggregator.pipeline.processes</publicPackage>

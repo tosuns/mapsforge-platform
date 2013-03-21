@@ -6,6 +6,7 @@ package de.fub.mapsforge.snapshot.impl;
 
 import de.fub.mapsforge.snapshot.api.AbstractComponentSnapShotExporter;
 import de.fub.mapsforge.snapshot.api.ComponentSnapShotExporter;
+import de.fub.mapsforge.snapshot.utils.DimensionUtil;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -73,7 +74,7 @@ public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter
                         @Override
                         public void run() {
                             Dimension preferredSize = component.getPreferredSize();
-                            Dimension dimension = computeDestDimension(preferredSize);
+                            Dimension dimension = DimensionUtil.computeToA4(preferredSize);
 
                             Writer out = null;
                             FileOutputStream fileOutputSream = null;
@@ -106,7 +107,6 @@ public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter
                                 fileOutputSream = new FileOutputStream(file);
                                 out = new OutputStreamWriter(fileOutputSream, "UTF-8");
                                 svgGenerator.stream(out, useCSS);
-
                             } catch (SVGGraphics2DIOException ex) {
                                 Exceptions.printStackTrace(ex);
                             } catch (IOException ex) {
@@ -131,38 +131,5 @@ public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter
                 }
             }
         });
-    }
-
-    /**
-     * this method computes the A4 dimension in pixel unites depending on the
-     * monitor screen resolution.
-     *
-     * @param sourceDimension
-     * @return
-     */
-    private Dimension computeDestDimension(Dimension sourceDimension) {
-        Dimension destDimension = sourceDimension;
-
-        // metric factor inch in mm
-        final double metricFactor = 2.54 * 10d;
-
-        // compute ppi value through screnn resolution and a factor. the factor is currently not
-        // resolution independent.
-        double ppi = Toolkit.getDefaultToolkit().getScreenResolution() * 0.9379;
-
-        // get current sourceDimension as mm units
-        double widthInMm = sourceDimension.getWidth() / ppi * metricFactor;
-        double heightInMm = sourceDimension.getHeight() / ppi * metricFactor;
-
-        // compute the factors in relation to a A4 form
-        double widthFactor = widthInMm < 210 ? widthInMm / 210 : 210 / widthInMm;
-        double heightFactor = heightInMm < 297 ? heightInMm / 297 : 297 / heightInMm;
-
-        // compute the destination dimension
-        int destWidth = (int) (sourceDimension.getWidth() * widthFactor);
-        int destHeight = (int) (sourceDimension.getHeight() * heightFactor);
-        destDimension = new Dimension(destWidth, destHeight);
-
-        return destDimension;
     }
 }

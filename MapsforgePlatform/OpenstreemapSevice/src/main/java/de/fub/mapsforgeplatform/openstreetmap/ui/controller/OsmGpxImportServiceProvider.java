@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.ui.controller;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforge.project.datasource.service.GPXImportService;
 import de.fub.mapsforgeplatform.openstreetmap.service.LocationBoundingBoxService.BoundingBox;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
@@ -163,7 +162,7 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
         }
 
         private FileObject getGPXFile(FileObject gpxFileFolder) throws IOException {
-            String gpxFileName = MessageFormat.format("{0}_{1}.gpx", "Gpx", String.valueOf(page));
+            String gpxFileName = MessageFormat.format("Gpx_{0, number, 00000}.gpx", page);
             FileObject gpxFileObject = gpxFileFolder.getFileObject(gpxFileName);
             if (gpxFileObject == null) {
                 gpxFileObject = gpxFileFolder.createData(gpxFileName);
@@ -171,18 +170,17 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
             return gpxFileObject;
         }
 
-        private void writeGPX(Gpx gpx) throws IOException, JAXBException {
+        private void writeGPX(de.fub.mapsforgeplatform.xml.gpx.Gpx gpx) throws IOException, JAXBException {
             OutputStream outputStream = null;
             try {
                 if (gpx != null && gpx.getTrk() != null && !gpx.getTrk().isEmpty()) {
                     FileObject gpxFileObject = getGPXFile(getGPXFolder());
                     outputStream = gpxFileObject.getOutputStream();
-                    javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(Gpx.class);
+                    javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(de.fub.mapsforgeplatform.xml.gpx.Gpx.class);
                     javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
                     marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
                     marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                     marshaller.marshal(gpx, outputStream);
-                    outputStream.close();
                 }
             } finally {
                 if (outputStream != null) {
@@ -201,8 +199,8 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
 
             try {
                 openstreetMapService = new OpenstreetMapService();
-                Gpx gpx = openstreetMapService.gpsPoints(
-                        Gpx.class,
+                de.fub.mapsforgeplatform.xml.gpx.Gpx gpx = openstreetMapService.gpsPoints(
+                        de.fub.mapsforgeplatform.xml.gpx.Gpx.class,
                         String.valueOf(boundingBox.getLeftLongitude()),
                         String.valueOf(boundingBox.getBottomLatitude()),
                         String.valueOf(boundingBox.getRightLongitude()),

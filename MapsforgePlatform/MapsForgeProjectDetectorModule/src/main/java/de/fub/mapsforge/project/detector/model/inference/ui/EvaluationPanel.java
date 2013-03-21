@@ -234,7 +234,6 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     }// </editor-fold>//GEN-END:initComponents
 
     private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
-        // TODO add your handling code here:
         if (evaluation != null) {
             DialogDescriptor descriptor = new DialogDescriptor(new EvaluationDetailPanel(evaluation), "Detail Evaluation Statistics");
             DialogDisplayer.getDefault().createDialog(descriptor).setVisible(true);

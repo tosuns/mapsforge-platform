@@ -39,7 +39,7 @@ public final class DetectorStartAction extends AbstractAction implements Present
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        // TODO use context
+        // do nothing
     }
 
     @Override

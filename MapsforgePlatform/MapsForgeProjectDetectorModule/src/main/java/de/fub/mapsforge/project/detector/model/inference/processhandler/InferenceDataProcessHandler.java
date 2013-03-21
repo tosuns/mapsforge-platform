@@ -33,7 +33,7 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
     @Override
     protected void handle() {
-        // TODO convert TrakSegment list to GPX
+        // TODO implementation convert TrakSegment list to GPX
     }
 
     public HashSet<TrackSegment> getInferenceDataSet() {

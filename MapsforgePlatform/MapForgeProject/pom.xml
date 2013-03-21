@@ -132,7 +132,6 @@
                 <version>3.8</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <useOSGiDependencies>true</useOSGiDependencies>
                     <publicPackages>
                         <publicPackage>de.fub.mapforgeproject</publicPackage>
                         <publicPackage>de.fub.mapforgeproject.api.process</publicPackage>

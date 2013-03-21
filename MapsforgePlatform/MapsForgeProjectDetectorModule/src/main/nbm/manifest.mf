@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module-Layer: de/fub/mapsforge/project/detector/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/fub/mapsforge/project/detector/Bundle.properties

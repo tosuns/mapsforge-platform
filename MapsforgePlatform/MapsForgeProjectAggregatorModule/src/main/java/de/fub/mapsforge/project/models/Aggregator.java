@@ -287,7 +287,7 @@ public class Aggregator extends ModelSynchronizer {
 
         @Override
         public void pipelineChanged() {
-            // something TODO ?
+            // something to do?
         }
     }
 }

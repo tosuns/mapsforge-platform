@@ -230,10 +230,10 @@ public class InferenceModelComponent extends javax.swing.JPanel implements Explo
                     selectedInferenceModel.setText(abstractInferenceModel.getName());
                     detector.getDetectorDescriptor().setInferenceModel(inferenceModelDescriptor);
                 } else {
-                    // TODO error
+                    throw new IllegalStateException("Inferene model doesn't have a inferenceModelDescriptor!");
                 }
             } else {
-                // TODO error message
+                throw new IllegalStateException("Node doesn't contain an inference model");
             }
         }
     }

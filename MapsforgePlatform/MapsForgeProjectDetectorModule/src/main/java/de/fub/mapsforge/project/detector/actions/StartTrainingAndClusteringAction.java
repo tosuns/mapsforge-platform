@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.cookies.OpenCookie;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -31,6 +32,10 @@ public final class StartTrainingAndClusteringAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
+        OpenCookie openCookie = detector.getDataObject().getLookup().lookup(OpenCookie.class);
+        if (openCookie != null) {
+            openCookie.open();
+        }
         RequestProcessor.getDefault().post(new Runnable() {
             @Override
             public void run() {

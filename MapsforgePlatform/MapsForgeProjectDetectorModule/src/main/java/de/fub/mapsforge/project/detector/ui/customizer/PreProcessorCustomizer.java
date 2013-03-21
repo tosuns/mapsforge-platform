@@ -19,7 +19,7 @@ public class PreProcessorCustomizer implements ProjectCustomizer.CompositeCatego
     private static final String GENERAL = "Preprocessors";
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
-            projectType = "org-mapsforge-project/Detector", position = 10)
+            projectType = "org-mapsforge-project/Detector", position = 200)
     public static PreProcessorCustomizer createGeneral() {
         return new PreProcessorCustomizer();
     }

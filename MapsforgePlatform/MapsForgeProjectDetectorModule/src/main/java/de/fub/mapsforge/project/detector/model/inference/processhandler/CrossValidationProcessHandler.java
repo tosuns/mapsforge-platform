@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Random;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -74,8 +75,13 @@ public class CrossValidationProcessHandler extends EvaluationProcessHandler {
     }
 
     @Override
-    protected void updateVisualRepresentation(Evaluation evaluation) {
-        getEvaluationPanel().updatePanel(evaluation);
+    protected void updateVisualRepresentation(final Evaluation evaluation) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                getEvaluationPanel().updatePanel(evaluation);
+            }
+        });
     }
 
     private int getCrossValidationFoldsCount() {
