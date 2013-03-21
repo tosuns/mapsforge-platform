@@ -521,6 +521,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceModelSettingForm.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceModelVisuaElement.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceModelVisuaElement.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceResultPanel.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/InferenceResultPanel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/OptionPanel.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/OptionPanel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/ProcessHandlerPanel.form -text

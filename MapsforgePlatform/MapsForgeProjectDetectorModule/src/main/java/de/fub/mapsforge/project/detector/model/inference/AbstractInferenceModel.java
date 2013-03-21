@@ -38,7 +38,6 @@ import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.openide.DialogDescriptor;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import weka.classifiers.Classifier;
@@ -201,6 +200,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      */
     @Override
     protected void start() {
+        clearFeatureList();
         switch (inferenceMode) {
             case INFERENCE_MODE:
                 startInference();
@@ -216,7 +216,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                 // TODO not supported anymore
                 break;
             default:
-                throw new IllegalArgumentException(inferenceMode + " not supported"); //NO18N
+                throw new IllegalArgumentException(MessageFormat.format("{0} not supported", inferenceMode)); //NO18N
         }
     }
 
@@ -259,36 +259,52 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Note : The classifier[, , ] should not be trained when handed over to the
+     * crossValidateModel method. Why? If the classifier does not abide to the
+     * Weka convention that a classifier must be re-initialized every time the
+     * buildClassifier method is called (in other words: subsequent calls to the
+     * buildClassifier method always return the same results), you will get
+     * inconsistent and worthless results. The crossValidateModel takes care of
+     * training and evaluating the classifier. (It creates a copy of the
+     * original classifier that you hand over to the crossValidateModel for each
+     * run of the cross-validation.)
      *
+     * @see {@link http://weka.wikispaces.com/Use+WEKA+in+your+Java+code}
      */
     private void startTraining() {
         // build feature Array and Map
         initAttributes();
+        if (!getAttributeList().isEmpty()) {
+            InferenceModelProcessHandler processHandler = null;
 
-        InferenceModelProcessHandler processHandler = null;
-        // training with test of classifier
-        fireStartEvent(InferenceMode.TRAININGS_MODE);
-        processHandler = getProcessHandlerInstance(InferenceMode.TRAININGS_MODE);
-        processHandler.start();
-        fireFinishedEvent(InferenceMode.TRAININGS_MODE);
+            // first start cross validation of classifier. Important see comment above
+            fireStartEvent(CROSS_VALIDATION_MODE);
+            processHandler = getProcessHandlerInstance(CROSS_VALIDATION_MODE);
+            processHandler.start();
+            fireFinishedEvent(CROSS_VALIDATION_MODE);
 
-        // cross validation of classifier
-        fireStartEvent(CROSS_VALIDATION_MODE);
-        processHandler = getProcessHandlerInstance(CROSS_VALIDATION_MODE);
-        processHandler.start();
-        fireFinishedEvent(CROSS_VALIDATION_MODE);
+            // then training with test of classifier
+            fireStartEvent(InferenceMode.TRAININGS_MODE);
+            processHandler = getProcessHandlerInstance(InferenceMode.TRAININGS_MODE);
+            processHandler.start();
+            fireFinishedEvent(InferenceMode.TRAININGS_MODE);
+        } else {
+            throw new IllegalStateException("There are no attributes/features registered to use for the classifier!"); // NO18N
+        }
     }
 
     /**
      *
      */
     private void startInference() {
-        InferenceModelProcessHandler processHandler = null;
-        // third phase inference
-        fireStartEvent(InferenceMode.INFERENCE_MODE);
-        processHandler = getProcessHandlerInstance(InferenceMode.INFERENCE_MODE);
-        processHandler.start();
-        fireFinishedEvent(InferenceMode.INFERENCE_MODE);
+        if (classifier != null) {
+            InferenceModelProcessHandler processHandler = null;
+            // third phase inference
+            fireStartEvent(InferenceMode.INFERENCE_MODE);
+            processHandler = getProcessHandlerInstance(InferenceMode.INFERENCE_MODE);
+            processHandler.start();
+            fireFinishedEvent(InferenceMode.INFERENCE_MODE);
+        }
     }
 
     /**
@@ -372,6 +388,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                     case INFERENCE_MODE:
                         listener.startedClustering();
                         break;
+                    case ALL_MODE:
+                        // do nothing
+                        break;
                     default:
                         throw new IllegalArgumentException("Event not supported"); //NO18N
                 }
@@ -395,6 +414,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                         break;
                     case INFERENCE_MODE:
                         listener.finishedClustering();
+                        break;
+                    case ALL_MODE:
+                        // do nothing
                         break;
                     default:
                         throw new IllegalArgumentException("Event not supported"); //NO18N
@@ -439,8 +461,11 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the result of the training and inference processes of this
+     * inference model.
      *
-     * @return
+     *
+     * @return always an InferenceModelResultDataSet
      */
     @Override
     public InferenceModelResultDataSet getResult() {
@@ -448,6 +473,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     *
      *
      * @return
      */
@@ -604,8 +630,11 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     @Override
     public JComponent getSettingsView() {
         InferenceModelSettingForm inferenceModelSettingForm = new InferenceModelSettingForm(AbstractInferenceModel.this);
-        DialogDescriptor dialogDescriptor = new DialogDescriptor(inferenceModelSettingForm, MessageFormat.format("{0} Settings", getName()), true, inferenceModelSettingForm);
         return inferenceModelSettingForm;
+    }
+
+    public void resetClassifier() {
+        classifier = createClassifier();
     }
 
     /**

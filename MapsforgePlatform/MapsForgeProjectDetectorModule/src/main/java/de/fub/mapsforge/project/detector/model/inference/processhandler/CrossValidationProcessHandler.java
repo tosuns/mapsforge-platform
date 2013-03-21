@@ -70,7 +70,7 @@ public class CrossValidationProcessHandler extends EvaluationProcessHandler {
             evaluation.crossValidateModel(getInferenceModel().getClassifier(), trainingSet, crossValidationFoldsCount, new Random(1));
             updateVisualRepresentation(evaluation);
         } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            throw new InferenceModelClassifyException(ex.getMessage(), ex);
         }
     }
 

@@ -93,7 +93,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         jPanel2 = new javax.swing.JPanel();
         barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel();
-        outlineView = new org.openide.explorer.view.OutlineView("Transport Mode");
+        outlineView = new org.openide.explorer.view.OutlineView(NbBundle.getMessage(EvaluationPanel.class, "CLT_Doman_Axis_Name"));
         jPanel3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -235,7 +235,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
     private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
         if (evaluation != null) {
-            DialogDescriptor descriptor = new DialogDescriptor(new EvaluationDetailPanel(evaluation), "Detail Evaluation Statistics");
+            DialogDescriptor descriptor = new DialogDescriptor(new EvaluationDetailPanel(evaluation), "Detail Evaluation Statistics"); //NO18N
             DialogDisplayer.getDefault().createDialog(descriptor).setVisible(true);
         }
     }//GEN-LAST:event_infoButtonActionPerformed

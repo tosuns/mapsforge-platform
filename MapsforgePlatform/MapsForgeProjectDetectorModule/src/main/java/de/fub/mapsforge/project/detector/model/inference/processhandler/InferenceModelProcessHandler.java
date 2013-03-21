@@ -5,7 +5,6 @@
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
-import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlers;
@@ -15,7 +14,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
