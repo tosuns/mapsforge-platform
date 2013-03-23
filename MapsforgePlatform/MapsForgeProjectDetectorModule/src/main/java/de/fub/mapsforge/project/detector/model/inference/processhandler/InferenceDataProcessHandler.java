@@ -130,7 +130,7 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                getInferenceResultPanel().updateView(new ClassificationResult(resultMap)); // TODO
+                getInferenceResultPanel().updateView(new ClassificationResult(resultMap, instanceToTrackSegmentMap)); // TODO
             }
         });
 
@@ -183,13 +183,19 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
     public static class ClassificationResult {
 
         private final HashMap<String, List<Instance>> resultMap;
+        private final HashMap<Instance, TrackSegment> instanceToTrackSegmentMap;
 
-        public ClassificationResult(HashMap<String, List<Instance>> resultMap) {
+        public ClassificationResult(HashMap<String, List<Instance>> resultMap, HashMap<Instance, TrackSegment> instanceToTrackSegmentMap) {
+            this.instanceToTrackSegmentMap = instanceToTrackSegmentMap;
             this.resultMap = resultMap;
         }
 
         public Map<String, List<Instance>> getResultMap() {
             return Collections.unmodifiableMap(resultMap);
+        }
+
+        public HashMap<Instance, TrackSegment> getInstanceToTrackSegmentMap() {
+            return instanceToTrackSegmentMap;
         }
     }
 }

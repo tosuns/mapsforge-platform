@@ -200,15 +200,16 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      */
     @Override
     protected void start() {
-        clearFeatureList();
         switch (inferenceMode) {
             case INFERENCE_MODE:
                 startInference();
                 break;
             case TRAININGS_MODE:
+                clearFeatureList();
                 startTraining();
                 break;
             case ALL_MODE:
+                clearFeatureList();
                 startTraining();
                 startInference();
                 break;

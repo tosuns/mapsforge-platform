@@ -15,9 +15,11 @@ import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.openide.util.NbBundle;
@@ -33,6 +35,8 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
     private final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
     private final JFreeChart barChart;
     private final CategoryPlot plot;
+    private Color precColor = new Color(0x00, 0x7a, 0xe0);
+    private Color recColor = new Color(0xe0, 0x00, 0x00);
 
     /**
      * Creates new form PrecisionRecallBarChartPanel
@@ -49,19 +53,30 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
                 true,
                 true,
                 true);
+
         Font font = new JLabel().getFont().deriveFont(Font.BOLD, 14);
+
         barChart.getTitle().setFont(font);
         barChart.getTitle().setPaint(new Color(153, 153, 153));
+
         plot = barChart.getCategoryPlot();
         NumberAxis preciAxis = new NumberAxis(NbBundle.getMessage(PrecisionRecallBarChartPanel.class, "CLT_Value_Axis_Name"));
+//        preciAxis.setAutoRange(false);
+        preciAxis.setRange(0, 100);
         plot.setRangeAxis(0, preciAxis);
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
+
         BarRenderer barRenderer = new BarRenderer();
+        barRenderer.setBarPainter(new StandardBarPainter());
+        barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+        barRenderer.setSeriesPaint(0, precColor);
+        barRenderer.setSeriesPaint(1, recColor);
+
         plot.setRenderer(barRenderer);
+
         chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);
-
         add(chartPanel, BorderLayout.CENTER);
     }
 

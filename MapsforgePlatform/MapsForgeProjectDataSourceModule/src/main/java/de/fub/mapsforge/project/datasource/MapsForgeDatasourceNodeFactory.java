@@ -30,6 +30,7 @@ import org.openide.util.Exceptions;
 public class MapsForgeDatasourceNodeFactory implements NodeFactory {
 
     public static final String DATASOURCE_FILENAME = "GPX Datasource";
+    public static GPXDatasourceNode gpxDatasourceNode;
 
     @Override
     public NodeList<?> createNodes(Project project) {
@@ -64,7 +65,8 @@ public class MapsForgeDatasourceNodeFactory implements NodeFactory {
                             fileObject = mapsForgeProject.getProjectDirectory().createFolder(datasourceFolderPath);
                         }
                         DataObject dataObject = DataObject.find(fileObject);
-                        nodeList.add(new GPXDatasourceNode(dataObject, mapsForgeProject));
+                        gpxDatasourceNode = new GPXDatasourceNode(dataObject, mapsForgeProject);
+                        nodeList.add(gpxDatasourceNode);
                         projectData.getProjectFolders().putFolder(DATASOURCE_FILENAME, datasourceFolderPath);
                         mapsForgeProject.modelChanged(MapsForgeDatasourceNodeList.this, projectData);
 
@@ -74,7 +76,8 @@ public class MapsForgeDatasourceNodeFactory implements NodeFactory {
                         FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(datasourceFolderPath);
                         if (fileObject != null) {
                             DataObject dataObject = DataObject.find(fileObject);
-                            nodeList.add(new GPXDatasourceNode(dataObject, mapsForgeProject));
+                            gpxDatasourceNode = new GPXDatasourceNode(dataObject, mapsForgeProject);
+                            nodeList.add(gpxDatasourceNode);
                         } else {
                             // TODO implement
                             // inconsitency! signal error message to project node

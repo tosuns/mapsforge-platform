@@ -11,14 +11,22 @@ import javax.swing.JLabel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.LegendItem;
+import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.RectangleInsets;
 import org.openide.util.NbBundle;
 
 /**
@@ -29,9 +37,12 @@ public class ClassificationBarChart extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
     private final ChartPanel chartPanel;
-    private final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    private final DefaultCategoryDataset relDataset = new DefaultCategoryDataset();
+    private final DefaultCategoryDataset absDataset = new DefaultCategoryDataset();
     private final JFreeChart barChart;
     private final CategoryPlot plot;
+    private Color relColor = new Color(0x00, 0x7a, 0xe0);
+    private Color absColor = new Color(0xe0, 0x00, 0x00);
 
     /**
      * Creates new form ClassificationBarChart
@@ -39,25 +50,53 @@ public class ClassificationBarChart extends javax.swing.JPanel {
     public ClassificationBarChart() {
         super();
         initComponents();
-        barChart = ChartFactory.createBarChart(
-                NbBundle.getMessage(ClassificationBarChart.class, "CLT_Chart_Classify_Name"),
-                NbBundle.getMessage(ClassificationBarChart.class, "CLT_Doman_Axis_Name"),
-                NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Axis_Name"),
-                dataset,
-                PlotOrientation.VERTICAL,
-                true,
-                true,
-                true);
+        plot = new CustomCategoryPlot();
+        barChart = new JFreeChart(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Chart_Classify_Name"), null, plot, true);
+        ChartFactory.getChartTheme().apply(barChart);
+        plot.setDomainAxis(new CategoryAxis());
+        plot.getDomainAxis().setLabel(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Doman_Axis_Name"));
+        plot.setOrientation(PlotOrientation.VERTICAL);
+
         Font font = new JLabel().getFont().deriveFont(Font.BOLD, 14);
         barChart.getTitle().setFont(font);
         barChart.getTitle().setPaint(new Color(153, 153, 153));
-        plot = barChart.getCategoryPlot();
-        NumberAxis preciAxis = new NumberAxis(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Axis_Name"));
-        plot.setRangeAxis(0, preciAxis);
+
+        plot.setDataset(0, relDataset);
+        plot.setDataset(1, absDataset);
+        plot.mapDatasetToRangeAxis(0, 0);
+        plot.mapDatasetToRangeAxis(1, 1);
+
+        NumberAxis relAxis = new NumberAxis(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Axis_Name"));
+        relAxis.setRange(0, 100);
+        NumberAxis absAxis = new NumberAxis(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Rel_Axis_Name"));
+
+        plot.setRangeAxis(0, relAxis);
+        plot.setRangeAxis(1, absAxis);
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
+        plot.setRangeAxisLocation(1, AxisLocation.TOP_OR_RIGHT);
+
+        BarRenderer relRenderer = new BarRenderer();
+        relRenderer.setBasePaint(relColor);
+        relRenderer.setAutoPopulateSeriesPaint(false);
+        relRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+        relRenderer.setBarPainter(new StandardBarPainter());
+
+        BarRenderer absRenderer = new BarRenderer();
+        absRenderer.setBasePaint(absColor);
+        absRenderer.setAutoPopulateSeriesPaint(false);
+        absRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+        absRenderer.setBarPainter(new StandardBarPainter());
+
+        plot.setRenderer(0, relRenderer);
+        plot.setRenderer(1, absRenderer);
+
         plot.setBackgroundPaint(Color.white);
-        chartPanel = new ChartPanel(barChart, true);
+        barChart.setBackgroundPaint(Color.white);
+        plot.setRangeGridlinesVisible(false);
+        chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);
+        chartPanel.setDisplayToolTips(true);
+        chartPanel.setBackground(Color.white);
         add(chartPanel, BorderLayout.CENTER);
     }
 
@@ -65,8 +104,12 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         return chartPanel;
     }
 
-    public DefaultCategoryDataset getDataset() {
-        return dataset;
+    public DefaultCategoryDataset getRelDataset() {
+        return relDataset;
+    }
+
+    public DefaultCategoryDataset getAbsDataset() {
+        return absDataset;
     }
 
     public JFreeChart getBarChart() {
@@ -102,4 +145,73 @@ public class ClassificationBarChart extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+
+    /* ===========================================================
+     * JFreeChart : a free chart library for the Java(tm) platform
+     * ===========================================================
+     *
+     * (C) Copyright 2000-2004, by Object Refinery Limited and Contributors.
+     *
+     * Project Info:  http://www.jfree.org/jfreechart/index.html
+     *
+     * This library is free software; you can redistribute it and/or modify it under the terms
+     * of the GNU Lesser General Public License as published by the Free Software Foundation;
+     * either version 2.1 of the License, or (at your option) any later version.
+     *
+     * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+     * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+     * See the GNU Lesser General Public License for more details.
+     *
+     * You should have received a copy of the GNU Lesser General Public License along with this
+     * library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+     * Boston, MA 02111-1307, USA.
+     *
+     * [Java is a trademark or registered trademark of Sun Microsystems, Inc.
+     * in the United States and other countries.]
+     *
+     * ------------------
+     * DualAxisDemo5.java
+     * ------------------
+     * (C) Copyright 2002-2004, by Object Refinery Limited and Contributors.
+     *
+     * Original Author:  David Gilbert (for Object Refinery Limited);
+     * Contributor(s):   -;
+     *
+     * $Id: DualAxisDemo5.java,v 1.12 2004/04/29 07:54:56 mungady Exp $
+     *
+     * Changes
+     * -------
+     * 19-Sep-2003 : Version 1 (DG);
+     * 06-Feb-2004 : Modified to correct legend (DG);
+     *
+     */
+    private static class CustomCategoryPlot extends CategoryPlot {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public LegendItemCollection getLegendItems() {
+            final LegendItemCollection result = new LegendItemCollection();
+
+            final CategoryDataset data = getDataset();
+            if (data != null && data.getRowCount() > 0 && data.getColumnCount() > 0) {
+                final CategoryItemRenderer r = getRenderer();
+                if (r != null) {
+                    final LegendItem item = r.getLegendItem(0, 0);
+                    result.add(item);
+                }
+            }
+
+            final CategoryDataset dset2 = getDataset(1);
+            if (dset2 != null && dset2.getRowCount() > 1 && dset2.getColumnCount() > 1) {
+                final CategoryItemRenderer renderer2 = getRenderer(1);
+                if (renderer2 != null) {
+                    final LegendItem item = renderer2.getLegendItem(1, 1);
+                    result.add(item);
+                }
+            }
+
+            return result;
+        }
+    }
 }

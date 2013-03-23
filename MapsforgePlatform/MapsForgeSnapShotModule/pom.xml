@@ -82,6 +82,12 @@
             <type>jar</type>
             <version>5.4.0</version>
         </dependency>
+        <dependency>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
     </dependencies>
 
     <build>

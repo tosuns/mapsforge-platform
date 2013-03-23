@@ -45,4 +45,20 @@ public class DimensionUtil {
 
         return destDimension;
     }
+
+    /**
+     * IText lib works internally with points instead of pixels. To compute the
+     * resized dimension for the pdf export, we use the following function to
+     * resize the dimension to A4 paper size.
+     *
+     * @param sourceDimesion
+     * @return
+     */
+    public static Dimension computeToA4Pdf(Dimension sourceDimension) {
+        Dimension destDimension = computeToA4(sourceDimension);
+        // this is properbly not resolution independent, because of hard it is hard coded.
+        destDimension.setSize(destDimension.width * 0.8, destDimension.height * 0.8);
+
+        return destDimension;
+    }
 }

@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.EvaluationDetailPanel;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
+import de.fub.mapsforge.project.detector.ui.CustomOutlineView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -93,7 +94,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         jPanel2 = new javax.swing.JPanel();
         barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel();
-        outlineView = new org.openide.explorer.view.OutlineView(NbBundle.getMessage(EvaluationPanel.class, "CLT_Doman_Axis_Name"));
+        outlineView = new CustomOutlineView(NbBundle.getMessage(EvaluationPanel.class, "CLT_Doman_Axis_Name"));
         jPanel3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -277,8 +278,8 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         int numClasses = evaluation.getHeader().numClasses();
         for (int classIndex = 0; classIndex < numClasses; classIndex++) {
-            double precision = evaluation.precision(classIndex);
-            double recall = evaluation.recall(classIndex);
+            double precision = evaluation.precision(classIndex) * 100;
+            double recall = evaluation.recall(classIndex) * 100;
             dataset.addValue(precision, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Precision_Text"), evaluation.getHeader().classAttribute().value(classIndex));
             dataset.addValue(recall, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Recall_Text"), evaluation.getHeader().classAttribute().value(classIndex));
         }

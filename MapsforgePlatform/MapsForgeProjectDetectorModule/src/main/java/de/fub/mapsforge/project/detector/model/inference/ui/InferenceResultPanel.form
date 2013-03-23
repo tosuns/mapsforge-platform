@@ -129,7 +129,7 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new org.openide.explorer.view.OutlineView(NbBundle.getMessage(InferenceResultPanel.class, &quot;CLT_Doman_Axis_Name&quot;))"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new CustomOutlineView(NbBundle.getMessage(InferenceResultPanel.class, &quot;CLT_Doman_Axis_Name&quot;))"/>
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

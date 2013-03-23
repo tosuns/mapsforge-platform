@@ -5,17 +5,34 @@
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler;
+import de.fub.mapsforge.project.detector.ui.CustomOutlineView;
+import de.fub.utilsmodule.Collections.ObservableArrayList;
+import de.fub.utilsmodule.Collections.ObservableList;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.jfree.chart.LegendItemCollection;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.netbeans.swing.outline.Outline;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.OutlineView;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.nodes.Node.Property;
+import org.openide.nodes.PropertySupport.ReadOnly;
+import org.openide.nodes.Sheet;
 import org.openide.util.NbBundle;
+import org.openide.util.WeakListeners;
 import weka.core.Instance;
 
 /**
@@ -26,14 +43,14 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
 
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
+    private final ObservableList<DataItem> dataItemList = new ObservableArrayList<DataItem>();
 
     /**
      * Creates new form InferenceResultPanel
      */
     public InferenceResultPanel() {
         initComponents();
-        Outline outline = outlineView.getOutline();
-        outline.setRootVisible(false);
+        explorerManager.setRootContext(new AbstractNode(Children.create(new NodeFactory(dataItemList), true)));
     }
 
     /**
@@ -50,7 +67,7 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         jPanel2 = new javax.swing.JPanel();
         classificationBarChart = new de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart();
         jPanel6 = new javax.swing.JPanel();
-        outlineView = new org.openide.explorer.view.OutlineView(NbBundle.getMessage(InferenceResultPanel.class, "CLT_Doman_Axis_Name"));
+        outlineView = new CustomOutlineView(NbBundle.getMessage(InferenceResultPanel.class, "CLT_Doman_Axis_Name"));
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -249,8 +266,11 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
     }
 
     public void updateView(InferenceDataProcessHandler.ClassificationResult classificationResult) {
-        DefaultCategoryDataset dataset = getClassificationBarChart().getDataset();
-        dataset.clear();
+        DefaultCategoryDataset relDataset = getClassificationBarChart().getRelDataset();
+        DefaultCategoryDataset absDataset = getClassificationBarChart().getAbsDataset();
+        relDataset.clear();
+        absDataset.clear();
+        dataItemList.clear();
         Map<String, List<Instance>> resultMap = classificationResult.getResultMap();
 
         double sum = 0;
@@ -258,12 +278,121 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
             sum += entry.getValue().size();
         }
+        CategoryPlot plot = getClassificationBarChart().getPlot();
+        CategoryItemRenderer relRenderer = plot.getRenderer(0);
+        CategoryItemRenderer absRenderer = plot.getRenderer(1);
+
 
         for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-            dataset.addValue(entry.getValue().size(), "Instances (abs.)", entry.getKey());
-            dataset.addValue(entry.getValue().size() / sum * 100, "Instances (rel.)", entry.getKey());
+            double abs = entry.getValue().size();
+            double rel = entry.getValue().size() / sum * 100;
+            absDataset.addValue(null, "Instances (rel.)", entry.getKey());
+            absDataset.addValue(abs, "Instances (abs.)", entry.getKey());
+            relDataset.addValue(rel, "Instances (rel.)", entry.getKey());
+            relDataset.addValue(null, "Instances (abs.)", entry.getKey());
+            dataItemList.add(new DataItem(entry.getKey(), rel, abs));
         }
+        final LegendItemCollection result = new LegendItemCollection();
+        result.add(relRenderer.getLegendItem(0, 0));
+        result.add(absRenderer.getLegendItem(1, 1));
+
+        double classified = (sum / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
+        double notClassified = ((classificationResult.getInstanceToTrackSegmentMap().size() - sum) / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
+        getClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", classified));
+        getNotClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", notClassified));
 
         repaint();
+    }
+
+    private static class NodeFactory extends ChildFactory<DataItem> implements ChangeListener {
+
+        private final ObservableList<DataItem> list;
+
+        public NodeFactory(ObservableList<DataItem> list) {
+            this.list = list;
+            this.list.addChangeListener(WeakListeners.change(NodeFactory.this, list));
+        }
+
+        @Override
+        protected boolean createKeys(List<DataItem> toPopulate) {
+            toPopulate.addAll(list);
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(DataItem dataItem) {
+            return new DataItemNode(dataItem);
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            refresh(true);
+        }
+    }
+
+    private static class DataItem implements Comparable<DataItem> {
+
+        private final double absData;
+        private final double relData;
+        private final String className;
+
+        public DataItem(String className, double relData, double absData) {
+            this.className = className;
+            this.relData = relData;
+            this.absData = absData;
+        }
+
+        public double getAbsData() {
+            return absData;
+        }
+
+        public double getRelData() {
+            return relData;
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        @Override
+        public int compareTo(DataItem dataItem) {
+            return getClassName().compareToIgnoreCase(dataItem.getClassName());
+        }
+    }
+
+    private static class DataItemNode extends AbstractNode {
+
+        private final DataItem dataItem;
+
+        public DataItemNode(DataItem dataItem) {
+            super(Children.LEAF);
+            this.dataItem = dataItem;
+            setDisplayName(dataItem.getClassName());
+        }
+
+        @Override
+        protected Sheet createSheet() {
+            Sheet sheet = Sheet.createDefault();
+            Sheet.Set set = Sheet.createPropertiesSet();
+            sheet.put(set);
+
+            Property<?> property = new ReadOnly<Double>("instancesAbs", Double.class, "Instances (abs.)", "") {
+                @Override
+                public Double getValue() throws IllegalAccessException, InvocationTargetException {
+                    return dataItem.getAbsData();
+                }
+            };
+            set.put(property);
+
+            property = new ReadOnly<Double>("instancesRel", Double.class, "Instances (rel.)", "") {
+                @Override
+                public Double getValue() throws IllegalAccessException, InvocationTargetException {
+                    return dataItem.getRelData();
+                }
+            };
+            set.put(property);
+
+            return sheet;
+        }
     }
 }

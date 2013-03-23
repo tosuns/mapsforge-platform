@@ -8,10 +8,12 @@ import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
-import de.fub.mapsforge.project.detector.model.inference.ui.actions.SnapShotExporterDelegateAction;
+import de.fub.mapsforge.snapshot.api.SnapShotExporterDelegateAction;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import java.util.List;
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -20,10 +22,15 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.Toolbar;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
+import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
@@ -39,6 +46,15 @@ import org.openide.windows.TopComponent;
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "DetectorInferenceModelVisual",
         position = 3000)
+@ActionReferences({
+    @ActionReference(
+            id =
+            @ActionID(
+            category = "SnapShot",
+            id = "de.fub.mapsforge.snapshot.api.SnapShotExporterDelegateAction"),
+            path = "Mapsforge/Gpx/MapView/Actions",
+            position = 250,
+            separatorAfter = 275)})
 @NbBundle.Messages({
     "LBL_Detector_InferenceModel_VISUAL=Evaluation",})
 public class InferenceModelVisuaElement extends javax.swing.JPanel implements MultiViewElement, ChangeListener {
@@ -102,9 +118,16 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     private void addToolbarActions() {
         toolbar.setFloatable(false);
-        toolbar.add(new Toolbar.Separator());
-        toolbar.add(new SnapShotExporterDelegateAction().getPresenter());
-        toolbar.add(new Toolbar.Separator());
+        toolbar.add(new JToolBar.Separator());
+        List<? extends Action> actionsForPath = Utilities.actionsForPath("Mapsforge/Gpx/MapView/Actions");
+        for (Action action : actionsForPath) {
+            if (action instanceof Presenter.Toolbar) {
+                Presenter.Toolbar presenter = (Presenter.Toolbar) action;
+                toolbar.add(presenter.getToolbarPresenter());
+            } else if (action == null) {
+                toolbar.add(new Toolbar.Separator());
+            }
+        }
     }
 
     /**

@@ -10,7 +10,6 @@ import de.fub.mapsforge.snapshot.utils.DimensionUtil;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -89,12 +88,14 @@ public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter
                                 // Create an instance of the SVG Generator.
                                 svgGenerator = new SVGGraphics2D(document);
                                 svgGenerator.setSVGCanvasSize(dimension);
-//                                svgGenerator.scale(dimension.getWidth() / preferredSize.getWidth(), dimension.getHeight() / preferredSize.getHeight());
+
                                 // Ask the test to render into the SVG Graphics2D implementation.
                                 component.setPreferredSize(dimension);
                                 component.setSize(dimension);
                                 component.revalidate();
                                 component.repaint();
+                                // paintAll must be called, a simple paint does
+                                //not change the size of the component
                                 component.paintAll(svgGenerator);
                                 component.setPreferredSize(preferredSize);
                                 component.setSize(preferredSize);

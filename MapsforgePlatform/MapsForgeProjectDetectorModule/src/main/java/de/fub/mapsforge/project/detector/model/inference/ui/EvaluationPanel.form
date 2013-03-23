@@ -81,7 +81,7 @@
             <Property name="wheelScrollingEnabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new org.openide.explorer.view.OutlineView(NbBundle.getMessage(EvaluationPanel.class, &quot;CLT_Doman_Axis_Name&quot;))"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new CustomOutlineView(NbBundle.getMessage(EvaluationPanel.class, &quot;CLT_Doman_Axis_Name&quot;))"/>
           </AuxValues>
         </Component>
       </SubComponents>

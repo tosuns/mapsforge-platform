@@ -25,6 +25,7 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -65,54 +66,57 @@ public class PdfSnapShotExporter extends AbstractComponentSnapShotExporter {
     }
 
     private void handleExport(final File selectedFile, final Component component) {
-        SwingUtilities.invokeLater(new Runnable() {
+        RequestProcessor.getDefault().post(new Runnable() {
             @Override
             public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
 
-                if (component != null) {
-                    PdfGraphics2D pdfGraphics2D = null;
-                    try {
-                        Dimension preferredSize = component.getPreferredSize();
-                        Dimension dimension = DimensionUtil.computeToA4(preferredSize);
-                        // step 1
-                        Document document = new Document(new Rectangle(component.getWidth(), component.getHeight()));
-                        // step 2
-                        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(selectedFile));
-                        // step 3
-                        document.open();
-                        document.newPage();
-                        // step 4
-                        PdfContentByte cb = writer.getDirectContent();
-                        PdfTemplate map = cb.createTemplate(dimension.width, dimension.height);
-                        com.itextpdf.text.Image imageInstance = com.itextpdf.text.Image.getInstance(map);
+                        if (component != null) {
+                            PdfGraphics2D pdfGraphics2D = null;
+                            try {
+                                Dimension preferredSize = component.getPreferredSize();
+                                Dimension dimension = DimensionUtil.computeToA4Pdf(preferredSize);
+                                // step 1
+                                Document document = new Document(new Rectangle(dimension.width, dimension.height));
+                                // step 2
+                                PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(selectedFile));
+                                // step 3
+                                document.open();
+                                document.newPage();
+                                // step 4
+                                PdfContentByte cb = writer.getDirectContent();
+                                PdfTemplate map = cb.createTemplate(dimension.width, dimension.height);
+                                pdfGraphics2D = new PdfGraphics2D(map, dimension.width, dimension.height);
+                                component.setPreferredSize(dimension);
+                                component.setSize(dimension);
+                                component.revalidate();
+                                component.repaint();
+                                // paintAll must be called, a simple paint does
+                                //not change the size of the component
+                                component.paintAll(pdfGraphics2D);
+                                component.setPreferredSize(preferredSize);
+                                component.setSize(preferredSize);
+                                component.revalidate();
+                                component.repaint();
 
-                        imageInstance.scaleAbsolute(dimension.width, dimension.height);
-                        pdfGraphics2D = new PdfGraphics2D(map, dimension.width, dimension.height);
-
-                        component.setPreferredSize(dimension);
-                        component.setSize(dimension);
-                        component.revalidate();
-                        component.repaint();
-                        component.paint(pdfGraphics2D);
-                        component.setPreferredSize(preferredSize);
-                        component.setSize(preferredSize);
-                        component.revalidate();
-                        component.repaint();
-
-                        pdfGraphics2D.dispose();
-                        cb.addTemplate(map, 0, 0);
-                        // step 5
-                        document.close();
-                    } catch (FileNotFoundException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (DocumentException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } finally {
-                        if (pdfGraphics2D != null) {
-                            pdfGraphics2D.dispose();
+                                pdfGraphics2D.dispose();
+                                cb.addTemplate(map, 0, 0);
+                                // step 5
+                                document.close();
+                            } catch (FileNotFoundException ex) {
+                                Exceptions.printStackTrace(ex);
+                            } catch (DocumentException ex) {
+                                Exceptions.printStackTrace(ex);
+                            } finally {
+                                if (pdfGraphics2D != null) {
+                                    pdfGraphics2D.dispose();
+                                }
+                            }
                         }
                     }
-                }
+                });
             }
         });
     }

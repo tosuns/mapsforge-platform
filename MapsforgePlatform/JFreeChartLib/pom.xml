@@ -111,6 +111,8 @@
                         <publicPackage>org.jfree.data.time.ohlc</publicPackage>
                         <publicPackage>org.jfree.data.xml</publicPackage>
                         <publicPackage>org.jfree.data.xy</publicPackage>
+
+                        <publicPackage>org.jfree.ui</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>
