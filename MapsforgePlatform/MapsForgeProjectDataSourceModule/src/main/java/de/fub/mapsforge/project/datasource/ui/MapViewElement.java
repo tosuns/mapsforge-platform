@@ -65,7 +65,7 @@ import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
         mimeType = "text/gpx+xml",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "GPXVisual",
-        position = 2000)
+        position = 500)
 @NbBundle.Messages("LBL_GPX_VISUAL=Visual")
 public class MapViewElement extends javax.swing.JPanel implements MultiViewElement, ChangeListener, ExplorerManager.Provider {
 

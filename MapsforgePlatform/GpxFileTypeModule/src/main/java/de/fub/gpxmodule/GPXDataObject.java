@@ -173,7 +173,7 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
             mimeType = "text/gpx+xml",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             preferredID = "GPX",
-            position = 1000)
+            position = 3000)
     @Messages("LBL_GPX_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
         return new MultiViewEditorElement(lkp);

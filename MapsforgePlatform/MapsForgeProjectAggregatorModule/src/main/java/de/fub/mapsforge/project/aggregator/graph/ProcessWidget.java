@@ -26,9 +26,6 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.widget.ComponentWidget;
 import org.netbeans.api.visual.widget.Widget;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.nodes.FilterNode;
 
 /**
  *
@@ -79,15 +76,17 @@ public class ProcessWidget extends Widget {
     }
 
     private void initSettingsButton() {
-        settingsButton = new JButton();
-        settingsButton.setBackground(new Color(0, 0, 0, 0));
-        settingsButton.setText("Settings");
-        settingsButton.addActionListener(new SettingAction());
+        if (!process.getDescriptor().getProperties().getSections().isEmpty()) {
+            settingsButton = new JButton();
+            settingsButton.setBackground(new Color(0, 0, 0, 0));
+            settingsButton.setText("Settings");
+            settingsButton.addActionListener(new SettingAction());
 
-        Widget buttonWidget = new ComponentWidget(getScene(), settingsButton);
-        buttonWidget.setPreferredLocation(new Point(10, getPreferredSize().height - 32));
-        buttonWidget.setPreferredSize(new Dimension(getPreferredSize().width - 24, 20));
-        addChild(buttonWidget);
+            Widget buttonWidget = new ComponentWidget(getScene(), settingsButton);
+            buttonWidget.setPreferredLocation(new Point(10, getPreferredSize().height - 32));
+            buttonWidget.setPreferredSize(new Dimension(getPreferredSize().width - 24, 20));
+            addChild(buttonWidget);
+        }
     }
 
     @Override

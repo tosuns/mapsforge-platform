@@ -34,7 +34,7 @@ public class PostprocessorComponent extends javax.swing.JPanel implements Change
         selectionComponent1.getAllItemListTitle().setText("Registered Postprocessors"); //NO18N
         selectionComponent1.getSelectedItemListTitle().setText("Selected Postprocessors"); //NO18N
         selectionComponent1.getAllItems().addAll(Lookup.getDefault().lookupResult(Task.class).allInstances());
-        selectionComponent1.getSelectedItems().addChangeListener(PostprocessorComponent.this);
+
     }
 
     public PostprocessorComponent(Lookup lookup) {
@@ -55,6 +55,7 @@ public class PostprocessorComponent extends javax.swing.JPanel implements Change
         }
 
         allItems.removeAll(toRemoveItems);
+        selectionComponent1.getSelectedItems().addChangeListener(PostprocessorComponent.this);
     }
 
     /**

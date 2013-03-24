@@ -5,7 +5,6 @@
 package de.fub.mapsforge.plugins.tasks;
 
 import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
@@ -17,18 +16,21 @@ import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -99,7 +101,7 @@ public class MapRenderer extends Task {
                     List<Source> sourceList = aggregator.getSourceList();
                     sourceList.clear();
 
-                    FileObject createTempFolder = createTempFolder(entry.getKey());
+                    FileObject createTempFolder = createTempFolder(URLEncoder.encode(MessageFormat.format("Transportation: {0}", entry.getKey()), "UTF-8"));
 
                     for (Gpx gpx : entry.getValue()) {
                         File tmpFile = createTmpfile(createTempFolder);
@@ -111,17 +113,7 @@ public class MapRenderer extends Task {
                         }
                     }
 
-                    aggregator.notifyModified();
-                    ArrayList<AbstractAggregationProcess<?, ?>> processes = new ArrayList<AbstractAggregationProcess<?, ?>>(aggregator.getPipeline().getProcesses());
-                    aggregator.start(processes);
-
-                    if (isOpenAfterFinished()) {
-                        DataObject dataObject = DataObject.find(aggregatorFileObject);
-                        OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
-                        if (openCookie != null) {
-                            openCookie.open();
-                        }
-                    }
+                    new OpenEditorAction(aggregator).run();
 
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
@@ -133,7 +125,9 @@ public class MapRenderer extends Task {
     }
 
     private File createTmpfile(FileObject parentFolder) throws IOException {
-        return File.createTempFile("tmp", ".gpx", FileUtil.toFile(parentFolder));
+        File tmpFile = File.createTempFile("tmp", ".gpx", FileUtil.toFile(parentFolder));
+        tmpFile.deleteOnExit();
+        return tmpFile;
     }
 
     private FileObject createTempFolder(String name) throws IOException {
@@ -142,7 +136,11 @@ public class MapRenderer extends Task {
             File tmpdirFile = new File(tmpdir);
             if (tmpdirFile.exists()) {
                 FileObject fileObject = FileUtil.toFileObject(tmpdirFile);
-                return fileObject.createFolder(name + String.valueOf(new Random().nextLong()));
+                if (fileObject.getFileObject(name) == null) {
+                    return fileObject.createFolder(name);
+                } else {
+                    return fileObject.getFileObject(name);
+                }
             }
         }
         throw new FileNotFoundException("Couldn't find temp dir!"); // NO18N
@@ -167,5 +165,33 @@ public class MapRenderer extends Task {
             return getProcessDescriptor().getDescription();
         }
         return Bundle.CLT_MapRenderer_Description();
+    }
+
+    private class OpenEditorAction implements Runnable {
+
+        private final Aggregator aggregator;
+
+        public OpenEditorAction(Aggregator aggregator) {
+            this.aggregator = aggregator;
+        }
+
+        @Override
+        public void run() {
+            if (isOpenAfterFinished()) {
+                try {
+                    aggregator.notifyModified();
+                    aggregator.start();
+                    DataObject dataObject = DataObject.find(aggregatorFileObject);
+                    dataObject.getNodeDelegate();
+                    OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
+                    if (openCookie != null) {
+                        openCookie.open();
+
+                    }
+                } catch (DataObjectNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }
 }

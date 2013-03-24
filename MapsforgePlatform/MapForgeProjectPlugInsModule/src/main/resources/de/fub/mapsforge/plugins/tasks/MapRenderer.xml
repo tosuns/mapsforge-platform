@@ -5,8 +5,14 @@
     description="Renders Gps data with the help of an Aggregator.">
     <properties>
         <property javaType="java.lang.String"
+                  id="maprenderer.aggregator.file.path"
                   value="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/AggregationBuilders/agg2Graph.agg"
                   name="Aggregator file path"
                   description="The file path to the aggregator file."/>
+        <property javaType="java.lang.Boolean"
+                  id="maprenderer.open.after.finished"
+                  value="true"
+                  name="Open after finished classification"
+                  description="Open after finished classification"/>
     </properties>
 </dec:processunit>

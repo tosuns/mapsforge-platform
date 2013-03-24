@@ -196,7 +196,7 @@ public class AggregatorUtils {
         javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(content, destFile);
+        marshaller.marshal(new ObjectFactory().createGpx(content), destFile);
     }
 
     private static class PaletteDragAndDropHandler extends DragAndDropHandler {

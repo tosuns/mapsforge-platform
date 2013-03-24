@@ -77,7 +77,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
         mimeType = "text/aggregationbuilder+xml",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "AggregationVisualElement",
-        position = 3000)
+        position = 1000)
 @NbBundle.Messages("LBL_AggregationBuilder_VISUAL=Map")
 public class AggregationVisualElement extends javax.swing.JPanel implements MultiViewElement, PropertyChangeListener, ExplorerManager.Provider {
 
@@ -112,6 +112,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
      * Creates new form AggregationVisualElement
      */
     public AggregationVisualElement(Lookup lkp) {
+
         AggregatorNode node = lkp.lookup(AggregatorNode.class);
         if (node != null) {
             aggregator = node.getLookup().lookup(Aggregator.class);
@@ -376,26 +377,19 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public void componentShowing() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                List<Source> sourceList = aggregator.getSourceList();
-                if (sourceList != null) {
-                    for (Source source : sourceList) {
-                        String url = source.getUrl();
-                        if (url != null) {
-                            File file = new File(url);
-                            Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
-                            if (boundingBox != null) {
-                                aggComponent.showArea(new DoubleRect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight()));
-                            }
-
-                        }
-
+        List<Source> sourceList = aggregator.getSourceList();
+        if (sourceList != null) {
+            for (Source source : sourceList) {
+                String url = source.getUrl();
+                if (url != null) {
+                    File file = new File(url);
+                    Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
+                    if (boundingBox != null) {
+                        aggComponent.showArea(new DoubleRect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight()));
                     }
                 }
             }
-        });
+        }
     }
 
     @Override
@@ -466,7 +460,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            setUpToolbar();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    setUpToolbar();
+                }
+            });
         }
     }
 

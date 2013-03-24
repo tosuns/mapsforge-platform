@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
+import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import java.text.MessageFormat;
@@ -31,6 +32,13 @@ public class RemoveUnusableTrkSegFilterProcess extends FilterProcess {
 
     private static final Logger LOG = Logger.getLogger(RemoveUnusableTrkSegFilterProcess.class.getName());
     private List<TrackSegment> gpxTracks;
+
+    public RemoveUnusableTrkSegFilterProcess() {
+    }
+
+    public RemoveUnusableTrkSegFilterProcess(Detector detector) {
+        super(detector);
+    }
 
     @Override
     protected void start() {

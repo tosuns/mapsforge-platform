@@ -34,8 +34,6 @@ public class PreprocessorComponent extends javax.swing.JPanel implements ChangeL
         selectionComponent1.getAllItemListTitle().setText("Registered Preprocessors"); //NO18N
         selectionComponent1.getSelectedItemListTitle().setText("Selected Preprocessors"); //NO18N
         selectionComponent1.getAllItems().addAll(Lookup.getDefault().lookupResult(FilterProcess.class).allInstances());
-        selectionComponent1.getSelectedItems().addChangeListener(PreprocessorComponent.this);
-
     }
 
     public PreprocessorComponent(Lookup lookup) {
@@ -56,6 +54,7 @@ public class PreprocessorComponent extends javax.swing.JPanel implements ChangeL
         }
 
         allItems.removeAll(toRemoveItems);
+        selectionComponent1.getSelectedItems().addChangeListener(PreprocessorComponent.this);
     }
 
     /**

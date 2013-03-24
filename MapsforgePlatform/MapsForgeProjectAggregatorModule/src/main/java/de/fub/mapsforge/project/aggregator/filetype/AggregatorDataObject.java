@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Collections;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -135,6 +136,7 @@ public class AggregatorDataObject extends MultiDataObject {
         getCookieSet().add(validateXMLSupport);
         ic.add(checkXMLSupport);
         ic.add(validateXMLSupport);
+        ic.add(getNodeDelegate());
     }
 
     @Override
@@ -153,6 +155,7 @@ public class AggregatorDataObject extends MultiDataObject {
                 javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(AggregatorDescriptor.class);
                 javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
                 aggregator = (AggregatorDescriptor) unmarshaller.unmarshal(inputStream);
+                aggregator.setDatasources(Collections.synchronizedList(aggregator.getDatasources()));
             } finally {
                 if (inputStream != null) {
                     inputStream.close();
@@ -205,12 +208,22 @@ public class AggregatorDataObject extends MultiDataObject {
                         StringWriter stringWriter = new StringWriter();
                         marshaller.marshal(aggregator, stringWriter);
                         StyledDocument document = editorSupport.getDocument();
-                        document.remove(0, document.getLength());
-                        document.insertString(0, stringWriter.toString(), null);
-                        editorSupport.saveDocument();
-                        setModified(false);
+                        if (document != null) {
+                            document.remove(0, document.getLength());
+                            document.insertString(0, stringWriter.toString(), null);
+                            editorSupport.saveDocument();
+                            setModified(false);
+                        }
                     } else {
-                        save();
+                        File file = FileUtil.toFile(getPrimaryFile());
+                        if (file != null) {
+                            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(AggregatorDescriptor.class);
+                            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
+                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
+                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                            marshaller.marshal(aggregator, file);
+                            FileUtil.refreshFor(file);
+                        }
                     }
                 } catch (JAXBException ex) {
                     Exceptions.printStackTrace(ex);
@@ -251,7 +264,7 @@ public class AggregatorDataObject extends MultiDataObject {
             mimeType = "text/aggregationbuilder+xml",
             persistenceType = TopComponent.PERSISTENCE_NEVER,
             preferredID = "AggregationBuilder",
-            position = 1000)
+            position = 3000)
     @Messages("LBL_AggregationBuilder_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
         return new MultiViewEditorElement(lkp);
@@ -280,8 +293,15 @@ public class AggregatorDataObject extends MultiDataObject {
 
         @Override
         public void fileChanged(FileEvent fe) {
-            aggregator = null;
-            cs.fireChange();
+            try {
+                aggregator = null;
+                getAggregator();
+                cs.fireChange();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (JAXBException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }
 }

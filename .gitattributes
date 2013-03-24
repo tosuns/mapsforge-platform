@@ -607,6 +607,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/LimitWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinDistanceWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinTimeDiffWaypointFilterProcess.xml -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/RemoveUnusableTrkSegFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/filterIcon16.png -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/xmls/DetectorTestTemplate.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/xsds/detectorDescriptor.xsd -text

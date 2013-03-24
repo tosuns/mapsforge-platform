@@ -141,6 +141,11 @@ public class Aggregator extends ModelSynchronizer {
         getPipeline().start(processes);
     }
 
+    public void start() {
+        start(new ArrayList<AbstractAggregationProcess<?, ?>>(getPipeline().getProcesses()));
+
+    }
+
     public AggContainer getAggContainer() {
         return aggContainer;
     }

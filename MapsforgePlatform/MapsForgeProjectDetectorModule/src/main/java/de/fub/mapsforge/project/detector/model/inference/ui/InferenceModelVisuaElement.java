@@ -43,7 +43,7 @@ import org.openide.windows.TopComponent;
         mimeType = "text/detector+xml",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "DetectorInferenceModelVisual",
-        position = 3000)
+        position = 1000)
 @ActionReferences({
     @ActionReference(
             id =
@@ -205,6 +205,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
+        callback.getTopComponent().setDisplayName(detector.getInferenceModel().getName());
     }
 
     @Override

@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.utils.DetectorUtils.DetectorCopyExcepti
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.SwingUtilities;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.DialogDisplayer;
@@ -17,6 +18,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
@@ -62,6 +64,11 @@ public final class ShowCustomizerAction implements ActionListener {
                     if (detectorOriginalInstance != null) {
                         DetectorUtils.mergeDetector(detectorOriginalInstance, detectorCopyInstance);
                         FileUtil.refreshFor(FileUtil.toFile(detectorOriginalInstance.getDataObject().getPrimaryFile()));
+                    }
+                    FileObject primaryFile = detectorCopyInstance.getDataObject().getPrimaryFile();
+                    File file = FileUtil.toFile(primaryFile);
+                    if (file != null) {
+                        file.delete();
                     }
                 }
             });

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.RemoveUnusableTrkSegFilterProcess"
+    name="Remove unusable track segments"
+    description="Removes all track segments that don'T contain the minimum data to be able to classify the segments">
+    <properties/>
+</dec:processunit>

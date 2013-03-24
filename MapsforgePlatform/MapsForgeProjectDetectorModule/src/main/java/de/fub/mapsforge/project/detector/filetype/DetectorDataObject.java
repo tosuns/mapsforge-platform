@@ -153,7 +153,7 @@ public class DetectorDataObject extends MultiDataObject {
             mimeType = "text/detector+xml",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             preferredID = "Detector",
-            position = 1000)
+            position = 3000)
     @Messages("LBL_Detector_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
         return new MultiViewEditorElement(lkp);
