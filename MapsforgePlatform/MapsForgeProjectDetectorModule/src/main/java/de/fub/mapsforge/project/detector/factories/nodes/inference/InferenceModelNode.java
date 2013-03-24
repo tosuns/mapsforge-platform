@@ -6,13 +6,13 @@ package de.fub.mapsforge.project.detector.factories.nodes.inference;
 
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapsforge.project.detector.factories.inference.InferenceNodeChildFactory;
-import de.fub.mapsforge.project.detector.factories.nodes.ProcessProperty;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Section;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
+import de.fub.utilsmodule.node.property.ProcessProperty;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;

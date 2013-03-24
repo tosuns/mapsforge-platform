@@ -106,6 +106,7 @@
                         <publicPackage>de.fub.utilsmodule.icons</publicPackage>
                         <publicPackage>de.fub.utilsmodule.installer</publicPackage>
                         <publicPackage>de.fub.utilsmodule.node</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.node.property</publicPackage>
                         <publicPackage>de.fub.utilsmodule.node.property.editors</publicPackage>
                         <publicPackage>de.fub.utilsmodule.process</publicPackage>
                         <publicPackage>de.fub.utilsmodule.profiling</publicPackage>

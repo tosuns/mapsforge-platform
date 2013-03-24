@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import weka.classifiers.Evaluation;

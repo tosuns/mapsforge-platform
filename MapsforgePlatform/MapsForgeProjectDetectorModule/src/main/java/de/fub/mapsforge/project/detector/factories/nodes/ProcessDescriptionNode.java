@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.factories.nodes;
 
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.utilsmodule.node.CustomAbstractnode;
+import de.fub.utilsmodule.node.property.ProcessProperty;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import org.openide.nodes.Children;
 import org.openide.nodes.Sheet;

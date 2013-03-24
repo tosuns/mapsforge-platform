@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.factories.inference;
 
 import de.fub.mapsforge.project.detector.factories.nodes.inference.FeatureRootNode;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.FilterNode;

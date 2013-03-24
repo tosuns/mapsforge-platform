@@ -8,7 +8,7 @@ import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -75,7 +75,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
 
     private void initLookup() {
         lookup = new AbstractLookup(content);
-        content.add(AggregateUtils.getProcessPalette());
+        content.add(AggregatorUtils.getProcessPalette());
     }
 
     private void updateGraph() {

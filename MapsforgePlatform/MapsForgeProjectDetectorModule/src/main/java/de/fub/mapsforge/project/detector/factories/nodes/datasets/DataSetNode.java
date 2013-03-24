@@ -63,9 +63,9 @@ public class DataSetNode extends AbstractNode {
 
     @Override
     public Action[] getActions(boolean context) {
-        if (dataObject != null) {
-            return dataObject.getNodeDelegate().getActions(context);
-        }
+//        if (dataObject != null) {
+//            return dataObject.getNodeDelegate().getActions(context);
+//        }
         return super.getActions(context);
     }
 

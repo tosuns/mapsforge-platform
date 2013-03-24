@@ -19,11 +19,9 @@ import de.fub.agg2graphui.layers.MergingLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +30,6 @@ import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -41,7 +38,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegment>, AggContainer> implements StatisticProvider {
+public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSegment>, AggContainer> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -65,9 +62,9 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
         matchingLayer = new MatchingLayer();
         aggregationLayer = new AggContainerLayer();
 
-        layers.add(matchingLayer);
-        layers.add(mergeLayer);
-        layers.add(aggregationLayer);
+        getLayers().add(matchingLayer);
+        getLayers().add(mergeLayer);
+        getLayers().add(aggregationLayer);
     }
 
     @Override
@@ -78,7 +75,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
     @Override
     public AggContainer getResult() {
         synchronized (RUN_MUTEX) {
-            return aggregator.getAggContainer();
+            return getAggregator().getAggContainer();
         }
     }
 
@@ -89,8 +86,8 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
         totalPointGhostPointPairs = 0;
 
         if (inputList != null
-                && aggregator != null
-                && aggregator.getAggContainer() != null) {
+                && getAggregator() != null
+                && getAggregator().getAggContainer() != null) {
             LOG.log(Level.FINE, "Segment size: {0}", inputList.size());
             ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
             handle.start(inputList.size());
@@ -100,7 +97,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
                 mergeLayer.clearRenderObjects();
                 matchingLayer.clearRenderObjects();
 
-                AggContainer aggContainer = aggregator.getAggContainer();
+                AggContainer aggContainer = getAggregator().getAggContainer();
 
                 int counter = 0;
 
@@ -113,7 +110,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
                     }
 
                     counter++;
-                    aggregator.getAggContainer().addSegment(inputSegment);
+                    aggContainer.addSegment(inputSegment);
 
                     // update debug layers: matching, merging
                     IAggregationStrategy aggregationStrategy = aggContainer.getAggregationStrategy();
@@ -163,17 +160,18 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
 
     @Override
     public String getName() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDisplayName();
+        }
         return "Aggregation";
     }
 
     @Override
     public String getDescription() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDescription();
+        }
         return "Aggregation process";
-    }
-
-    @Override
-    public void setDescriptor(ProcessDescriptor descriptor) {
-        this.descriptor = descriptor;
     }
 
     @Override
@@ -184,18 +182,6 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
     @Override
     public JComponent getSettingsView() {
         return null;
-    }
-
-    @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor desc = null;
-        try {
-            desc = AggregateUtils.getProcessDescriptor(getClass());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        return desc;
     }
 
     @Override

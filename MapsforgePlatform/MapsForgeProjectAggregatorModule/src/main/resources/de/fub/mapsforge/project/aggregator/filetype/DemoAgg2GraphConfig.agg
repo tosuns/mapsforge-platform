@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:aggregator xmlns:ns2="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
-                aggregationStrategyClass="de.fub.agg2graph.agg.strategy.DefaultAggregationStrategy"
-                description="Demo aggregator config file."
-                name="DemoAgg2GraphConfig"
-                tileCachingStrategyClass="de.fub.agg2graph.agg.tiling.DefaultCachingStrategy">
+<aggaggregator xmlns:agg="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
+               aggregationStrategyClass="de.fub.agg2graph.agg.strategy.DefaultAggregationStrategy"
+               description="Demo aggregator config file."
+               name="DemoAgg2GraphConfig"
+               tileCachingStrategyClass="de.fub.agg2graph.agg.tiling.DefaultCachingStrategy">
     <datasources>
         <!--<datasources url="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/GPXDatasource/[24.11.2012 15.33.49.187]_13_52,517_13,38_52,526/Gpx_0.gpx"/>-->
     </datasources>
@@ -90,4 +90,4 @@
         </process>
     </pipeline>
     <properties/>
-</ns2:aggregator>
+</agg:aggregator>

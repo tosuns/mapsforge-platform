@@ -20,12 +20,9 @@ import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.color.ColorUtil;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -38,7 +35,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -82,25 +78,8 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     private transient MultiViewElementCallback callback;
     private GPXProvider gpxProvide;
     private boolean modelChanged = true;
-    private MouseListener mouseListener = new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            Children children = getExplorerManager().getRootContext().getChildren();
-            for (Node node : children.getNodes()) {
-                if (node instanceof TrackSegmentBehaviour) {
-                    TrackSegmentBehaviour trksegNode = (TrackSegmentBehaviour) node;
-                    TrksegWrapper trkseg = node.getLookup().lookup(TrksegWrapper.class);
-                    if (trkseg != null && markerMap.containsKey(trkseg)) {
-                        for (CustomMapMarker marker : markerMap.get(trkseg)) {
-                            marker.setSelected(trksegNode.isSelected());
-                            marker.setVisible(trksegNode.isVisible());
-                        }
-                    }
-                    abstractMapViewer1.repaint();
-                }
-            }
-        }
-    };
+    // mouselistener to check and display only the treseg that are visible
+    private MouseListener mouseListener = new MouseAdapterImpl();
     private boolean splitPanelVisble;
 
     /**
@@ -119,36 +98,32 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         gpxProvide = obj.getLookup().lookup(GPXProvider.class);
         gpxProvide.addChangeListener(WeakListeners.change(MapViewElement.this, gpxProvide));
         update();
-        initOutlineView();
+
         jSplitPane1.setDividerLocation(Integer.MAX_VALUE);
     }
 
     private void initOutlineView() {
-        final Outline outline = outlineView1.getOutline();
+        outlineView1.setPropertyColumnDescription("visible", "Visible On/Off");
+        outlineView1.setDefaultActionAllowed(false);
+        Outline outline = outlineView1.getOutline();
         outline.addMouseListener(WeakListeners.create(MouseListener.class, mouseListener, outline));
         outline.setRootVisible(false);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                outlineView1.setPropertyColumnDescription("visible", "Visible On/Off");
-                outlineView1.setPropertyColumnDescription("selected", "Select On/Off");
-                outlineView1.setDefaultActionAllowed(false);
-                TableColumnModel columnModel = outline.getColumnModel();
-                columnModel.moveColumn(0, columnModel.getColumnCount() - 1);
-                TableColumn column = outline.getColumn("V");
-                if (column != null) {
-                    column.setMaxWidth(24);
-                    column.setMinWidth(24);
-                    column.setPreferredWidth(24);
-                }
-                column = outline.getColumn("S");
-                if (column != null) {
-                    column.setMaxWidth(24);
-                    column.setMinWidth(24);
-                    column.setPreferredWidth(24);
-                }
-            }
-        });
+        TableColumnModel columnModel = outline.getColumnModel();
+        // replace the node column in which the segments bounding box is displayed
+        // to the end of the columns
+        TableColumn column = outline.getColumn("Segment");
+        columnModel.removeColumn(column);
+        columnModel.addColumn(column);
+
+        // set a fix width for the visible checkbox column
+        column = outline.getColumn("V");
+        if (column != null) {
+            column.setMaxWidth(24);
+            column.setMinWidth(24);
+            column.setPreferredWidth(24);
+        }
+        outlineView1.revalidate();
+        outline.repaint();
     }
 
     private void initToolBar() {
@@ -223,7 +198,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         outlineViewPanel.setPreferredSize(new java.awt.Dimension(0, 100));
         outlineViewPanel.setLayout(new java.awt.BorderLayout());
 
-        outlineView1.setPropertyColumns(new String[] {"visible", "V", "selected", "S"});
+        outlineView1.setPropertyColumns(new String[] {"visible", "V"});
         outlineView1.setQuickSearchAllowed(false);
         outlineViewPanel.add(outlineView1, java.awt.BorderLayout.CENTER);
 
@@ -242,13 +217,9 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         this.splitPanelVisble = visible;
         Component rightComponent = jSplitPane1.getRightComponent();
         if (splitPanelVisble) {
-//            Dimension dimension = new Dimension(300, rightComponent.getPreferredSize().height);
-//            rightComponent.setMinimumSize(dimension);
             jSplitPane1.setDividerSize(5);
             jSplitPane1.setDividerLocation(.75);
         } else {
-//            Dimension dimension = new Dimension(0, rightComponent.getPreferredSize().height);
-//            rightComponent.setMinimumSize(dimension);
             jSplitPane1.setDividerSize(0);
             jSplitPane1.setDividerLocation(1.0);
         }
@@ -280,6 +251,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
 
     @Override
     public void componentOpened() {
+        initOutlineView();
     }
 
     @Override
@@ -403,18 +375,27 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         }
     }
 
-    private static class SplitPanelAction implements ActionListener {
+    private class MouseAdapterImpl extends MouseAdapter {
 
-        private final MapViewElement mapViewElement;
-
-        public SplitPanelAction(MapViewElement mapViewElement) {
-            this.mapViewElement = mapViewElement;
-
+        public MouseAdapterImpl() {
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            mapViewElement.setSplitPanelVisible(!mapViewElement.isSplitpanelVisible());
+        public void mouseClicked(MouseEvent e) {
+            Children children = getExplorerManager().getRootContext().getChildren();
+            for (Node node : children.getNodes()) {
+                if (node instanceof TrackSegmentBehaviour) {
+                    TrackSegmentBehaviour trksegNode = (TrackSegmentBehaviour) node;
+                    TrksegWrapper trkseg = node.getLookup().lookup(TrksegWrapper.class);
+                    if (trkseg != null && markerMap.containsKey(trkseg)) {
+                        for (CustomMapMarker marker : markerMap.get(trkseg)) {
+                            marker.setSelected(trksegNode.isSelected());
+                            marker.setVisible(trksegNode.isVisible());
+                        }
+                    }
+                    abstractMapViewer1.repaint();
+                }
+            }
         }
     }
 }

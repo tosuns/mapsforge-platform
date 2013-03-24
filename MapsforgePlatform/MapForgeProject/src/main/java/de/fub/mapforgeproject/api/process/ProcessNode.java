@@ -4,7 +4,6 @@
  */
 package de.fub.mapforgeproject.api.process;
 
-import de.fub.mapforgeproject.api.process.Process;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,6 +25,10 @@ public class ProcessNode extends AbstractNode implements PropertyChangeListener,
         setDisplayName(process.getName());
         setShortDescription(process.getDescription());
         process.addProcessListener(ProcessNode.this);
+    }
+
+    public Process<?, ?> getProcess() {
+        return process;
     }
 
     @Override

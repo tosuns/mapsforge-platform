@@ -12,7 +12,6 @@ import de.fub.mapsforge.project.detector.model.inference.processhandler.Inferenc
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeEvent;

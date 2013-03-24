@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.aggregator.graph;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.mapsforge.project.ui.component.WidgetPropertySheet;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -25,6 +26,9 @@ import org.netbeans.api.visual.action.PopupMenuProvider;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.widget.ComponentWidget;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.nodes.FilterNode;
 
 /**
  *
@@ -32,44 +36,58 @@ import org.netbeans.api.visual.widget.Widget;
  */
 public class ProcessWidget extends Widget {
 
+    private static final Logger LOG = Logger.getLogger(ProcessWidget.class.getName());
     private final AbstractAggregationProcess process;
-//    private final Shape shape = new RoundRectangle2D.Double(0, 0, 200, 200, 10, 10);
-    private JButton button;
+    private JButton settingsButton;
     private JLabel nameLabel = new JLabel();
     private final ProcessGraph processGraph;
 
-    public ProcessWidget(ProcessGraph scene, AbstractAggregationProcess process) {
+    public ProcessWidget(ProcessGraph scene, AbstractAggregationProcess proc) {
         super(scene);
+        assert proc != null;
+        this.process = proc;
         this.processGraph = scene;
+        init();
+    }
+
+    private void init() {
         getActions().addAction(ActionFactory.createPopupMenuAction(new ProcessPopupProvider()));
         setOpaque(true);
-        this.process = process;
+        setToolTipText(process.getDescription());
         setPreferredSize(new Dimension(150, 180));
         setBorder(BorderFactory.createRoundedBorder(10, 10, 2, 2, new Color(0, 0, 0, 255), new Color(0, 0, 0, 0)));
-        setBackground(new LinearGradientPaint(0, 0, 0, 180, new float[]{0, 0.03f, 0.44f, 0.85f, 0.88f, 1}, new Color[]{Color.decode("0xffffff"), Color.decode("0xe8e8e8"), Color.decode("0xb9b9b9"), Color.decode("0x9e9e9e"), Color.decode("0x9e9e9e"), Color.decode("0x696969")}));
+        setBackground(new LinearGradientPaint(0, 0, 0, 180,
+                new float[]{0, 0.03f, 0.44f, 0.85f, 0.88f, 1},
+                new Color[]{Color.decode("0xffffff"),
+            Color.decode("0xe8e8e8"),
+            Color.decode("0xb9b9b9"),
+            Color.decode("0x9e9e9e"),
+            Color.decode("0x9e9e9e"),
+            Color.decode("0x696969")}));
 
+        initSettingsButton();
+        initLabel();
+    }
 
-        button = new JButton();
-        Widget buttonWidget = new ComponentWidget(scene, button);
-        button.setBackground(new Color(0, 0, 0, 0));
-        button.setText("Settings");
-        buttonWidget.setPreferredLocation(new Point(10, getPreferredSize().height - 32));
-        buttonWidget.setPreferredSize(new Dimension(getPreferredSize().width - 24, 20));
-        addChild(buttonWidget);
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            }
-        });
-
-        ComponentWidget labelWidget = new ComponentWidget(scene, nameLabel);
+    private void initLabel() {
+        ComponentWidget labelWidget = new ComponentWidget(getScene(), nameLabel);
         labelWidget.setPreferredLocation(new Point(8, 8));
         labelWidget.setPreferredSize(new Dimension(getPreferredSize().width - 24, 14));
         nameLabel.setText(process.getName());
         nameLabel.setHorizontalAlignment(JLabel.CENTER);
         addChild(labelWidget);
+    }
 
-        setToolTipText(process.getDescription());
+    private void initSettingsButton() {
+        settingsButton = new JButton();
+        settingsButton.setBackground(new Color(0, 0, 0, 0));
+        settingsButton.setText("Settings");
+        settingsButton.addActionListener(new SettingAction());
+
+        Widget buttonWidget = new ComponentWidget(getScene(), settingsButton);
+        buttonWidget.setPreferredLocation(new Point(10, getPreferredSize().height - 32));
+        buttonWidget.setPreferredSize(new Dimension(getPreferredSize().width - 24, 20));
+        addChild(buttonWidget);
     }
 
     @Override
@@ -98,9 +116,7 @@ public class ProcessWidget extends Widget {
                 (getPreferredSize().height - process.getIcon().getHeight(null)) / 2 - 5,
                 null);
         graphics.setColor(color);
-//        LOG.info(getLocation().toString());
     }
-    private static final Logger LOG = Logger.getLogger(ProcessWidget.class.getName());
 
     private class ProcessPopupProvider implements PopupMenuProvider {
 
@@ -128,6 +144,17 @@ public class ProcessWidget extends Widget {
         @Override
         public JPopupMenu getPopupMenu(Widget widget, Point localLocation) {
             return popupMenu;
+        }
+    }
+
+    private class SettingAction implements ActionListener {
+
+        public SettingAction() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            WidgetPropertySheet.createWidgetPropertySheet(process).setVisible(true);
         }
     }
 }

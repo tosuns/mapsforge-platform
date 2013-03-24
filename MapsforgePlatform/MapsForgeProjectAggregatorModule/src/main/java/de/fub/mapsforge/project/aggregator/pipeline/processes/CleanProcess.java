@@ -13,16 +13,15 @@ import de.fub.agg2graphui.layers.GPSSegmentLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline.ProcessEvent;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.awt.Color;
 import java.awt.Image;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,7 +29,6 @@ import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -39,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, List<GPSSegment>> implements StatisticProvider {
+public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSegment>, List<GPSSegment>> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -73,11 +71,11 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
         renderingOptions.setzIndex(0);
         renderingOptions.setOpacity(1);
         gPSSegmentLayer = new GPSSegmentLayer(getName(), "Clean gps data", renderingOptions);
-        layers.add(gPSSegmentLayer);
+        getLayers().add(gPSSegmentLayer);
     }
 
     private void createCleaningOptions(List<Property> properties) {
-        gpsCleaner.setCleaningOptions(AggregateUtils.createValue(CleaningOptions.class, properties));
+        gpsCleaner.setCleaningOptions(AggregatorUtils.createValue(CleaningOptions.class, properties));
     }
 
     private PropertySet getPropertySet(String name) {
@@ -107,7 +105,7 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
         RamerDouglasPeuckerFilter filter = null;
         PropertySet propertySet = getPropertySet(RAMER_DOUGLAS_PEUCKER_SETTINGS);
         if (propertySet != null) {
-            filter = AggregateUtils.createValue(RamerDouglasPeuckerFilter.class, propertySet.getProperties());
+            filter = AggregatorUtils.createValue(RamerDouglasPeuckerFilter.class, propertySet.getProperties());
         } else {
             filter = new RamerDouglasPeuckerFilter(5);
         }
@@ -191,11 +189,6 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
     }
 
     @Override
-    public void setDescriptor(ProcessDescriptor descriptor) {
-        this.descriptor = descriptor;
-    }
-
-    @Override
     public Image getIcon() {
         return IMAGE;
     }
@@ -206,28 +199,24 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
     }
 
     @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor desc = null;
-        try {
-            desc = AggregateUtils.getProcessDescriptor(getClass());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        return desc;
-    }
-
-    @Override
     public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException {
         List<StatisticSection> statisticSections = new ArrayList<StatisticProvider.StatisticSection>();
         statisticSections.add(getPerformanceData());
 
-        StatisticSection section = new StatisticSection("Cleaning Statistics", "Statistical data of the cleaning process.");
+        StatisticSection section = new StatisticSection("Cleaning Statistics", "Statistical data of the cleaning process."); //NO18N
         statisticSections.add(section);
-        section.getStatisticsItemList().add(new StatisticItem("Clean GPS Point Count", String.valueOf(totalCleanGPSPointCount), "Total count of GPS points after cleaning."));
-        section.getStatisticsItemList().add(new StatisticItem("Clean Segment Count", String.valueOf(totalCleanSegmentCount), "Total count of GPS segments after cleaning."));
-        section.getStatisticsItemList().add(new StatisticItem("Clean GPS Point/Segment Ratio", String.valueOf(totalCleanGPSPointCount / (double) totalCleanSegmentCount), "The ratio of cleaned points to cleaned segements."));
-        section.getStatisticsItemList().add(new StatisticItem("Smoothed GPS Points", String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter."));
+        section.getStatisticsItemList().add(
+                new StatisticItem("Clean GPS Point Count",
+                String.valueOf(totalCleanGPSPointCount), "Total count of GPS points after cleaning.")); //NO18N
+        section.getStatisticsItemList().add(
+                new StatisticItem("Clean Segment Count",
+                String.valueOf(totalCleanSegmentCount), "Total count of GPS segments after cleaning.")); //NO18N
+        section.getStatisticsItemList().add(
+                new StatisticItem("Clean GPS Point/Segment Ratio",
+                String.valueOf(totalCleanGPSPointCount / (double) totalCleanSegmentCount), "The ratio of cleaned points to cleaned segements.")); //NO18N
+        section.getStatisticsItemList().add(
+                new StatisticItem("Smoothed GPS Points",
+                String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter.")); //NO18N
 
         return statisticSections;
     }

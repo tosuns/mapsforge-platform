@@ -13,7 +13,7 @@ import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -77,7 +77,7 @@ public class MapRenderer extends Task {
                         if (aggregatorFile.exists()) {
                             aggregatorFileObject = FileUtil.toFileObject(aggregatorFile);
                             if (aggregatorFileObject != null) {
-                                return AggregateUtils.createAggregator(aggregatorFileObject);
+                                return AggregatorUtils.createAggregator(aggregatorFileObject);
                             }
                         }
                     }
@@ -104,7 +104,7 @@ public class MapRenderer extends Task {
                     for (Gpx gpx : entry.getValue()) {
                         File tmpFile = createTmpfile(createTempFolder);
                         try {
-                            AggregateUtils.saveGpxToFile(tmpFile, gpx);
+                            AggregatorUtils.saveGpxToFile(tmpFile, gpx);
                             sourceList.add(new Source(tmpFile.getAbsolutePath()));
                         } catch (JAXBException ex) {
                             Exceptions.printStackTrace(ex);

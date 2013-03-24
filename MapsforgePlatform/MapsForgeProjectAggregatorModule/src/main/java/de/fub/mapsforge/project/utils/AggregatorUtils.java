@@ -49,7 +49,7 @@ import org.openide.util.datatransfer.ExTransferable;
  *
  * @author Serdar
  */
-public class AggregateUtils {
+public class AggregatorUtils {
 
     @StaticResource
     public static final String ICON_PATH_NORMAL = "de/fub/mapsforge/project/aggregator/aggregatorIcon.png";

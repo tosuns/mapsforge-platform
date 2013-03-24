@@ -13,11 +13,9 @@ import de.fub.agg2graphui.layers.RoadNetworkLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,6 @@ import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -36,7 +33,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer, RoadNetwork> implements StatisticProvider {
+public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContainer, RoadNetwork> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -51,8 +48,8 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
 
     public RoadNetworkProcess(Aggregator container) {
         super(container);
-        layers.add(intersectionLayer);
-        layers.add(roadNetworkLayer);
+        getLayers().add(intersectionLayer);
+        getLayers().add(roadNetworkLayer);
     }
 
     @Override
@@ -62,7 +59,7 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     @Override
     protected void start() {
 
-        if (aggregator != null) {
+        if (getAggregator() != null) {
             ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
             try {
                 handle.start();
@@ -70,7 +67,7 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
                 intersectionLayer.clearRenderObjects();
 
                 roadNetwork = new RoadNetwork();
-                roadNetwork.parse(aggregator.getAggContainer(), null);
+                roadNetwork.parse(getAggregator().getAggContainer(), null);
                 handle.switchToDeterminate(roadNetwork.intersections.size());
                 int counter = 0;
                 for (Intersection intersection : roadNetwork.intersections) {
@@ -102,17 +99,18 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
 
     @Override
     public String getName() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDisplayName();
+        }
         return "Road Generator";
     }
 
     @Override
     public String getDescription() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDescription();
+        }
         return "Default Road Generator";
-    }
-
-    @Override
-    public void setDescriptor(ProcessDescriptor descriptor) {
-        this.descriptor = descriptor;
     }
 
     @Override
@@ -123,18 +121,6 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     @Override
     public JComponent getSettingsView() {
         return null;
-    }
-
-    @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor desc = null;
-        try {
-            desc = AggregateUtils.getProcessDescriptor(getClass());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        return desc;
     }
 
     @NbBundle.Messages({"CLT_No_Statistics_Available=No road network was computed to provide its statistics. Please run the read generator process!",

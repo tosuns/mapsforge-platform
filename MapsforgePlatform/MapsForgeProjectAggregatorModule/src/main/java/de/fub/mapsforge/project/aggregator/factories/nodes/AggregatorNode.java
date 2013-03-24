@@ -16,6 +16,7 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.utilsmodule.node.property.ProcessProperty;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Color;
 import java.awt.Image;
@@ -134,10 +135,8 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         set.setValue(TAB_NAME, MessageFormat.format("{0} ({1})", tabName, id));
 
         for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-            Property<?> prop = createProperty(property);
-            if (prop != null) {
-                set.put(prop);
-            }
+            Property<?> prop = new ProcessProperty(modelSynchronizerClient, property);
+            set.put(prop);
         }
         return set;
     }

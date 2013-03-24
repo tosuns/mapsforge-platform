@@ -9,9 +9,8 @@ import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +35,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AbstractAggregationProcess.class)
 @NbBundle.Messages({"CLT_OSM_Export_Title=OSM File Export",
     "CLT_OSM_Export_Description=OSM Exporter process"})
-public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, FileObject> implements StatisticProvider {
+public class OSMExportProcess extends AbstractXmlAggregationProcess<RoadNetwork, FileObject> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -96,17 +95,18 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
 
     @Override
     public String getName() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDisplayName();
+        }
         return Bundle.CLT_OSM_Export_Title();
     }
 
     @Override
     public String getDescription() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDescription();
+        }
         return Bundle.CLT_OSM_Export_Description();
-    }
-
-    @Override
-    public void setDescriptor(ProcessDescriptor descriptor) {
-        this.descriptor = descriptor;
     }
 
     @Override
@@ -117,18 +117,6 @@ public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, Fi
     @Override
     public JComponent getSettingsView() {
         return null;
-    }
-
-    @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor desc = null;
-        try {
-            desc = AggregateUtils.getProcessDescriptor(getClass());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        return desc;
     }
 
     @Override

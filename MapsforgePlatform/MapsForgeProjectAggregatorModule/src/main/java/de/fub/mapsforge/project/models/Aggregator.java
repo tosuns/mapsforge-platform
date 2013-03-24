@@ -16,7 +16,7 @@ import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
@@ -110,13 +110,13 @@ public class Aggregator extends ModelSynchronizer {
                     try {
                         sourceFolder.createNewFile();
                     } catch (IOException ex) {
-                        LOG.log(Level.SEVERE, MessageFormat.format("{0}.\\n sourceFikder: {1}", ex.getMessage(), sourceFolder.getAbsolutePath()), ex);
+                        LOG.log(Level.SEVERE, MessageFormat.format("{0}.\\n sourceFolder: {1}", ex.getMessage(), sourceFolder.getAbsolutePath()), ex); //NO18N
                         Exceptions.printStackTrace(ex);
                     }
                 }
             }
-            IAggregationStrategy aggregateStrategy = AggregateUtils.createInstance(IAggregationStrategy.class, descriptor.getAggregationStrategy());
-            ICachingStrategy cachingStrategy = AggregateUtils.createInstance(ICachingStrategy.class, descriptor.getTileCachingStrategy());
+            IAggregationStrategy aggregateStrategy = AggregatorUtils.createInstance(IAggregationStrategy.class, descriptor.getAggregationStrategy());
+            ICachingStrategy cachingStrategy = AggregatorUtils.createInstance(ICachingStrategy.class, descriptor.getTileCachingStrategy());
 
             if (aggContainer != null) {
                 aggContainer.setAggregationStrategy(aggregateStrategy);
@@ -201,7 +201,6 @@ public class Aggregator extends ModelSynchronizer {
                     try {
                         Constructor<? extends AbstractAggregationProcess> constructor = clazz.getDeclaredConstructor(Aggregator.class);
                         aggregateProcess = constructor.newInstance(Aggregator.this);
-                        aggregateProcess.setDescriptor(processDescriptor);
                     } catch (SecurityException ex) {
                         Exceptions.printStackTrace(ex);
                     } catch (IllegalArgumentException ex) {
@@ -235,9 +234,9 @@ public class Aggregator extends ModelSynchronizer {
 
     public enum AggregatorState {
 
-        ERROR("Error", ImageUtilities.loadImage(AggregateUtils.ICON_PATH_ERROR)),
-        RUNNING("Running", ImageUtilities.loadImage(AggregateUtils.ICON_PATH_BUSY)),
-        INACTIVE("Inactive", ImageUtilities.loadImage(AggregateUtils.ICON_PATH_NORMAL));
+        ERROR("Error", ImageUtilities.loadImage(AggregatorUtils.ICON_PATH_ERROR)),
+        RUNNING("Running", ImageUtilities.loadImage(AggregatorUtils.ICON_PATH_BUSY)),
+        INACTIVE("Inactive", ImageUtilities.loadImage(AggregatorUtils.ICON_PATH_NORMAL));
         private String displayName;
         private Image image;
 

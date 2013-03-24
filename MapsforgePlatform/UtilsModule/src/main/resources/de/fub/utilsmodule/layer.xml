@@ -17,6 +17,9 @@
         <file name="exportIcon.png" url="nbres:/de/fub/utilsmodule/icons/exportIcon.png">
             <attr name="iconBase" stringvalue="de/fub/utilsmodule/icons/exportIcon.png"/>
         </file>
+        <file name="errorIcon.png" url="nbres:/de/fub/utilsmodule/icons/errorIcon.png">
+            <attr name="iconBase" stringvalue="de/fub/utilsmodule/icons/errorIcon.png"/>
+        </file>
     </folder>
     <folder name="Menu">
         <folder name="Tools">

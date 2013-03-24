@@ -12,14 +12,12 @@ import de.fub.agg2graphui.layers.GPSSegmentLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +27,6 @@ import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -38,14 +35,14 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPSSegment>> implements StatisticProvider {
+public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<GPSSegment>> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
     private static final Logger LOG = Logger.getLogger(DatasourceProcess.class.getName());
     private final List<GPSSegment> segments = new ArrayList<GPSSegment>();
-    private final GPSSegmentLayer gPSSegmentLayer;
+    private GPSSegmentLayer gPSSegmentLayer;
     private int totalSegmentCount = 0;
     private int totalGPSPoints = 0;
     private int totalGPXFiles = 0;
@@ -56,27 +53,32 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
 
     public DatasourceProcess(Aggregator container) {
         super(container);
+        init();
+    }
+
+    private void init() {
         RenderingOptions renderingOptions = new RenderingOptions();
         renderingOptions.setColor(new Color(97, 123, 228)); // blue
         renderingOptions.setRenderingType(RenderingOptions.RenderingType.ALL);
         renderingOptions.setzIndex(-1);
         renderingOptions.setOpacity(1);
         gPSSegmentLayer = new GPSSegmentLayer("Raw-Layer", "Displays the raw gps data.", renderingOptions);
-        layers.add(gPSSegmentLayer);
-    }
-
-    @Override
-    public void setDescriptor(ProcessDescriptor descriptor) {
-        this.descriptor = descriptor;
+        super.getLayers().add(gPSSegmentLayer);
     }
 
     @Override
     public String getName() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDisplayName();
+        }
         return "Gpx Datasource";
     }
 
     @Override
     public String getDescription() {
+        if (getDescriptor() != null) {
+            return getDescriptor().getDescription();
+        }
         return "Gpx segment provider";
     }
 
@@ -94,7 +96,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
 
     @Override
     public List<AbstractLayer<?>> getLayers() {
-        return Collections.unmodifiableList(layers);
+        return Collections.unmodifiableList(super.getLayers());
     }
 
     @Override
@@ -104,7 +106,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
         totalSegmentCount = 0;
         segments.clear();
         gPSSegmentLayer.clearRenderObjects();
-        List<Source> sourceList = aggregator.getSourceList();
+        List<Source> sourceList = getAggregator().getSourceList();
         int progress = 0;
         ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
         handle.start(sourceList.size());
@@ -154,18 +156,6 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
     }
 
     @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor desc = null;
-        try {
-            desc = AggregateUtils.getProcessDescriptor(getClass());
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        return desc;
-    }
-
-    @Override
     public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException {
         List<StatisticSection> statisticSections = new ArrayList<StatisticProvider.StatisticSection>();
         statisticSections.add(getPerformanceData());
@@ -175,7 +165,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
         section.getStatisticsItemList().add(new StatisticItem("Total GPS Points", String.valueOf(totalGPSPoints), "Represents the total count of GPS points that the data set contains."));
         section.getStatisticsItemList().add(new StatisticItem("Total GPS Segemtns", String.valueOf(totalSegmentCount), "Represents the total count of GPS segments that the data set contains."));
         section.getStatisticsItemList().add(new StatisticItem("GPS points/segment ratio", String.valueOf(totalGPSPoints / (double) totalSegmentCount), "Displays the ratio of gps points to segments"));
-        section.getStatisticsItemList().add(new StatisticItem("Total GPX File", String.valueOf(aggregator.getSourceList().size()), "Represents the total amount of GPX files as data set"));
+        section.getStatisticsItemList().add(new StatisticItem("Total GPX File", String.valueOf(getAggregator().getSourceList().size()), "Represents the total amount of GPX files as data set"));
 
         return statisticSections;
     }

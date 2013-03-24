@@ -6,11 +6,16 @@ package de.fub.mapsforge.project.datasource.spi.actions;
 
 import de.fub.mapsforge.project.datasource.GPXDatasourceNode;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
+import de.fub.utilsmodule.icons.IconRegister;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -28,6 +33,7 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
 
     private static final long serialVersionUID = 1L;
     private List<FileObject> folders = null;
+    private ImageIcon icon;
 
     /**
      * Creates new form ExportDialog
@@ -64,6 +70,18 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
         return openAfterSave;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public JButton getCancelbutton() {
+        return cancelbutton;
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
+    }
+
     public Object[] getOptions() {
         return new Object[]{saveButton, cancelbutton};
     }
@@ -88,23 +106,10 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
         jLabel2 = new javax.swing.JLabel();
         openAfterSave = new javax.swing.JCheckBox();
         message = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jLabel3 = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(saveButton, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.saveButton.text")); // NOI18N
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(cancelbutton, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.cancelbutton.text")); // NOI18N
-        cancelbutton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelbuttonActionPerformed(evt);
-            }
-        });
 
         folderName.setEditable(true);
 
@@ -135,16 +140,6 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
         org.openide.awt.Mnemonics.setLocalizedText(message, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.message.text")); // NOI18N
         message.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton1, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.jRadioButton1.text")); // NOI18N
-        jRadioButton1.setMargin(new java.awt.Insets(2, -2, 2, 2));
-
-        buttonGroup1.add(jRadioButton2);
-        org.openide.awt.Mnemonics.setLocalizedText(jRadioButton2, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.jRadioButton2.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.jLabel3.text")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -158,19 +153,12 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(message, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
-                            .addComponent(jLabel3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButton2)
-                                .addGap(0, 174, Short.MAX_VALUE))
-                            .addComponent(folderName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(folderName, 0, 394, Short.MAX_VALUE)
                             .addComponent(fileName))))
                 .addContainerGap())
         );
@@ -187,26 +175,13 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openAfterSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(message, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(message, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_saveButtonActionPerformed
-
-    private void cancelbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelbuttonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cancelbuttonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton cancelbutton;
@@ -214,9 +189,6 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
     private javax.swing.JComboBox<String> folderName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel message;
@@ -262,33 +234,62 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
     }
 
     private void checkFileExist() {
-        message.setText(null);
+        normalState();
 
-//        for (int i = 0; i < folderName.getItemCount(); i++) {
-//            Object item = folderName.getItemAt(i);
-//            if (item instanceof String) {
-//                String folderString = (String) item;
-//                if (folderString.equals(folderName.getSelectedItem())) {
-//                    message.setText(
-//                            MessageFormat.format("There already exists a folder with the specifed name {0}. Please enter another name.", folderString));
-//                    return;
-//                }
-//            }
-//        }
-        saveButton.setEnabled(true);
         FileObject testFileObject = getTestFileObject();
         if (testFileObject != null && fileName.getText() != null) {
-            String fileString = fileName.getText();
-            if (!fileString.endsWith(".gpx")) {
-                fileString = MessageFormat.format("{0}.gpx", fileString);
-            }
+            if (fileName.getText().trim().length() == 0) {
+                errorState(ErrorState.ERROR_FILE_NAME_REQUIRED);
+            } else {
+                String fileString = fileName.getText();
+                if (!fileString.endsWith(".gpx")) {
+                    fileString = MessageFormat.format("{0}.gpx", fileString);
+                }
 
-            FileObject fileObject = testFileObject.getFileObject(fileString);
-            if (fileObject != null) {
-                message.setText(
-                        MessageFormat.format("There already exists a file with the specifed name {0}. Please enter another name.", fileObject.getNameExt()));
-                saveButton.setEnabled(false);
+                FileObject fileObject = testFileObject.getFileObject(fileString);
+                if (fileObject != null) {
+                    errorState(ErrorState.ERROR_FILE_ALREADY_EXISTS);
+                }
             }
         }
+    }
+
+    private Icon getErrorIcon() {
+        icon = null;
+        if (icon == null) {
+            Image image = IconRegister.findRegisteredIcon("errorIcon.png");
+            if (image != null) {
+                icon = new ImageIcon(image);
+            }
+        }
+        return icon;
+    }
+
+    private void errorState(ErrorState error) {
+        switch (error) {
+            case ERROR_FILE_ALREADY_EXISTS:
+                message.setText("There already exists a file with the specifed name. Please enter another name.");
+                break;
+            case ERROR_FILE_NAME_REQUIRED:
+                message.setText("You have to specifiy a file name which has atleast one character!");
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        message.setIcon(getErrorIcon());
+        saveButton.setEnabled(false);
+    }
+
+    private void normalState() {
+        message.setText(null);
+        message.setIcon(null);
+        saveButton.setEnabled(true);
+    }
+
+    private enum ErrorState {
+
+        ERROR_FILE_ALREADY_EXISTS,
+        ERROR_FILE_NAME_REQUIRED;
     }
 }
