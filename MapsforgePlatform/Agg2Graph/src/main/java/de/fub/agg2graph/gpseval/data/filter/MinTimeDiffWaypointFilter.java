@@ -23,7 +23,7 @@ public class MinTimeDiffWaypointFilter extends WaypointFilter {
 
     @Override
     public boolean filter(Waypoint gpsData) {
-        if (mLastAcceptedWaypointTime != null) {
+        if (mLastAcceptedWaypointTime != null && gpsData.getTimestamp() != null) {
             long time1 = mLastAcceptedWaypointTime.getTime();
             long time2 = gpsData.getTimestamp().getTime();
             if ((time2 - time1) < (mInterval * 1000) - 1) {

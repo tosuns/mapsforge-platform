@@ -7,7 +7,7 @@ package de.fub.mapsforge.project.aggregator.actions.wizards.aggregator;
 import de.fub.mapforgeproject.MapsForgeProject;
 import de.fub.mapforgeproject.xml.MapsForge;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.IOException;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
@@ -37,7 +37,7 @@ public class AggregatorVisualPanel3 extends javax.swing.JPanel implements Explor
         DataObject dataObject = Utilities.actionsGlobalContext().lookup(DataObject.class);
         if (dataObject != null) {
             FileObject primaryFile = dataObject.getPrimaryFile();
-            Project project = AggregateUtils.findProject(primaryFile);
+            Project project = AggregatorUtils.findProject(primaryFile);
             if (project instanceof MapsForgeProject) {
                 MapsForgeProject mapsForgeProject = (MapsForgeProject) project;
                 try {

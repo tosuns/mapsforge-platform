@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Serdar
  */
-@XmlRootElement(name = "process")
+@XmlRootElement(name = "process", namespace = "http://inf.fu-berlin.de/mapsforge/aggregation/schema")
 @XmlType(name = "process")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class ProcessDescriptor {

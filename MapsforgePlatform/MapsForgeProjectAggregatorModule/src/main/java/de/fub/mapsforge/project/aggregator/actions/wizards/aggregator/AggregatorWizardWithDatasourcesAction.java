@@ -10,7 +10,7 @@ import de.fub.mapsforge.project.MapsForgeAggregationBuilderNodeFactory;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -154,7 +154,7 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
 
     private DataObject getAggregatorFolder() {
         if (!datasources.isEmpty()) {
-            Project project = AggregateUtils.findProject(datasources.iterator().next().getPrimaryFile());
+            Project project = AggregatorUtils.findProject(datasources.iterator().next().getPrimaryFile());
             if (project instanceof MapsForgeProject) {
                 try {
                     MapsForgeProject mapsForgeProject = (MapsForgeProject) project;

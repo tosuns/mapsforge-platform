@@ -8,6 +8,7 @@ import de.fub.mapsforge.project.detector.factories.DataSetNodeFactory;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
+import javax.swing.Action;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.NbBundle;
@@ -43,5 +44,10 @@ public class InferenceDataSetNode extends AbstractNode {
     @Override
     public Image getOpenedIcon(int type) {
         return getIcon(type);
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        return new Action[0];
     }
 }

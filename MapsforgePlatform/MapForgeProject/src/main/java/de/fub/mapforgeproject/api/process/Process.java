@@ -4,7 +4,6 @@
  */
 package de.fub.mapforgeproject.api.process;
 
-import de.fub.mapforgeproject.api.process.Process;
 import java.awt.datatransfer.DataFlavor;
 
 /**

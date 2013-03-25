@@ -57,11 +57,9 @@
             <Component class="org.openide.explorer.view.OutlineView" name="outlineView1">
               <Properties>
                 <Property name="propertyColumns" type="[Ljava.lang.String;" editor="org.netbeans.beaninfo.editors.StringArrayEditor">
-                  <StringArray count="4">
+                  <StringArray count="2">
                     <StringItem index="0" value="visible"/>
                     <StringItem index="1" value="V"/>
-                    <StringItem index="2" value="selected"/>
-                    <StringItem index="3" value="S"/>
                   </StringArray>
                 </Property>
                 <Property name="quickSearchAllowed" type="boolean" value="false"/>

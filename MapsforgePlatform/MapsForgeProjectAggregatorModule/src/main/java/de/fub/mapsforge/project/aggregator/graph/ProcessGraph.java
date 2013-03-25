@@ -16,7 +16,10 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeListener;
@@ -47,12 +50,13 @@ import org.openide.util.Exceptions;
  */
 public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, String> {
 
+    private static long edgeCount = 0;
     private LayerWidget backgroundLayer = null;
     private LayerWidget mainLayer = null;
     private LayerWidget connectionLayer = null;
     private LayerWidget interactionLayer = null;
     private final ChangeSupport pcs = new ChangeSupport(this);
-    private static long edgeCount = 0;
+    private final HashMap<String, Integer> javaTypeCounterMap = new HashMap<String, Integer>();
 
     public ProcessGraph() {
         getActions().addAction(ActionFactory.createZoomAction(1.5, true));
@@ -81,6 +85,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     }
 
     public void clearGraph() {
+        javaTypeCounterMap.clear();
         Collection<AbstractAggregationProcess<?, ?>> nodes = getNodes();
         ArrayList<AbstractAggregationProcess<?, ?>> list = new ArrayList<AbstractAggregationProcess<?, ?>>(nodes);
         for (AbstractAggregationProcess<?, ?> process : list) {
@@ -95,8 +100,22 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         validate();
     }
 
+    private Integer getTypeCounter(AbstractAggregationProcess<?, ?> process) {
+        if (!javaTypeCounterMap.containsKey(process.getDescriptor().getJavaType())) {
+            javaTypeCounterMap.put(process.getDescriptor().getJavaType(), new Integer(1));
+        }
+        return javaTypeCounterMap.get(process.getDescriptor().getJavaType());
+    }
+
+    private void updateTypeCounter(AbstractAggregationProcess<?, ?> process) {
+        Integer typeCounter = getTypeCounter(process);
+        javaTypeCounterMap.put(process.getDescriptor().getJavaType(), ++typeCounter);
+        Logger.getLogger(ProcessGraph.class.getName()).log(Level.INFO, MessageFormat.format("{0} count: {1}", process.getDescriptor().getJavaType(), typeCounter));
+    }
+
     @Override
     protected Widget attachNodeWidget(AbstractAggregationProcess<?, ?> process) {
+        updateAggregatorPipeline();
         ProcessWidget processWidget = new ProcessWidget(this, process);
         processWidget.setPreferredLocation(new Point(0, 0));
         Widget widget = new Widget(getScene());
@@ -485,13 +504,18 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
             try {
                 Object transferData = transferable.getTransferData(AbstractAggregationProcess.PROCESS_FLAVOR);
                 if (transferData instanceof de.fub.mapforgeproject.api.process.Process) {
-                    Widget processWidget = addNode((AbstractAggregationProcess) transferData.getClass().newInstance());
+                    AbstractAggregationProcess process = (AbstractAggregationProcess) transferData.getClass().newInstance();
+                    Integer typeCounter = getTypeCounter(process);
+                    process.getDescriptor().setDisplayName(MessageFormat.format("{0} ({1})", process.getDescriptor().getDisplayName(), typeCounter));
+
+                    Widget processWidget = addNode(process);
                     Dimension preferredSize = processWidget.getPreferredSize();
                     Point point1 = new Point(point.x - preferredSize.width / 2, point.y - preferredSize.height / 2);
                     Point convertLocalToScene = widget.convertLocalToScene(point1);
                     processWidget.setPreferredLocation(convertLocalToScene);
                     validate();
                     repaint();
+                    updateTypeCounter(process);
                 }
             } catch (InstantiationException ex) {
                 Exceptions.printStackTrace(ex);

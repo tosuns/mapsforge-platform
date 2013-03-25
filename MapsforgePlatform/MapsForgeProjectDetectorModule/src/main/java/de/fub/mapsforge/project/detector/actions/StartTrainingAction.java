@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.cookies.OpenCookie;
 import org.openide.util.NbBundle.Messages;
@@ -20,7 +21,11 @@ import org.openide.util.RequestProcessor;
         id = "de.fub.mapsforge.project.detector.actions.StartTrainingAction")
 @ActionRegistration(
         displayName = "#CTL_StartTrainingAction")
-@ActionReference(path = "Projects/org-mapsforge-project/Detector/Start/Actions", position = 0)
+@ActionReferences({
+    @ActionReference(path = "Projects/org-mapsforge-project/Detector/Start/Actions", position = 0),
+    @ActionReference(
+            path = "Projects/org-mapsforge-project/Detector/Toolbar/Start/Popup/Actions", position = 100)
+})
 @Messages("CTL_StartTrainingAction=Training")
 public final class StartTrainingAction implements ActionListener {
 

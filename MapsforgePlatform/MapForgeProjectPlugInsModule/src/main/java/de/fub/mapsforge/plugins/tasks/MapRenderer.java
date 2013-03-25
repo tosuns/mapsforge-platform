@@ -5,7 +5,6 @@
 package de.fub.mapsforge.plugins.tasks;
 
 import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
@@ -13,20 +12,23 @@ import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
 import javax.swing.JComponent;
 import javax.xml.bind.JAXBException;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -75,9 +77,10 @@ public class MapRenderer extends Task {
                     if (pathString != null) {
                         File aggregatorFile = new File(pathString);
                         if (aggregatorFile.exists()) {
-                            aggregatorFileObject = FileUtil.toFileObject(aggregatorFile);
+                            aggregatorFileObject = FileUtil.toFileObject(createAggregatorCopy(aggregatorFile));
+
                             if (aggregatorFileObject != null) {
-                                return AggregateUtils.createAggregator(aggregatorFileObject);
+                                return AggregatorUtils.createAggregator(aggregatorFileObject);
                             }
                         }
                     }
@@ -85,6 +88,36 @@ public class MapRenderer extends Task {
             }
         }
         return null;
+    }
+
+    private File createAggregatorCopy(File fileObject) {
+        File copyFileObject = null;
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        try {
+            copyFileObject = File.createTempFile("tmp", ".agg");
+            inputStream = new FileInputStream(fileObject);
+            outputStream = new FileOutputStream(copyFileObject);
+            FileUtil.copy(inputStream, outputStream);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        return copyFileObject;
     }
 
     @Override
@@ -99,29 +132,19 @@ public class MapRenderer extends Task {
                     List<Source> sourceList = aggregator.getSourceList();
                     sourceList.clear();
 
-                    FileObject createTempFolder = createTempFolder(entry.getKey());
+                    FileObject createTempFolder = createTempFolder(URLEncoder.encode(MessageFormat.format("Transportation: {0}", entry.getKey()), "UTF-8"));
 
                     for (Gpx gpx : entry.getValue()) {
                         File tmpFile = createTmpfile(createTempFolder);
                         try {
-                            AggregateUtils.saveGpxToFile(tmpFile, gpx);
+                            AggregatorUtils.saveGpxToFile(tmpFile, gpx);
                             sourceList.add(new Source(tmpFile.getAbsolutePath()));
                         } catch (JAXBException ex) {
                             Exceptions.printStackTrace(ex);
                         }
                     }
 
-                    aggregator.notifyModified();
-                    ArrayList<AbstractAggregationProcess<?, ?>> processes = new ArrayList<AbstractAggregationProcess<?, ?>>(aggregator.getPipeline().getProcesses());
-                    aggregator.start(processes);
-
-                    if (isOpenAfterFinished()) {
-                        DataObject dataObject = DataObject.find(aggregatorFileObject);
-                        OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
-                        if (openCookie != null) {
-                            openCookie.open();
-                        }
-                    }
+                    new OpenEditorAction(aggregator).run();
 
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
@@ -133,7 +156,9 @@ public class MapRenderer extends Task {
     }
 
     private File createTmpfile(FileObject parentFolder) throws IOException {
-        return File.createTempFile("tmp", ".gpx", FileUtil.toFile(parentFolder));
+        File tmpFile = File.createTempFile("tmp", ".gpx", FileUtil.toFile(parentFolder));
+        tmpFile.deleteOnExit();
+        return tmpFile;
     }
 
     private FileObject createTempFolder(String name) throws IOException {
@@ -142,7 +167,11 @@ public class MapRenderer extends Task {
             File tmpdirFile = new File(tmpdir);
             if (tmpdirFile.exists()) {
                 FileObject fileObject = FileUtil.toFileObject(tmpdirFile);
-                return fileObject.createFolder(name + String.valueOf(new Random().nextLong()));
+                if (fileObject.getFileObject(name) == null) {
+                    return fileObject.createFolder(name);
+                } else {
+                    return fileObject.getFileObject(name);
+                }
             }
         }
         throw new FileNotFoundException("Couldn't find temp dir!"); // NO18N
@@ -167,5 +196,33 @@ public class MapRenderer extends Task {
             return getProcessDescriptor().getDescription();
         }
         return Bundle.CLT_MapRenderer_Description();
+    }
+
+    private class OpenEditorAction implements Runnable {
+
+        private final Aggregator aggregator;
+
+        public OpenEditorAction(Aggregator aggregator) {
+            this.aggregator = aggregator;
+        }
+
+        @Override
+        public void run() {
+            if (isOpenAfterFinished()) {
+                try {
+                    aggregator.notifyModified();
+                    aggregator.start();
+                    DataObject dataObject = DataObject.find(aggregatorFileObject);
+                    dataObject.getNodeDelegate();
+                    OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
+                    if (openCookie != null) {
+                        openCookie.open();
+
+                    }
+                } catch (DataObjectNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }
 }

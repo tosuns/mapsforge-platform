@@ -9,7 +9,7 @@ import de.fub.mapforgeproject.xml.MapsForge;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,7 +59,7 @@ public final class DatasourceWizardAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            Project project = AggregateUtils.findProject(context.getDataObject().getPrimaryFile());
+            Project project = AggregatorUtils.findProject(context.getDataObject().getPrimaryFile());
             if (project instanceof MapsForgeProject) {
                 MapsForgeProject mapsForgeProject = (MapsForgeProject) project;
                 MapsForge projectData = mapsForgeProject.getProjectData();

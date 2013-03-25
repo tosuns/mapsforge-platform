@@ -12,8 +12,6 @@ import javax.swing.JTable;
 import org.netbeans.swing.outline.DefaultOutlineCellRenderer;
 import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.Node.Property;
-import org.openide.nodes.PropertySupport;
-import org.openide.util.Exceptions;
 
 /**
  *

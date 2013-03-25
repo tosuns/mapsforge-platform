@@ -51,7 +51,8 @@ public class DetectorUtils {
     public static <T> T createInstance(Class<T> clazz, String className, Object... arguments) {
         T instance = null;
         try {
-            Class<?> forName = Class.forName(className);
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            Class<?> forName = classLoader.loadClass(className);
             Class<T> cl = (Class<T>) forName;
 
             if (arguments == null || arguments.length == 0) {
@@ -79,10 +80,31 @@ public class DetectorUtils {
         } catch (ClassNotFoundException ex) {
             Lookup.Result<T> lookupResult = Lookup.getDefault().lookupResult(clazz);
             for (T task : lookupResult.allInstances()) {
+                Class<T> cl = (Class<T>) task.getClass();
                 if (task.getClass().getName().equals(className)) {
                     try {
-                        instance = (T) task.getClass().newInstance();
-                        break;
+                        if (arguments == null || arguments.length == 0) {
+                            instance = cl.newInstance();
+                        } else {
+                            ArrayList<Class<?>> argumentTypes = new ArrayList<Class<?>>();
+                            for (Object object : arguments) {
+                                argumentTypes.add(object.getClass());
+                            }
+                            Constructor<T> constructor = null;
+
+                            while (cl != null && instance == null) {
+                                try {
+                                    constructor = cl.getConstructor(argumentTypes.toArray(new Class[argumentTypes.size()]));
+                                    instance = constructor.newInstance(arguments);
+                                } catch (NoSuchMethodException ex1) {
+                                    cl = (Class<T>) cl.getSuperclass();
+                                } catch (IllegalArgumentException ex1) {
+                                    Exceptions.printStackTrace(ex1);
+                                } catch (InvocationTargetException ex1) {
+                                    Exceptions.printStackTrace(ex1);
+                                }
+                            }
+                        }
                     } catch (InstantiationException ex1) {
                         Exceptions.printStackTrace(ex1);
                     } catch (IllegalAccessException ex1) {
@@ -304,8 +326,7 @@ public class DetectorUtils {
                             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
                             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
 
-                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING,
-                                    "UTF-8"); //NOI18N
+                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
                             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
                             marshaller.marshal(descriptor, file);

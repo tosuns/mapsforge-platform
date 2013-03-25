@@ -38,8 +38,8 @@ import org.openide.util.NbBundle;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_Trainings_Process_Running=Running Training",
-    "CLT_Inference_Process_Running=Running Clustering"
+    "CLT_Trainings_Process_Running=Training",
+    "CLT_Inference_Process_Running=Clustering"
 })
 class DetectorRunController {
 
@@ -151,6 +151,7 @@ class DetectorRunController {
                 inferenceModelInputDataSet = new InferenceModelInputDataSet();
             }
 
+            inferenceModelInputDataSet.getInferenceSet().clear();
             inferenceModelInputDataSet.getInferenceSet().addAll(inferenceSet);
 
             detector.getInferenceModel().setInput(inferenceModelInputDataSet);
@@ -170,6 +171,7 @@ class DetectorRunController {
                     for (Task task : detector.getPostProcessorPipeline().getProcesses()) {
                         // maybe here is a concurrent execution possible
                         task.setInput(resultDataset);
+                        task.run();
                     }
                 }
             }

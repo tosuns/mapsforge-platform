@@ -16,13 +16,13 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
-@MultiViewElement.Registration(
-        displayName = "#LBL_Detector_VISUAL",
-        iconBase = "de/fub/mapsforge/project/detector/filetype/detector.png",
-        mimeType = "text/detector+xml",
-        persistenceType = TopComponent.PERSISTENCE_NEVER,
-        preferredID = "DetectorVisual",
-        position = 2000)
+//@MultiViewElement.Registration(
+//        displayName = "#LBL_Detector_VISUAL",
+//        iconBase = "de/fub/mapsforge/project/detector/filetype/detector.png",
+//        mimeType = "text/detector+xml",
+//        persistenceType = TopComponent.PERSISTENCE_NEVER,
+//        preferredID = "DetectorVisual",
+//        position = 2000)
 @Messages("LBL_Detector_VISUAL=Visual")
 public final class DetectorVisualElement extends JPanel implements MultiViewElement {
 

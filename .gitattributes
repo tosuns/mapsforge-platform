@@ -378,6 +378,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforg
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/graph/ProcessView.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/graph/ProcessWidget.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/AbstractAggregationProcess.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/AbstractXmlAggregationProcess.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/AggregationProcessNode.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/AggregatorProcessPipeline.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/processes/AggregationProcess.java -text
@@ -422,7 +423,9 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon32.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layersIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layerview.png -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/zoomToMap.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/layoutIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/layer.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/AggregationProcess.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/CleanProcess.xml -text
@@ -437,6 +440,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/statisticsIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/xml/aggregatorDescriptor.xsd -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/ui/component/Bundle.properties -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/test/java/de/fub/mapsforge/project/aggregator/xml/AggregatorDescriptorSchemaGeneratorTest.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/test/java/de/fub/mapsforge/project/aggregator/xml/AggregatorDescriptorTest.java -text
 MapsforgePlatform/MapsForgeProjectDataSourceModule/pom.xml -text
@@ -499,6 +503,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceModelListener.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceModelResultDataSet.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/J48InferenceModel.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/actions/ToolbarDetectorStartAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgAcceleratopmFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgBearingChangeFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgPrecisionFeatureProcess.java -text
@@ -605,6 +610,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/LimitWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinDistanceWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinTimeDiffWaypointFilterProcess.xml -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/RemoveUnusableTrkSegFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/filterIcon16.png -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/xmls/DetectorTestTemplate.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/xsds/detectorDescriptor.xsd -text
@@ -658,9 +664,13 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/WeakL
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/awt/ColorUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/NodeFactories/MutableChildFactory.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/BeanUtil.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptor.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptorUtil.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/icons/IconRegister.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/installer/UtilInstaller.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/CustomAbstractnode.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/NodeProperty.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/ProcessProperty.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/editors/BigDecimalPropertyEditor.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/profiling/ProfilungUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/BigDecimalEditor.java -text
@@ -677,7 +687,9 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/generator/Sch
 MapsforgePlatform/UtilsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/Bundle.properties -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorHintIcon.png -text
+MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/playHintIcon.png -text
+MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/toolbarProcessRunIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/layer.xml -text
 MapsforgePlatform/UtilsModule/src/test/java/de/fub/utilsmodule/text/StringUtilsTest.java -text
 MapsforgePlatform/WekaLibModule/pom.xml -text

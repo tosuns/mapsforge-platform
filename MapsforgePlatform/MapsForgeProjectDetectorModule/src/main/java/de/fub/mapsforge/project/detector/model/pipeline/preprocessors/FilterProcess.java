@@ -4,12 +4,12 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
-import de.fub.mapsforge.project.detector.factories.nodes.ProcessProperty;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
+import de.fub.utilsmodule.node.property.ProcessProperty;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Color;
 import java.awt.Graphics;

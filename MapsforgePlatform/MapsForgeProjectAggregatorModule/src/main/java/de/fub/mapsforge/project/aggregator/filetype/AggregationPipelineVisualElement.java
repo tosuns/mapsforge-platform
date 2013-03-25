@@ -8,7 +8,7 @@ import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.mapsforge.project.utils.AggregateUtils;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -25,10 +25,12 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
@@ -46,6 +48,8 @@ import org.openide.windows.TopComponent;
 @Messages("LBL_AggregationBuilder_PIPELINE=Pipeline")
 public final class AggregationPipelineVisualElement extends JPanel implements MultiViewElement, PropertyChangeListener {
 
+    @StaticResource
+    private static final String LAYOUT_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/graph/layoutIcon.png";
     private static final Logger LOG = Logger.getLogger(AggregationPipelineVisualElement.class.getName());
     private static final long serialVersionUID = 1L;
     private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
@@ -68,6 +72,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
         aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationPipelineVisualElement.this, aggregator));
         modelSynchronizerClient = aggregator.create(graphUpdater);
         updateGraph();
+        toolbar.add(new JToolBar.Separator());
         for (Action action : getActions()) {
             toolbar.add(new JButton(action));
         }
@@ -75,7 +80,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
 
     private void initLookup() {
         lookup = new AbstractLookup(content);
-        content.add(AggregateUtils.getProcessPalette());
+        content.add(AggregatorUtils.getProcessPalette());
     }
 
     private void updateGraph() {
@@ -120,7 +125,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
 
     @Override
     public Action[] getActions() {
-        return new Action[]{new AbstractAction("Layout") {
+        return new Action[]{new AbstractAction(null, ImageUtilities.loadImageIcon(LAYOUT_BUTTON_ICON_PATH, true)) {
                 private static final long serialVersionUID = 1L;
 
                 @Override
@@ -168,6 +173,9 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
+        if (this.callback != null && aggregator != null) {
+            this.callback.getTopComponent().setDisplayName(aggregator.getDescriptor().getName());
+        }
     }
 
     @Override

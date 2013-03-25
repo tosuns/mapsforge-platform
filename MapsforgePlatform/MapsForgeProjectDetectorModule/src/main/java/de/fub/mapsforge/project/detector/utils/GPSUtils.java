@@ -66,6 +66,7 @@ public class GPSUtils {
             gpxWpt.setLat(BigDecimal.valueOf(lat));
             gpxWpt.setLon(BigDecimal.valueOf(lon));
             gpxWpt.setTime(timestamp);
+            trkseg.getTrkpt().add(gpxWpt);
         }
 
         return trkseg;

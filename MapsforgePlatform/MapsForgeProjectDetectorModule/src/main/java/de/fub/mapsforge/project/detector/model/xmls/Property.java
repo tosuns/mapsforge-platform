@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.xmls;
 
+import de.fub.utilsmodule.beans.PropertyDescriptor;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "property")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Property extends Descriptor {
+public class Property extends Descriptor implements PropertyDescriptor {
 
     @XmlAttribute(name = "value", required = true)
     private String value;
@@ -32,10 +33,12 @@ public class Property extends Descriptor {
         this.id = id;
     }
 
+    @Override
     public String getValue() {
         return value;
     }
 
+    @Override
     public void setValue(String value) {
         this.value = value;
     }

@@ -252,7 +252,7 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
                             }
                             Point convertLocalToScene = graph.getScene().convertLocalToScene(new Point(horizontalOffset, verticalOffset));
                             widget.setPreferredLocation(convertLocalToScene);
-                            LOG.info(widget.getLocation().toString());
+//                            LOG.info(widget.getLocation().toString());
                             graph.getScene().validate();
                             horizontalOffset += bounds.width + bounds.width / 2 + BOUNDS_MARGIN;
                         }

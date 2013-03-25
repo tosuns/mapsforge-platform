@@ -3,7 +3,11 @@
     xmlns="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
     targetNamespace="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
     version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
     <xs:element name="aggregator" type="aggregatorDescriptor"/>
+
+    <xs:element name="process" type="process"/>
+
     <xs:complexType name="aggregatorDescriptor">
         <xs:sequence>
             <xs:element minOccurs="0" name="datasources">

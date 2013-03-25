@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.aggregator.xml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -23,7 +24,7 @@ public class AggregatorDescriptor {
 
     private String name;
     private String description;
-    private List<Source> datasources = new ArrayList<Source>();
+    private List<Source> datasources = Collections.synchronizedList(new ArrayList<Source>());
     private ProcessDescriptorList pipeline = new ProcessDescriptorList();
     private String aggregationStrategy;
     private String tileCachingStrategy;
@@ -71,7 +72,7 @@ public class AggregatorDescriptor {
     }
 
     public void setDatasources(List<Source> sources) {
-        this.datasources = sources;
+        datasources = sources;
     }
 
     @XmlElement(name = "properties")

@@ -67,7 +67,9 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
     @Override
     protected void handle() {
-
+        getInferenceModel().getResult().clear();
+        resultMap.clear();
+        instanceToTrackSegmentMap.clear();
         Classifier classifier = getInferenceModel().getClassifier();
         HashSet<TrackSegment> inferenceDataSet = getInferenceDataSet();
         ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
@@ -76,17 +78,18 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
             Set<String> keySet = getInferenceModel().getInput().getTrainingsSet().keySet();
             setClassesToView(keySet);
 
-            Instances unlabeldInstances = new Instances("Unlabeld Tracks", attributeList, 0); //NO18N
-            unlabeldInstances.setClassIndex(0);
+            Instances unlabeledInstances = new Instances("Unlabeld Tracks", attributeList, 0); //NO18N
+            unlabeledInstances.setClassIndex(0);
 
+            ArrayList<TrackSegment> segmentList = new ArrayList<TrackSegment>();
             for (TrackSegment segment : inferenceDataSet) {
                 Instance instance = getInstance(segment);
-                unlabeldInstances.add(instance);
-                instanceToTrackSegmentMap.put(instance, segment);
+                unlabeledInstances.add(instance);
+                segmentList.add(segment);
             }
 
             // create copy
-            Instances labeledInstances = new Instances(unlabeldInstances);
+            Instances labeledInstances = new Instances(unlabeledInstances);
 
             for (int index = 0; index < labeledInstances.numInstances(); index++) {
                 try {
@@ -97,7 +100,11 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
                     instance.setClassValue(classifyed);
 
                     // get class label
-                    String value = unlabeldInstances.classAttribute().value((int) classifyed);
+                    String value = unlabeledInstances.classAttribute().value((int) classifyed);
+
+                    if (index < segmentList.size()) {
+                        instanceToTrackSegmentMap.put(instance, segmentList.get(index));
+                    }
 
                     // put label and instance to result map
                     put(value, instance);

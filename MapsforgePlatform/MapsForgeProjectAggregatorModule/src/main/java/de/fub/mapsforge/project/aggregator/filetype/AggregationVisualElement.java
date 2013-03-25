@@ -13,6 +13,7 @@ import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.ui.component.StatisticsPanel;
 import de.fub.mapsforge.project.utils.LayerTableCellRender;
+import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import geofiletypeapi.GeoUtil;
 import java.awt.Dimension;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
@@ -77,7 +79,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
         mimeType = "text/aggregationbuilder+xml",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "AggregationVisualElement",
-        position = 3000)
+        position = 1000)
 @NbBundle.Messages("LBL_AggregationBuilder_VISUAL=Map")
 public class AggregationVisualElement extends javax.swing.JPanel implements MultiViewElement, PropertyChangeListener, ExplorerManager.Provider {
 
@@ -87,9 +89,11 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     @StaticResource
     private static final String LAYERVIEW_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/layerview.png";
     @StaticResource
-    private static final String PROCESS_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png";
-    @StaticResource
     private static final String STATISTICS_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/statisticsIcon.png";
+    @StaticResource
+    private static final String FIT_MAP_TO_SIZE_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/zoomToMap.png";
+    private final JToolBar toolbar = new JToolBar();
+    private final ExplorerManager explorerManager = new ExplorerManager();
     private transient final RequestProcessor requestProcessor = new RequestProcessor();
     private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private transient final ViewUpdater viewUpdater = new ViewUpdater();
@@ -98,12 +102,11 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private transient MultiViewElementCallback callback;
     private transient Aggregator aggregator;
     private transient Image defaulImage;
-    private JToolBar toolbar = new JToolBar();
     private JToggleButton layerViewButton;
-    private ExplorerManager explorerManager = new ExplorerManager();
     private JButton layersButton;
     private JButton processButton;
     private JButton statisticsDataButton;
+    private JButton fitToSizeButton;
     private JPopupMenu layersMenu;
     private JPopupMenu processMenu;
     private JComboBox<TileSource> tileSourceComboBox;
@@ -112,6 +115,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
      * Creates new form AggregationVisualElement
      */
     public AggregationVisualElement(Lookup lkp) {
+
         AggregatorNode node = lkp.lookup(AggregatorNode.class);
         if (node != null) {
             aggregator = node.getLookup().lookup(Aggregator.class);
@@ -131,12 +135,11 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         outlineView1.getOutline().setRowHeight(300);
         outlineView1.getOutline().setRootVisible(false);
         outlineView1.getOutline().setDefaultRenderer(Object.class, new LayerTableCellRender());
-//        outlineView1.getOutline().getColumnModel().getColumn(0).setCellRenderer(new LayerTableCellRender());
         jSplitPane1.setDividerLocation(Integer.MAX_VALUE);
     }
 
     /**
-     * initializes and sets up the deop down menu of the Layer visiblity menu.
+     * initializes and sets up the drop down menu of the Layer visiblity menu.
      */
     private void initPopupMenu() {
         nodeFactory.clear();
@@ -184,7 +187,8 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         "CLT_Show_Hide_Layers=Shows/Hides Layers",
         "CLT_Show_Hide_Layer_View=Shows/Hides Layer View",
         "CLT_Statistics_Button_Tooltip=Displays all available Statistics of this Aggregator.",
-        "CLT_Statistics_Window=Statistics"})
+        "CLT_Statistics_Window=Statistics",
+        "CLT_Fit_Map_To_Size_Tooltip=Zoom the map to the size of the viewport."})
     private void setUpToolbar() {
 
         // set up tilesource combobox
@@ -268,6 +272,20 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 }
             });
             toolbar.add(layerViewButton);
+
+        }
+
+        // set up fit map to size button
+        if (fitToSizeButton == null) {
+            fitToSizeButton = new JButton(ImageUtilities.loadImageIcon(FIT_MAP_TO_SIZE_BUTTON_ICON_PATH, true));
+            fitToSizeButton.setToolTipText(Bundle.CLT_Fit_Map_To_Size_Tooltip());
+            fitToSizeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    componentShowing();
+                }
+            });
+            toolbar.add(fitToSizeButton);
             toolbar.add(new JToolBar.Separator());
         }
 
@@ -275,7 +293,8 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         if (processMenu == null) {
             processMenu = new JPopupMenu();
             initProcessPopupMenu();
-            processButton = DropDownButtonFactory.createDropDownButton(ImageUtilities.loadImageIcon(PROCESS_BUTTON_ICON_PATH, true), processMenu);
+            Image buttonImageIcon = IconRegister.findRegisteredIcon("toolbarProcessRunIcon.png");
+            processButton = DropDownButtonFactory.createDropDownButton(new ImageIcon(buttonImageIcon), processMenu);
             processButton.setToolTipText(Bundle.CLT_Process_Button_Tooltip());
             processButton.addActionListener(new ActionListener() {
                 @Override
@@ -376,26 +395,19 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public void componentShowing() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                List<Source> sourceList = aggregator.getSourceList();
-                if (sourceList != null) {
-                    for (Source source : sourceList) {
-                        String url = source.getUrl();
-                        if (url != null) {
-                            File file = new File(url);
-                            Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
-                            if (boundingBox != null) {
-                                aggComponent.showArea(new DoubleRect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight()));
-                            }
-
-                        }
-
+        List<Source> sourceList = aggregator.getSourceList();
+        if (sourceList != null) {
+            for (Source source : sourceList) {
+                String url = source.getUrl();
+                if (url != null) {
+                    File file = new File(url);
+                    Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
+                    if (boundingBox != null) {
+                        aggComponent.showArea(new DoubleRect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight()));
                     }
                 }
             }
-        });
+        }
     }
 
     @Override
@@ -418,6 +430,9 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
+        if (this.callback != null && aggregator != null) {
+            this.callback.getTopComponent().setDisplayName(aggregator.getDescriptor().getName());
+        }
     }
 
     @Override
@@ -466,7 +481,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            setUpToolbar();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    setUpToolbar();
+                }
+            });
         }
     }
 
