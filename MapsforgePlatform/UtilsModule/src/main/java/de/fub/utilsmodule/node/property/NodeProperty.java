@@ -52,7 +52,11 @@ public class NodeProperty extends PropertySupport.ReadWrite<Object> {
     private static Class getClassOf(PropertyDescriptor property) {
         Class<?> clazz = Object.class;
         try {
-            clazz = Class.forName(property.getJavaType());
+            if (property != null && property.getJavaType() != null) {
+                clazz = Class.forName(property.getJavaType());
+            } else {
+                clazz = Object.class;
+            }
         } catch (ClassNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }

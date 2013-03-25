@@ -8,7 +8,9 @@ import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
+import de.fub.mapsforge.project.detector.model.inference.actions.ToolbarDetectorStartAction;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -60,6 +62,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     private static final long serialVersionUID = 1L;
     private final DetectorDataObject obj;
     private final JToolBar toolbar = new JToolBar();
+    // This tool bar is a proxy toolbar. we need this one for the cases the detector and  its inference model get modified
+    // an the successive re init of the toolbar. we make sure the inference model
+    // tool bar representer will always be at the end of this element toolbar
+    private final JToolBar inferenceModelProxyToolbar = new JToolBar();
     private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private AbstractInferenceModel inferenceModel;
     private Detector detector;
@@ -72,15 +78,14 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     public InferenceModelVisuaElement(Lookup lkp) {
         initComponents();
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
-        addToolbarActions();
         obj = lkp.lookup(DetectorDataObject.class);
         assert obj != null;
-
-        lookup = new ProxyLookup(lkp, Lookups.singleton(contentPanel));
-
         detector = obj.getNodeDelegate().getLookup().lookup(Detector.class);
+        lookup = new ProxyLookup(lkp, Lookups.fixed(detector, contentPanel));
         assert detector != null;
         modelSynchronizerClient = detector.create(InferenceModelVisuaElement.this);
+
+        addToolbarActions();
         reinit();
     }
 
@@ -88,7 +93,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         contentPanel.removeAll();
 
         if (inferenceModel != null && inferenceModel.getToolbarRepresenter() != null) {
-            toolbar.remove(inferenceModel.getToolbarRepresenter());
+            inferenceModelProxyToolbar.remove(inferenceModel.getToolbarRepresenter());
         }
         inferenceModel = detector.getInferenceModel();
 
@@ -115,9 +120,14 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     }
 
     private void addToolbarActions() {
+        inferenceModelProxyToolbar.setFloatable(false);
         toolbar.setFloatable(false);
+        // toolbar seperator
         toolbar.add(new JToolBar.Separator());
-        List<? extends Action> actionsForPath = Utilities.actionsForPath("Mapsforge/Gpx/MapView/Actions");
+
+        // get all register actions from the respective folder
+        List<Action> actionsForPath = new ArrayList<Action>();
+        actionsForPath.addAll(Utilities.actionsForPath("Mapsforge/Gpx/MapView/Actions"));
         for (Action action : actionsForPath) {
             if (action instanceof Presenter.Toolbar) {
                 Presenter.Toolbar presenter = (Presenter.Toolbar) action;
@@ -126,6 +136,9 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
                 toolbar.add(new Toolbar.Separator());
             }
         }
+        toolbar.add(new ToolbarDetectorStartAction(detector).getToolbarPresenter());
+        toolbar.add(new JToolBar.Separator());
+        toolbar.add(inferenceModelProxyToolbar);
     }
 
     /**
@@ -205,7 +218,9 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
-        callback.getTopComponent().setDisplayName(detector.getInferenceModel().getName());
+        if (this.callback != null) {
+            this.callback.getTopComponent().setDisplayName(detector.getInferenceModel().getName());
+        }
     }
 
     @Override

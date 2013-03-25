@@ -12,9 +12,9 @@ import org.openide.util.Exceptions;
 
 /**
  *
- * This abstract class uses the fully qualified class name to search for the xml
- * file to create its ProcessDescriptor. The xml file must have the same simple
- * name as this class.
+ * This abstract class uses the fully qualified class name to search for the
+ * process descrption xml file to create its ProcessDescriptor. The xml file
+ * must have the same simple name as this class.
  *
  * @author Serdar
  */

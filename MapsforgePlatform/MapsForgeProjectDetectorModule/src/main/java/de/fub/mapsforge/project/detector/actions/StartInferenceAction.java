@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.cookies.OpenCookie;
 import org.openide.util.NbBundle.Messages;
@@ -20,7 +21,10 @@ import org.openide.util.RequestProcessor;
         id = "de.fub.mapsforge.project.detector.actions.StartInferenceAction")
 @ActionRegistration(
         displayName = "#CTL_StartInferenceAction")
-@ActionReference(path = "Projects/org-mapsforge-project/Detector/Start/Actions", position = 1000)
+@ActionReferences({
+    @ActionReference(path = "Projects/org-mapsforge-project/Detector/Start/Actions", position = 1000),
+    @ActionReference(path = "Projects/org-mapsforge-project/Detector/Toolbar/Start/Popup/Actions", position = 200)
+})
 @Messages("CTL_StartInferenceAction=Clustering")
 public final class StartInferenceAction implements ActionListener {
 

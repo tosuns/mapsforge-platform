@@ -423,7 +423,9 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon32.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layersIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layerview.png -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/zoomToMap.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/layoutIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/layer.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/AggregationProcess.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/pipeline/processes/CleanProcess.xml -text
@@ -501,6 +503,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceModelListener.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/InferenceModelResultDataSet.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/J48InferenceModel.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/actions/ToolbarDetectorStartAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgAcceleratopmFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgBearingChangeFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgPrecisionFeatureProcess.java -text
@@ -686,6 +689,7 @@ MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/Bundle.prope
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorHintIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/playHintIcon.png -text
+MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/toolbarProcessRunIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/layer.xml -text
 MapsforgePlatform/UtilsModule/src/test/java/de/fub/utilsmodule/text/StringUtilsTest.java -text
 MapsforgePlatform/WekaLibModule/pom.xml -text

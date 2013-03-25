@@ -14,14 +14,15 @@ import de.fub.mapsforge.project.detector.model.xmls.Property;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
@@ -30,7 +31,6 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -77,7 +77,8 @@ public class MapRenderer extends Task {
                     if (pathString != null) {
                         File aggregatorFile = new File(pathString);
                         if (aggregatorFile.exists()) {
-                            aggregatorFileObject = FileUtil.toFileObject(aggregatorFile);
+                            aggregatorFileObject = FileUtil.toFileObject(createAggregatorCopy(aggregatorFile));
+
                             if (aggregatorFileObject != null) {
                                 return AggregatorUtils.createAggregator(aggregatorFileObject);
                             }
@@ -87,6 +88,36 @@ public class MapRenderer extends Task {
             }
         }
         return null;
+    }
+
+    private File createAggregatorCopy(File fileObject) {
+        File copyFileObject = null;
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        try {
+            copyFileObject = File.createTempFile("tmp", ".agg");
+            inputStream = new FileInputStream(fileObject);
+            outputStream = new FileOutputStream(copyFileObject);
+            FileUtil.copy(inputStream, outputStream);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        return copyFileObject;
     }
 
     @Override
