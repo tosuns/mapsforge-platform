@@ -38,8 +38,8 @@
         <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
-            <url>http://localhost:8080/artifactory/libs-release-local/</url>
-        </repository>
+            <url>http://yakumo:8081/artifactory/repo/</url>
+        </repository>   
     </repositories>
 
     <build>
