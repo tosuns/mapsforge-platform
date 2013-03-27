@@ -147,7 +147,7 @@ public class AggregatorDataObject extends MultiDataObject {
         return lookup;
     }
 
-    public synchronized AggregatorDescriptor getAggregator() throws IOException, JAXBException {
+    public synchronized AggregatorDescriptor getAggregatorDescriptor() throws IOException, JAXBException {
         if (aggregator == null) {
             InputStream inputStream = null;
             try {
@@ -295,7 +295,7 @@ public class AggregatorDataObject extends MultiDataObject {
         public void fileChanged(FileEvent fe) {
             try {
                 aggregator = null;
-                getAggregator();
+                getAggregatorDescriptor();
                 cs.fireChange();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

@@ -103,7 +103,7 @@ public class WidgetPropertySheet extends javax.swing.JPanel implements ExplorerM
                 if (e != null
                         && e.getSource().equals(widgetPropertySheet.getSaveButton())
                         && process.getAggregator() != null) {
-                    process.getAggregator().notifyModified();
+                    process.getAggregator().updateSource();
                 }
             }
         }); // NO18N

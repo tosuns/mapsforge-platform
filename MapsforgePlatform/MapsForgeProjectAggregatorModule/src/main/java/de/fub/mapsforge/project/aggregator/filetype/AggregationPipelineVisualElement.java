@@ -11,6 +11,7 @@ import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.event.ActionEvent;
+import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -174,7 +175,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
         if (this.callback != null && aggregator != null) {
-            this.callback.getTopComponent().setDisplayName(aggregator.getDescriptor().getName());
+            this.callback.getTopComponent().setDisplayName(aggregator.getAggregatorDescriptor().getName());
         }
     }
 
@@ -191,11 +192,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
                 public void run() {
                     TopComponent topComponent = callback.getTopComponent();
                     if (callback.isSelectedElement()) {
-                        if (aggregator.getAggregatorState() == Aggregator.AggregatorState.RUNNING) {
-                            topComponent.setIcon(aggregator.getAggregatorState().getImage());
-                        } else {
-                            topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(0));
-                        }
+                        topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
                     }
                 }
             });
@@ -208,7 +205,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
         public void stateChanged(ChangeEvent e) {
             if (aggregator != null) {
                 List<AbstractAggregationProcess<?, ?>> pipelineList = graphPanel1.collectPipeline();
-                List<ProcessDescriptor> list = aggregator.getDescriptor().getPipeline().getList();
+                List<ProcessDescriptor> list = aggregator.getAggregatorDescriptor().getPipeline().getList();
                 list.clear();
                 for (AbstractAggregationProcess<?, ?> process : pipelineList) {
                     if (process.getDescriptor() != null) {
@@ -217,7 +214,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
                         LOG.log(Level.SEVERE, "process {0} doesn''T have a ProcessDescriptor", process.getName());
                     }
                 }
-                aggregator.notifyModified();
+                aggregator.updateSource();
             }
         }
     }

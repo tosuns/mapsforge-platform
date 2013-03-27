@@ -86,6 +86,12 @@
             <type>jar</type>
             <version>RELEASE73</version>
         </dependency>
+        <dependency>
+            <artifactId>org-netbeans-swing-outline</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -103,6 +109,7 @@
                         <publicPackage>de.fub.utilsmodule.NodeFactories</publicPackage>
                         <publicPackage>de.fub.utilsmodule.beans</publicPackage>
                         <publicPackage>de.fub.utilsmodule.color</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.components</publicPackage>
                         <publicPackage>de.fub.utilsmodule.icons</publicPackage>
                         <publicPackage>de.fub.utilsmodule.installer</publicPackage>
                         <publicPackage>de.fub.utilsmodule.node</publicPackage>

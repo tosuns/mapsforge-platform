@@ -131,7 +131,7 @@ public final class AggregatorVisualPanel2 extends JPanel implements ExplorerMana
                 if (dataObject instanceof AggregatorDataObject) {
                     AggregatorDataObject aggregatorDataObject = (AggregatorDataObject) dataObject;
                     try {
-                        AggregatorDescriptor aggregator = aggregatorDataObject.getAggregator();
+                        AggregatorDescriptor aggregator = aggregatorDataObject.getAggregatorDescriptor();
                         String description = aggregator.getDescription();
                         if (description != null) {
                             templateDescription.setText(description);

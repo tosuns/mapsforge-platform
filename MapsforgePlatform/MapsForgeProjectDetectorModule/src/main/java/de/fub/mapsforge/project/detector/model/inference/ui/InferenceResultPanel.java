@@ -5,9 +5,9 @@
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler;
-import de.fub.mapsforge.project.detector.ui.CustomOutlineView;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
+import de.fub.utilsmodule.components.CustomOutlineView;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.List;

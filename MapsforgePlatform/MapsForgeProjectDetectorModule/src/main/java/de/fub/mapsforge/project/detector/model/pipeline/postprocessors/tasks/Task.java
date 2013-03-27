@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.pipeline.postprocessors;
+package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 
 import static de.fub.mapforgeproject.api.process.ProcessState.ERROR;
 import static de.fub.mapforgeproject.api.process.ProcessState.INACTIVE;
@@ -24,7 +24,6 @@ import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -75,7 +74,7 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
     }
 
     @NbBundle.Messages({"CLT_Tesk_Parameter=Parameters"})
-    private static class TaskProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
+    protected static class TaskProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
 
         private final Task taskProcess;
         private Sheet.Set set;
@@ -116,26 +115,21 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
         public Image getIcon(int type) {
             Image image = null;
             Image backgroundIcon = null;
-            Image overlayIcon = null;
             switch (this.taskProcess.getProcessState()) {
                 case ERROR:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconError.png");
-                    overlayIcon = IconRegister.findRegisteredIcon("errorHintIcon.png");
                     break;
                 case INACTIVE:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconNormal.png");
                     break;
                 case RUNNING:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconRun.png");
-                    overlayIcon = IconRegister.findRegisteredIcon("playHintIcon.png");
                     break;
                 default:
                     throw new AssertionError();
             }
 
-            if (backgroundIcon != null && overlayIcon != null) {
-                image = ImageUtilities.mergeImages(backgroundIcon, overlayIcon, 0, 0);
-            } else if (backgroundIcon != null) {
+            if (backgroundIcon != null) {
                 image = backgroundIcon;
             }
 

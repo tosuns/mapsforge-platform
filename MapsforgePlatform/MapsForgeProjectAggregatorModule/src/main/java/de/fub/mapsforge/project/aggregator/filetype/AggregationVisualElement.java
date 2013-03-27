@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Rectangle2D;
+import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -431,7 +432,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
         if (this.callback != null && aggregator != null) {
-            this.callback.getTopComponent().setDisplayName(aggregator.getDescriptor().getName());
+            this.callback.getTopComponent().setDisplayName(aggregator.getAggregatorDescriptor().getName());
         }
     }
 
@@ -448,24 +449,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 public void run() {
                     TopComponent topComponent = callback.getTopComponent();
                     if (callback.isSelectedElement()) {
-                        switch (aggregator.getAggregatorState()) {
-                            case ERROR:
-                            case INACTIVE:
-                                if (defaulImage != null) {
-                                    topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(0));
-                                }
-                                if (processButton != null) {
-                                    processButton.setEnabled(true);
-                                }
-                                break;
-                            case RUNNING:
-                                defaulImage = topComponent.getIcon();
-                                topComponent.setIcon(aggregator.getAggregatorState().getImage());
-                                if (processButton != null) {
-                                    processButton.setEnabled(false);
-                                }
-                                break;
-                        }
+                        topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
                     }
                 }
             });

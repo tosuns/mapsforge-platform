@@ -138,7 +138,7 @@ public final class DatasourceWizardAction implements ActionListener {
                     Source source = new Source();
                     String url = file.getAbsolutePath().replaceAll("\\\\", "/");
                     source.setUrl(url);
-                    List<Source> datasources = context.getDescriptor().getDatasources();
+                    List<Source> datasources = context.getAggregatorDescriptor().getDatasources();
                     if (!datasources.contains(source)) {
                         datasources.add(source);
                     }

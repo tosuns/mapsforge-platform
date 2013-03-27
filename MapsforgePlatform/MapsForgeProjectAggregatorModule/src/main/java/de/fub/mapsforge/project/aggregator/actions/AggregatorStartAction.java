@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.aggregator.actions;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapsforge.project.models.Aggregator.AggregatorState;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -22,22 +23,22 @@ import org.openide.util.actions.Presenter;
 
 @ActionID(
         category = "Aggregator",
-        id = "de.fub.mapsforge.project.aggregator.actions.RunAction")
+        id = "de.fub.mapsforge.project.aggregator.actions.AggregatorStartAction")
 @ActionRegistration(
         displayName = "#CTL_RunAction",
         lazy = false)
 @ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 250, separatorAfter = 275)
-@Messages("CTL_RunAction=Run")
-public final class RunAction extends AbstractAction implements Presenter.Popup {
+@Messages("CTL_RunAction=Start")
+public final class AggregatorStartAction extends AbstractAction implements Presenter.Popup {
 
     private static final long serialVersionUID = 1L;
     private final Lookup context;
 
-    public RunAction() {
+    public AggregatorStartAction() {
         this(Utilities.actionsGlobalContext());
     }
 
-    public RunAction(Lookup lookup) {
+    public AggregatorStartAction(Lookup lookup) {
         this.context = lookup;
     }
 
@@ -50,7 +51,9 @@ public final class RunAction extends AbstractAction implements Presenter.Popup {
     public JMenuItem getPopupPresenter() {
         Aggregator aggregator = context.lookup(Aggregator.class);
         JMenu menu = new JMenu(Bundle.CTL_RunAction());
-        if (aggregator != null && !aggregator.getSourceList().isEmpty()) {
+        if (aggregator != null
+                && !aggregator.getSourceList().isEmpty()
+                && aggregator.getAggregatorState() != AggregatorState.ERROR_NOT_EXECUTABLE) {
             AggregatorProcessPipeline pipeline = aggregator.getPipeline();
             DelegateAction delegateAction = null;
             for (int i = 0; i < pipeline.size(); i++) {

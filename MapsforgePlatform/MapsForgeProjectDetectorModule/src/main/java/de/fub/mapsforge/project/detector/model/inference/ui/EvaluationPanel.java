@@ -6,7 +6,7 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.EvaluationDetailPanel;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
-import de.fub.mapsforge.project.detector.ui.CustomOutlineView;
+import de.fub.utilsmodule.components.CustomOutlineView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;

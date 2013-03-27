@@ -331,12 +331,13 @@ MapsforgePlatform/MapViewer/src/main/resources/de/fub/mapviewer/Bundle.propertie
 MapsforgePlatform/MapViewer/src/main/resources/de/fub/mapviewer/ui/Bundle.properties -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/nb-configuration.xml -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/pom.xml -text
-MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/MapsForgeAggregationBuilderNodeFactory.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/MapsForgeAggregatorHelper.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/MapsForgeAggregatorNodeFactory.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/AggregatorStartAction.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/DelegateAction.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/NewAggregatorAction.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/NewAggregatorWithDatasourcesAction.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/RemoveSourceAction.java -text
-MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/RunAction.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/wizards/aggregator/AggregatorVisualPanel1.form -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/wizards/aggregator/AggregatorVisualPanel1.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/actions/wizards/aggregator/AggregatorVisualPanel2.form -text
@@ -477,7 +478,6 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/PostProcessorsNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/PreProcessorsNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/ProcessDescriptionNode.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/TaskNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/datasets/DataSetFolderNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/datasets/DataSetNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/factories/nodes/datasets/InferenceDataSetNode.java -text
@@ -537,7 +537,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/ProcessSelectionComponent.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/actions/SnapShotExporterDelegateAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/PostProcessorPipeline.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/Task.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/Task.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/FilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/PreProcessorPipeline.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/LimitWaypointFilterProcess.java -text
@@ -559,7 +559,6 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Properties.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Property.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/TrainingsSet.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/CustomListView.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/InferenceModelComponent.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/InferenceModelComponent.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/ListComponent.form -text
@@ -666,6 +665,7 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/NodeFactories/Mut
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/BeanUtil.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptor.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptorUtil.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/components/CustomListView.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/icons/IconRegister.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/installer/UtilInstaller.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/CustomAbstractnode.java -text

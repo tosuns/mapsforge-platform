@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -36,6 +37,8 @@ import org.netbeans.spi.palette.PaletteActions;
 import org.netbeans.spi.palette.PaletteController;
 import org.netbeans.spi.palette.PaletteFactory;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
@@ -58,6 +61,7 @@ public class AggregatorUtils {
     @StaticResource
     public static final String ICON_PATH_ERROR = "de/fub/mapsforge/project/aggregator/aggregatorIconError.png";
     private static PaletteController palette;
+    private static FileSystem inMemoryFileSystem;
 
     public static PaletteController getProcessPalette() {
         if (palette == null) {
@@ -197,6 +201,44 @@ public class AggregatorUtils {
         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(new ObjectFactory().createGpx(content), destFile);
+    }
+
+    public static AggregatorDataObject createInMemoryTemplate(AggregatorDataObject dataObject) throws IOException {
+        assert dataObject != null;
+        AggregatorDataObject template = null;
+        FileObject primaryFile = dataObject.getPrimaryFile();
+        OutputStream outputStream = getFilesystem().getRoot().createAndOpen(primaryFile.getNameExt());
+        InputStream inputStream = primaryFile.getInputStream();
+        try {
+            FileUtil.copy(inputStream, outputStream);
+            FileObject templateFileObject = getFilesystem().getRoot().getFileObject(primaryFile.getNameExt());
+            if (templateFileObject != null) {
+                DataObject templateDataObject = DataObject.find(templateFileObject);
+                if (templateDataObject instanceof AggregatorDataObject) {
+                    template = (AggregatorDataObject) templateDataObject;
+                    Aggregator templateAggregator = template.getNodeDelegate().getLookup().lookup(Aggregator.class);
+                    if (templateAggregator != null) {
+                        templateAggregator.getSourceList().clear();
+                        template.save();
+                    }
+                }
+            }
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        }
+        return template;
+    }
+
+    private static FileSystem getFilesystem() {
+        if (inMemoryFileSystem == null) {
+            inMemoryFileSystem = FileUtil.createMemoryFileSystem();
+        }
+        return inMemoryFileSystem;
     }
 
     private static class PaletteDragAndDropHandler extends DragAndDropHandler {

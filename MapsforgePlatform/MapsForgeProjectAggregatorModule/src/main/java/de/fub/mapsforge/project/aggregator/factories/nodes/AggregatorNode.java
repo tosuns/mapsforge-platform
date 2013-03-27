@@ -16,9 +16,9 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.property.ProcessProperty;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
-import java.awt.Color;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,11 +32,13 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.loaders.DataNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.PropertySupport;
 import org.openide.nodes.PropertySupport.ReadOnly;
 import org.openide.nodes.Sheet;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
@@ -50,6 +52,8 @@ import org.openide.util.lookup.ProxyLookup;
 @NbBundle.Messages({"CLT_Progress_name=Pipeline Process", "# {0} - current phase", "CLT_Progress_Phase=Phase {0}"})
 public class AggregatorNode extends DataNode implements PropertyChangeListener, ChangeListener {
 
+    @StaticResource
+    private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png";
     protected static final String TAB_NAME = "tabName";
     private HashMap<String, Sheet.Set> setMap = new HashMap<String, Sheet.Set>();
     private Sheet sheet;
@@ -58,16 +62,16 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
     public AggregatorNode(Aggregator aggregator) {
         super(aggregator.getDataObject(), Children.create(new AggregatorSubFolderFactory(aggregator), true), new ProxyLookup(Lookups.fixed(aggregator), aggregator.getDataObject().getLookup()));
-        aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregatorNode.this, aggregator));
-        sheet = Sheet.createDefault();
         this.aggregator = aggregator;
-        modelSynchronizerClient = aggregator.create(AggregatorNode.this);
+        this.aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregatorNode.this, aggregator));
+        sheet = Sheet.createDefault();
+        modelSynchronizerClient = this.aggregator.create(AggregatorNode.this);
     }
 
     @Override
     public String getDisplayName() {
         if (aggregator != null) {
-            return aggregator.getDescriptor().getName();
+            return aggregator.getAggregatorDescriptor().getName();
         }
         return super.getDisplayName();
     }
@@ -75,7 +79,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
     @Override
     public String getShortDescription() {
         if (aggregator != null) {
-            return aggregator.getDescriptor().getDescription();
+            return aggregator.getAggregatorDescriptor().getDescription();
         }
         return super.getShortDescription();
     }
@@ -83,7 +87,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
     @Override
     protected Sheet createSheet() {
         if (aggregator != null) {
-            final AggregatorDescriptor descriptor = aggregator.getDescriptor();
+            final AggregatorDescriptor descriptor = aggregator.getAggregatorDescriptor();
 
             if (descriptor != null) {
                 Sheet.Set createProperties = createProperties(descriptor);
@@ -132,137 +136,23 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         set.setName(propertySet.getName() + id);
         set.setDisplayName(propertySet.getName());
         set.setShortDescription(propertySet.getDescription());
-        set.setValue(TAB_NAME, MessageFormat.format("{0} ({1})", tabName, id));
+        set.setValue(TAB_NAME, MessageFormat.format("{0}", tabName, id));
 
         for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-            Property<?> prop = new ProcessProperty(modelSynchronizerClient, property);
+            Property<?> prop = new ProcessProperty(modelSynchronizerClient, property) {
+                @Override
+                public boolean canRead() {
+                    return super.canRead(); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public boolean canWrite() {
+                    return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+                }
+            };
             set.put(prop);
         }
         return set;
-    }
-
-    private Property<?> createProperty(final de.fub.mapsforge.project.aggregator.xml.Property propertyItem) {
-        Property<?> property = null;
-
-        if (Boolean.class.getName().equals(propertyItem.getJavaType())) {
-            property = new PropertySupport.ReadWrite<Boolean>(propertyItem.getName(), Boolean.class, propertyItem.getName(), "") {
-                private Boolean value = Boolean.parseBoolean(propertyItem.getValue());
-
-                @Override
-                public Boolean getValue() throws IllegalAccessException, InvocationTargetException {
-                    return value;
-                }
-
-                @Override
-                public void setValue(Boolean val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        value = val;
-                        propertyItem.setValue(String.valueOf(val));
-                        update();
-                    }
-                }
-            };
-            property.setName(propertyItem.getName());
-        } else if (Double.class.getName().equals(propertyItem.getJavaType())) {
-            property = new PropertySupport.ReadWrite<Double>(propertyItem.getName(), Double.class, propertyItem.getName(), "") {
-                private Double value = Double.parseDouble(propertyItem.getValue());
-
-                @Override
-                public Double getValue() throws IllegalAccessException, InvocationTargetException {
-                    return value;
-                }
-
-                @Override
-                public void setValue(Double val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        value = val;
-                        propertyItem.setValue(String.valueOf(val));
-                        update();
-                    }
-                }
-            };
-            property.setName(propertyItem.getName());
-        } else if (Integer.class.getName().equals(propertyItem.getJavaType())) {
-            property = new PropertySupport.ReadWrite<Integer>(propertyItem.getName(), Integer.class, propertyItem.getName(), "") {
-                private Integer value = Integer.parseInt(propertyItem.getValue());
-
-                @Override
-                public Integer getValue() throws IllegalAccessException, InvocationTargetException {
-                    return value;
-                }
-
-                @Override
-                public void setValue(Integer val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val)) {
-                        value = val;
-                        propertyItem.setValue(String.valueOf(val));
-                        update();
-                    }
-                }
-            };
-            property.setName(propertyItem.getName());
-        } else if (Long.class.getName().equals(propertyItem.getJavaType())) {
-            property = new PropertySupport.ReadWrite<Long>(propertyItem.getName(), Long.class, propertyItem.getName(), "") {
-                private Long value = Long.valueOf(propertyItem.getValue());
-
-                @Override
-                public Long getValue() throws IllegalAccessException, InvocationTargetException {
-                    return value;
-                }
-
-                @Override
-                public void setValue(Long val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        value = val;
-                        propertyItem.setValue(String.valueOf(val));
-                        update();
-                    }
-                }
-            };
-            property.setName(propertyItem.getName());
-        } else if (Color.class.getName().equals(propertyItem.getJavaType())) {
-            property = new PropertySupport.ReadWrite<Color>(propertyItem.getName(), Color.class, propertyItem.getName(), "") {
-                private Color color = new Color(Integer.parseInt(propertyItem.getValue()));
-
-                @Override
-                public Color getValue() throws IllegalAccessException, InvocationTargetException {
-                    return color;
-                }
-
-                @Override
-                public void setValue(Color val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (val != null && color.getRGB() != val.getRGB() && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        color = val;
-                        propertyItem.setValue(String.valueOf(val.getRGB()));
-                        update();
-                    }
-                }
-            };
-            property.setName(propertyItem.getName());
-        } else if (String.class.getName().equals(propertyItem.getJavaType())) {
-            property = new PropertySupport.ReadWrite<String>(propertyItem.getName(), String.class, propertyItem.getName(), "") {
-                private String value = propertyItem.getValue();
-
-                @Override
-                public String getValue() throws IllegalAccessException, InvocationTargetException {
-                    return value;
-                }
-
-                @Override
-                public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                    if (!value.equals(val) && aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        value = val;
-                        propertyItem.setValue(val);
-                        update();
-                    }
-                }
-            };
-            property.setName(propertyItem.getName());
-        } else { // TODO subclass of enums
-        }
-
-
-        return property;
     }
 
     private Sheet.Set createPropertySection(PropertySection section) {
@@ -272,7 +162,18 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
             for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-                set.put(new Prop(property));
+                Prop prop = new Prop(property) {
+                    @Override
+                    public boolean canRead() {
+                        return super.canRead();
+                    }
+
+                    @Override
+                    public boolean canWrite() {
+                        return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+                    }
+                };
+                set.put(prop);
             }
         }
 
@@ -287,7 +188,17 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         Property<?> property = null;
 
         property = new PropertySupport.ReadWrite<String>("name", String.class, "Name", "Name of the aggregator.") {
-            private String value = aggregator.getDescriptor().getName();
+            private String value = aggregator.getAggregatorDescriptor().getName();
+
+            @Override
+            public boolean canRead() {
+                return super.canRead();
+            }
+
+            @Override
+            public boolean canWrite() {
+                return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+            }
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
@@ -298,7 +209,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                     value = val;
-                    aggregator.getDescriptor().setName(val);
+                    aggregator.getAggregatorDescriptor().setName(val);
                     update();
                 }
             }
@@ -306,7 +217,17 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         set.put(property);
 
         property = new PropertySupport.ReadWrite<String>("description", String.class, "Description", "Description text for the aggregator") {
-            private String description = aggregator.getDescriptor().getDescription();
+            private String description = aggregator.getAggregatorDescriptor().getDescription();
+
+            @Override
+            public boolean canRead() {
+                return super.canRead();
+            }
+
+            @Override
+            public boolean canWrite() {
+                return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+            }
 
             @Override
             public String getValue() throws IllegalAccessException, InvocationTargetException {
@@ -317,7 +238,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
             public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                     description = val;
-                    aggregator.getDescriptor().setDescription(val);
+                    aggregator.getAggregatorDescriptor().setDescription(val);
                     update();
                 }
             }
@@ -325,8 +246,18 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         set.put(property);
 
         property = new ClassProperty("aggStrategy", "Aggregator Strategy", "something", IAggregationStrategy.class) {
-            private ClassWrapper wrapper = aggregator.getDescriptor().getAggregationStrategy() != null
-                    ? new ClassWrapper(aggregator.getDescriptor().getAggregationStrategy()) : null;
+            private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
+                    ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
+
+            @Override
+            public boolean canRead() {
+                return super.canRead();
+            }
+
+            @Override
+            public boolean canWrite() {
+                return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+            }
 
             @Override
             public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
@@ -340,7 +271,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                         throw new IllegalArgumentException(" null is not a valid argument!");
                     }
                     wrapper = val;
-                    aggregator.getDescriptor().setAggregationStrategy(val.getQualifiedName());
+                    aggregator.getAggregatorDescriptor().setAggregationStrategy(val.getQualifiedName());
                     update();
                 }
             }
@@ -349,8 +280,18 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
 
         property = new ClassProperty("cacheStrategy", "TileCache Strategy", "something", ICachingStrategy.class) {
-            private ClassWrapper wrapper = aggregator.getDescriptor().getTileCachingStrategy() != null
-                    ? new ClassWrapper(aggregator.getDescriptor().getTileCachingStrategy()) : null;
+            private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getTileCachingStrategy() != null
+                    ? new ClassWrapper(aggregator.getAggregatorDescriptor().getTileCachingStrategy()) : null;
+
+            @Override
+            public boolean canRead() {
+                return super.canRead();
+            }
+
+            @Override
+            public boolean canWrite() {
+                return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+            }
 
             @Override
             public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
@@ -364,7 +305,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                         throw new IllegalArgumentException("null is not a valid argument!");
                     }
                     wrapper = val;
-                    aggregator.getDescriptor().setTileCachingStrategy(val.getQualifiedName());
+                    aggregator.getAggregatorDescriptor().setTileCachingStrategy(val.getQualifiedName());
 
                     update();
                 }
@@ -417,7 +358,22 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
     public Image getIcon(int type) {
         Image image = super.getIcon(type);
         if (aggregator != null) {
-            image = aggregator.getAggregatorState().getImage();
+            image = ImageUtilities.loadImage(ICON_PATH);
+            switch (aggregator.getAggregatorState()) {
+                case ERROR:
+                case ERROR_NOT_EXECUTABLE:
+                    image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("errorHintIcon.png"), 0, 0);
+                    break;
+                case INACTIVE:
+                    break;
+                case WARNING:
+                    break;
+                case RUNNING:
+                    image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("playHintIcon.png"), 0, 0);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
         }
         return image;
     }
@@ -435,7 +391,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
     }
 
     private void update() {
-        aggregator.notifyModified();
+        aggregator.updateSource();
     }
 
     @Override

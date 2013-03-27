@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.factories;
 
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.util.List;
 import javax.swing.event.ChangeEvent;

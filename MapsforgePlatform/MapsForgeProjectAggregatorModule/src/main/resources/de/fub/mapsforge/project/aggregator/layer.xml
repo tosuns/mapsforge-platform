@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+    <folder name="Actions">
+        <folder name="Aggregator">
+            <file name="de-fub-mapsforge-project-aggregator-actions-AggregatorStartAction.instance"/>
+            <file name="de-fub-mapsforge-project-aggregator-actions-RunAction.instance_hidden"/>
+        </folder>
+    </folder>
     <folder name="MapsForge">
         <folder name="Catalog">
             <file name="Aggregator Descriptor.xsd" url="nbres:/de/fub/mapsforge/project/aggregator/xml/aggregatorDescriptor.xsd">
@@ -31,5 +37,15 @@
         <file name="toolbarProcessRunIcon.png" url="nbres:/de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png">
             <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png"/>
         </file>
+    </folder>
+    <folder name="Projects">
+        <folder name="org-mapsforge-project">
+            <folder name="Nodes">
+                <file name="de-fub-mapsforge-project-MapsForgeAggregationBuilderNodeFactory.instance_hidden"/>
+                <file name="de-fub-mapsforge-project-MapsForgeAggregatorNodeFactory.instance">
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
+        </folder>
     </folder>
 </filesystem>

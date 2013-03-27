@@ -6,7 +6,11 @@ package de.fub.mapsforge.project.aggregator.pipeline;
 
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapsforge.project.models.Aggregator;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -50,11 +54,12 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
             canceled.set(false);
             workingProcesses.clear();
             workingProcesses.addAll(processes);
-            handler = ProgressHandleFactory.createHandle(Bundle.CLT_Proceeding_Process("", aggregator.getDescriptor().getName()), new CancellableImpl());
+            handler = ProgressHandleFactory.createHandle(Bundle.CLT_Proceeding_Process("", aggregator.getAggregatorDescriptor().getName()), new CancellableImpl());
             try {
                 firePipelineEvent(PipelineEvents.WILL_START);
 
                 handler.start(100);
+                firePipelineEvent(PipelineEvents.STARTED);
                 int i = 0;
                 AbstractAggregationProcess lastProcess = null;
                 long lastTime = System.currentTimeMillis();
@@ -69,7 +74,7 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
                         break;
                     }
 
-                    handler.setDisplayName(Bundle.CLT_Proceeding_Process(process.getName(), getAggregator().getDescriptor().getName()));
+                    handler.setDisplayName(Bundle.CLT_Proceeding_Process(process.getName(), getAggregator().getAggregatorDescriptor().getName()));
                     if (j == 0) {
                         int indexOf = indexOf(process);
                         if (indexOf > 0) {
@@ -110,6 +115,85 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
     }
 
     @Override
+    public boolean add(AbstractAggregationProcess<?, ?> proc) throws PipelineException {
+        checkIsValidProcess(size() - 1, proc);
+        return super.add(proc);
+    }
+
+    @Override
+    public void add(int index, AbstractAggregationProcess<?, ?> proc) {
+        checkIsValidProcess(index, proc);
+        super.add(index, proc);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends AbstractAggregationProcess<?, ?>> collection) {
+        boolean result = true;
+        for (AbstractAggregationProcess<?, ?> proc : collection) {
+            add(proc);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends AbstractAggregationProcess<?, ?>> collection) {
+        boolean result = true;
+        for (AbstractAggregationProcess<?, ?> proc : collection) {
+            add(index, proc);
+            index++;
+        }
+        return result;
+    }
+
+    public void checkIsValidProcess(int prevProcessIndex, AbstractAggregationProcess<?, ?> process) throws PipelineException {
+        if (prevProcessIndex > -1) {
+            ArrayList<AbstractAggregationProcess<?, ?>> arrayList = new ArrayList<AbstractAggregationProcess<?, ?>>(getProcesses());
+            AbstractAggregationProcess<?, ?> previousProcess = arrayList.get(prevProcessIndex);
+            Class<? extends AbstractAggregationProcess> previousProcessClass = previousProcess.getClass();
+            Class<? extends AbstractAggregationProcess> currentProcessClass = process.getClass();
+            compareGenericTypes(currentProcessClass, previousProcessClass);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void compareGenericTypes(Type currentProcessClass, Type previousProcessClass) throws PipelineException {
+        Type previousProcessSuperclass = previousProcessClass instanceof Class ? ((Class) previousProcessClass).getGenericSuperclass() : previousProcessClass.getClass().getGenericSuperclass();
+        Type currentProcessSuperclass = currentProcessClass instanceof Class ? ((Class) currentProcessClass).getGenericSuperclass() : currentProcessClass.getClass().getGenericSuperclass();
+
+        // in case both types are of type class then check whether they are
+        //
+        LOG.info(MessageFormat.format("prev : {0} , current: {1}", previousProcessSuperclass, currentProcessSuperclass));
+        if (previousProcessSuperclass instanceof Class
+                && currentProcessSuperclass instanceof Class
+                && previousProcessSuperclass.equals(currentProcessSuperclass)) {
+        } else if (previousProcessSuperclass instanceof ParameterizedType
+                && currentProcessSuperclass instanceof ParameterizedType) {
+            Type[] outputTypeArray = ((ParameterizedType) previousProcessSuperclass).getActualTypeArguments();
+            Type[] inputTypeArray = ((ParameterizedType) currentProcessSuperclass).getActualTypeArguments();
+            // if both array have the length 2
+            // check there types
+            if (outputTypeArray.length == inputTypeArray.length
+                    && outputTypeArray.length == 2) {
+                Type outputType = outputTypeArray[1];
+                Type inputType = inputTypeArray[0];
+                if (outputType.getClass().equals(inputType.getClass())) {
+                    compareGenericTypes(inputType, outputType);
+                } else {
+                    throw new PipelineException(MessageFormat.format("input type {0} and output type {1} don't match!", inputType, outputType));
+                }
+            } else if (outputTypeArray.length == inputTypeArray.length
+                    && outputTypeArray.length == 0) {
+                // recursive anchor. Both have classes have no type parameters
+            } else {
+                // both type array lengths are not 2. Error state
+                throw new PipelineException(MessageFormat.format("output generic interfaces type {0} and input generice interfaces type {1}  length don't macth !", outputTypeArray, inputTypeArray));
+            }
+        } else {
+            throw new PipelineException(MessageFormat.format("Current case not supported type1 :{0} type2 : {1}", previousProcessSuperclass, currentProcessSuperclass));
+        }
+    }
+
+    @Override
     public void started() {
         // do nothing
     }
@@ -138,6 +222,26 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
             canceled.set(true);
             result = canceled.get();
             return result;
+        }
+    }
+
+    public static class PipelineException extends IllegalArgumentException {
+
+        private static final long serialVersionUID = 1L;
+
+        public PipelineException() {
+        }
+
+        public PipelineException(String s) {
+            super(s);
+        }
+
+        public PipelineException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public PipelineException(Throwable cause) {
+            super(cause);
         }
     }
 }

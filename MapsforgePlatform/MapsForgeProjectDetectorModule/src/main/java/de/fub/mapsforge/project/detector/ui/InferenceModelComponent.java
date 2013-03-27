@@ -8,6 +8,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
+import de.fub.utilsmodule.components.CustomListView;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;

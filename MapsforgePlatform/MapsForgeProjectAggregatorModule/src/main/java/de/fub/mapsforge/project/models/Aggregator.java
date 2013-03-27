@@ -18,7 +18,6 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
-import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -36,11 +35,11 @@ import javax.xml.bind.JAXBException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
+ * A high level implementation of an gps navigation graph map renderer.
  *
  * @author Serdar
  */
@@ -70,121 +69,202 @@ public class Aggregator extends ModelSynchronizer {
                 // do nothing
             }
         });
-
         this.dataObject.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                setUpPipeline();
+                initAggregator();
                 dataObjectModelSynchonizerClient.modelChangedFromSource();
             }
         });
-        setUpPipeline();
-        getPipeline().addPipelineListener(new PipelineListenerImpl());
-    }
-
-    private void setUpPipeline() {
-        AggregatorDescriptor descriptor = getDescriptor();
-        if (descriptor != null) {
-            File sourceFolder = null;
-            if (descriptor.getCacheFolderPath() == null) {
-                FileObject parent = this.dataObject.getPrimaryFile().getParent();
-                if (parent != null) {
-                    try {
-                        if (parent.getFileObject(descriptor.getName()) != null) {
-                            sourceFolder = FileUtil.toFile(parent.getFileObject(descriptor.getName()));
-                        } else {
-                            FileObject cacheFolder = parent.createFolder(descriptor.getName());
-                            descriptor.setCacheFolderPath(cacheFolder.getPath());
-                            sourceFolder = FileUtil.toFile(cacheFolder);
-                        }
-                        descriptor.setCacheFolderPath(sourceFolder.getAbsolutePath());
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                        LOG.info(ex.getMessage());
-                    }
-                }
-                dataObject.save();
-            } else {
-                sourceFolder = new File(descriptor.getCacheFolderPath());
-                if (!sourceFolder.exists()) {
-                    try {
-                        sourceFolder.createNewFile();
-                    } catch (IOException ex) {
-                        LOG.log(Level.SEVERE, MessageFormat.format("{0}.\\n sourceFolder: {1}", ex.getMessage(), sourceFolder.getAbsolutePath()), ex); //NO18N
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            }
-            IAggregationStrategy aggregateStrategy = AggregatorUtils.createInstance(IAggregationStrategy.class, descriptor.getAggregationStrategy());
-            ICachingStrategy cachingStrategy = AggregatorUtils.createInstance(ICachingStrategy.class, descriptor.getTileCachingStrategy());
-
-            if (aggContainer != null) {
-                aggContainer.setAggregationStrategy(aggregateStrategy);
-                aggContainer.setCachingStrategy(cachingStrategy);
-                aggContainer.setDataSource(sourceFolder);
-            } else {
-                aggContainer = AggContainer.createContainer(sourceFolder, aggregateStrategy, cachingStrategy);
-            }
-
-            pipeline.clear();
-            AbstractAggregationProcess process = null;
-            for (ProcessDescriptor processDescriptor : descriptor.getPipeline().getList()) {
-                process = createProcess(processDescriptor);
-                pipeline.add(process);
-            }
+        AggregatorDescriptor aggregatorDescriptor = getAggregatorDescriptor();
+        if (aggregatorDescriptor != null) {
+            initAggregator();
+            getPipeline().addPipelineListener(new PipelineListenerImpl());
+        } else {
+            setAggregatorState(AggregatorState.ERROR_NOT_EXECUTABLE);
         }
     }
 
-    @NbBundle.Messages({"# {0} - processName", "# {1} - aggregatorName", "CLT_Proceeding_Process={1}: Running {0}..."})
+    private void initAggregator() {
+        setAggregatorState(AggregatorState.INACTIVE);
+        initAggregatorContainer();
+        initPipeline();
+    }
+
+    private void initAggregatorContainer() {
+        AggregatorDescriptor descriptor = getAggregatorDescriptor();
+        File sourceFolder = null;
+        if (descriptor.getCacheFolderPath() == null) {
+            sourceFolder = createDefaultCacheFolder();
+        } else {
+            sourceFolder = new File(descriptor.getCacheFolderPath());
+            if (!sourceFolder.exists()) {
+                try {
+                    sourceFolder.createNewFile();
+                } catch (IOException ex) {
+                    // failed to create the cache folder. Fall back
+                    // to create the cache folder in the same folder where
+                    // the .agg file lies.
+                    LOG.log(Level.WARNING, MessageFormat.format("{0}.\\n sourceFolder: {1}! Creating default sourceFolder in the same folder where the agg file lies !", ex.getMessage(), sourceFolder.getAbsolutePath()), ex); //NO18N
+                    sourceFolder = createDefaultCacheFolder();
+                }
+            }
+        }
+
+        IAggregationStrategy aggregateStrategy = AggregatorUtils.createInstance(IAggregationStrategy.class, descriptor.getAggregationStrategy());
+        ICachingStrategy cachingStrategy = AggregatorUtils.createInstance(ICachingStrategy.class, descriptor.getTileCachingStrategy());
+
+        if (aggContainer != null) {
+            aggContainer.setAggregationStrategy(aggregateStrategy);
+            aggContainer.setCachingStrategy(cachingStrategy);
+            aggContainer.setDataSource(sourceFolder);
+        } else {
+            aggContainer = AggContainer.createContainer(sourceFolder, aggregateStrategy, cachingStrategy);
+        }
+    }
+
+    private void initPipeline() {
+        AggregatorDescriptor descriptor = getAggregatorDescriptor();
+        pipeline.clear();
+        try {
+            AbstractAggregationProcess process = null;
+            for (ProcessDescriptor processDescriptor : descriptor.getPipeline().getList()) {
+                //TODO either here or in the pipeline class: check
+                // of valid order of the processes.
+                // if output type of the previouse processes
+                // does not match with the input type of the current process
+                // abort and notify user via a message and visual error hint.
+                process = createProcess(processDescriptor);
+                pipeline.add(process);
+            }
+        } catch (AggregatorProcessPipeline.PipelineException ex) {
+            setAggregatorState(AggregatorState.ERROR_NOT_EXECUTABLE);
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private File createDefaultCacheFolder() {
+        AggregatorDescriptor descriptor = getAggregatorDescriptor();
+        File sourceFolder = null;
+        FileObject parent = this.dataObject.getPrimaryFile().getParent();
+        if (parent != null) {
+            try {
+                if (parent.getFileObject(descriptor.getName()) != null) {
+                    sourceFolder = FileUtil.toFile(parent.getFileObject(descriptor.getName()));
+                } else {
+                    FileObject cacheFolder = parent.createFolder(descriptor.getName());
+                    descriptor.setCacheFolderPath(cacheFolder.getPath());
+                    sourceFolder = FileUtil.toFile(cacheFolder);
+                }
+                descriptor.setCacheFolderPath(sourceFolder.getAbsolutePath());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                LOG.info(ex.getMessage());
+            }
+        }
+        dataObject.save();
+        return sourceFolder;
+    }
+
+    /**
+     * Starts and processes the specified process units in the list. The process
+     * units in the list can't be in out of order
+     *
+     * @param processes
+     */
+    @NbBundle.Messages({
+        "# {0} - processName",
+        "# {1} - aggregatorName",
+        "CLT_Proceeding_Process={1}: Running {0}..."})
     @SuppressWarnings("unchecked")
     public void start(final List<AbstractAggregationProcess<?, ?>> processes) {
+        // TODO check whether the process list is valid, otherwise throw IllegalArgument exception
         getPipeline().start(processes);
     }
 
+    /**
+     * Convenience method to run all process units that are in the pipeline from
+     * the first process unit to the last one.
+     */
     public void start() {
         start(new ArrayList<AbstractAggregationProcess<?, ?>>(getPipeline().getProcesses()));
-
     }
 
+    /**
+     * Returns the underlying Aggregator container.
+     *
+     * @return Always an AggContainer instance.
+     */
     public AggContainer getAggContainer() {
         return aggContainer;
     }
 
+    /**
+     * Returns the process pipeline of this Aggregator object.
+     *
+     * @return Always an AggregatorProcessPipeline instance.
+     */
     public AggregatorProcessPipeline getPipeline() {
         return pipeline;
     }
 
+    /**
+     * A convenience method to delegate the call to the respective method of the
+     * Aggregator descriptor.
+     *
+     * @return in all cases a List instance.
+     */
     public List<Source> getSourceList() {
-        return getDescriptor().getDatasources();
+        return getAggregatorDescriptor().getDatasources();
     }
 
+    /**
+     * Returns the current aggregator state.
+     *
+     * @return Always an AggregatorState instance.
+     */
     public synchronized AggregatorState getAggregatorState() {
         return aggregatorState;
     }
 
+    /**
+     * Sets the current aggregator state and fires a property change event.
+     *
+     * @param aggregatorState an AggregatorState, null not permitted.
+     */
     public synchronized void setAggregatorState(AggregatorState aggregatorState) {
+        assert aggregatorState != null : "null permitted as aggregator state.";
         Object oldValue = this.aggregatorState;
         this.aggregatorState = aggregatorState;
         pcs.firePropertyChange(PROP_NAME_AGGREGATOR_STATE, oldValue, this.aggregatorState);
+
     }
 
+    /**
+     * Returns the underlying DataObject.
+     *
+     * @return Always an AggregatorDataObject instance.
+     */
     public AggregatorDataObject getDataObject() {
         return dataObject;
     }
 
-    public AggregatorDescriptor getDescriptor() {
+    /**
+     * Convenience method to get the Aggregator descriptor. This method
+     * delegates the call to the underlying AggregatorDataObject.
+     *
+     * @return A valid AggregatorDescriptor instance if possible, otherwise
+     * null.
+     */
+    public AggregatorDescriptor getAggregatorDescriptor() {
         try {
-            return dataObject.getAggregator();
+            return dataObject.getAggregatorDescriptor();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (JAXBException ex) {
             Exceptions.printStackTrace(ex);
         }
         return null;
-    }
-
-    public void notifyModified() {
-        dataObject.modifySourceEditor();
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -239,23 +319,19 @@ public class Aggregator extends ModelSynchronizer {
 
     public enum AggregatorState {
 
-        ERROR("Error", ImageUtilities.loadImage(AggregatorUtils.ICON_PATH_ERROR)),
-        RUNNING("Running", ImageUtilities.loadImage(AggregatorUtils.ICON_PATH_BUSY)),
-        INACTIVE("Inactive", ImageUtilities.loadImage(AggregatorUtils.ICON_PATH_NORMAL));
+        ERROR("Error"),
+        RUNNING("Running"),
+        INACTIVE("Inactive"),
+        ERROR_NOT_EXECUTABLE("Errot not executable"),
+        WARNING("Warning");
         private String displayName;
-        private Image image;
 
-        private AggregatorState(String displayName, Image image) {
+        private AggregatorState(String displayName) {
             this.displayName = displayName;
-            this.image = image;
         }
 
         public String getDisplayName() {
             return displayName;
-        }
-
-        public Image getImage() {
-            return image;
         }
     }
 

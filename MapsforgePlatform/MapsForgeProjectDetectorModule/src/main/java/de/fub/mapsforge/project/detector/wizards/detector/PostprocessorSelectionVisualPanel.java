@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.wizards.detector;
 
 import de.fub.mapsforge.project.detector.model.DetectorProcess;
-import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.utilsmodule.Collections.ObservableList;
 import javax.swing.JPanel;
 import org.openide.util.Lookup;

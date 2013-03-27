@@ -83,7 +83,7 @@ public final class AggregatorWizardAction implements ActionListener {
                         AggregatorDataObject aggregatorDataObject = (AggregatorDataObject) property;
                         String fileName = null;
                         try {
-                            AggregatorDescriptor aggregator = aggregatorDataObject.getAggregator();
+                            AggregatorDescriptor aggregator = aggregatorDataObject.getAggregatorDescriptor();
                             aggregator.setName((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_NAME));
                             aggregator.setDescription((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION));
                             aggregator.setCacheFolderPath(null);

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.ui;
+package de.fub.utilsmodule.components;
 
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;

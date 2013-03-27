@@ -54,7 +54,7 @@ public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I
             if (getAggregator() == null) {
                 descriptor = createProcessDescriptor();
             } else {
-                for (ProcessDescriptor processDescriptor : getAggregator().getDescriptor().getPipeline().getList()) {
+                for (ProcessDescriptor processDescriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (processDescriptor != null
                             && getClass().getName().equals(processDescriptor.getJavaType())) {
                         descriptor = processDescriptor;

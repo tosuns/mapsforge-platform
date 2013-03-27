@@ -31,7 +31,7 @@ public final class RemoveSourceAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        List<Source> datasources = context.getAggregator().getDescriptor().getDatasources();
+        List<Source> datasources = context.getAggregator().getAggregatorDescriptor().getDatasources();
         datasources.remove(context.getSource());
         context.getAggregator().getDataObject().save();
     }
