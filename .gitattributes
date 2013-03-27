@@ -314,6 +314,9 @@ MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wiza
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/xml/mapsforge.xml -text
 MapsforgePlatform/MapForgeProject/src/test/java/de/fub/mapforgeproject/xml/MapsForgeXmlTest.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/pom.xml -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/AggregatorChooserPanel.form -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/AggregatorChooserPanel.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/AggregatorDataObjectPropertyEditor.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/Bundle.properties -text
 MapsforgePlatform/MapViewer/pom.xml -text
