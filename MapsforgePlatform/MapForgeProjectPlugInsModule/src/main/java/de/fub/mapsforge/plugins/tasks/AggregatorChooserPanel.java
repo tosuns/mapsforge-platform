@@ -17,6 +17,7 @@ import javax.swing.Action;
 import javax.swing.ListSelectionModel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
@@ -159,20 +160,16 @@ public class AggregatorChooserPanel extends javax.swing.JPanel implements Explor
 
         @Override
         protected boolean createKeys(List<AggregatorDataObject> toPopulate) {
-            Node aggregatorFolderNode = MapsForgeAggregatorHelper.getInstance().getAggregatorFolderNode();
-            if (aggregatorFolderNode != null) {
-                DataObject dataObject = aggregatorFolderNode.getLookup().lookup(DataObject.class);
-                if (dataObject != null) {
-                    FileObject fileObject = dataObject.getPrimaryFile();
-                    for (FileObject childFileObject : fileObject.getChildren()) {
-                        try {
-                            DataObject childDataObject = DataObject.find(childFileObject);
-                            if (childDataObject instanceof AggregatorDataObject) {
-                                toPopulate.add(((AggregatorDataObject) childDataObject));
-                            }
-                        } catch (DataObjectNotFoundException ex) {
-                            Exceptions.printStackTrace(ex);
+            FileObject aggregatorTemplates = FileUtil.getConfigFile("Templates/Aggregators");
+            if (aggregatorTemplates != null) {
+                for (FileObject childFileObject : aggregatorTemplates.getChildren()) {
+                    try {
+                        DataObject childDataObject = DataObject.find(childFileObject);
+                        if (childDataObject instanceof AggregatorDataObject) {
+                            toPopulate.add(((AggregatorDataObject) childDataObject));
                         }
+                    } catch (DataObjectNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
                 }
             }

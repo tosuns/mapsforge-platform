@@ -420,8 +420,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/aggregatorIconBusy.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/aggregatorIconError.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/datasetIcon.png -text
-MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/AggregationBuilderTemplate.agg -text
-MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/DemoAgg2GraphConfig.agg -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/Standard[!!-~]Aggregator.agg -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon24.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon32.png -text
@@ -665,6 +664,7 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/Obser
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/WeakList.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/awt/ColorUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/NodeFactories/MutableChildFactory.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/actions/SaveAsTemplateAction.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/BeanUtil.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptor.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptorUtil.java -text
@@ -687,8 +687,10 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapE
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapType.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/XmlGenericMapAdapter.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/generator/SchemaGenertator.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/jax/JAXBUtil.java -text
 MapsforgePlatform/UtilsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/Bundle.properties -text
+MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/actions/Bundle.properties -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorHintIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/errorIcon.png -text
 MapsforgePlatform/UtilsModule/src/main/resources/de/fub/utilsmodule/icons/playHintIcon.png -text

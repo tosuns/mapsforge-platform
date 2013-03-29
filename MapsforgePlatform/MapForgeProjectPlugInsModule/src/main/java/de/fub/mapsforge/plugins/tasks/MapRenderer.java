@@ -5,6 +5,7 @@
 package de.fub.mapsforge.plugins.tasks;
 
 import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.detector.model.Detector;
@@ -69,6 +70,18 @@ public class MapRenderer extends Task {
 
     public MapRenderer(Detector detector) {
         super(detector);
+        validate();
+    }
+
+    private void validate() {
+        setProcessState(ProcessState.INACTIVE);
+        try {
+            Aggregator createAggregator = createAggregator();
+
+        } catch (FileNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+            setProcessState(ProcessState.ERROR);
+        }
     }
 
     private boolean isOpenAfterFinished() {
@@ -141,7 +154,7 @@ public class MapRenderer extends Task {
     protected void start() {
         try {
             Aggregator aggregator = createAggregator();
-            if (aggregator != null) {
+            if (aggregator != null && aggregator.getAggregatorDescriptor() != null) {
                 InferenceModelResultDataSet resultDataSet = getResultDataSet();
                 for (Entry<String, List<Gpx>> entry : resultDataSet.entrySet()) {
                     try {

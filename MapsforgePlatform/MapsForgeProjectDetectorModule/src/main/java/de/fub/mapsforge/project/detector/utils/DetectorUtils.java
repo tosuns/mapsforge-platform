@@ -13,6 +13,7 @@ import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import de.fub.utilsmodule.xml.jax.JAXBUtil;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -166,7 +167,9 @@ public class DetectorUtils {
         return instance;
     }
 
-    @NbBundle.Messages({"# {0} - filepath", "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"})
+    @NbBundle.Messages({
+        "# {0} - filepath",
+        "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"})
     @SuppressWarnings("unchecked")
     public static <T> T getXmlDescriptor(Class<T> destClass, Class<?> sourceClass) throws IOException {
         T descriptor = null;
@@ -315,28 +318,16 @@ public class DetectorUtils {
     }
 
     public static void saveDetector(final FileObject fileObject, final DetectorDescriptor descriptor) {
-        synchronized (DETECTOR_FILE_OPERATION_MUTEX) {
-            FileUtil.runAtomicAction(new Runnable() {
-                @Override
-                public void run() {
-                    File file = FileUtil.toFile(fileObject);
-
-                    if (file != null) {
-                        try {
-                            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
-                            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-
-                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-                            marshaller.marshal(descriptor, file);
-                        } catch (javax.xml.bind.JAXBException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
+        FileUtil.runAtomicAction(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JAXBUtil.saveDetector(fileObject, descriptor);
+                } catch (JAXBException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-            });
-        }
+            }
+        });
     }
 
     public static DetectorDescriptor getDetectorDescriptor(DataObject dataObject) throws JAXBException, IOException {
@@ -344,22 +335,7 @@ public class DetectorUtils {
     }
 
     public static DetectorDescriptor getDetectorDescriptor(FileObject fileObject) throws JAXBException, IOException {
-        synchronized (DETECTOR_FILE_OPERATION_MUTEX) {
-            DetectorDescriptor detectorDescriptor = null;
-            InputStream inputStream = null;
-            inputStream = fileObject.getInputStream();
-
-            try {
-                javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(DetectorDescriptor.class);
-                javax.xml.bind.Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
-                detectorDescriptor = (DetectorDescriptor) unmarshaller.unmarshal(inputStream); //NOI18N
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            }
-            return detectorDescriptor;
-        }
+        return JAXBUtil.createDescriptor(DetectorDescriptor.class, fileObject);
     }
 
     public static Detector copyInstance(Detector detector) throws DetectorCopyException {

@@ -92,6 +92,22 @@
             <type>jar</type>
             <version>RELEASE73</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-awt</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-loaders</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>org-openide-dialogs</artifactId>
+            <groupId>org.netbeans.api</groupId>
+            <type>jar</type>
+            <version>RELEASE73</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -107,6 +123,7 @@
                         <publicPackage>de.fub.utilsmodule.Collections</publicPackage>
                         <publicPackage>de.fub.utilsmodule.Collections.awt</publicPackage>
                         <publicPackage>de.fub.utilsmodule.NodeFactories</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.actions</publicPackage>
                         <publicPackage>de.fub.utilsmodule.beans</publicPackage>
                         <publicPackage>de.fub.utilsmodule.color</publicPackage>
                         <publicPackage>de.fub.utilsmodule.components</publicPackage>
@@ -123,6 +140,7 @@
                         <publicPackage>de.fub.utilsmodule.text</publicPackage>
                         <publicPackage>de.fub.utilsmodule.xml.adapters</publicPackage>
                         <publicPackage>de.fub.utilsmodule.xml.generator</publicPackage>
+                        <publicPackage>de.fub.utilsmodule.xml.jax</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

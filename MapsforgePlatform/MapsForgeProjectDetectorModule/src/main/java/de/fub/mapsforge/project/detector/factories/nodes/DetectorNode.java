@@ -40,7 +40,7 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
     public DetectorNode(Detector detector) {
         super(detector.getDataObject(),
                 Children.create(new DetectorSubNodeFactory(detector), true),
-                new ProxyLookup(Lookups.fixed(detector), detector.getDataObject().getLookup()));
+                new ProxyLookup(Lookups.fixed(detector, detector.getDataObject()), detector.getDataObject().getLookup()));
         this.detector = detector;
         detector.addPropertyChangeListener(WeakListeners.propertyChange(DetectorNode.this, detector));
         modelSynchronizerClient = detector.create(DetectorNode.this);
@@ -81,19 +81,26 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
     public Image getIcon(int type) {
         Image image = super.getIcon(type);
         if (detector != null) {
+            String hintName = null;
+
             switch (detector.getDetectorState()) {
                 case ERROR:
-                    image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("errorHintIcon.png"), 0, 0);
+                    hintName = "errorHintIcon.png";
                     break;
                 case RUNNING:
-                    image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("playHintIcon.png"), 0, 0);
+                    hintName = "playHintIcon.png";
                     break;
                 case INACTIVE:
                     break;
                 default:
                     throw new AssertionError();
             }
-
+            if (hintName != null) {
+                Image hint = IconRegister.findRegisteredIcon(hintName);
+                if (hint != null) {
+                    image = ImageUtilities.mergeImages(image, hint, 0, 0);
+                }
+            }
         }
         return image;
     }

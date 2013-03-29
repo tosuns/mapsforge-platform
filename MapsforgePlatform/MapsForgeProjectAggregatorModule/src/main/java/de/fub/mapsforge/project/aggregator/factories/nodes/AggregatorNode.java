@@ -70,7 +70,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
     @Override
     public String getDisplayName() {
-        if (aggregator != null) {
+        if (aggregator != null && aggregator.getAggregatorDescriptor() != null) {
             return aggregator.getAggregatorDescriptor().getName();
         }
         return super.getDisplayName();
@@ -78,7 +78,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
     @Override
     public String getShortDescription() {
-        if (aggregator != null) {
+        if (aggregator != null && aggregator.getAggregatorDescriptor() != null) {
             return aggregator.getAggregatorDescriptor().getDescription();
         }
         return super.getShortDescription();
@@ -162,7 +162,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
             for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-                Prop prop = new Prop(property) {
+                ProcessProperty processProperty = new ProcessProperty(modelSynchronizerClient, property) {
                     @Override
                     public boolean canRead() {
                         return super.canRead();
@@ -173,21 +173,35 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                         return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
                     }
                 };
-                set.put(prop);
+                set.put(processProperty);
             }
         }
 
         return set;
     }
 
-    @NbBundle.Messages("CLT_Common_info=General Information")
+    @NbBundle.Messages({
+        "CLT_Common_info=General Information",
+        "CLT_Property_Name_DisplayName=Name",
+        "CLT_Property_Name_Description=Name of the aggregator.",
+        "CLT_Property_Description_DisplayName=Description",
+        "CLT_Property_Description_Description=Description test of the aggregator",
+        "CLT_Property_Aggregator_Strategy_Class_Name=Aggregation Strategy",
+        "CLT_Property_Aggregator_Strategy_Class_Description=The aggregation strategy that wil be used during aggregation.",
+        "CLT_Property_TileCache_Strategy_Class_Name=Tilecache Strategy",
+        "CLT_Property_TileCache_Strategy_Class_Description=The TileCache strategy which will be used during the aggregation."
+    })
     private Sheet.Set createProperties(final AggregatorDescriptor descriptor) {
         Sheet.Set set = Sheet.createPropertiesSet();
         set.setName("general information");
         set.setDisplayName(Bundle.CLT_Common_info());
         Property<?> property = null;
 
-        property = new PropertySupport.ReadWrite<String>("name", String.class, "Name", "Name of the aggregator.") {
+        property = new PropertySupport.ReadWrite<String>(
+                "name",
+                String.class,
+                Bundle.CLT_Property_Name_DisplayName(),
+                Bundle.CLT_Property_Name_Description()) {
             private String value = aggregator.getAggregatorDescriptor().getName();
 
             @Override
@@ -216,7 +230,11 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         };
         set.put(property);
 
-        property = new PropertySupport.ReadWrite<String>("description", String.class, "Description", "Description text for the aggregator") {
+        property = new PropertySupport.ReadWrite<String>(
+                "description",
+                String.class,
+                Bundle.CLT_Property_Description_DisplayName(),
+                Bundle.CLT_Property_Description_Description()) {
             private String description = aggregator.getAggregatorDescriptor().getDescription();
 
             @Override
@@ -245,7 +263,11 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         };
         set.put(property);
 
-        property = new ClassProperty("aggStrategy", "Aggregator Strategy", "something", IAggregationStrategy.class) {
+        property = new ClassProperty(
+                "aggStrategy",
+                Bundle.CLT_Property_Aggregator_Strategy_Class_Name(),
+                Bundle.CLT_Property_Aggregator_Strategy_Class_Description(),
+                IAggregationStrategy.class) {
             private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
                     ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
 
@@ -278,8 +300,11 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         };
         set.put(property);
 
-
-        property = new ClassProperty("cacheStrategy", "TileCache Strategy", "something", ICachingStrategy.class) {
+        property = new ClassProperty(
+                "cacheStrategy",
+                Bundle.CLT_Property_TileCache_Strategy_Class_Name(),
+                Bundle.CLT_Property_TileCache_Strategy_Class_Description(),
+                ICachingStrategy.class) {
             private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getTileCachingStrategy() != null
                     ? new ClassWrapper(aggregator.getAggregatorDescriptor().getTileCachingStrategy()) : null;
 
@@ -359,17 +384,24 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         Image image = super.getIcon(type);
         if (aggregator != null) {
             image = ImageUtilities.loadImage(ICON_PATH);
+            Image hint = null;
             switch (aggregator.getAggregatorState()) {
                 case ERROR:
                 case ERROR_NOT_EXECUTABLE:
-                    image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("errorHintIcon.png"), 0, 0);
+                    hint = IconRegister.findRegisteredIcon("errorHintIcon.png");
+                    if (hint != null) {
+                        image = ImageUtilities.mergeImages(image, hint, 0, 0);
+                    }
                     break;
                 case INACTIVE:
                     break;
                 case WARNING:
                     break;
                 case RUNNING:
-                    image = ImageUtilities.mergeImages(image, IconRegister.findRegisteredIcon("playHintIcon.png"), 0, 0);
+                    hint = IconRegister.findRegisteredIcon("playHintIcon.png");
+                    if (hint != null) {
+                        image = ImageUtilities.mergeImages(image, hint, 0, 0);
+                    }
                     break;
                 default:
                     throw new AssertionError();
@@ -405,25 +437,5 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
             sheet.put(set);
         }
         fireIconChange();
-    }
-
-    private static class Prop extends PropertySupport.ReadWrite<String> {
-
-        private final de.fub.mapsforge.project.aggregator.xml.Property property;
-
-        public Prop(de.fub.mapsforge.project.aggregator.xml.Property property) {
-            super(property.getName(), String.class, property.getName(), "");
-            this.property = property;
-        }
-
-        @Override
-        public String getValue() throws IllegalAccessException, InvocationTargetException {
-            return property.getValue();
-        }
-
-        @Override
-        public void setValue(String val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            property.setValue(val);
-        }
     }
 }

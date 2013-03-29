@@ -34,13 +34,13 @@ public class DetectorFolderNode extends FilterNode {
     private static Image iconImage = null;
     private final DataObject dataObject;
 
-    public DetectorFolderNode(DataObject aggregationFolder, MapsForgeProject project) {
-        super(aggregationFolder.getNodeDelegate(),
-                Children.create(new DetectorNodeFactory(aggregationFolder), true),
+    public DetectorFolderNode(DataObject detectorFolder, MapsForgeProject project) {
+        super(detectorFolder.getNodeDelegate(),
+                Children.create(new DetectorNodeFactory(detectorFolder), true),
                 new ProxyLookup(
-                aggregationFolder.getNodeDelegate().getLookup(),
+                detectorFolder.getNodeDelegate().getLookup(),
                 Lookups.singleton(project)));
-        this.dataObject = aggregationFolder;
+        this.dataObject = detectorFolder;
         setDisplayName(Bundle.CLT_Detector_Folder_Node_Name());
     }
 
@@ -63,7 +63,6 @@ public class DetectorFolderNode extends FilterNode {
                     Image detector = ImageUtilities.loadImage(DETECTORS_NODE_ICON_PATH);
                     Image scaledInstance = detector.getScaledInstance(10, 10, Image.SCALE_REPLICATE);
                     g2d.drawImage(scaledInstance, 6, 6, null);
-//                    iconImage = ImageUtilities.mergeImages(folderIcon, scaledInstance, 4, 4);
                 } finally {
                     g2d.dispose();
                 }

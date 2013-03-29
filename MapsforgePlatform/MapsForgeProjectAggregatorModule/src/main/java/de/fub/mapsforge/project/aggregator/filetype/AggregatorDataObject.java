@@ -7,10 +7,14 @@ package de.fub.mapsforge.project.aggregator.filetype;
 import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
+import de.fub.utilsmodule.actions.SaveAsTemplateAction;
+import de.fub.utilsmodule.xml.jax.JAXBUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.Collections;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
@@ -29,6 +33,7 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
+import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
@@ -94,7 +99,9 @@ import org.xml.sax.InputSource;
     @ActionReference(
             path = "Loaders/text/aggregationbuilder+xml/Actions",
             id =
-            @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
+            @ActionID(
+            category = "System",
+            id = "de.fub.utilsmodule.actions.SaveAsTemplateAction"),
             position = 900,
             separatorAfter = 1000),
     @ActionReference(
@@ -134,9 +141,22 @@ public class AggregatorDataObject extends MultiDataObject {
         ValidateXMLSupport validateXMLSupport = new ValidateXMLSupport(inputSource);
         getCookieSet().add(checkXMLSupport);
         getCookieSet().add(validateXMLSupport);
-        ic.add(checkXMLSupport);
-        ic.add(validateXMLSupport);
-        ic.add(getNodeDelegate());
+        getCookieSet().add(new SaveAsTemplateHandlerImpl());
+    }
+
+    @Override
+    protected void handleDelete() throws IOException {
+        super.handleDelete(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected FileObject handleRename(String name) throws IOException {
+        return super.handleRename(name); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    protected DataObject handleCreateFromTemplate(DataFolder df, String name) throws IOException {
+        return super.handleCreateFromTemplate(df, name); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -301,6 +321,43 @@ public class AggregatorDataObject extends MultiDataObject {
                 Exceptions.printStackTrace(ex);
             } catch (JAXBException ex) {
                 Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
+    private class SaveAsTemplateHandlerImpl implements SaveAsTemplateAction.SaveAsTemplateHandler {
+
+        @Override
+        public void createTemplate(String templateName, DataObject templateFromThisDataObject) throws IOException {
+            if (templateFromThisDataObject instanceof AggregatorDataObject) {
+                try {
+                    AggregatorDataObject dataObject = (AggregatorDataObject) templateFromThisDataObject;
+                    AggregatorDescriptor aggregatorDescriptor = AggregatorUtils.getAggregatorDescritpor(dataObject);
+
+                    aggregatorDescriptor.setName(templateName);
+
+                    if (aggregatorDescriptor.getDatasources() != null) {
+                        aggregatorDescriptor.getDatasources().clear();
+                    }
+
+                    FileObject aggregatorTemplates = FileUtil.getConfigFile("Templates/Aggregators");
+                    if (aggregatorTemplates == null) {
+                        FileObject templateFolder = FileUtil.getConfigFile("Tamplates");
+                        if (templateFolder != null) {
+                            aggregatorTemplates = templateFolder.createFolder("Aggregators");
+                        } else {
+                            throw new IOException("Couldn't find Template folder!");
+                        }
+                    }
+
+                    templateName = templateName.endsWith(".agg") ? templateName : MessageFormat.format("{0}.agg", templateName);
+
+                    FileObject aggregatorTemplate = aggregatorTemplates.createData(templateName);
+                    DataObject.find(aggregatorTemplate).setTemplate(true);
+                    JAXBUtil.saveDetector(aggregatorTemplate, aggregatorDescriptor);
+                } catch (JAXBException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }

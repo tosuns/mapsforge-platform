@@ -10,16 +10,17 @@ import de.fub.mapforgeproject.utils.MapsForgeProjectUtils;
 import de.fub.mapsforge.project.aggregator.factories.CategoryNodeFactory;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.utilsmodule.xml.jax.JAXBUtil;
 import java.awt.Color;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -203,35 +204,12 @@ public class AggregatorUtils {
         marshaller.marshal(new ObjectFactory().createGpx(content), destFile);
     }
 
-    public static AggregatorDataObject createInMemoryTemplate(AggregatorDataObject dataObject) throws IOException {
-        assert dataObject != null;
-        AggregatorDataObject template = null;
-        FileObject primaryFile = dataObject.getPrimaryFile();
-        OutputStream outputStream = getFilesystem().getRoot().createAndOpen(primaryFile.getNameExt());
-        InputStream inputStream = primaryFile.getInputStream();
-        try {
-            FileUtil.copy(inputStream, outputStream);
-            FileObject templateFileObject = getFilesystem().getRoot().getFileObject(primaryFile.getNameExt());
-            if (templateFileObject != null) {
-                DataObject templateDataObject = DataObject.find(templateFileObject);
-                if (templateDataObject instanceof AggregatorDataObject) {
-                    template = (AggregatorDataObject) templateDataObject;
-                    Aggregator templateAggregator = template.getNodeDelegate().getLookup().lookup(Aggregator.class);
-                    if (templateAggregator != null) {
-                        templateAggregator.getSourceList().clear();
-                        template.save();
-                    }
-                }
-            }
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        }
-        return template;
+    public static AggregatorDescriptor getAggregatorDescritpor(DataObject dataObject) throws JAXBException, IOException {
+        return getAggregatorDescriptor(dataObject.getPrimaryFile());
+    }
+
+    public static AggregatorDescriptor getAggregatorDescriptor(FileObject fileObject) throws JAXBException, IOException {
+        return JAXBUtil.createDescriptor(AggregatorDescriptor.class, fileObject);
     }
 
     private static FileSystem getFilesystem() {

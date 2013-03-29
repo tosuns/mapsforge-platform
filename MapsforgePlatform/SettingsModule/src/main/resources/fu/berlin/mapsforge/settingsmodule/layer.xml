@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Actions">
-        <file name="Tools_hidden"/>
+    <folder name="Templates">
+        <file name="Licenses_hidden"/>
+        <file name="Other_hidden"/>
+        <file name="Privileged_hidden"/>
+        <file name="Properties_hidden"/>
+        <file name="Recent_hidden"/>
+        <file name="Services_hidden"/>
+        <file name="XML_hidden"/>
     </folder>
-    <file name="Favorites_hidden"/>
+    <!--<file name="Favorites_hidden"/>-->
     <folder name="Menu">
         <file name="BuildProject_hidden"/>
         <file name="Edit_hidden"/>
         <file name="GoTo_hidden"/>
+        <file name="Help_hidden"/>
         <file name="Refactoring_hidden"/>
         <file name="RunProject_hidden"/>
         <file name="Source_hidden"/>
         <folder name="Tools">
             <file name="PaletteManager_hidden"/>
             <file name="Separator1.instance_hidden"/>
-            <file name="org-netbeans-modules-favorites-templates-TemplatesAction.shadow_hidden"/>
+            <!--<file name="org-netbeans-modules-favorites-templates-TemplatesAction.shadow_hidden"/>-->
         </folder>
         <folder name="File">
             <file name="org-netbeans-modules-openfile-OpenFileAction.shadow_hidden"/>
