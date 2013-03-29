@@ -70,7 +70,9 @@ public final class AggregatorVisualPanel1 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AggregatorVisualPanel1.class, "AggregatorVisualPanel1.jLabel3.text")); // NOI18N
 
         aggregatorDescription.setColumns(20);
+        aggregatorDescription.setLineWrap(true);
         aggregatorDescription.setRows(5);
+        aggregatorDescription.setWrapStyleWord(true);
         jScrollPane1.setViewportView(aggregatorDescription);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(AggregatorVisualPanel1.class, "AggregatorVisualPanel1.jLabel1.text")); // NOI18N
@@ -89,7 +91,7 @@ public final class AggregatorVisualPanel1 extends JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(aggregatorLocation)
                     .addComponent(aggregatorName)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -105,7 +107,7 @@ public final class AggregatorVisualPanel1 extends JPanel {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 0, Short.MAX_VALUE)))

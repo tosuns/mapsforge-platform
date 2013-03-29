@@ -33,7 +33,6 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
@@ -146,17 +145,32 @@ public class AggregatorDataObject extends MultiDataObject {
 
     @Override
     protected void handleDelete() throws IOException {
+        try {
+            String cacheFolderPath = getAggregatorDescriptor().getCacheFolderPath();
+            if (cacheFolderPath != null) {
+                File file = new File(cacheFolderPath);
+                if (file.exists()) {
+                    DataObject.find(FileUtil.toFileObject(file)).delete();
+                }
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         super.handleDelete(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     protected FileObject handleRename(String name) throws IOException {
-        return super.handleRename(name); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    protected DataObject handleCreateFromTemplate(DataFolder df, String name) throws IOException {
-        return super.handleCreateFromTemplate(df, name); //To change body of generated methods, choose Tools | Templates.
+        try {
+            getAggregatorDescriptor().setName(name);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return super.handleRename(name);
     }
 
     @Override

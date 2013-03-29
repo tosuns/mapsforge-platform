@@ -155,7 +155,7 @@ public final class AggregatorVisualPanel2 extends JPanel implements ExplorerMana
 
         @Override
         protected boolean createKeys(List<DataObject> toPopulate) {
-            FileObject templateFolder = FileUtil.getConfigFile("Templates/Demo Samples");
+            FileObject templateFolder = FileUtil.getConfigFile("Templates/Aggregators");
             if (templateFolder != null) {
                 for (FileObject child : templateFolder.getChildren()) {
                     try {

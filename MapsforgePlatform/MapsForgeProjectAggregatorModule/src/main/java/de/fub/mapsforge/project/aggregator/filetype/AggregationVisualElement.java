@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.aggregator.filetype;
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.mapsforge.project.aggregator.factories.LayerNodeFactory;
-import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
@@ -56,6 +55,7 @@ import org.openide.awt.DropDownButtonFactory;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
@@ -117,9 +117,9 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
      */
     public AggregationVisualElement(Lookup lkp) {
 
-        AggregatorNode node = lkp.lookup(AggregatorNode.class);
-        if (node != null) {
-            aggregator = node.getLookup().lookup(Aggregator.class);
+        DataObject dataObject = lkp.lookup(DataObject.class);
+        if (dataObject != null) {
+            aggregator = dataObject.getNodeDelegate().getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
         lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());

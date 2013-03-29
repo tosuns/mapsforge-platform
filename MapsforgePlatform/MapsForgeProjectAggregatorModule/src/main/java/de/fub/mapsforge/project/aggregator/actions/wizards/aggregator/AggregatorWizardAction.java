@@ -7,12 +7,13 @@ package de.fub.mapsforge.project.aggregator.actions.wizards.aggregator;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
+import de.fub.mapsforge.project.utils.AggregatorUtils;
+import de.fub.utilsmodule.xml.jax.JAXBUtil;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,14 +80,17 @@ public final class AggregatorWizardAction implements ActionListener {
                     Object property = wiz.getProperty(AggregatorWizardAction.PROP_NAME_TEMPLATE);
                     if (property instanceof AggregatorDataObject) {
 
-                        OutputStream outputStream = null;
+                        FileObject destFileObject = null;
                         AggregatorDataObject aggregatorDataObject = (AggregatorDataObject) property;
                         String fileName = null;
                         try {
-                            AggregatorDescriptor aggregator = aggregatorDataObject.getAggregatorDescriptor();
+                            AggregatorDescriptor aggregator = AggregatorUtils.getAggregatorDescritpor(aggregatorDataObject);
                             aggregator.setName((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_NAME));
                             aggregator.setDescription((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION));
                             aggregator.setCacheFolderPath(null);
+                            if (aggregator.getDatasources() != null) {
+                                aggregator.getDatasources().clear();
+                            }
                             property = wiz.getProperty(AggregatorWizardAction.PROP_NAME_DATASOURCES);
 
                             if (property instanceof Node[]) {
@@ -108,47 +112,24 @@ public final class AggregatorWizardAction implements ActionListener {
                                 fileName = FileUtil.findFreeFileName(dataObject.getPrimaryFile(), aggregator.getName(), "agg");
                             }
 
-                            outputStream = dataObject.getPrimaryFile().createAndOpen(fileName);
-
-                            javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(aggregator.getClass());
-                            javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
-                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-                            marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                            marshaller.marshal(aggregator, outputStream);
-
+                            destFileObject = dataObject.getPrimaryFile().createData(fileName);
+                            JAXBUtil.saveDetector(destFileObject, aggregator);
                         } catch (IOException ex) {
-                            if (outputStream != null && fileName != null) {
-                                handleExceptionOfOutputStream(outputStream, fileName);
+                            if (destFileObject != null && fileName != null) {
+                                handleExceptionOfOutputStream(destFileObject, fileName);
                             }
                         } catch (JAXBException ex) {
-                            if (outputStream != null && fileName != null) {
-                                handleExceptionOfOutputStream(outputStream, fileName);
-                            }
-                        } finally {
-                            if (outputStream != null) {
-                                try {
-                                    outputStream.close();
-                                } catch (IOException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                }
+                            if (destFileObject != null && fileName != null) {
+                                handleExceptionOfOutputStream(destFileObject, fileName);
                             }
                         }
-
                     }
                 }
             });
         }
     }
 
-    private void handleExceptionOfOutputStream(OutputStream outputStream, String fileName) {
-        if (outputStream != null) {
-            try {
-                outputStream.close();
-            } catch (IOException ee) {
-                Exceptions.printStackTrace(ee);
-            }
-        }
-        FileObject fileObject = dataObject.getPrimaryFile().getFileObject(fileName);
+    private void handleExceptionOfOutputStream(FileObject fileObject, String fileName) {
         if (fileObject != null) {
             try {
                 fileObject.delete();

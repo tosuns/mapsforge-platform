@@ -72,11 +72,7 @@ public class AggregatorDescriptor {
     }
 
     public void setDatasources(List<Source> sources) {
-        if (sources != null) {
-            datasources.addAll(sources);
-        } else {
-            datasources.clear();
-        }
+        datasources = sources;
     }
 
     @XmlElement(name = "properties")

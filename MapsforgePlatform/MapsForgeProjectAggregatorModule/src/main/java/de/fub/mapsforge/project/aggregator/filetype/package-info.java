@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 @TemplateRegistrations({
-    @TemplateRegistration(folder = "Aggregators", content = "Standard Aggregator.agg")})
+    @TemplateRegistration(folder = "Aggregators", content = "StandardAggregator.agg")})
 package de.fub.mapsforge.project.aggregator.filetype;
 
 import org.netbeans.api.templates.TemplateRegistration;

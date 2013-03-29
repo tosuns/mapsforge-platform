@@ -110,11 +110,11 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
                                 marshaller.marshal(aggregator, outputStream);
 
                             } catch (IOException ex) {
-                                if (outputStream != null && fileName != null && aggregatorFolder != null) {
+                                if (outputStream != null && fileName != null) {
                                     handleExceptionOfOutputStream(outputStream, fileName, aggregatorFolder);
                                 }
                             } catch (JAXBException ex) {
-                                if (outputStream != null && fileName != null && aggregatorFolder != null) {
+                                if (outputStream != null && fileName != null) {
                                     handleExceptionOfOutputStream(outputStream, fileName, aggregatorFolder);
                                 }
                             } finally {

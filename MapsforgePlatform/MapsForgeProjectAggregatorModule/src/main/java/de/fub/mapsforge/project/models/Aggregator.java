@@ -129,11 +129,6 @@ public class Aggregator extends ModelSynchronizer {
         try {
             AbstractAggregationProcess process = null;
             for (ProcessDescriptor processDescriptor : descriptor.getPipeline().getList()) {
-                //TODO either here or in the pipeline class: check
-                // of valid order of the processes.
-                // if output type of the previouse processes
-                // does not match with the input type of the current process
-                // abort and notify user via a message and visual error hint.
                 process = createProcess(processDescriptor);
                 pipeline.add(process);
             }
@@ -178,7 +173,6 @@ public class Aggregator extends ModelSynchronizer {
         "CLT_Proceeding_Process={1}: Running {0}..."})
     @SuppressWarnings("unchecked")
     public void start(final List<AbstractAggregationProcess<?, ?>> processes) {
-        // TODO check whether the process list is valid, otherwise throw IllegalArgument exception
         getPipeline().start(processes);
     }
 
