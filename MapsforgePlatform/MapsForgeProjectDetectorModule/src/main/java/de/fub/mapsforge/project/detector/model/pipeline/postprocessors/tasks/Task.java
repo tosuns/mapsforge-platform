@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.pipeline.postprocessors;
+package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 
 import static de.fub.mapforgeproject.api.process.ProcessState.ERROR;
 import static de.fub.mapforgeproject.api.process.ProcessState.INACTIVE;
@@ -11,6 +11,8 @@ import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.node.property.ProcessProperty;
@@ -18,13 +20,14 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
-import org.openide.util.ImageUtilities;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -36,6 +39,28 @@ import org.openide.util.lookup.Lookups;
 public abstract class Task extends AbstractDetectorProcess<InferenceModelResultDataSet, Void> {
 
     private InferenceModelResultDataSet resultDataSet;
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor processDescriptor = null;
+        if (getDetector() == null) {
+            try {
+                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+
+            for (ProcessDescriptor teskProcessDescriptor : getDetector().getDetectorDescriptor().getPostprocessors().getPostprocessorList()) {
+                if (teskProcessDescriptor != null
+                        && getClass().getName().equals(teskProcessDescriptor.getJavaType())) {
+                    processDescriptor = teskProcessDescriptor;
+                    break;
+                }
+            }
+        }
+        return processDescriptor;
+    }
 
     public Task() {
         super(null);
@@ -75,7 +100,7 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
     }
 
     @NbBundle.Messages({"CLT_Tesk_Parameter=Parameters"})
-    private static class TaskProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
+    protected static class TaskProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
 
         private final Task taskProcess;
         private Sheet.Set set;
@@ -116,26 +141,21 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
         public Image getIcon(int type) {
             Image image = null;
             Image backgroundIcon = null;
-            Image overlayIcon = null;
             switch (this.taskProcess.getProcessState()) {
                 case ERROR:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconError.png");
-                    overlayIcon = IconRegister.findRegisteredIcon("errorHintIcon.png");
                     break;
                 case INACTIVE:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconNormal.png");
                     break;
                 case RUNNING:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconRun.png");
-                    overlayIcon = IconRegister.findRegisteredIcon("playHintIcon.png");
                     break;
                 default:
                     throw new AssertionError();
             }
 
-            if (backgroundIcon != null && overlayIcon != null) {
-                image = ImageUtilities.mergeImages(backgroundIcon, overlayIcon, 0, 0);
-            } else if (backgroundIcon != null) {
+            if (backgroundIcon != null) {
                 image = backgroundIcon;
             }
 

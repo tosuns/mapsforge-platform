@@ -8,6 +8,7 @@ import de.fub.mapsforge.project.detector.DetectorMode;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.Profile;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
+import de.fub.utilsmodule.components.CustomListView;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;

@@ -32,4 +32,17 @@
             <attr name="iconBase" stringvalue="de/fub/mapsforge/project/aggregator/toolbarProcessRunIcon.png"/>
         </file>
     </folder>
+    <folder name="Projects">
+        <folder name="org-mapsforge-project">
+            <folder name="Nodes">
+                <file name="de-fub-mapsforge-project-MapsForgeAggregationBuilderNodeFactory.instance_hidden"/>
+                <file name="de-fub-mapsforge-project-MapsForgeAggregatorNodeFactory.instance">
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Templates">
+        <folder name="Aggregators"/>
+    </folder>
 </filesystem>

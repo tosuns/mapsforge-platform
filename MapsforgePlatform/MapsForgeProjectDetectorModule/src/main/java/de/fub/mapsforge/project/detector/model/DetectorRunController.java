@@ -11,7 +11,7 @@ import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
-import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.Profile;

@@ -122,6 +122,13 @@ public final class InferenceModelSelectionVisualPanel extends JPanel implements 
         return explorerManager;
     }
 
+    public AbstractInferenceModel getSelectedInferenceModel() {
+        Node[] selectedNodes = getExplorerManager().getSelectedNodes();
+        return selectedNodes.length == 1
+                ? selectedNodes[0].getLookup().lookup(AbstractInferenceModel.class)
+                : null;
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {

@@ -4,6 +4,7 @@
  */
 package de.fub.utilsmodule.icons;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -72,6 +73,14 @@ public class IconRegister {
         }
     }
 
+    /**
+     * Looks up image with the specified name in layer xml and returns a cloned
+     * image instance.
+     *
+     * @param nameWithExtension
+     * @return A cloned Image if the image could be found in the layer xml,
+     * otherwise null.
+     */
     public static Image findRegisteredIcon(String nameWithExtension) {
         if (platformIconMap.isEmpty()) {
             FileObject iconFolder = FileUtil.getConfigFile(ICON_REGISTER_PATH);
@@ -102,7 +111,7 @@ public class IconRegister {
                 }
             }
         }
-        return platformIconMap.get(nameWithExtension);
+        return cloneImage(platformIconMap.get(nameWithExtension));
     }
 
     public static Image findSystemIcon(File file) {
@@ -115,8 +124,23 @@ public class IconRegister {
                 }
                 image = iconMap.get(FileSystemView.getFileSystemView().getSystemDisplayName(file));
             }
-            return image;
+            return cloneImage(image);
         }
+    }
+
+    private static Image cloneImage(Image image) {
+        BufferedImage buffImage = null;
+        if (image != null) {
+            buffImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_4BYTE_ABGR);
+
+            Graphics2D g2d = buffImage.createGraphics();
+            try {
+                g2d.drawImage(image, 0, 0, null);
+            } finally {
+                g2d.dispose();
+            }
+        }
+        return buffImage;
     }
 
     public static Image findSystemIcon(FileObject fileObject) {
@@ -131,7 +155,7 @@ public class IconRegister {
                 SYSTEM_DRIVE_ICON = ((ImageIcon) systemIcon).getImage();
             }
         }
-        return SYSTEM_DRIVE_ICON;
+        return cloneImage(SYSTEM_DRIVE_ICON);
     }
 
     public static synchronized Image getFolderIcon() {
@@ -158,6 +182,6 @@ public class IconRegister {
                 }
             }
         }
-        return SYSTEM_FOLDER_ICON;
+        return cloneImage(SYSTEM_FOLDER_ICON);
     }
 }

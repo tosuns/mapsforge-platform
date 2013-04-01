@@ -19,11 +19,12 @@ public class InferenceDataSetSelectionWizardPanel implements WizardDescriptor.Fi
      * component from this class, just use getComponent().
      */
     private InferenceDataSetSelectionVisualPanel component;
-
+    public static final String PROP_NAME_INFERENCE_DATA = "wizard.inference.data";
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
+
     @Override
     public InferenceDataSetSelectionVisualPanel getComponent() {
         if (component == null) {
@@ -65,7 +66,7 @@ public class InferenceDataSetSelectionWizardPanel implements WizardDescriptor.Fi
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+        wiz.putProperty(PROP_NAME_INFERENCE_DATA, getComponent().getDataNodes());
     }
 
     @Override

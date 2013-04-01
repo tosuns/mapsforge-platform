@@ -9,6 +9,7 @@ import de.fub.utilsmodule.beans.PropertyDescriptorUtil;
 import java.lang.reflect.InvocationTargetException;
 import org.openide.nodes.PropertySupport;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -28,9 +29,10 @@ public class NodeProperty extends PropertySupport.ReadWrite<Object> {
 
     private void initValue() {
         try {
-            value = PropertyDescriptorUtil.getValue(Class.forName(property.getJavaType()), property);
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            value = PropertyDescriptorUtil.getValue(classLoader.loadClass(property.getJavaType()), property);
         } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            value = PropertyDescriptorUtil.getValue(Object.class, property);
         }
     }
 
@@ -53,7 +55,8 @@ public class NodeProperty extends PropertySupport.ReadWrite<Object> {
         Class<?> clazz = Object.class;
         try {
             if (property != null && property.getJavaType() != null) {
-                clazz = Class.forName(property.getJavaType());
+                ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+                clazz = classLoader.loadClass(property.getJavaType());
             } else {
                 clazz = Object.class;
             }

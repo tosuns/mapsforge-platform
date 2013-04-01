@@ -7,6 +7,10 @@ package de.fub.mapsforge.project.detector.wizards.detector;
 import de.fub.mapsforge.project.detector.model.xmls.TransportMode;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
+import de.fub.utilsmodule.icons.IconRegister;
+import java.awt.Image;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JPanel;
@@ -14,13 +18,16 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -32,6 +39,7 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private Lookup lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());
+    private HashMap<String, List<Node>> map = new HashMap<String, List<Node>>();
 
     /**
      * Creates new form TrainingSetSelectionVisualPanel
@@ -46,6 +54,16 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
     @Override
     public String getName() {
         return Bundle.CLT_TransportMode_And_Trainingset();
+    }
+
+    public HashMap<String, List<Node>> getTransportModeMap() {
+        map.clear();
+        Node rootContext = getExplorerManager().getRootContext();
+        for (Node node : rootContext.getChildren().getNodes(true)) {
+            String transportMode = node.getDisplayName();
+            map.put(transportMode, Arrays.asList(node.getChildren().getNodes(true)));
+        }
+        return map;
     }
 
     /**
@@ -97,6 +115,20 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
         }
 
         @Override
+        public Image getIcon(int type) {
+            Image image = IconRegister.getFolderIcon();
+            if (image == null) {
+                super.getIcon(type);
+            }
+            return image;
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
+        }
+
+        @Override
         public Action[] getActions(boolean context) {
             List<? extends Action> actionsForPath = Utilities.actionsForPath(ACTION_PATH);
             return actionsForPath.toArray(new Action[actionsForPath.size()]);
@@ -134,6 +166,37 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
         }
     }
 
+    private static class DataSetNodeFactory extends ChildFactory<DataObject> implements ChangeListener {
+
+        private final ObservableList<DataObject> list;
+
+        private DataSetNodeFactory(ObservableList<DataObject> list) {
+            this.list = list;
+            list.addChangeListener(WeakListeners.change(DataSetNodeFactory.this, list));
+        }
+
+        @Override
+        protected boolean createKeys(List<DataObject> toPopulate) {
+            toPopulate.addAll(list);
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(DataObject key) {
+            return new FilterNode(key.getNodeDelegate()) {
+                @Override
+                public Action[] getActions(boolean context) {
+                    return new Action[0];
+                }
+            };
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            refresh(true);
+        }
+    }
+
     public static class TransportModeFilterNode extends AbstractNode {
 
         public static final String ACTION_PATH = "mapsforge/Detector/Wizard/Traningsset/Transportmode/Actions";
@@ -141,15 +204,25 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
         private final TransportMode transportMode;
         private final ObservableList<String> transportNodeNameList;
 
-        public TransportModeFilterNode(TransportMode transportMode, ObservableList<String> transportModeNameList) {
-            this(transportMode, transportModeNameList, new InstanceContent());
+        public TransportModeFilterNode(
+                TransportMode transportMode,
+                ObservableList<String> transportModeNameList) {
+            this(transportMode,
+                    transportModeNameList,
+                    new InstanceContent(),
+                    new ObservableArrayList<DataObject>());
         }
 
-        private TransportModeFilterNode(TransportMode transportMode, ObservableList<String> transportModeNameList, InstanceContent content) {
-            super(Children.LEAF, new AbstractLookup(content));
+        private TransportModeFilterNode(
+                TransportMode transportMode,
+                ObservableList<String> transportModeNameList,
+                InstanceContent content,
+                ObservableList<DataObject> dataObjectList) {
+            super(Children.create(new DataSetNodeFactory(dataObjectList), true), new AbstractLookup(content));
             setDisplayName(transportMode.getName());
             this.content = content;
             this.content.add(TransportModeFilterNode.this);
+            this.content.add(dataObjectList);
             this.transportMode = transportMode;
             this.transportNodeNameList = transportModeNameList;
         }
@@ -166,6 +239,20 @@ public final class TrainingSetSelectionVisualPanel extends JPanel implements Exp
 
         public ObservableList<String> getTransportNodeNameList() {
             return transportNodeNameList;
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            Image image = IconRegister.getFolderIcon();
+            if (image == null) {
+                image = super.getIcon(type);
+            }
+            return image;
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
         }
     }
 }

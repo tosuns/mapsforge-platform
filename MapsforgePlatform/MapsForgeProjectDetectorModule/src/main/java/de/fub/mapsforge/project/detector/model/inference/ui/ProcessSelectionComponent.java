@@ -5,8 +5,8 @@
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
-import de.fub.mapsforge.project.detector.ui.CustomListView;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
+import de.fub.utilsmodule.components.CustomListView;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;

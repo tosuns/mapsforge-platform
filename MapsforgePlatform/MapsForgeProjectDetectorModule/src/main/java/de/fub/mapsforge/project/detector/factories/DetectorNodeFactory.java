@@ -54,8 +54,8 @@ public class DetectorNodeFactory extends ChildFactory<DetectorDataObject> implem
     }
 
     @Override
-    protected Node createNodeForKey(DetectorDataObject aggregatorDataObject) {
-        return new FilterNode(aggregatorDataObject.getNodeDelegate());
+    protected Node createNodeForKey(DetectorDataObject detectorDataObject) {
+        return new FilterNode(detectorDataObject.getNodeDelegate());
     }
 
     @Override

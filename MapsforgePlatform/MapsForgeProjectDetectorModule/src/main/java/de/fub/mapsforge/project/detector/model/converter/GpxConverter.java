@@ -21,7 +21,6 @@ import java.util.Map;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -36,13 +35,6 @@ public class GpxConverter implements DataConverter {
         boolean result = false;
 
         if (fileObject != null) {
-            try {
-                DataObject dataObject = DataObject.find(fileObject);
-            } catch (DataObjectNotFoundException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-
-
             if ("text/gpx+xml".equals(fileObject.getMIMEType())) {
                 result = true;
             } else {
@@ -56,23 +48,24 @@ public class GpxConverter implements DataConverter {
     public synchronized List<TrackSegment> convert(FileObject fileObject) throws DataConverterException {
         List<TrackSegment> trackSegmentList = new ArrayList<TrackSegment>();
         Gpx gpx = null;
-        if (fileObject != null) {
+        if (fileObject != null && isFileTypeSupported(fileObject)) {
             try {
                 DataObject dataObject = DataObject.find(fileObject);
                 if (dataObject instanceof GPXDataObject) {
                     gpx = ((GPXDataObject) dataObject).getGpx();
-
-                }
-                if (gpx == null) {
-                    throw new DataConverterException("Failed to convert specified file: " + fileObject.getPath());
+                    if (gpx == null) {
+                        throw new DataConverterException("Failed to convert specified file: " + fileObject.getPath());
+                    } else {
+                        trackSegmentList = convertToTrackSegment(gpx);
+                    }
                 } else {
-                    trackSegmentList = convertToTrackSegment(gpx);
+                    throw new DataConverterException("File type not type of GPXDataObject!");
                 }
             } catch (DataObjectNotFoundException ex) {
                 throw new DataConverterException("Couldn't convert file to gpx because !");
             }
         } else {
-            throw new DataConverterException("Couldn't convert file gpx because file == null!");
+            throw new DataConverterException("Couldn't convert file gpx because file == null or file type is not supported by this converter!");
         }
         return trackSegmentList;
     }
@@ -103,7 +96,7 @@ public class GpxConverter implements DataConverter {
         HashMap<String, String> map = new HashMap<String, String>();
         Collection<String> propertyList = new Waypoint().getPropertyList();
         for (String property : propertyList) {
-            if (Waypoint.PROP_NAME_BEARING.equals(property)) {
+            if (GpxWayPoint.PROP_NAME_BEARING.equals(property)) {
                 // gpx version 1.1 does not support bearing information
             } else if (GpxWayPoint.PROP_NAME_LATITUDE.equals(property)) {
                 map.put(Waypoint.PROP_NAME_LATITUDE, String.valueOf(gpxWpt.getLat().doubleValue()));

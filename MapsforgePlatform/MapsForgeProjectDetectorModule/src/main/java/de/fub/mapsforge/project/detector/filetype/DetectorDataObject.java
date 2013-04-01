@@ -6,10 +6,13 @@ package de.fub.mapsforge.project.detector.filetype;
 
 import de.fub.mapsforge.project.detector.factories.nodes.DetectorNode;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.xmls.DataSets;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
+import de.fub.utilsmodule.actions.SaveAsTemplateAction;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -80,18 +83,13 @@ import org.xml.sax.InputSource;
             id =
             @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 600),
-//    @ActionReference(
-//            path = "Loaders/text/detector+xml/Actions",
-//            id =
-//            @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
-//            position = 700,
-//            separatorAfter = 800),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
             id =
-            @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
-            position = 900,
-            separatorAfter = 1000),
+            @ActionID(
+            category = "System",
+            id = "de.fub.utilsmodule.actions.SaveAsTemplateAction"),
+            position = 900),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
             id =
@@ -123,6 +121,7 @@ public class DetectorDataObject extends MultiDataObject {
         InputSource inputSource = DataObjectAdapters.inputSource(DetectorDataObject.this);
         CheckXMLSupport checkXMLSupport = new CheckXMLSupport(inputSource);
         ValidateXMLSupport validateXMLSupport = new ValidateXMLSupport(inputSource);
+        getCookieSet().add(new SaveAsTamplateHandlerImpl());
         getCookieSet().add(checkXMLSupport);
         getCookieSet().add(validateXMLSupport);
         pf.addFileChangeListener(fileChangeListener);
@@ -251,6 +250,38 @@ public class DetectorDataObject extends MultiDataObject {
         public void fileChanged(FileEvent fe) {
             detectorDescriptor = null;
             cs.fireChange();
+        }
+    }
+
+    private class SaveAsTamplateHandlerImpl implements SaveAsTemplateAction.SaveAsTemplateHandler {
+
+        @Override
+        public void createTemplate(String templateName, DataObject templateFromThisDataObject) throws IOException {
+            if (templateFromThisDataObject instanceof DetectorDataObject) {
+                try {
+                    DetectorDataObject detectorDataObject = (DetectorDataObject) templateFromThisDataObject;
+                    DetectorDescriptor detectorDescr = DetectorUtils.getDetectorDescriptor(detectorDataObject);
+                    detectorDescr.setName(templateName);
+                    DataSets datasets = detectorDescr.getDatasets();
+                    datasets.getInferenceSet().getDatasetList().clear();
+                    datasets.getTrainingSet().getTransportModeList().clear();
+                    FileObject detectorTemplates = FileUtil.getConfigFile("Templates/Detectors");
+                    if (detectorTemplates == null) {
+                        FileObject templateFolder = FileUtil.getConfigFile("Templates");
+                        if (templateFolder != null) {
+                            detectorTemplates = templateFolder.createFolder("Detectors");
+                        } else {
+                            throw new IOException("Couldn't Templates folder!");
+                        }
+                    }
+                    templateName = templateName.endsWith(".dec") ? templateName : MessageFormat.format("{0}.dec", templateName);
+                    FileObject templateFile = detectorTemplates.createData(templateName);
+                    DataObject.find(templateFile).setTemplate(true);
+                    DetectorUtils.saveDetector(templateFile, detectorDescr);
+                } catch (JAXBException ex) {
+                    throw new IOException(ex);
+                }
+            }
         }
     }
 }

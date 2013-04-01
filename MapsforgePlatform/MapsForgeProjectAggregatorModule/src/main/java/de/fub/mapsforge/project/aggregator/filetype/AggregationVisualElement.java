@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.aggregator.filetype;
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.mapsforge.project.aggregator.factories.LayerNodeFactory;
-import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
@@ -23,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Rectangle2D;
+import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -55,6 +55,7 @@ import org.openide.awt.DropDownButtonFactory;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
@@ -116,9 +117,9 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
      */
     public AggregationVisualElement(Lookup lkp) {
 
-        AggregatorNode node = lkp.lookup(AggregatorNode.class);
-        if (node != null) {
-            aggregator = node.getLookup().lookup(Aggregator.class);
+        DataObject dataObject = lkp.lookup(DataObject.class);
+        if (dataObject != null) {
+            aggregator = dataObject.getNodeDelegate().getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
         lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());
@@ -431,7 +432,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
         if (this.callback != null && aggregator != null) {
-            this.callback.getTopComponent().setDisplayName(aggregator.getDescriptor().getName());
+            this.callback.getTopComponent().setDisplayName(aggregator.getAggregatorDescriptor().getName());
         }
     }
 
@@ -448,24 +449,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 public void run() {
                     TopComponent topComponent = callback.getTopComponent();
                     if (callback.isSelectedElement()) {
-                        switch (aggregator.getAggregatorState()) {
-                            case ERROR:
-                            case INACTIVE:
-                                if (defaulImage != null) {
-                                    topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(0));
-                                }
-                                if (processButton != null) {
-                                    processButton.setEnabled(true);
-                                }
-                                break;
-                            case RUNNING:
-                                defaulImage = topComponent.getIcon();
-                                topComponent.setIcon(aggregator.getAggregatorState().getImage());
-                                if (processButton != null) {
-                                    processButton.setEnabled(false);
-                                }
-                                break;
-                        }
+                        topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
                     }
                 }
             });

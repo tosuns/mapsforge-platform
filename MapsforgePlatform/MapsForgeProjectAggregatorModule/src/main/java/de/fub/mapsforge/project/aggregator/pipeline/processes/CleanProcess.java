@@ -14,6 +14,7 @@ import de.fub.mapforgeproject.api.process.ProcessPipeline.ProcessEvent;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
@@ -61,10 +62,7 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
     public CleanProcess(Aggregator aggregator) {
         super(aggregator);
 
-        PropertySet propertySet = getPropertySet(CLEAN_SETTINGS);
-        if (propertySet != null) {
-            createCleaningOptions(propertySet.getProperties());
-        }
+
         RenderingOptions renderingOptions = new RenderingOptions();
         renderingOptions.setColor(new Color(39, 172, 88)); // green
         renderingOptions.setRenderingType(RenderingOptions.RenderingType.ALL);
@@ -74,13 +72,24 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
         getLayers().add(gPSSegmentLayer);
     }
 
+    @Override
+    public void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        super.setProcessDescriptor(processDescriptor);
+        if (processDescriptor != null) {
+            PropertySet propertySet = getPropertySet(CLEAN_SETTINGS);
+            if (propertySet != null) {
+                createCleaningOptions(propertySet.getProperties());
+            }
+        }
+    }
+
     private void createCleaningOptions(List<Property> properties) {
         gpsCleaner.setCleaningOptions(AggregatorUtils.createValue(CleaningOptions.class, properties));
     }
 
     private PropertySet getPropertySet(String name) {
-        if (getDescriptor() != null) {
-            Properties properties = getDescriptor().getProperties();
+        if (getProcessDescriptor() != null) {
+            Properties properties = getProcessDescriptor().getProperties();
             if (!properties.getSections().isEmpty()) {
                 return getPropertySet(name, properties);
             }
@@ -174,16 +183,16 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
     @Override
     public String getName() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDisplayName();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDisplayName();
         }
         return "Clean";
     }
 
     @Override
     public String getDescription() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDescription();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDescription();
         }
         return "Clean Process";
     }

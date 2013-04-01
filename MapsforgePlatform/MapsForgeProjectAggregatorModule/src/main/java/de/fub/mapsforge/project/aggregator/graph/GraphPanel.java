@@ -25,12 +25,13 @@ import org.netbeans.api.visual.layout.LayoutFactory;
 import org.netbeans.api.visual.layout.SceneLayout;
 import org.netbeans.api.visual.widget.Widget;
 import org.openide.util.ChangeSupport;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Serdar
  */
-public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
+public class GraphPanel extends javax.swing.JPanel implements ChangeListener, Lookup.Provider {
 
     private static final Logger LOG = Logger.getLogger(GraphPanel.class.getName());
     private static final long serialVersionUID = 1L;
@@ -174,6 +175,11 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Lookup getLookup() {
+        return graph.getLookup();
+    }
 
     static class DropHandler extends DropTargetAdapter {
 

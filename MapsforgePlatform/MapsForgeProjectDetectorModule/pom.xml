@@ -193,7 +193,7 @@
                         <publicPackage>de.fub.mapsforge.project.detector.model.inference.features</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.inference.processhandler</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.inference.ui</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.pipeline.postprocessors</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.xmls</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.ui.customizer</publicPackage>

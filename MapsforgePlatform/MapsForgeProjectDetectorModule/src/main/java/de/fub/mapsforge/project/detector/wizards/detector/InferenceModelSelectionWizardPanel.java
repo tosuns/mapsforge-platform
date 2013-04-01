@@ -21,11 +21,12 @@ public class InferenceModelSelectionWizardPanel implements WizardDescriptor.Fini
      */
     private InferenceModelSelectionVisualPanel component;
     private final ChangeSupport cs = new ChangeSupport(this);
+    public static final String PROP_NAME_INFERENCEMODEL = "wizard.selected.inferencemodel";
+
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
-
     @Override
     public InferenceModelSelectionVisualPanel getComponent() {
         if (component == null) {
@@ -71,7 +72,7 @@ public class InferenceModelSelectionWizardPanel implements WizardDescriptor.Fini
     @Override
     public void storeSettings(WizardDescriptor wiz) {
         wiz.putProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 5);
-        // use wiz.putProperty to remember current panel state
+        wiz.putProperty(PROP_NAME_INFERENCEMODEL, getComponent().getSelectedInferenceModel());
     }
 
     @Override

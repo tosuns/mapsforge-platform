@@ -160,16 +160,16 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
     @Override
     public String getName() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDisplayName();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDisplayName();
         }
         return "Aggregation";
     }
 
     @Override
     public String getDescription() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDescription();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDescription();
         }
         return "Aggregation process";
     }

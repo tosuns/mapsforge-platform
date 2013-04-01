@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.ui;
 
+import de.fub.utilsmodule.components.CustomListView;
 import javax.swing.JLabel;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.ListView;

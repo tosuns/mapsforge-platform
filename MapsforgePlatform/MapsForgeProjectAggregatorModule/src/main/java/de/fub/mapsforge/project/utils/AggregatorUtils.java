@@ -10,9 +10,11 @@ import de.fub.mapforgeproject.utils.MapsForgeProjectUtils;
 import de.fub.mapsforge.project.aggregator.factories.CategoryNodeFactory;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.utilsmodule.xml.jax.JAXBUtil;
 import java.awt.Color;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
@@ -36,6 +38,8 @@ import org.netbeans.spi.palette.PaletteActions;
 import org.netbeans.spi.palette.PaletteController;
 import org.netbeans.spi.palette.PaletteFactory;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
@@ -58,6 +62,7 @@ public class AggregatorUtils {
     @StaticResource
     public static final String ICON_PATH_ERROR = "de/fub/mapsforge/project/aggregator/aggregatorIconError.png";
     private static PaletteController palette;
+    private static FileSystem inMemoryFileSystem;
 
     public static PaletteController getProcessPalette() {
         if (palette == null) {
@@ -197,6 +202,21 @@ public class AggregatorUtils {
         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
         marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(new ObjectFactory().createGpx(content), destFile);
+    }
+
+    public static AggregatorDescriptor getAggregatorDescritpor(DataObject dataObject) throws JAXBException, IOException {
+        return getAggregatorDescriptor(dataObject.getPrimaryFile());
+    }
+
+    public static AggregatorDescriptor getAggregatorDescriptor(FileObject fileObject) throws JAXBException, IOException {
+        return JAXBUtil.createDescriptor(AggregatorDescriptor.class, fileObject);
+    }
+
+    private static FileSystem getFilesystem() {
+        if (inMemoryFileSystem == null) {
+            inMemoryFileSystem = FileUtil.createMemoryFileSystem();
+        }
+        return inMemoryFileSystem;
     }
 
     private static class PaletteDragAndDropHandler extends DragAndDropHandler {

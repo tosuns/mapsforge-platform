@@ -237,6 +237,8 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
+                        <publicPackage>de.fub.mapsforge.project</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.aggregator.filetype</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.aggregator.pipeline</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.aggregator.pipeline.processes</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.aggregator.xml</publicPackage>

@@ -6,7 +6,7 @@ package de.fub.mapsforge.project.aggregator.actions.wizards.aggregator;
 
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.mapforgeproject.MapsForgeProject;
-import de.fub.mapsforge.project.MapsForgeAggregationBuilderNodeFactory;
+import de.fub.mapsforge.project.MapsForgeAggregatorNodeFactory;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
@@ -82,7 +82,7 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
                             AggregatorDataObject aggregatorDataObject = (AggregatorDataObject) property;
                             String fileName = null;
                             try {
-                                AggregatorDescriptor aggregator = aggregatorDataObject.getAggregator();
+                                AggregatorDescriptor aggregator = aggregatorDataObject.getAggregatorDescriptor();
                                 aggregator.setName((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_NAME));
                                 aggregator.setDescription((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION));
 
@@ -110,11 +110,11 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
                                 marshaller.marshal(aggregator, outputStream);
 
                             } catch (IOException ex) {
-                                if (outputStream != null && fileName != null && aggregatorFolder != null) {
+                                if (outputStream != null && fileName != null) {
                                     handleExceptionOfOutputStream(outputStream, fileName, aggregatorFolder);
                                 }
                             } catch (JAXBException ex) {
-                                if (outputStream != null && fileName != null && aggregatorFolder != null) {
+                                if (outputStream != null && fileName != null) {
                                     handleExceptionOfOutputStream(outputStream, fileName, aggregatorFolder);
                                 }
                             } finally {
@@ -158,7 +158,7 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
             if (project instanceof MapsForgeProject) {
                 try {
                     MapsForgeProject mapsForgeProject = (MapsForgeProject) project;
-                    String folderPath = mapsForgeProject.getProjectData().getProjectFolders().getFolderPath(MapsForgeAggregationBuilderNodeFactory.AGGREGATION_BUILDER_FILENAME);
+                    String folderPath = mapsForgeProject.getProjectData().getProjectFolders().getFolderPath(MapsForgeAggregatorNodeFactory.AGGREGATION_BUILDER_FILENAME);
                     FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(folderPath);
                     if (fileObject != null) {
                         return DataObject.find(fileObject);

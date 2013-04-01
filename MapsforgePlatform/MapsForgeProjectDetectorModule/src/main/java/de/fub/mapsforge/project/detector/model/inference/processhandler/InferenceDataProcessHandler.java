@@ -67,9 +67,8 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
     @Override
     protected void handle() {
-        getInferenceModel().getResult().clear();
-        resultMap.clear();
-        instanceToTrackSegmentMap.clear();
+        clearResults();
+
         Classifier classifier = getInferenceModel().getClassifier();
         HashSet<TrackSegment> inferenceDataSet = getInferenceDataSet();
         ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
@@ -125,8 +124,12 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
                         trackSegmentList.add(trackSegment);
                     }
                 }
-                Gpx gpx = GPSUtils.convert(trackSegmentList);
-                getInferenceModel().getResult().put(entry.getKey(), Arrays.asList(gpx));
+
+                // only those classes are put into  the result data set, which are not empty
+                if (!trackSegmentList.isEmpty()) {
+                    Gpx gpx = GPSUtils.convert(trackSegmentList);
+                    getInferenceModel().getResult().put(entry.getKey(), Arrays.asList(gpx));
+                }
             }
         } else {
             throw new InferenceModelClassifyException(MessageFormat.format("No attributes available. Attribute list lengeth == {0}", attributeList.size()));
@@ -150,8 +153,10 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
         resultMap.get(className).add(instance);
     }
 
-    private void clearResultMap() {
+    private void clearResults() {
+        getInferenceModel().getResult().clear();
         resultMap.clear();
+        instanceToTrackSegmentMap.clear();
     }
 
     public HashSet<TrackSegment> getInferenceDataSet() {

@@ -6,7 +6,6 @@ package de.fub.mapsforge.project;
 
 import de.fub.mapforgeproject.MapsForgeProject;
 import de.fub.mapforgeproject.xml.MapsForge;
-import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorFolderNode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ import org.openide.util.Exceptions;
  * @author Serdar
  */
 @NodeFactory.Registration(projectType = "org-mapsforge-project", position = 1000)
-public class MapsForgeAggregationBuilderNodeFactory implements NodeFactory {
+public class MapsForgeAggregatorNodeFactory implements NodeFactory {
 
     public static final String AGGREGATION_BUILDER_FILENAME = "Aggregation Builders";
 
@@ -57,25 +56,25 @@ public class MapsForgeAggregationBuilderNodeFactory implements NodeFactory {
                 // Find GPX Datasource folder
                 if (projectData.getProjectFolders() != null) {
 
-                    String datasourceFolderPath = projectData.getProjectFolders().getFolderPath(AGGREGATION_BUILDER_FILENAME);
-                    if (datasourceFolderPath == null) {
-                        datasourceFolderPath = AGGREGATION_BUILDER_FILENAME.replaceAll(" ", "");
-                        FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(datasourceFolderPath);
+                    String aggregatorFolderPath = projectData.getProjectFolders().getFolderPath(AGGREGATION_BUILDER_FILENAME);
+                    if (aggregatorFolderPath == null) {
+                        aggregatorFolderPath = AGGREGATION_BUILDER_FILENAME.replaceAll(" ", "");
+                        FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(aggregatorFolderPath);
                         if (fileObject == null) {
-                            fileObject = mapsForgeProject.getProjectDirectory().createFolder(datasourceFolderPath);
+                            fileObject = mapsForgeProject.getProjectDirectory().createFolder(aggregatorFolderPath);
                         }
                         DataObject dataObject = DataObject.find(fileObject);
-                        nodeList.add(new AggregatorFolderNode(dataObject, mapsForgeProject));
-                        projectData.getProjectFolders().putFolder(AGGREGATION_BUILDER_FILENAME, datasourceFolderPath);
+                        nodeList.add(MapsForgeAggregatorHelper.getInstance().createAggregatorFolderNode(dataObject, mapsForgeProject));
+                        projectData.getProjectFolders().putFolder(AGGREGATION_BUILDER_FILENAME, aggregatorFolderPath);
                         mapsForgeProject.modelChanged(AggregationBuilderNodeList.this, projectData);
 
                     } else {
                         // there is an entry for the gpx datasource file
                         // validate path and get folder if possible
-                        FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(datasourceFolderPath);
+                        FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(aggregatorFolderPath);
                         if (fileObject != null) {
                             DataObject dataObject = DataObject.find(fileObject);
-                            nodeList.add(new AggregatorFolderNode(dataObject, mapsForgeProject));
+                            nodeList.add(MapsForgeAggregatorHelper.getInstance().createAggregatorFolderNode(dataObject, mapsForgeProject));
                         } else {
                             // TODO implement
                             // inconsitency! signal error message to project node

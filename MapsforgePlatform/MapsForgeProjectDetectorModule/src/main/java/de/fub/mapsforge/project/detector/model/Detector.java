@@ -9,7 +9,7 @@ import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.PostProcessorPipeline;
-import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.Task;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcessorPipeline;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;

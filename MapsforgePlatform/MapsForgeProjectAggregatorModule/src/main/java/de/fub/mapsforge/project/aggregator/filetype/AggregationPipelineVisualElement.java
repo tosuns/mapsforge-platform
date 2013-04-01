@@ -4,13 +4,13 @@
  */
 package de.fub.mapsforge.project.aggregator.filetype;
 
-import de.fub.mapsforge.project.aggregator.factories.nodes.AggregatorNode;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.event.ActionEvent;
+import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -30,12 +31,14 @@ import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
+import org.openide.loaders.DataObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 @MultiViewElement.Registration(
@@ -56,19 +59,19 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
     private transient final GraphUpdater graphUpdater = new GraphUpdater();
     private transient final ModelUpdater modelUpdater = new ModelUpdater();
     private final InstanceContent content = new InstanceContent();
-    private AbstractLookup lookup = null;
+    private Lookup lookup = null;
     private transient Aggregator aggregator;
     private JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;
 
     public AggregationPipelineVisualElement(Lookup lkp) {
-        AggregatorNode node = lkp.lookup(AggregatorNode.class);
-        if (node != null) {
-            aggregator = node.getLookup().lookup(Aggregator.class);
+        DataObject dataObject = lkp.lookup(DataObject.class);
+        if (dataObject != null) {
+            aggregator = dataObject.getNodeDelegate().getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
-        initLookup();
         initComponents();
+        initLookup();
         aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationPipelineVisualElement.this, aggregator));
         modelSynchronizerClient = aggregator.create(graphUpdater);
         updateGraph();
@@ -79,7 +82,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
     }
 
     private void initLookup() {
-        lookup = new AbstractLookup(content);
+        lookup = new ProxyLookup(new AbstractLookup(content), graphPanel1.getLookup());
         content.add(AggregatorUtils.getProcessPalette());
     }
 
@@ -125,14 +128,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
 
     @Override
     public Action[] getActions() {
-        return new Action[]{new AbstractAction(null, ImageUtilities.loadImageIcon(LAYOUT_BUTTON_ICON_PATH, true)) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    graphPanel1.layoutGraph();
-                }
-            }};
+        return new Action[]{new LayoutAction(null, ImageUtilities.loadImageIcon(LAYOUT_BUTTON_ICON_PATH, true))};
     }
 
     @Override
@@ -174,7 +170,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
         if (this.callback != null && aggregator != null) {
-            this.callback.getTopComponent().setDisplayName(aggregator.getDescriptor().getName());
+            this.callback.getTopComponent().setDisplayName(aggregator.getAggregatorDescriptor().getName());
         }
     }
 
@@ -191,11 +187,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
                 public void run() {
                     TopComponent topComponent = callback.getTopComponent();
                     if (callback.isSelectedElement()) {
-                        if (aggregator.getAggregatorState() == Aggregator.AggregatorState.RUNNING) {
-                            topComponent.setIcon(aggregator.getAggregatorState().getImage());
-                        } else {
-                            topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(0));
-                        }
+                        topComponent.setIcon(aggregator.getDataObject().getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
                     }
                 }
             });
@@ -208,16 +200,16 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
         public void stateChanged(ChangeEvent e) {
             if (aggregator != null) {
                 List<AbstractAggregationProcess<?, ?>> pipelineList = graphPanel1.collectPipeline();
-                List<ProcessDescriptor> list = aggregator.getDescriptor().getPipeline().getList();
+                List<ProcessDescriptor> list = aggregator.getAggregatorDescriptor().getPipeline().getList();
                 list.clear();
                 for (AbstractAggregationProcess<?, ?> process : pipelineList) {
-                    if (process.getDescriptor() != null) {
-                        list.add(process.getDescriptor());
+                    if (process.getProcessDescriptor() != null) {
+                        list.add(process.getProcessDescriptor());
                     } else {
                         LOG.log(Level.SEVERE, "process {0} doesn''T have a ProcessDescriptor", process.getName());
                     }
                 }
-                aggregator.notifyModified();
+                aggregator.updateSource();
             }
         }
     }
@@ -227,6 +219,21 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
         @Override
         public void stateChanged(ChangeEvent e) {
             updateGraph();
+        }
+    }
+
+    @Messages({"CLT_LayoutAction_Name=Layout Graph"})
+    private class LayoutAction extends AbstractAction {
+
+        public LayoutAction(String name, Icon icon) {
+            super(name, icon);
+            putValue(Action.SHORT_DESCRIPTION, Bundle.CLT_LayoutAction_Name());
+        }
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            graphPanel1.layoutGraph();
         }
     }
 }

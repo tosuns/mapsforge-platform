@@ -76,7 +76,7 @@ public class ProcessWidget extends Widget {
     }
 
     private void initSettingsButton() {
-        if (!process.getDescriptor().getProperties().getSections().isEmpty()) {
+        if (!process.getProcessDescriptor().getProperties().getSections().isEmpty()) {
             settingsButton = new JButton();
             settingsButton.setBackground(new Color(0, 0, 0, 0));
             settingsButton.setText("Settings");

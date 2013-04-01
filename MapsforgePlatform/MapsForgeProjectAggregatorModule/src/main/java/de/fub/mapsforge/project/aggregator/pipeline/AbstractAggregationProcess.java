@@ -49,12 +49,12 @@ public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I
         super.run();
     }
 
-    public ProcessDescriptor getDescriptor() {
+    public ProcessDescriptor getProcessDescriptor() {
         if (descriptor == null) {
             if (getAggregator() == null) {
                 descriptor = createProcessDescriptor();
             } else {
-                for (ProcessDescriptor processDescriptor : getAggregator().getDescriptor().getPipeline().getList()) {
+                for (ProcessDescriptor processDescriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (processDescriptor != null
                             && getClass().getName().equals(processDescriptor.getJavaType())) {
                         descriptor = processDescriptor;
@@ -64,6 +64,10 @@ public abstract class AbstractAggregationProcess<I, O> extends AbstractProcess<I
             }
         }
         return descriptor;
+    }
+
+    public void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        this.descriptor = processDescriptor;
     }
 
     public List<AbstractLayer<?>> getLayers() {
