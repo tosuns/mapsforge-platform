@@ -8,15 +8,21 @@ import de.fub.mapforgeproject.MapsForgeProject;
 import de.fub.mapforgeproject.xml.MapsForge;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
 import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.FilterNode;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
 /**
@@ -27,13 +33,55 @@ public class AggregatorVisualPanel3 extends javax.swing.JPanel implements Explor
 
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
+    private static final String FILE_NOT_FOUND_MESSAGE = "Datasource file path not found in module preference. Datasource module needs to register its path";
 
     /**
      * Creates new form AggregatorVisualPanel3
      */
     public AggregatorVisualPanel3() {
         initComponents();
+        String datasourcefileObjectPath = null;
+        try {
+            // this way depends on the abailablity of the necessary data in the
+            // NbPreference module.
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            if (classLoader != null) {
+                Preferences preferences = NbPreferences.forModule(classLoader.loadClass("de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory"));
+                datasourcefileObjectPath = preferences.get("GPX Datasource", null);
+                if (datasourcefileObjectPath == null) {
+                    throw new FileNotFoundException(FILE_NOT_FOUND_MESSAGE);
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            datasourcefileObjectPath = alternativeMethod();
+        } catch (FileNotFoundException ex) {
+            datasourcefileObjectPath = alternativeMethod();
+        }
+        try {
+            if (datasourcefileObjectPath != null) {
+                File file = new File(datasourcefileObjectPath);
+                if (file.exists()) {
+                    FileObject fileObject = FileUtil.toFileObject(file);
+                    DataObject dataObject1 = DataObject.find(fileObject);
+                    explorerManager.setRootContext(new FilterNode(dataObject1.getNodeDelegate(), new FilterNode.Children(dataObject1.getNodeDelegate())));
+                }
+            } else {
+                throw new FileNotFoundException(FILE_NOT_FOUND_MESSAGE);
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
 
+    /**
+     * A fall back method for the case that the datasource file path is not
+     * registered in the module preference.
+     *
+     * This way is more complicated but doesn't need pre requirements like
+     * registering the needed info in the NbPreference.
+     */
+    private String alternativeMethod() {
+        String folderPath = null;
         DataObject dataObject = Utilities.actionsGlobalContext().lookup(DataObject.class);
         if (dataObject != null) {
             FileObject primaryFile = dataObject.getPrimaryFile();
@@ -43,14 +91,7 @@ public class AggregatorVisualPanel3 extends javax.swing.JPanel implements Explor
                 try {
                     MapsForge projectData = mapsForgeProject.getProjectData();
                     if (projectData != null) {
-                        String folderPath = projectData.getProjectFolders().getFolderPath(MapsForgeDatasourceNodeFactory.DATASOURCE_FILENAME);
-                        if (folderPath != null) {
-                            FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(folderPath);
-                            if (fileObject != null) {
-                                DataObject dataObject1 = DataObject.find(fileObject);
-                                explorerManager.setRootContext(new FilterNode(dataObject1.getNodeDelegate(), new FilterNode.Children(dataObject1.getNodeDelegate())));
-                            }
-                        }
+                        folderPath = projectData.getProjectFolders().getFolderPath(MapsForgeDatasourceNodeFactory.DATASOURCE_FILENAME);
                     }
                 } catch (JAXBException ex) {
                     Exceptions.printStackTrace(ex);
@@ -59,6 +100,7 @@ public class AggregatorVisualPanel3 extends javax.swing.JPanel implements Explor
                 }
             }
         }
+        return folderPath;
     }
 
     @NbBundle.Messages("CLT_Choose_Datasources=Choose Datasources")

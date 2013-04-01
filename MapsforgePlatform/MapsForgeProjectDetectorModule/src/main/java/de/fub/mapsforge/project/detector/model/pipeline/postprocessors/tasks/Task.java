@@ -11,6 +11,8 @@ import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.node.property.ProcessProperty;
@@ -18,12 +20,14 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -35,6 +39,28 @@ import org.openide.util.lookup.Lookups;
 public abstract class Task extends AbstractDetectorProcess<InferenceModelResultDataSet, Void> {
 
     private InferenceModelResultDataSet resultDataSet;
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor processDescriptor = null;
+        if (getDetector() == null) {
+            try {
+                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+
+            for (ProcessDescriptor teskProcessDescriptor : getDetector().getDetectorDescriptor().getPostprocessors().getPostprocessorList()) {
+                if (teskProcessDescriptor != null
+                        && getClass().getName().equals(teskProcessDescriptor.getJavaType())) {
+                    processDescriptor = teskProcessDescriptor;
+                    break;
+                }
+            }
+        }
+        return processDescriptor;
+    }
 
     public Task() {
         super(null);

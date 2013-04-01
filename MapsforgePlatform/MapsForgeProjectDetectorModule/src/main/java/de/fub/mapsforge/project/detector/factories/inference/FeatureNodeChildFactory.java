@@ -4,22 +4,21 @@
  */
 package de.fub.mapsforge.project.detector.factories.inference;
 
-import de.fub.mapsforge.project.detector.factories.nodes.ProcessDescriptionNode;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.xmls.Features;
-import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 
 /**
  *
  * @author Serdar
  */
-public class FeatureNodeChildFactory extends ChildFactory<ProcessDescriptor> implements ChangeListener {
+public class FeatureNodeChildFactory extends ChildFactory<FeatureProcess> implements ChangeListener {
 
     private final Detector detector;
     private ModelSynchronizer.ModelSynchronizerClient msClient;
@@ -32,18 +31,16 @@ public class FeatureNodeChildFactory extends ChildFactory<ProcessDescriptor> imp
     }
 
     @Override
-    protected boolean createKeys(List<ProcessDescriptor> toPopulate) {
+    protected boolean createKeys(List<FeatureProcess> toPopulate) {
         if (detector != null && detector.getInferenceModel() != null) {
-            Features features = detector.getInferenceModel().getInferenceModelDescriptor().getFeatures();
-            List<ProcessDescriptor> featureList = features.getFeatureList();
-            toPopulate.addAll(featureList);
+            toPopulate.addAll(detector.getInferenceModel().getFeatureList());
         }
         return true;
     }
 
     @Override
-    protected Node createNodeForKey(ProcessDescriptor processDescriptor) {
-        return new ProcessDescriptionNode(msClient, processDescriptor);
+    protected Node createNodeForKey(FeatureProcess processDescriptor) {
+        return new FilterNode(processDescriptor.getNodeDelegate());
     }
 
     @Override

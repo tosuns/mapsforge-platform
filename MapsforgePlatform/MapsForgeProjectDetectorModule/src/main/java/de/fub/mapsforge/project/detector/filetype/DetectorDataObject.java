@@ -10,7 +10,6 @@ import de.fub.mapsforge.project.detector.model.xmls.DataSets;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.actions.SaveAsTemplateAction;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.MessageFormat;

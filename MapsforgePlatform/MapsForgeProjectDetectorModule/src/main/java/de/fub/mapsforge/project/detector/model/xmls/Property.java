@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Property extends Descriptor implements PropertyDescriptor {
 
-    @XmlAttribute(name = "value", required = true)
+    @XmlAttribute(name = "value", required = false)
     private String value;
     @XmlAttribute(name = "id", required = true)
     private String id;

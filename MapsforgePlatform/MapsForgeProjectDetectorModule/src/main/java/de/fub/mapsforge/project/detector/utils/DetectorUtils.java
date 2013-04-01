@@ -25,6 +25,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -34,6 +35,7 @@ import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -358,6 +360,23 @@ public class DetectorUtils {
         }
 
         return copy;
+    }
+
+    public static FileObject getDatasourceFileObject() {
+        FileObject fileObject = null;
+        ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+        try {
+            Preferences preferences = NbPreferences.forModule(classLoader.loadClass("de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory"));
+            String filePath = preferences.get("GPX Datasource", null);
+            if (filePath != null) {
+                File file = new File(filePath);
+                fileObject = FileUtil.toFileObject(file);
+            }
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return fileObject;
     }
 
     public static class DetectorCopyException extends Exception {

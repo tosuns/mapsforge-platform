@@ -4,25 +4,6 @@
     <folder name="Templates">
         <folder name="Detectors"/>
     </folder>
-    <folder name="Actions">
-        <folder name="Detector">
-            <file name="de-fub-mapsforge-project-detector-actions-DetecotStartAction.instance_hidden"/>
-            <file name="de-fub-mapsforge-project-detector-actions-DetectorStartAction.instance_hidden"/>
-            <file name="de-fub-mapsforge-project-detector-actions-InferenceModelSettingsAction.instance_hidden"/>
-        </folder>
-        <folder name="MapsForge">
-            <file name="de-fub-mapsforge-project-detector-actions-RunAction.instance_hidden"/>
-        </folder>
-    </folder>
-    <folder name="Loaders">
-        <folder name="text">
-            <folder name="detector+xml">
-                <folder name="Actions">
-                    <file name="de-fub-mapsforge-project-detector-actions-DetectorStartAction.shadow_hidden"/>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
     <folder name="MapsForge">
         <folder name="Catalog">
             <file name="Detector Descriptor.xsd" url="nbres:/de/fub/mapsforge/project/detector/model/xsds/detectorDescriptor.xsd">

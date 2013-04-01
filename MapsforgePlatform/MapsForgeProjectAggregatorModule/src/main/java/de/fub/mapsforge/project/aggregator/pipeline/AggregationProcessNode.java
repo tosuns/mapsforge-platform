@@ -43,7 +43,7 @@ public class AggregationProcessNode extends ProcessNode implements ChangeListene
         Sheet sheet = Sheet.createDefault();
 
         if (abstractProcess != null) {
-            ProcessDescriptor descriptor = abstractProcess.getDescriptor();
+            ProcessDescriptor descriptor = abstractProcess.getProcessDescriptor();
 
             if (descriptor != null) {
                 List<PropertySection> sections = descriptor.getProperties().getSections();

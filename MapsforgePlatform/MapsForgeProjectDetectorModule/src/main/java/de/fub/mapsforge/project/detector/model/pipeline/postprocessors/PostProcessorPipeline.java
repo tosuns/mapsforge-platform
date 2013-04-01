@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.postprocessors;
 
-import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 
 /**
  *

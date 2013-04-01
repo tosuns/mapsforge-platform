@@ -54,6 +54,7 @@ public class Aggregator extends ModelSynchronizer {
     private AggContainer aggContainer;
     private ModelSynchronizerClient dataObjectModelSynchonizerClient;
     private final Object MUTEX_PROCESS_CREATOR = new Object();
+    private PipelineListener pipelineListener = null;
 
     public Aggregator(AggregatorDataObject dataObject) {
         assert dataObject != null;
@@ -79,7 +80,10 @@ public class Aggregator extends ModelSynchronizer {
         AggregatorDescriptor aggregatorDescriptor = getAggregatorDescriptor();
         if (aggregatorDescriptor != null) {
             initAggregator();
-            getPipeline().addPipelineListener(new PipelineListenerImpl());
+            if (pipelineListener == null) {
+                pipelineListener = new PipelineListenerImpl();
+                getPipeline().addPipelineListener(pipelineListener);
+            }
         } else {
             setAggregatorState(AggregatorState.ERROR_NOT_EXECUTABLE);
         }
@@ -279,7 +283,16 @@ public class Aggregator extends ModelSynchronizer {
                 if (clazz != null && clazz.getName().equals(processDescriptor.getJavaType())) {
                     try {
                         Constructor<? extends AbstractAggregationProcess> constructor = clazz.getDeclaredConstructor(Aggregator.class);
-                        aggregateProcess = constructor.newInstance(Aggregator.this);
+
+                        if (!constructor.isAccessible()) {
+                            constructor.setAccessible(true);
+                            aggregateProcess = constructor.newInstance(Aggregator.this);
+                            constructor.setAccessible(false);
+                        } else {
+                            aggregateProcess = constructor.newInstance(Aggregator.this);
+                        }
+                        aggregateProcess.setProcessDescriptor(processDescriptor);
+
                     } catch (SecurityException ex) {
                         Exceptions.printStackTrace(ex);
                     } catch (IllegalArgumentException ex) {

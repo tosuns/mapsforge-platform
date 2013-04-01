@@ -4,9 +4,31 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
+import de.fub.utilsmodule.Collections.ObservableArrayList;
+import de.fub.utilsmodule.Collections.ObservableList;
+import de.fub.utilsmodule.icons.IconRegister;
+import java.awt.Image;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.swing.Action;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.loaders.DataObject;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Children;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -15,10 +37,11 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "CLT_InferenceDataset_Name=Inference Data Set"
 })
-public class InferenceDataSetSelectionVisualPanel extends JPanel implements ExplorerManager.Provider {
+public class InferenceDataSetSelectionVisualPanel extends JPanel implements Lookup.Provider, ExplorerManager.Provider {
 
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
+    private Lookup lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());
 
     /**
      * Creates new form InferenceDataSetSelectionVisualPanel
@@ -26,11 +49,16 @@ public class InferenceDataSetSelectionVisualPanel extends JPanel implements Expl
     public InferenceDataSetSelectionVisualPanel() {
         initComponents();
         beanTreeView1.setRootVisible(true);
+        explorerManager.setRootContext(new RootNode());
     }
 
     @Override
     public String getName() {
         return Bundle.CLT_InferenceDataset_Name();
+    }
+
+    public List<Node> getDataNodes() {
+        return Arrays.asList(getExplorerManager().getRootContext().getChildren().getNodes(true));
     }
 
     /**
@@ -58,5 +86,83 @@ public class InferenceDataSetSelectionVisualPanel extends JPanel implements Expl
     @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
+    }
+
+    @Override
+    public Lookup getLookup() {
+        return lookup;
+    }
+
+    private static class DataNodeFactory extends ChildFactory<DataObject> implements ChangeListener {
+
+        private final ObservableList<DataObject> list;
+
+        public DataNodeFactory(ObservableList<DataObject> list) {
+            this.list = list;
+            this.list.addChangeListener(WeakListeners.change(DataNodeFactory.this, this.list));
+        }
+
+        @Override
+        protected boolean createKeys(List<DataObject> toPopulate) {
+            toPopulate.addAll(list);
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(DataObject key) {
+            return new FilterNode(key.getNodeDelegate()) {
+                @Override
+                public Action[] getActions(boolean context) {
+                    return new Action[0];
+                }
+            };
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            refresh(true);
+        }
+    }
+
+    private static class RootNode extends AbstractNode {
+
+        public static final String ACTION_PATH = "mapsforge/Detector/Wizard/Inferenceset/Actions";
+        private InstanceContent content;
+
+        public RootNode() {
+            this(new ObservableArrayList<DataObject>(), new InstanceContent());
+        }
+
+        private RootNode(final ObservableList<DataObject> list, InstanceContent instanceContent) {
+            super(Children.createLazy(new Callable<Children>() {
+                @Override
+                public Children call() throws Exception {
+                    return Children.create(new DataNodeFactory(list), true);
+                }
+            }), new AbstractLookup(instanceContent));
+            setDisplayName("Inference Dataset"); //NON18N
+            content = instanceContent;
+            content.add(list);
+        }
+
+        @Override
+        public Action[] getActions(boolean context) {
+            List<? extends Action> actionsForPath = Utilities.actionsForPath(ACTION_PATH);
+            return actionsForPath.toArray(new Action[actionsForPath.size()]);
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            Image image = IconRegister.getFolderIcon();
+            if (image == null) {
+                image = super.getIcon(type);
+            }
+            return image;
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return getIcon(type);
+        }
     }
 }

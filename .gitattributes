@@ -317,6 +317,7 @@ MapsforgePlatform/MapForgeProjectPlugInsModule/pom.xml -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/AggregatorChooserPanel.form -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/AggregatorChooserPanel.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/AggregatorDataObjectPropertyEditor.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/OpenMapsAction.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/Bundle.properties -text
 MapsforgePlatform/MapViewer/pom.xml -text
@@ -561,6 +562,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Properties.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Property.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/TrainingsSet.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/FolderExplorer.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/FolderExplorer.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/InferenceModelComponent.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/InferenceModelComponent.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/ui/ListComponent.form -text
@@ -579,6 +582,9 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/CommonDetectorInformationVisualPanel1.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/CommonDetectorInformationVisualPanel1.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/CommonDetectorInformationWizardPanel1.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/DetectorTemplateVisualPanel.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/DetectorTemplateVisualPanel.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/DetectorTemplateWizardPanel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/InferenceModelFeatureSelectionVisualPanel3.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/InferenceModelFeatureSelectionVisualPanel3.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/wizards/detector/InferenceModelFeatureSelectionWizardPanel3.java -text

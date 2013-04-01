@@ -95,16 +95,16 @@ public class OSMExportProcess extends AbstractXmlAggregationProcess<RoadNetwork,
 
     @Override
     public String getName() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDisplayName();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDisplayName();
         }
         return Bundle.CLT_OSM_Export_Title();
     }
 
     @Override
     public String getDescription() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDescription();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDescription();
         }
         return Bundle.CLT_OSM_Export_Description();
     }

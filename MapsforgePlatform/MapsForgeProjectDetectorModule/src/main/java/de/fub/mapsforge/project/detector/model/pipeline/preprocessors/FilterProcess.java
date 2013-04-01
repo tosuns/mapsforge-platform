@@ -7,6 +7,8 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.node.property.ProcessProperty;
@@ -18,6 +20,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
@@ -26,6 +29,7 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.Cancellable;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -45,6 +49,27 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
 
     public FilterProcess(Detector detector) {
         super(detector);
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor processDescriptor = null;
+        if (getDetector() == null) {
+            try {
+                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            for (ProcessDescriptor filterProcessDescriptor : getDetector().getDetectorDescriptor().getPreprocessors().getPreprocessorList()) {
+                if (filterProcessDescriptor != null
+                        && getClass().getName().equals(filterProcessDescriptor.getJavaType())) {
+                    processDescriptor = filterProcessDescriptor;
+                    break;
+                }
+            }
+        }
+        return processDescriptor;
     }
 
     @Override

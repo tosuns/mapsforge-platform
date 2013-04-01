@@ -114,7 +114,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
         setMaximumSize(new java.awt.Dimension(2147483647, 350));
         setMinimumSize(new java.awt.Dimension(58, 100));
-        setPreferredSize(new java.awt.Dimension(801, 350));
+        setPreferredSize(new java.awt.Dimension(801, 250));
         setLayout(new java.awt.BorderLayout(0, 8));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));

@@ -23,15 +23,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,6 +49,7 @@ import org.openide.nodes.PropertySupport.ReadWrite;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -63,6 +67,7 @@ public class MapRenderer extends Task {
     private static final String PROP_NAME_AGGREGATOR_FILE_PATH = "maprenderer.aggregator.file.path";
     private static final String PROP_NAME_OPEN_AFTER_FINISHED = "maprenderer.open.after.finished";
     private FileObject aggregatorFileObject = null;
+    private List<Aggregator> aggregatorList = new ArrayList<Aggregator>();
 
     public MapRenderer() {
         this(null);
@@ -73,13 +78,15 @@ public class MapRenderer extends Task {
         validate();
     }
 
+    public List<Aggregator> getAggregatorList() {
+        return aggregatorList;
+    }
+
     private void validate() {
         setProcessState(ProcessState.INACTIVE);
         try {
             Aggregator createAggregator = createAggregator();
-
         } catch (FileNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
             setProcessState(ProcessState.ERROR);
         }
     }
@@ -103,15 +110,22 @@ public class MapRenderer extends Task {
                 if (PROP_NAME_AGGREGATOR_FILE_PATH.equalsIgnoreCase(propery.getId())) {
                     String pathString = propery.getValue();
                     if (pathString != null) {
-                        File aggregatorFile = new File(pathString);
-                        if (aggregatorFile.exists()) {
-                            aggregatorFileObject = FileUtil.toFileObject(createAggregatorCopy(aggregatorFile));
+                        FileObject aggregatorFile = FileUtil.getConfigFile(pathString);
+                        if (aggregatorFile.isValid()) {
+                            File createAggregatorCopy = createAggregatorCopy(aggregatorFile);
+                            if (createAggregatorCopy != null) {
+                                aggregatorFileObject = FileUtil.toFileObject(createAggregatorCopy);
 
-                            if (aggregatorFileObject != null) {
-                                return AggregatorUtils.createAggregator(aggregatorFileObject);
+                                if (aggregatorFileObject != null) {
+                                    return AggregatorUtils.createAggregator(aggregatorFileObject);
+                                }
+                            } else {
+                                propery.setValue(null);
+                                throw new FileNotFoundException(MessageFormat.format("aggregator {0} does not exist!", aggregatorFile.getPath()));
                             }
                         } else {
-                            throw new FileNotFoundException(MessageFormat.format("aggregator {0} does not exist!", aggregatorFile.getAbsolutePath()));
+                            propery.setValue(null);
+                            throw new FileNotFoundException(MessageFormat.format("aggregator {0} does not exist!", aggregatorFile.getPath()));
                         }
                     }
                 }
@@ -120,13 +134,13 @@ public class MapRenderer extends Task {
         return null;
     }
 
-    private File createAggregatorCopy(File fileObject) {
+    private File createAggregatorCopy(FileObject fileObject) {
         File copyFileObject = null;
-        FileInputStream inputStream = null;
-        FileOutputStream outputStream = null;
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
         try {
             copyFileObject = File.createTempFile("tmp", ".agg");
-            inputStream = new FileInputStream(fileObject);
+            inputStream = fileObject.getInputStream();
             outputStream = new FileOutputStream(copyFileObject);
             FileUtil.copy(inputStream, outputStream);
         } catch (IOException ex) {
@@ -152,36 +166,44 @@ public class MapRenderer extends Task {
 
     @Override
     protected void start() {
+        aggregatorList.clear();
         try {
             Aggregator aggregator = createAggregator();
             if (aggregator != null && aggregator.getAggregatorDescriptor() != null) {
+
                 InferenceModelResultDataSet resultDataSet = getResultDataSet();
                 for (Entry<String, List<Gpx>> entry : resultDataSet.entrySet()) {
                     try {
-                        aggregator.getAggregatorDescriptor().setName(entry.getKey());
+                        if (entry.getValue() != null && !entry.getValue().isEmpty()) {
+                            aggregator.getAggregatorDescriptor().setName(entry.getKey());
 
-                        List<Source> sourceList = aggregator.getSourceList();
-                        sourceList.clear();
+                            List<Source> sourceList = aggregator.getSourceList();
+                            sourceList.clear();
 
-                        FileObject createTempFolder = createTempFolder(URLEncoder.encode(MessageFormat.format("Transportation: {0}", entry.getKey()), "UTF-8"));
+                            FileObject createTempFolder = createTempFolder(URLEncoder.encode(MessageFormat.format("Transportation: {0}", entry.getKey()), "UTF-8"));
 
-                        for (Gpx gpx : entry.getValue()) {
-                            File tmpFile = createTmpfile(createTempFolder);
-                            try {
-                                AggregatorUtils.saveGpxToFile(tmpFile, gpx);
-                                sourceList.add(new Source(tmpFile.getAbsolutePath()));
-                            } catch (JAXBException ex) {
-                                Exceptions.printStackTrace(ex);
+                            for (Gpx gpx : entry.getValue()) {
+                                File tmpFile = createTmpfile(createTempFolder);
+                                try {
+                                    AggregatorUtils.saveGpxToFile(tmpFile, gpx);
+                                    sourceList.add(new Source(tmpFile.getAbsolutePath()));
+                                } catch (JAXBException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
                             }
+                            aggregator.updateSource();
+                            aggregator.start();
+                            aggregatorList.add(aggregator);
                         }
-
-                        new OpenEditorAction(aggregator).run();
-
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                     } finally {
                         aggregator = createAggregator();
                     }
+                }
+
+                if (isOpenAfterFinished()) {
+                    new OpenEditorTask(aggregatorList).run();
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -237,29 +259,22 @@ public class MapRenderer extends Task {
         return new MapRendererNode(MapRenderer.this);
     }
 
-    private class OpenEditorAction implements Runnable {
+    static class OpenEditorTask implements Runnable {
 
-        private final Aggregator aggregator;
+        private final List<Aggregator> aggregatorList;
 
-        public OpenEditorAction(Aggregator aggregator) {
-            this.aggregator = aggregator;
+        public OpenEditorTask(List<Aggregator> aggregatorList) {
+            this.aggregatorList = aggregatorList;
         }
 
         @Override
         public void run() {
-            if (isOpenAfterFinished()) {
-                try {
-                    aggregator.updateSource();
-                    aggregator.start();
-                    DataObject dataObject = DataObject.find(aggregatorFileObject);
-                    dataObject.getNodeDelegate();
-                    OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
-                    if (openCookie != null) {
-                        openCookie.open();
-
-                    }
-                } catch (DataObjectNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
+            for (Aggregator aggregator : aggregatorList) {
+                DataObject dataObject = aggregator.getDataObject();
+                dataObject.getNodeDelegate();
+                OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
+                if (openCookie != null) {
+                    openCookie.open();
                 }
             }
         }
@@ -297,6 +312,12 @@ public class MapRenderer extends Task {
         }
 
         @Override
+        public Action[] getActions(boolean context) {
+            List<? extends Action> actionsForPath = Utilities.actionsForPath("Projects/Mapsforge/Detector/Tasks/MapRenderer/Actions");
+            return actionsForPath.toArray(new Action[actionsForPath.size()]);
+        }
+
+        @Override
         public void stateChanged(ChangeEvent e) {
             // do nothing
         }
@@ -319,9 +340,17 @@ public class MapRenderer extends Task {
 
         private void init() {
             if (property.getValue() != null) {
-                File file = new File(property.getValue());
+                String normalizePath = FileUtil.normalizePath(property.getValue());
+                File file = new File(normalizePath);
+                FileObject fileObject = null;
                 if (file.exists()) {
-                    FileObject fileObject = FileUtil.toFileObject(file);
+                    fileObject = FileUtil.toFileObject(file);
+                } else {
+                    // the file exists not as a last attempt look into
+                    // the fsf of netbeans.
+                    fileObject = FileUtil.getConfigFile(property.getValue());
+                }
+                if (fileObject != null && fileObject.isValid()) {
                     try {
                         value = DataObject.find(fileObject);
                     } catch (DataObjectNotFoundException ex) {

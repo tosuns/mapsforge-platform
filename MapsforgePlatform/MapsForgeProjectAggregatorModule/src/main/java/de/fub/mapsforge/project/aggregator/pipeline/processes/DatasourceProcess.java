@@ -68,16 +68,16 @@ public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<
 
     @Override
     public String getName() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDisplayName();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDisplayName();
         }
         return "Gpx Datasource";
     }
 
     @Override
     public String getDescription() {
-        if (getDescriptor() != null) {
-            return getDescriptor().getDescription();
+        if (getProcessDescriptor() != null) {
+            return getProcessDescriptor().getDescription();
         }
         return "Gpx segment provider";
     }

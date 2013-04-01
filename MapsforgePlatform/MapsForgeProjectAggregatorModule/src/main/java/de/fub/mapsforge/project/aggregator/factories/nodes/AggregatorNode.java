@@ -353,7 +353,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         int i = 1;
         while (it.hasNext()) {
             final AbstractAggregationProcess<?, ?> process = it.next();
-            if (process.getDescriptor() != null) {
+            if (process.getProcessDescriptor() != null) {
                 String name = Bundle.CLT_Progress_Phase(i);
                 property = new ReadOnly<String>(name, String.class, name, process.getDescription()) {
                     @Override

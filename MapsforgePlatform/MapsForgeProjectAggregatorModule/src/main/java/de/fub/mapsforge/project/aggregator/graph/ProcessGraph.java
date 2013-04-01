@@ -5,12 +5,15 @@
 package de.fub.mapsforge.project.aggregator.graph;
 
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.utilsmodule.Collections.ObservableArrayList;
+import de.fub.utilsmodule.Collections.ObservableList;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -21,7 +24,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.visual.action.AcceptProvider;
 import org.netbeans.api.visual.action.ActionFactory;
@@ -40,15 +45,24 @@ import org.netbeans.api.visual.widget.ConnectionWidget;
 import org.netbeans.api.visual.widget.LayerWidget;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.explorer.ExplorerManager;
+import org.openide.explorer.ExplorerUtils;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
+import org.openide.nodes.Children;
+import org.openide.nodes.FilterNode;
+import org.openide.nodes.Node;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.WeakListeners;
 
 /**
  * TODO besseren layouter implementieren.
  *
  * @author Serdar
  */
-public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, String> {
+public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, String> implements ExplorerManager.Provider {
 
     private static long edgeCount = 0;
     private LayerWidget backgroundLayer = null;
@@ -57,8 +71,14 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     private LayerWidget interactionLayer = null;
     private final ChangeSupport pcs = new ChangeSupport(this);
     private final HashMap<String, Integer> javaTypeCounterMap = new HashMap<String, Integer>();
+    private final ExplorerManager explorerManager = new ExplorerManager();
+    private final Lookup lookup = ExplorerUtils.createLookup(explorerManager, new ActionMap());
+    private final ObservableList<AbstractAggregationProcess<?, ?>> processList = new ObservableArrayList<AbstractAggregationProcess<?, ?>>();
+    private final NodeFactory nodeFactory;
 
     public ProcessGraph() {
+        nodeFactory = new NodeFactory();
+        explorerManager.setRootContext(new AbstractNode(Children.create(nodeFactory, true)));
         getActions().addAction(ActionFactory.createZoomAction(1.5, true));
         backgroundLayer = new LayerWidget(ProcessGraph.this);
         mainLayer = new LayerWidget(ProcessGraph.this);
@@ -70,6 +90,11 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         addChild(connectionLayer);
         addChild(interactionLayer);
         getActions().addAction(ActionFactory.createAcceptAction(new AcceptProviderImpl()));
+    }
+
+    @Override
+    public Lookup getLookup() {
+        return lookup;
     }
 
     public synchronized String createEdge() {
@@ -85,6 +110,8 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     }
 
     public void clearGraph() {
+        nodeFactory.objectToNodeMap.clear();
+        processList.clear();
         javaTypeCounterMap.clear();
         Collection<AbstractAggregationProcess<?, ?>> nodes = getNodes();
         ArrayList<AbstractAggregationProcess<?, ?>> list = new ArrayList<AbstractAggregationProcess<?, ?>>(nodes);
@@ -101,21 +128,22 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
     }
 
     private Integer getTypeCounter(AbstractAggregationProcess<?, ?> process) {
-        if (!javaTypeCounterMap.containsKey(process.getDescriptor().getJavaType())) {
-            javaTypeCounterMap.put(process.getDescriptor().getJavaType(), new Integer(1));
+        if (!javaTypeCounterMap.containsKey(process.getProcessDescriptor().getJavaType())) {
+            javaTypeCounterMap.put(process.getProcessDescriptor().getJavaType(), new Integer(1));
         }
-        return javaTypeCounterMap.get(process.getDescriptor().getJavaType());
+        return javaTypeCounterMap.get(process.getProcessDescriptor().getJavaType());
     }
 
     private void updateTypeCounter(AbstractAggregationProcess<?, ?> process) {
         Integer typeCounter = getTypeCounter(process);
-        javaTypeCounterMap.put(process.getDescriptor().getJavaType(), ++typeCounter);
-        Logger.getLogger(ProcessGraph.class.getName()).log(Level.INFO, MessageFormat.format("{0} count: {1}", process.getDescriptor().getJavaType(), typeCounter));
+        javaTypeCounterMap.put(process.getProcessDescriptor().getJavaType(), ++typeCounter);
+        Logger.getLogger(ProcessGraph.class.getName()).log(Level.INFO, MessageFormat.format("{0} count: {1}", process.getProcessDescriptor().getJavaType(), typeCounter));
     }
 
     @Override
     protected Widget attachNodeWidget(AbstractAggregationProcess<?, ?> process) {
         updateAggregatorPipeline();
+        processList.add(process);
         ProcessWidget processWidget = new ProcessWidget(this, process);
         processWidget.setPreferredLocation(new Point(0, 0));
         Widget widget = new Widget(getScene());
@@ -266,7 +294,12 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         return list;
     }
 
-    private static class ProcessSelectProvider implements SelectProvider {
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return explorerManager;
+    }
+
+    private class ProcessSelectProvider implements SelectProvider {
 
         @Override
         public boolean isAimingAllowed(Widget widget, Point localLocation, boolean invertSelection) {
@@ -281,7 +314,24 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
         @Override
         public void select(Widget widget, Point localLocation, boolean invertSelection) {
             widget.bringToFront();
+            widget.setState(widget.getState().deriveSelected(!widget.getState().isSelected()));
             widget.getScene().validate();
+            Node[] nodes = new Node[0];
+            if (widget.getState().isSelected()) {
+                Object object = ProcessGraph.this.findObject(widget);
+
+                if (object instanceof AbstractAggregationProcess) {
+                    AbstractAggregationProcess process = (AbstractAggregationProcess) object;
+                    if (nodeFactory.objectToNodeMap.containsKey(process)) {
+                        nodes = new Node[]{nodeFactory.objectToNodeMap.get(process)};
+                    }
+                }
+            }
+            try {
+                getExplorerManager().setSelectedNodes(nodes);
+            } catch (PropertyVetoException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
     }
 
@@ -506,7 +556,7 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
                 if (transferData instanceof de.fub.mapforgeproject.api.process.Process) {
                     AbstractAggregationProcess process = (AbstractAggregationProcess) transferData.getClass().newInstance();
                     Integer typeCounter = getTypeCounter(process);
-                    process.getDescriptor().setDisplayName(MessageFormat.format("{0} ({1})", process.getDescriptor().getDisplayName(), typeCounter));
+                    process.getProcessDescriptor().setDisplayName(MessageFormat.format("{0} ({1})", process.getProcessDescriptor().getDisplayName(), typeCounter));
 
                     Widget processWidget = addNode(process);
                     Dimension preferredSize = processWidget.getPreferredSize();
@@ -526,6 +576,33 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }
+    }
+
+    private class NodeFactory extends ChildFactory<AbstractAggregationProcess<?, ?>> implements ChangeListener {
+
+        private final HashMap<AbstractAggregationProcess<?, ?>, Node> objectToNodeMap = new HashMap<AbstractAggregationProcess<?, ?>, Node>();
+
+        public NodeFactory() {
+            processList.addChangeListener(WeakListeners.change(NodeFactory.this, processList));
+        }
+
+        @Override
+        protected boolean createKeys(List<AbstractAggregationProcess<?, ?>> toPopulate) {
+            toPopulate.addAll(processList);
+            return true;
+        }
+
+        @Override
+        protected Node createNodeForKey(AbstractAggregationProcess<?, ?> process) {
+            Node node = new FilterNode(process.getNodeDelegate());
+            objectToNodeMap.put(process, node);
+            return node;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            refresh(true);
         }
     }
 }

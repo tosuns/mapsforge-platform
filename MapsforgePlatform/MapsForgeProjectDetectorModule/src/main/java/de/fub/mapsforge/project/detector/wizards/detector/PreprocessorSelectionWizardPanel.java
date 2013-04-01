@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
+import java.util.Collections;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -15,11 +16,12 @@ public class PreprocessorSelectionWizardPanel implements WizardDescriptor.Finish
      * component from this class, just use getComponent().
      */
     private PreprocessorSelectionVisualPanel component;
-
+    public static final String PROP_NAME_SELECTED_PREPROCESSORS = "wizard.selected.preprocessors";
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
+
     @Override
     public PreprocessorSelectionVisualPanel getComponent() {
         if (component == null) {
@@ -61,7 +63,7 @@ public class PreprocessorSelectionWizardPanel implements WizardDescriptor.Finish
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+        wiz.putProperty(PROP_NAME_SELECTED_PREPROCESSORS, Collections.unmodifiableList(getComponent().getSelectedFilters()));
     }
 
     @Override

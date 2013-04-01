@@ -15,11 +15,12 @@ public class TrainingSetSelectionWizardPanel implements WizardDescriptor.Finisha
      * component from this class, just use getComponent().
      */
     private TrainingSetSelectionVisualPanel component;
-
+    public static final String PROP_NAME_TRAININGS_SET = "wizard.trainings.set";
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
+
     @Override
     public TrainingSetSelectionVisualPanel getComponent() {
         if (component == null) {
@@ -54,14 +55,14 @@ public class TrainingSetSelectionWizardPanel implements WizardDescriptor.Finisha
     public void removeChangeListener(ChangeListener l) {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void readSettings(WizardDescriptor wiz) {
-        // use wiz.getProperty to retrieve previous panel state
     }
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+        wiz.putProperty(PROP_NAME_TRAININGS_SET, getComponent().getTransportModeMap());
     }
 
     @Override

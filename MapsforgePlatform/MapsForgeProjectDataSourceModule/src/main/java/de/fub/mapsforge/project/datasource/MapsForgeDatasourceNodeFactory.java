@@ -9,6 +9,7 @@ import de.fub.mapforgeproject.xml.MapsForge;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
@@ -21,6 +22,7 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -64,20 +66,15 @@ public class MapsForgeDatasourceNodeFactory implements NodeFactory {
                         if (fileObject == null) {
                             fileObject = mapsForgeProject.getProjectDirectory().createFolder(datasourceFolderPath);
                         }
-                        DataObject dataObject = DataObject.find(fileObject);
-                        gpxDatasourceNode = new GPXDatasourceNode(dataObject, mapsForgeProject);
-                        nodeList.add(gpxDatasourceNode);
+                        nodeList.add(createRootNode(DataObject.find(fileObject)));
                         projectData.getProjectFolders().putFolder(DATASOURCE_FILENAME, datasourceFolderPath);
                         mapsForgeProject.modelChanged(MapsForgeDatasourceNodeList.this, projectData);
-
                     } else {
                         // there is an entry for the gpx datasource file
                         // validate path and get folder if possible
                         FileObject fileObject = mapsForgeProject.getProjectDirectory().getFileObject(datasourceFolderPath);
                         if (fileObject != null) {
-                            DataObject dataObject = DataObject.find(fileObject);
-                            gpxDatasourceNode = new GPXDatasourceNode(dataObject, mapsForgeProject);
-                            nodeList.add(gpxDatasourceNode);
+                            nodeList.add(createRootNode(DataObject.find(fileObject)));
                         } else {
                             // TODO implement
                             // inconsitency! signal error message to project node
@@ -92,6 +89,13 @@ public class MapsForgeDatasourceNodeFactory implements NodeFactory {
                 Exceptions.printStackTrace(ex);
             }
             return nodeList;
+        }
+
+        private Node createRootNode(DataObject dataObject) {
+            Preferences preferences = NbPreferences.forModule(MapsForgeDatasourceNodeFactory.class);
+            preferences.put(DATASOURCE_FILENAME, dataObject.getPrimaryFile().getPath());
+            gpxDatasourceNode = new GPXDatasourceNode(dataObject, mapsForgeProject);
+            return gpxDatasourceNode;
         }
 
         @Override

@@ -30,7 +30,7 @@ public class DataSetNode extends AbstractNode {
     private final static String HTML_PATTERN = "<html><font color='808080'><i>&lt;{0}&gt;</i></font></html>";
     private final DataSet dataSet;
     private final Detector detector;
-    private boolean fileValied = true;
+    private boolean fileValid = true;
     private DataObject dataObject;
 
     public DataSetNode(Detector detector, DataSet dataSet) {
@@ -44,11 +44,13 @@ public class DataSetNode extends AbstractNode {
         if (dataSet.getUrl() != null) {
             FileObject fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
             if (fileObject == null) {
-                fileValied = false;
+                fileValid = false;
+                setShortDescription("File points to an invalid path.");
                 fireIconChange();
             } else {
                 try {
                     dataObject = DataObject.find(fileObject);
+                    setShortDescription(fileObject.getPath());
                 } catch (DataObjectNotFoundException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -94,7 +96,7 @@ public class DataSetNode extends AbstractNode {
     @Override
     public Image getIcon(int type) {
         Image image = super.getIcon(type);
-        if (!fileValied) {
+        if (!fileValid) {
             Image errorHint = IconRegister.findRegisteredIcon("errorHintIcon.png");
             if (errorHint != null) {
                 image = ImageUtilities.mergeImages(image, errorHint, 0, 0);

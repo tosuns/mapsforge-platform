@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
+import java.util.Collections;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
 import org.openide.util.HelpCtx;
@@ -15,11 +16,12 @@ public class PostprocessorSelectionWizardPanel implements WizardDescriptor.Finis
      * component from this class, just use getComponent().
      */
     private PostprocessorSelectionVisualPanel component;
-
+    public static final String PROP_NAME_SELECTED_POSTPROCESSORS = "wizard.selected.postprocessors";
     // Get the visual component for the panel. In this template, the component
     // is kept separate. This can be more efficient: if the wizard is created
     // but never displayed, or not all panels are displayed, it is better to
     // create only those which really need to be visible.
+
     @Override
     public PostprocessorSelectionVisualPanel getComponent() {
         if (component == null) {
@@ -61,7 +63,7 @@ public class PostprocessorSelectionWizardPanel implements WizardDescriptor.Finis
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
+        wiz.putProperty(PROP_NAME_SELECTED_POSTPROCESSORS, Collections.unmodifiableList(getComponent().getSelectedTasks()));
     }
 
     @Override
