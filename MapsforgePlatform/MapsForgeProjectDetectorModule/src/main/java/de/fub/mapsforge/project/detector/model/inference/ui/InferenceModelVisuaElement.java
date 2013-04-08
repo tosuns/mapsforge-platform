@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.actions.ToolbarDetectorStartAction;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -77,6 +78,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
      */
     public InferenceModelVisuaElement(Lookup lkp) {
         initComponents();
+        inferenceModelProxyToolbar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 16));
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
         obj = lkp.lookup(DetectorDataObject.class);
         assert obj != null;
@@ -93,7 +95,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         contentPanel.removeAll();
 
         if (inferenceModel != null && inferenceModel.getToolbarRepresenter() != null) {
-            inferenceModelProxyToolbar.remove(inferenceModel.getToolbarRepresenter());
+            toolbar.remove(inferenceModel.getToolbarRepresenter());
         }
         inferenceModel = detector.getInferenceModel();
 
@@ -103,11 +105,11 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
                 toolbar.revalidate();
             }
             contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(32));
+            contentPanel.add(Box.createVerticalStrut(16));
             contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(32));
+            contentPanel.add(Box.createVerticalStrut(16));
             contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(32));
+            contentPanel.add(Box.createVerticalStrut(16));
             contentPanel.revalidate();
             repaint();
         }
@@ -138,7 +140,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         }
         toolbar.add(new ToolbarDetectorStartAction(detector).getToolbarPresenter());
         toolbar.add(new JToolBar.Separator());
-        toolbar.add(inferenceModelProxyToolbar);
+//        toolbar.add(inferenceModelProxyToolbar);
     }
 
     /**

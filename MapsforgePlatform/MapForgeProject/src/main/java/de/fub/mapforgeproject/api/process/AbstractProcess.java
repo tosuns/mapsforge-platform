@@ -44,18 +44,20 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
 
     @Override
     public void run() {
-        synchronized (RUN_MUTEX) {
-            try {
-                fireProcessStartedEvent();
-                processStartTime = System.currentTimeMillis();
-                setProcessState(ProcessState.RUNNING);
-                start();
-                setProcessState(ProcessState.INACTIVE);
-                processFinishTime = System.currentTimeMillis();
-                fireProcessFinishedEvent();
-            } catch (Throwable ex) {
-                setProcessState(ProcessState.ERROR);
-                throw new ProcessRuntimeException(ex);
+        if (getProcessState() != ProcessState.SETTING_ERROR) {
+            synchronized (RUN_MUTEX) {
+                try {
+                    fireProcessStartedEvent();
+                    processStartTime = System.currentTimeMillis();
+                    setProcessState(ProcessState.RUNNING);
+                    start();
+                    setProcessState(ProcessState.INACTIVE);
+                    processFinishTime = System.currentTimeMillis();
+                    fireProcessFinishedEvent();
+                } catch (Throwable ex) {
+                    setProcessState(ProcessState.ERROR);
+                    throw new ProcessRuntimeException(ex);
+                }
             }
         }
     }

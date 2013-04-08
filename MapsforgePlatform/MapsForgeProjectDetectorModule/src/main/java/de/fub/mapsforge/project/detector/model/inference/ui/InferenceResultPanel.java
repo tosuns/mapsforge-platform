@@ -83,8 +83,8 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
-        setMinimumSize(new java.awt.Dimension(54, 100));
-        setPreferredSize(new java.awt.Dimension(849, 250));
+        setMinimumSize(new java.awt.Dimension(54, 300));
+        setPreferredSize(new java.awt.Dimension(849, 300));
         setLayout(new java.awt.BorderLayout(0, 8));
 
         jPanel3.setBackground(new java.awt.Color(255, 216, 178));

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.UniformLengthFilterProcess"
+    name="Uniform Length Segmentation"
+    description="GPS traces will be segmented into equally long tracks">
+    <properties>
+        <!-- length value in meters -->
+        <property id="uniform.length.filter.length" name="Length" description="Specifies the limit of length for each gps trace." value="10" javaType="java.lang.Double"/>
+    </properties>
+</dec:processunit>

@@ -13,6 +13,7 @@ import de.fub.gpxmodule.xml.gpx.Wpt;
 import de.fub.mapsforge.project.detector.model.gpx.GpxWayPoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.utils.GPSUtils;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class GpxConverter implements DataConverter {
                 if (dataObject instanceof GPXDataObject) {
                     gpx = ((GPXDataObject) dataObject).getGpx();
                     if (gpx == null) {
-                        throw new DataConverterException("Failed to convert specified file: " + fileObject.getPath());
+                        throw new DataConverterException(MessageFormat.format("Failed to convert specified file: {0}", fileObject.getPath()));
                     } else {
                         trackSegmentList = convertToTrackSegment(gpx);
                     }

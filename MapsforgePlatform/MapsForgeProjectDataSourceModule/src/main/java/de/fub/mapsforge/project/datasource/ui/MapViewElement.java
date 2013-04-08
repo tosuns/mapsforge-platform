@@ -291,6 +291,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
             if (icon != null) {
                 callback.getTopComponent().setIcon(icon);
             }
+            callback.getTopComponent().setDisplayName(obj.getName());
         }
     }
 
