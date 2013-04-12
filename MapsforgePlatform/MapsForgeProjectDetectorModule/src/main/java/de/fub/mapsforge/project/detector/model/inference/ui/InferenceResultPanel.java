@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
+import de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
@@ -65,7 +66,7 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         jPanel3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        classificationBarChart = new de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart();
+        classificationBarChart = new de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart();
         jPanel6 = new javax.swing.JPanel();
         outlineView = new CustomOutlineView(NbBundle.getMessage(InferenceResultPanel.class, "CLT_Doman_Axis_Name"));
         jPanel1 = new javax.swing.JPanel();
@@ -213,7 +214,7 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         // TODO
     }//GEN-LAST:event_infoButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart classificationBarChart;
+    private de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart classificationBarChart;
     private javax.swing.JLabel classifiedInstances;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JButton infoButton;

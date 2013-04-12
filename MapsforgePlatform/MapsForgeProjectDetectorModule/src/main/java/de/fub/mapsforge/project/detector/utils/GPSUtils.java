@@ -21,20 +21,22 @@ import java.util.List;
  */
 public class GPSUtils {
 
-    public static double computeSpeed(Wpt previousWpt, Wpt currentWpt) {
+    public static double computeVelocity(Wpt previousWpt, Wpt currentWpt) {
 
-        if (previousWpt != null && currentWpt != null) {
+        if (previousWpt != null && currentWpt != null
+                && previousWpt.getTime() != null && currentWpt.getTime() != null) {
             double distanceInMeters = GPSCalc.getDistVincentyFast(
                     previousWpt.getLat().doubleValue(),
                     previousWpt.getLon().doubleValue(),
                     currentWpt.getLat().doubleValue(),
                     currentWpt.getLon().doubleValue());
 
-            long timeInMilliSec = Math.abs(currentWpt.getTime().getTime() - previousWpt.getTime().getTime());
-
-            double speed = distanceInMeters / (timeInMilliSec / 1000);
-
-            return speed;
+            long timeInSec = Math.max(0, (currentWpt.getTime().getTime() - previousWpt.getTime().getTime() / 1000));
+            double velocity = 0;
+            if (timeInSec > 0) {
+                velocity = distanceInMeters / (timeInSec);
+            }
+            return velocity;
         }
         return 0;
     }

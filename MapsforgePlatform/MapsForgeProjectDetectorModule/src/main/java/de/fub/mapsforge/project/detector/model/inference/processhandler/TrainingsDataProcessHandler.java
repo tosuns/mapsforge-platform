@@ -107,7 +107,6 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
         }
     }
 
-    @Override
     protected void updateVisualRepresentation(final Evaluation evaluation) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

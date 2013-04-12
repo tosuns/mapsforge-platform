@@ -10,9 +10,11 @@ import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.gpxmodule.xml.gpx.Rte;
 import de.fub.gpxmodule.xml.gpx.Trk;
 import de.fub.gpxmodule.xml.gpx.Wpt;
+import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -80,10 +82,32 @@ public class GPXChildNodeFactory extends ChildFactory<Node> {
 
     private static class WptRootNode extends AbstractNode {
 
+        private static final Node NODE = createEmptyNode();
+
         public WptRootNode(List<Wpt> wpts) {
             super(Children.create(new WptNodeFactory(wpts), true));
             setDisplayName("Waypoints"); // NO18N
 
+        }
+
+        private static Node createEmptyNode() {
+            Node node = null;
+            try {
+                node = new BeanNode<Object>(new Object());
+            } catch (IntrospectionException ex) {
+                node = new AbstractNode(Children.LEAF);
+            }
+            return node;
+        }
+
+        @Override
+        public Image getIcon(int type) {
+            return NODE.getIcon(type);
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            return NODE.getIcon(type);
         }
     }
 }

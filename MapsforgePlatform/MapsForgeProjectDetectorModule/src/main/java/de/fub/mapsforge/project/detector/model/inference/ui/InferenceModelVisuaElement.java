@@ -7,8 +7,8 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
-import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.actions.ToolbarDetectorStartAction;
+import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Dimension;
 import java.util.ArrayList;
@@ -104,12 +104,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
                 toolbar.add(inferenceModel.getToolbarRepresenter());
                 toolbar.revalidate();
             }
-            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(16));
-            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(16));
-            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(16));
+            for (InferenceModelProcessHandler handler : inferenceModel.getProcessHandlers()) {
+                contentPanel.add(handler.getVisualRepresentation());
+                contentPanel.add(Box.createVerticalStrut(16));
+            }
             contentPanel.revalidate();
             repaint();
         }

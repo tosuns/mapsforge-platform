@@ -95,7 +95,7 @@ public class GpxConverter implements DataConverter {
 
     protected Map<String, String> createWaypointPropertymap(Wpt previouseWpt, Wpt gpxWpt) {
         HashMap<String, String> map = new HashMap<String, String>();
-        Collection<String> propertyList = new Waypoint().getPropertyList();
+        Collection<String> propertyList = new GpxWayPoint().getPropertyList();
         for (String property : propertyList) {
             if (GpxWayPoint.PROP_NAME_BEARING.equals(property)) {
                 // gpx version 1.1 does not support bearing information
@@ -111,7 +111,7 @@ public class GpxConverter implements DataConverter {
                 //at this point of development we don't use segment number for filtering
             } else if (GpxWayPoint.PROP_NAME_SPEED.equals(property)) {
                 if (gpxWpt.getLon() != null && gpxWpt.getLat() != null && gpxWpt.getTime() != null) {
-                    map.put(Waypoint.PROP_NAME_SPEED, String.valueOf(GPSUtils.computeSpeed(previouseWpt, gpxWpt)));
+                    map.put(Waypoint.PROP_NAME_SPEED, String.valueOf(GPSUtils.computeVelocity(previouseWpt, gpxWpt)));
                 }
             } else if (GpxWayPoint.PROP_NAME_TIMESTAMP.equals(property)) {
                 if (gpxWpt.getTime() != null) {

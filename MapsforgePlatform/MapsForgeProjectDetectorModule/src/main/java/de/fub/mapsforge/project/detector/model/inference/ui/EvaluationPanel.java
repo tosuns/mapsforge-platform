@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
+import de.fub.mapsforge.project.detector.model.inference.ui.charts.PrecisionRecallBarChartPanel;
 import de.fub.mapsforge.project.detector.model.inference.EvaluationDetailPanel;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.utilsmodule.components.CustomOutlineView;
@@ -93,7 +94,8 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel();
+        jPanel6 = new javax.swing.JPanel();
+        barChartPanel = new de.fub.mapsforge.project.detector.model.inference.ui.charts.PrecisionRecallBarChartPanel();
         outlineView = new CustomOutlineView(NbBundle.getMessage(EvaluationPanel.class, "CLT_Doman_Axis_Name"));
         jPanel3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
@@ -120,7 +122,11 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));
         jPanel2.setOpaque(false);
         jPanel2.setLayout(new java.awt.GridLayout(1, 2));
-        jPanel2.add(barChartPanel);
+
+        jPanel6.setLayout(new java.awt.GridLayout(1, 0));
+        jPanel6.add(barChartPanel);
+
+        jPanel2.add(jPanel6);
 
         outlineView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(213, 213, 213)));
         outlineView.setPropertyColumns(new String[] {"precision", "Precision", "recall", "Recall"});
@@ -241,7 +247,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         }
     }//GEN-LAST:event_infoButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private de.fub.mapsforge.project.detector.model.inference.ui.PrecisionRecallBarChartPanel barChartPanel;
+    private de.fub.mapsforge.project.detector.model.inference.ui.charts.PrecisionRecallBarChartPanel barChartPanel;
     private javax.swing.JLabel correctClassifiedInstances;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel incorrectClassifiedInstances;
@@ -253,6 +259,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private org.openide.explorer.view.OutlineView outlineView;

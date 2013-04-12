@@ -98,20 +98,25 @@ public class TrackSemgentExportAction extends AbstractAction {
 
     private Gpx getExportGpx() {
         Children children = explorerManger.getRootContext().getChildren();
-        Trk trk = new Trk();
 
+        final Gpx gpx = new Gpx();
         for (Node node : children.getNodes()) {
             if (node instanceof TrackSegmentBehaviour) {
                 TrksegWrapper trkseg = node.getLookup().lookup(TrksegWrapper.class);
                 TrackSegmentBehaviour trackNode = (TrackSegmentBehaviour) node;
                 if (trackNode.isVisible() && trkseg != null) {
+
+                    Trk trk = new Trk();
+                    trk.setName(trkseg.getTrackName());
+                    trk.setDesc(trkseg.getTrackDescription());
                     trk.getTrkseg().add(trkseg.getTrkseg());
+                    gpx.getTrk().add(trk);
                 }
             }
         }
 
-        final Gpx gpx = new Gpx();
-        gpx.getTrk().add(trk);
+
+
         return gpx;
     }
 

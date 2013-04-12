@@ -104,7 +104,7 @@
         <Property name="rows" type="int" value="1"/>
       </Layout>
       <SubComponents>
-        <Component class="de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart" name="classificationBarChart">
+        <Component class="de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart" name="classificationBarChart">
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel6">
           <Properties>

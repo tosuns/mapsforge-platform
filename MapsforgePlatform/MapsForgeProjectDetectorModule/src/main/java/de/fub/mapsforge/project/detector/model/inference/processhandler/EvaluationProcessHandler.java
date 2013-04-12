@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.detector.model.inference.processhandler;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
-import weka.classifiers.Evaluation;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -21,8 +20,6 @@ public abstract class EvaluationProcessHandler extends InferenceModelProcessHand
     public EvaluationProcessHandler(AbstractInferenceModel inferenceModel) {
         super(inferenceModel);
     }
-
-    protected abstract void updateVisualRepresentation(Evaluation evaluation);
 
     protected Instance getInstance(String className, TrackSegment dataset) {
         Instance instance = new DenseInstance(getInferenceModel().getAttributeList().size());

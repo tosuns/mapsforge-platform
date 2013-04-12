@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.inference.features.VarianceOfVelocityFeatureProcess"
+    name="Variance Of Velocity Feature"
+    description="Computss the variance of the velocity which a gps track contrains.">
+    <properties/>
+</dec:processunit>

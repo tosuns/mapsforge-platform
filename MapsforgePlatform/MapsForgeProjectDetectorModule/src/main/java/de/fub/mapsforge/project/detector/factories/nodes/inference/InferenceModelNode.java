@@ -81,7 +81,7 @@ public class InferenceModelNode extends CustomAbstractnode implements ChangeList
 
     private void updateNode() {
         if (detector != null) {
-
+            detector.create(InferenceModelNode.this);
             AbstractInferenceModel oldInferenceModel = getLookup().lookup(AbstractInferenceModel.class);
             if (oldInferenceModel != null) {
                 content.remove(oldInferenceModel);

@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
@@ -205,11 +206,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                 startInference();
                 break;
             case TRAININGS_MODE:
-                clearFeatureList();
                 startTraining();
                 break;
             case ALL_MODE:
-                clearFeatureList();
                 startTraining();
                 startInference();
                 break;
@@ -317,6 +316,17 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         if (inferenceMode1 != null && inferenceModelProcessHandleClass != null) {
             processHandlerMap.put(inferenceMode, inferenceModelProcessHandleClass);
         }
+    }
+
+    public List<InferenceModelProcessHandler> getProcessHandlers() {
+        List<InferenceModelProcessHandler> list = new ArrayList<InferenceModelProcessHandler>(processHandlerInstanceMap.size());
+        for (InferenceMode mode : InferenceMode.values()) {
+            InferenceModelProcessHandler processHandlerInstance = getProcessHandlerInstance(mode);
+            if (processHandlerInstance != null) {
+                list.add(processHandlerInstance);
+            }
+        }
+        return list;
     }
 
     /**

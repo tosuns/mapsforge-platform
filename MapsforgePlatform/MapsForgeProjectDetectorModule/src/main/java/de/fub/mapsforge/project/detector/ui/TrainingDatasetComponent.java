@@ -16,6 +16,9 @@ import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -84,6 +87,8 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
         beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
+
+        beanTreeView1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         add(beanTreeView1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -142,7 +147,14 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
 
         @Override
         protected boolean createKeys(List<TransportMode> list) {
-            list.addAll(dataset.transportModes);
+            ArrayList<TransportMode> arrayList = new ArrayList<TransportMode>(dataset.transportModes);
+            Collections.sort(arrayList, new Comparator<TransportMode>() {
+                @Override
+                public int compare(TransportMode o1, TransportMode o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+            list.addAll(arrayList);
             return true;
         }
 
@@ -165,7 +177,7 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
         private DataSetNodeFactory(TransportMode transportMode, TrainingDatasetWrapper dataset) {
             this.transportMode = transportMode;
             this.dataset = dataset;
-            this.dataset.addChangeListener(DataSetNodeFactory.this);
+            this.dataset.addChangeListener(WeakListeners.change(DataSetNodeFactory.this, this.dataset));
         }
 
         @Override

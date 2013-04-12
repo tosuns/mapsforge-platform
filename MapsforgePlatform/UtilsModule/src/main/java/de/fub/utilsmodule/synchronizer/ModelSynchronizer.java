@@ -4,6 +4,7 @@
  */
 package de.fub.utilsmodule.synchronizer;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -24,6 +25,7 @@ public abstract class ModelSynchronizer {
     // map to hold order information in which the mscs are created
     private final SortedMap<Integer, ModelSynchronizerClient> listenerMap = new TreeMap<Integer, ModelSynchronizerClient>();
     private final Object MUTEX = new Object();
+    private final HashMap<ChangeListener, ModelSynchronizerClient> listener = new HashMap<ChangeListener, ModelSynchronizerClient>();
 
     public final void modelChanged(ModelSynchronizerClient client) {
         synchronized (MUTEX) {
@@ -48,10 +50,13 @@ public abstract class ModelSynchronizer {
 
     public final ModelSynchronizerClient create(ChangeListener changeListener) {
         synchronized (MUTEX) {
-            ModelSynchronizerClient modelSynchronizerClient = new ModelSynchronizerClient(changeListener, ModelSynchronizer.this);
-            listenerSet.add(modelSynchronizerClient);
-            listenerMap.put(listenerSet.size() - 1, modelSynchronizerClient);
-            return modelSynchronizerClient;
+            if (!listener.containsKey(changeListener)) {
+                ModelSynchronizerClient modelSynchronizerClient = new ModelSynchronizerClient(changeListener, ModelSynchronizer.this);
+                listenerSet.add(modelSynchronizerClient);
+                listenerMap.put(listenerSet.size() - 1, modelSynchronizerClient);
+                listener.put(changeListener, modelSynchronizerClient);
+            }
+            return listener.get(changeListener);
         }
     }
 
