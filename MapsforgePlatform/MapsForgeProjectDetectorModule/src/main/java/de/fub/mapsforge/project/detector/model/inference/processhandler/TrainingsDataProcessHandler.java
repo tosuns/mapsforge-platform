@@ -71,18 +71,17 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
             for (Entry<String, HashSet<TrackSegment>> entry : dataset.entrySet()) {
 
                 int trainingsSetSize = (int) Math.ceil(entry.getValue().size() * getTrainingsSetRatioParameter());
-
+                int index = 0;
                 for (TrackSegment trackSegment : entry.getValue()) {
-                    for (int index = 0; index < trackSegment.getWayPointList().size(); index++) {
-                        Instance instance = getInstance(entry.getKey(), trackSegment);
+                    Instance instance = getInstance(entry.getKey(), trackSegment);
 
-                        if (index < trainingsSetSize) {
-                            trainingSet.add(instance);
-                        } else {
-                            testingSet.add(instance);
-                        }
-                        handle.progress(trackCount++);
+                    if (index < trainingsSetSize) {
+                        trainingSet.add(instance);
+                    } else {
+                        testingSet.add(instance);
                     }
+                    handle.progress(trackCount++);
+                    index++;
                 }
             }
 
@@ -107,6 +106,7 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
         }
     }
 
+    @Override
     protected void updateVisualRepresentation(final Evaluation evaluation) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

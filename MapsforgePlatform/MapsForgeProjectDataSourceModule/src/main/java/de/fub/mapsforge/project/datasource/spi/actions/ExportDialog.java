@@ -138,7 +138,6 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
         openAfterSave.setMargin(new java.awt.Insets(2, -2, 2, 2));
 
         org.openide.awt.Mnemonics.setLocalizedText(message, org.openide.util.NbBundle.getMessage(ExportDialog.class, "ExportDialog.message.text")); // NOI18N
-        message.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -177,8 +176,8 @@ public class ExportDialog extends javax.swing.JPanel implements ActionListener, 
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openAfterSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(message, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(message, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

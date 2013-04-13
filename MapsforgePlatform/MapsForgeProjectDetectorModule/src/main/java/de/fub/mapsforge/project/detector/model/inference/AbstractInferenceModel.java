@@ -272,7 +272,6 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      * @see {@link http://weka.wikispaces.com/Use+WEKA+in+your+Java+code}
      */
     private void startTraining() {
-        // build feature Array and Map
         initAttributes();
         if (!getAttributeList().isEmpty()) {
             InferenceModelProcessHandler processHandler = null;

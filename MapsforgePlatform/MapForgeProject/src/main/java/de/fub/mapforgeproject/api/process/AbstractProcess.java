@@ -63,7 +63,9 @@ public abstract class AbstractProcess<I, O> implements Process<I, O>, PropertyCh
     }
 
     public void setProcessState(ProcessState processState) {
+        Object oldValue = this.processState;
         this.processState = processState;
+        pcs.firePropertyChange(PROP_NAME_PROCESS_STATE, oldValue, this.processState);
     }
 
     @Override

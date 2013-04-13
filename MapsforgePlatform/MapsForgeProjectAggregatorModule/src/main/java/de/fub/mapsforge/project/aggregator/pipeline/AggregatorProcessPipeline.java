@@ -90,7 +90,7 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
                     process.run();
                     long now = System.currentTimeMillis();
                     process.removeProcessListener(AggregatorProcessPipeline.this);
-                    LOG.log(Level.INFO, "Process {0} took {1} time.", new Object[]{process.getName(), (now - lastTime)});
+                    LOG.log(Level.FINE, "Process {0} took {1} time.", new Object[]{process.getName(), (now - lastTime)});
                     lastProcess = process;
                     lastTime = now;
                 }
@@ -109,7 +109,7 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
         if (workingProcesses != null && handler != null) {
             double progress = (100d / workingProcesses.size());
             progress = (progress / 100 * event.getPercentfinished()) + (100 / workingProcesses.size() * unit);
-            LOG.log(Level.INFO, "progress {0}", progress);
+            LOG.log(Level.FINE, "progress {0}", progress);
             handler.progress(event.getProcessMessage(), (int) progress);
         }
     }
@@ -162,7 +162,7 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
 
         // in case both types are of type class then check whether they are
         //
-        LOG.info(MessageFormat.format("prev : {0} , current: {1}", previousProcessSuperclass, currentProcessSuperclass));
+        LOG.fine(MessageFormat.format("prev : {0} , current: {1}", previousProcessSuperclass, currentProcessSuperclass));
         if (previousProcessSuperclass instanceof Class
                 && currentProcessSuperclass instanceof Class
                 && previousProcessSuperclass.equals(currentProcessSuperclass)) {

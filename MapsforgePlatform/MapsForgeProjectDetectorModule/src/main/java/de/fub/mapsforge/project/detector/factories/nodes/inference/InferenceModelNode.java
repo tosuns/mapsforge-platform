@@ -21,6 +21,9 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.nodes.Children;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
@@ -33,6 +36,13 @@ import org.openide.util.lookup.InstanceContent;
  *
  * @author Serdar
  */
+@ActionReferences(
+        @ActionReference(
+        id =
+        @ActionID(
+        category = "Detector",
+        id = "de.fub.mapsforge.project.detector.model.inference.actions.PerformAttributeSelection"),
+        path = "MapsForge/Detector/inferenceModel/Actions"))
 @NbBundle.Messages({
     "CLT_No_InferenceModel_Name=<No Inference Model>",
     "CLT_No_InferenceModel_Description=Without an inference model the classifcation process can not be run."

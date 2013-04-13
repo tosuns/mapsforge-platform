@@ -21,6 +21,7 @@ import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.IEdge;
 import de.fub.agg2graph.structs.ILocation;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -91,7 +92,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
         if (i2.mergedTo != null) {
             i2 = i2.mergedTo;
         }
-        logger.info("merging " + i1 + " with " + i2 + " dist: " + GPSCalc.getDistance(i1, i2));
+        logger.info(MessageFormat.format("merging {0} with {1} dist: {2}", i1, i2, GPSCalc.getDistance(i1, i2)));
         AggNode aggNode = new AggNode(GPSCalc.getMidwayLocation(i1, i2),
                 i1.baseNode.getAggContainer());
         Intersection newIntersection = new Intersection(aggNode);

@@ -80,6 +80,8 @@ public class InferenceDatasetComponent extends javax.swing.JPanel implements Exp
         beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
+
+        beanTreeView1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         add(beanTreeView1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -209,7 +211,7 @@ public class InferenceDatasetComponent extends javax.swing.JPanel implements Exp
 
                 for (Node node : selectedNodes) {
                     DataObject dataObject = node.getLookup().lookup(DataObject.class);
-                    dataset.inferenceSet.getDatasetList().addAll(collectData(dataObject));
+                    dataset.dataset.addAll(collectData(dataObject));
                 }
             }
         }

@@ -85,6 +85,9 @@ class DetectorRunController {
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
             detector.setDetectorState(ProcessState.ERROR);
         } finally {
+            detector.getInferenceModel().getInput().clearAllInferenceData();
+            detector.getInferenceModel().getInput().clearAllTrainingsData();
+            detector.getInferenceModel().getResult().clear();
             handle.finish();
         }
     }
@@ -105,7 +108,7 @@ class DetectorRunController {
             try {
                 for (Entry<String, List<TrackSegment>> entry : entrySet) {
                     List<TrackSegment> tracks = entry.getValue();
-                    // TOCO could lead to an infinity loop or to a concurrent modification exception!
+                    // TODO could lead to an infinity loop or to a concurrent modification exception!
                     trainingsMap.put(entry.getKey(), applyPreProcessors(tracks));
                     filterHandle.progress(index++);
                 }
