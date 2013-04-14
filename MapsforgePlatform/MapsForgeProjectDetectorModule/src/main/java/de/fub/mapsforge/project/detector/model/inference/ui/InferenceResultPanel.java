@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
+import de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
@@ -65,7 +66,7 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         jPanel3 = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        classificationBarChart = new de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart();
+        classificationBarChart = new de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart();
         jPanel6 = new javax.swing.JPanel();
         outlineView = new CustomOutlineView(NbBundle.getMessage(InferenceResultPanel.class, "CLT_Doman_Axis_Name"));
         jPanel1 = new javax.swing.JPanel();
@@ -83,8 +84,8 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
-        setMinimumSize(new java.awt.Dimension(54, 100));
-        setPreferredSize(new java.awt.Dimension(849, 250));
+        setMinimumSize(new java.awt.Dimension(54, 300));
+        setPreferredSize(new java.awt.Dimension(849, 300));
         setLayout(new java.awt.BorderLayout(0, 8));
 
         jPanel3.setBackground(new java.awt.Color(255, 216, 178));
@@ -213,7 +214,7 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         // TODO
     }//GEN-LAST:event_infoButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private de.fub.mapsforge.project.detector.model.inference.ui.ClassificationBarChart classificationBarChart;
+    private de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart classificationBarChart;
     private javax.swing.JLabel classifiedInstances;
     private javax.swing.Box.Filler filler1;
     private javax.swing.JButton infoButton;
@@ -273,36 +274,37 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         absDataset.clear();
         dataItemList.clear();
         Map<String, List<Instance>> resultMap = classificationResult.getResultMap();
+        if (!resultMap.isEmpty()) {
+            double sum = 0;
 
-        double sum = 0;
+            for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
+                sum += entry.getValue().size();
+            }
+            CategoryPlot plot = getClassificationBarChart().getPlot();
+            CategoryItemRenderer relRenderer = plot.getRenderer(0);
+            CategoryItemRenderer absRenderer = plot.getRenderer(1);
 
-        for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-            sum += entry.getValue().size();
+
+            for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
+                double abs = entry.getValue().size();
+                double rel = entry.getValue().size() / sum * 100;
+                absDataset.addValue(null, "Instances (rel.)", entry.getKey());
+                absDataset.addValue(abs, "Instances (abs.)", entry.getKey());
+                relDataset.addValue(rel, "Instances (rel.)", entry.getKey());
+                relDataset.addValue(null, "Instances (abs.)", entry.getKey());
+                dataItemList.add(new DataItem(entry.getKey(), rel, abs));
+            }
+            final LegendItemCollection result = new LegendItemCollection();
+            result.add(relRenderer.getLegendItem(0, 0));
+            result.add(absRenderer.getLegendItem(1, 1));
+
+            double classified = (sum / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
+            double notClassified = ((classificationResult.getInstanceToTrackSegmentMap().size() - sum) / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
+            getClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", classified));
+            getNotClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", notClassified));
+
+            repaint();
         }
-        CategoryPlot plot = getClassificationBarChart().getPlot();
-        CategoryItemRenderer relRenderer = plot.getRenderer(0);
-        CategoryItemRenderer absRenderer = plot.getRenderer(1);
-
-
-        for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-            double abs = entry.getValue().size();
-            double rel = entry.getValue().size() / sum * 100;
-            absDataset.addValue(null, "Instances (rel.)", entry.getKey());
-            absDataset.addValue(abs, "Instances (abs.)", entry.getKey());
-            relDataset.addValue(rel, "Instances (rel.)", entry.getKey());
-            relDataset.addValue(null, "Instances (abs.)", entry.getKey());
-            dataItemList.add(new DataItem(entry.getKey(), rel, abs));
-        }
-        final LegendItemCollection result = new LegendItemCollection();
-        result.add(relRenderer.getLegendItem(0, 0));
-        result.add(absRenderer.getLegendItem(1, 1));
-
-        double classified = (sum / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
-        double notClassified = ((classificationResult.getInstanceToTrackSegmentMap().size() - sum) / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
-        getClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", classified));
-        getNotClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", notClassified));
-
-        repaint();
     }
 
     private static class NodeFactory extends ChildFactory<DataItem> implements ChangeListener {

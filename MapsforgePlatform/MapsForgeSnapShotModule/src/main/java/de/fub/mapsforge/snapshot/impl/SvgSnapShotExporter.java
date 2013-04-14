@@ -73,7 +73,7 @@ public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter
                         @Override
                         public void run() {
                             Dimension preferredSize = component.getPreferredSize();
-                            Dimension dimension = DimensionUtil.computeToA4(preferredSize);
+                            Dimension dimension = preferredSize; //DimensionUtil.computeToA4(preferredSize);
 
                             Writer out = null;
                             FileOutputStream fileOutputSream = null;

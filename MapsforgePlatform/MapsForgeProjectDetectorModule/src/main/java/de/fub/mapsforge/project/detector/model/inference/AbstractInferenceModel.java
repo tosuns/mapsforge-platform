@@ -19,6 +19,7 @@ import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlers;
+import de.fub.mapsforge.project.detector.model.xmls.TransportMode;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
@@ -33,6 +34,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
@@ -169,6 +171,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                     }
                 }
             }
+
+            initAttributes();
         }
     }
 
@@ -205,11 +209,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                 startInference();
                 break;
             case TRAININGS_MODE:
-                clearFeatureList();
                 startTraining();
                 break;
             case ALL_MODE:
-                clearFeatureList();
                 startTraining();
                 startInference();
                 break;
@@ -241,21 +243,33 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      *
      */
     private void initAttributes() {
-        attributeList.clear();
-        attibuteMap.clear();
+        if (getDetector() != null
+                && getDetector().getDetectorDescriptor() != null
+                && getDetector().getDetectorDescriptor().getDatasets() != null
+                && getDetector().getDetectorDescriptor().getDatasets().getTrainingSet() != null
+                && getDetector().getDetectorDescriptor().getDatasets().getTrainingSet().getTransportModeList() != null) {
+            attributeList.clear();
+            attibuteMap.clear();
 
-        // the class label attribute will be the first attribute
-        // in the list of attributes.
-        // this is more like a convention
-        Attribute attribute = new Attribute("class", new ArrayList<String>(inputDataSet.getTrainingsSet().keySet()));
-        attributeList.add(attribute);
-        attibuteMap.put(CLASSES_ATTRIBUTE_NAME, attribute);
+            ArrayList<String> classes = new ArrayList<String>();
+            List<TransportMode> transportModeList = getDetector().getDetectorDescriptor().getDatasets().getTrainingSet().getTransportModeList();
+            for (TransportMode transportMode : transportModeList) {
+                classes.add(transportMode.getName());
+            }
 
-
-        for (FeatureProcess feature : getFeatureList()) {
-            attribute = new Attribute(feature.getName());
-            attibuteMap.put(feature.getName(), attribute);
+            // the class label attribute will be the first attribute
+            // in the list of attributes.
+            // this is more like a convention
+            Attribute attribute = new Attribute("class", classes);
             attributeList.add(attribute);
+            attibuteMap.put(CLASSES_ATTRIBUTE_NAME, attribute);
+
+
+            for (FeatureProcess feature : getFeatureList()) {
+                attribute = new Attribute(feature.getName());
+                attibuteMap.put(feature.getName(), attribute);
+                attributeList.add(attribute);
+            }
         }
     }
 
@@ -273,7 +287,6 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      * @see {@link http://weka.wikispaces.com/Use+WEKA+in+your+Java+code}
      */
     private void startTraining() {
-        // build feature Array and Map
         initAttributes();
         if (!getAttributeList().isEmpty()) {
             InferenceModelProcessHandler processHandler = null;
@@ -298,7 +311,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      *
      */
     private void startInference() {
-        if (classifier != null) {
+        if (getClassifier() != null) {
             InferenceModelProcessHandler processHandler = null;
             // third phase inference
             fireStartEvent(InferenceMode.INFERENCE_MODE);
@@ -317,6 +330,17 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         if (inferenceMode1 != null && inferenceModelProcessHandleClass != null) {
             processHandlerMap.put(inferenceMode, inferenceModelProcessHandleClass);
         }
+    }
+
+    public List<InferenceModelProcessHandler> getProcessHandlers() {
+        List<InferenceModelProcessHandler> list = new ArrayList<InferenceModelProcessHandler>(processHandlerInstanceMap.size());
+        for (InferenceMode mode : InferenceMode.values()) {
+            InferenceModelProcessHandler processHandlerInstance = getProcessHandlerInstance(mode);
+            if (processHandlerInstance != null) {
+                list.add(processHandlerInstance);
+            }
+        }
+        return list;
     }
 
     /**

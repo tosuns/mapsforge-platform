@@ -7,9 +7,11 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
-import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.actions.ToolbarDetectorStartAction;
+import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import java.awt.Dimension;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -27,6 +29,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.Toolbar;
 import org.openide.awt.UndoRedo;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -77,6 +80,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
      */
     public InferenceModelVisuaElement(Lookup lkp) {
         initComponents();
+        inferenceModelProxyToolbar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 16));
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(8);
         obj = lkp.lookup(DetectorDataObject.class);
         assert obj != null;
@@ -93,7 +97,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         contentPanel.removeAll();
 
         if (inferenceModel != null && inferenceModel.getToolbarRepresenter() != null) {
-            inferenceModelProxyToolbar.remove(inferenceModel.getToolbarRepresenter());
+            toolbar.remove(inferenceModel.getToolbarRepresenter());
         }
         inferenceModel = detector.getInferenceModel();
 
@@ -102,12 +106,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
                 toolbar.add(inferenceModel.getToolbarRepresenter());
                 toolbar.revalidate();
             }
-            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.TRAININGS_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(32));
-            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.CROSS_VALIDATION_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(32));
-            contentPanel.add(inferenceModel.getProcessHandlerInstance(InferenceMode.INFERENCE_MODE).getVisualRepresentation());
-            contentPanel.add(Box.createVerticalStrut(32));
+            for (InferenceModelProcessHandler handler : inferenceModel.getProcessHandlers()) {
+                contentPanel.add(handler.getVisualRepresentation());
+                contentPanel.add(Box.createVerticalStrut(16));
+            }
             contentPanel.revalidate();
             repaint();
         }
@@ -130,15 +132,21 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         actionsForPath.addAll(Utilities.actionsForPath("Mapsforge/Gpx/MapView/Actions"));
         for (Action action : actionsForPath) {
             if (action instanceof Presenter.Toolbar) {
-                Presenter.Toolbar presenter = (Presenter.Toolbar) action;
-                toolbar.add(presenter.getToolbarPresenter());
+                try {
+                    Presenter.Toolbar presenter = (Presenter.Toolbar) action.getClass().newInstance();
+                    toolbar.add(presenter.getToolbarPresenter());
+                } catch (InstantiationException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalAccessException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else if (action == null) {
                 toolbar.add(new Toolbar.Separator());
             }
         }
         toolbar.add(new ToolbarDetectorStartAction(detector).getToolbarPresenter());
         toolbar.add(new JToolBar.Separator());
-        toolbar.add(inferenceModelProxyToolbar);
+//        toolbar.add(inferenceModelProxyToolbar);
     }
 
     /**
@@ -196,6 +204,12 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public void componentShowing() {
+        String displayNString = MessageFormat.format("{0}[{1}]",
+                detector.getDataObject().getName(),
+                detector.getInferenceModel().getName());
+        TopComponent topComponent = callback.getTopComponent();
+        topComponent.setDisplayName(displayNString);
+        topComponent.setHtmlDisplayName(displayNString);
     }
 
     @Override

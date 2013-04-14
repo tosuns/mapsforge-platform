@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.Gpx;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

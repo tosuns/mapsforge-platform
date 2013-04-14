@@ -5,7 +5,7 @@
 package de.fub.gpxmodule.factories;
 
 import de.fub.gpxmodule.nodes.TrkSegNode;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
+import de.fub.gpxmodule.xml.Trkseg;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.ChildFactory;

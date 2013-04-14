@@ -136,7 +136,7 @@ public class Waypoint {
         return lon;
     }
 
-    public String putProperty(String propertyName, String value) {
+    public String putPropertyValue(String propertyName, String value) {
         return propertyMap.put(propertyName, value);
     }
 

@@ -10,10 +10,10 @@ import de.fub.mapsforge.project.datasource.spi.TrksegWrapper;
 import de.fub.mapsforge.project.datasource.spi.actions.TrackSemgentExportAction;
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.service.GPXProvider;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.Trk;
+import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.datasource.spi.actions.SplitpanelAction;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
@@ -23,6 +23,8 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -40,6 +42,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -49,6 +52,7 @@ import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -63,12 +67,14 @@ import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
         displayName = "#LBL_GPX_VISUAL",
         iconBase = "de/fub/gpxmodule/gpx.png",
         mimeType = "text/gpx+xml",
-        persistenceType = TopComponent.PERSISTENCE_NEVER,
+        persistenceType = TopComponent.PERSISTENCE_ALWAYS,
         preferredID = "GPXVisual",
         position = 500)
-@NbBundle.Messages("LBL_GPX_VISUAL=Visual")
+@NbBundle.Messages({"LBL_GPX_VISUAL=Visual", "CLT_Fit_Map_To_Size_Tooltip=Zoom the map to the size of the viewport."})
 public class MapViewElement extends javax.swing.JPanel implements MultiViewElement, ChangeListener, ExplorerManager.Provider {
 
+    @StaticResource
+    private static final String FIT_MAP_TO_SIZE_BUTTON_ICON_PATH = "de/fub/mapsforge/project/datasource/ui/zoomToMap.png";
     private static final long serialVersionUID = 1L;
     private final JToolBar toolbar = new JToolBar();
     private final ObservableList<TrksegWrapper> trackSegmentList = new ObservableArrayList<TrksegWrapper>();
@@ -132,6 +138,18 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         JButton jButton = new JButton(new TrackSemgentExportAction(getExplorerManager()));
         toolbar.add(jButton);
         toolbar.add(new JToggleButton(new SplitpanelAction(MapViewElement.this)));
+
+        // set up fit map to size button
+
+        JButton fitToSizeButton = new JButton(ImageUtilities.loadImageIcon(FIT_MAP_TO_SIZE_BUTTON_ICON_PATH, true));
+        fitToSizeButton.setToolTipText(Bundle.CLT_Fit_Map_To_Size_Tooltip());
+        fitToSizeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abstractMapViewer1.setDisplayToFitMapMarkers();
+            }
+        });
+        toolbar.add(fitToSizeButton);
     }
 
     private void update() {
@@ -143,7 +161,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
                 for (Trk trk : gpx.getTrk()) {
                     for (Trkseg trkseg : trk.getTrkseg()) {
                         Color color = colorProvider.getNextColor();
-                        TrksegWrapper trksegWrapper = new TrksegWrapper(trkseg, color);
+                        TrksegWrapper trksegWrapper = new TrksegWrapper(trk.getName(), trk.getDesc(), trkseg, color);
                         trackSegmentList.add(trksegWrapper);
 
                         for (Wpt trkpt : trkseg.getTrkpt()) {
@@ -291,6 +309,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
             if (icon != null) {
                 callback.getTopComponent().setIcon(icon);
             }
+            callback.getTopComponent().setDisplayName(obj.getName());
         }
     }
 

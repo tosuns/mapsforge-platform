@@ -6,9 +6,7 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 
 import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
-import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
-import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,27 +57,26 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
         selectionComponent1.getAllItems().removeAll(selectionComponent1.getSelectedItems());
         selectionComponent1.getSelectedItems().addChangeListener(WeakListeners.change(InferenceModelSettingForm.this, selectionComponent1.getSelectedListExplorerManager()));
 
-        for (InferenceMode mode : InferenceMode.values()) {
-            InferenceModelProcessHandler processHandlerInstance = inferenceModel.getProcessHandlerInstance(mode);
-            if (processHandlerInstance != null) {
-                switch (mode) {
-                    case TRAININGS_MODE:
-                        processHandlerPanel1.getTrainingProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
-                        break;
-                    case CROSS_VALIDATION_MODE:
-                        processHandlerPanel1.getCrossvalidationProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
-                        break;
-                    case INFERENCE_MODE:
-                        processHandlerPanel1.getInferenceProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
-                        break;
-                    case ALL_MODE: // do nothing in this case
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
-            }
-        }
-
+//        for (InferenceMode mode : InferenceMode.values()) {
+//            InferenceModelProcessHandler processHandlerInstance = inferenceModel.getProcessHandlerInstance(mode);
+//            if (processHandlerInstance != null) {
+//                switch (mode) {
+//                    case TRAININGS_MODE:
+//                        processHandlerPanel1.getTrainingProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
+//                        break;
+//                    case CROSS_VALIDATION_MODE:
+//                        processHandlerPanel1.getCrossvalidationProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
+//                        break;
+//                    case INFERENCE_MODE:
+//                        processHandlerPanel1.getInferenceProcessSelectionComponent().setSelectedProcessHandler(processHandlerInstance);
+//                        break;
+//                    case ALL_MODE: // do nothing in this case
+//                        break;
+//                    default:
+//                        throw new AssertionError();
+//                }
+//            }
+//        }
 
     }
 
@@ -95,8 +92,6 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
         jTabbedPane1 = new javax.swing.JTabbedPane();
         optionPanel1 = new de.fub.mapsforge.project.detector.model.inference.ui.OptionPanel();
         selectionComponent1 = new de.fub.mapsforge.project.detector.ui.SelectionComponent();
-        jPanel1 = new javax.swing.JPanel();
-        processHandlerPanel1 = new de.fub.mapsforge.project.detector.model.inference.ui.ProcessHandlerPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -106,19 +101,11 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
         selectionComponent1.setPreferredSize(new java.awt.Dimension(400, 450));
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(InferenceModelSettingForm.class, "InferenceModelSettingForm.selectionComponent1.TabConstraints.tabTitle"), selectionComponent1); // NOI18N
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        jPanel1.setLayout(new java.awt.BorderLayout());
-        jPanel1.add(processHandlerPanel1, java.awt.BorderLayout.CENTER);
-
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(InferenceModelSettingForm.class, "InferenceModelSettingForm.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
-
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private de.fub.mapsforge.project.detector.model.inference.ui.OptionPanel optionPanel1;
-    private de.fub.mapsforge.project.detector.model.inference.ui.ProcessHandlerPanel processHandlerPanel1;
     private de.fub.mapsforge.project.detector.ui.SelectionComponent selectionComponent1;
     // End of variables declaration//GEN-END:variables
 

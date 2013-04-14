@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.ResegmentationFilterProcess"
+    name="Resegmentation Filter"
+    description="This filter resegmentats gpx segments if it determins there are jumps in context of distance between tow point.">
+    <properties/>
+</dec:processunit>

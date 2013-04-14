@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.inference.ui;
+package de.fub.mapsforge.project.detector.model.inference.ui.charts;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,7 +13,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
@@ -28,68 +27,53 @@ import org.openide.util.NbBundle;
  *
  * @author Serdar
  */
-public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
+public class AttributeSelectionBarChart extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
+    private final JFreeChart barChart;
     private final ChartPanel chartPanel;
     private final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    private final JFreeChart barChart;
     private final CategoryPlot plot;
-    private Color precColor = new Color(0x00, 0x7a, 0xe0);
-    private Color recColor = new Color(0xe0, 0x00, 0x00);
 
     /**
-     * Creates new form PrecisionRecallBarChartPanel
+     * Creates new form AttributeSelectionBarChart
      */
-    public PrecisionRecallBarChartPanel() {
-        super();
+    public AttributeSelectionBarChart() {
         initComponents();
         barChart = ChartFactory.createBarChart(
-                NbBundle.getMessage(PrecisionRecallBarChartPanel.class, "CLT_Chart_Precision_Recall_Name"),
-                NbBundle.getMessage(PrecisionRecallBarChartPanel.class, "CLT_Doman_Axis_Name"),
-                NbBundle.getMessage(PrecisionRecallBarChartPanel.class, "CLT_Value_Axis_Name"),
+                NbBundle.getMessage(AttributeSelectionBarChart.class, "AttributeSelectionBarChart.CLT_Chart_Title"),
+                NbBundle.getMessage(AttributeSelectionBarChart.class, "AttributeSelectionBarChart.CLT_Domain_Axis_Name"),
+                NbBundle.getMessage(AttributeSelectionBarChart.class, "AttributeSelectionBarChart.CLT_Value_Axis_Name"),
                 dataset,
                 PlotOrientation.VERTICAL,
                 true,
                 true,
                 true);
-
+        plot = barChart.getCategoryPlot();
         Font font = new JLabel().getFont().deriveFont(Font.BOLD, 14);
 
         barChart.getTitle().setFont(font);
         barChart.getTitle().setPaint(new Color(153, 153, 153));
 
-        plot = barChart.getCategoryPlot();
-        NumberAxis preciAxis = new NumberAxis(NbBundle.getMessage(PrecisionRecallBarChartPanel.class, "CLT_Value_Axis_Name"));
-//        preciAxis.setAutoRange(false);
-        preciAxis.setRange(0, 100);
-        plot.setRangeAxis(0, preciAxis);
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
-
+        plot.getRangeAxis().setRange(0, 100);
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-        barRenderer.setSeriesPaint(0, precColor);
-        barRenderer.setSeriesPaint(1, recColor);
 
         plot.setRenderer(barRenderer);
-
         chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);
         add(chartPanel, BorderLayout.CENTER);
     }
 
-    public ChartPanel getChartPanel() {
-        return chartPanel;
+    public JFreeChart getBarChart() {
+        return barChart;
     }
 
     public DefaultCategoryDataset getDataset() {
         return dataset;
-    }
-
-    public JFreeChart getBarChart() {
-        return barChart;
     }
 
     public CategoryPlot getPlot() {

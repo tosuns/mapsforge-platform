@@ -1,0 +1,63 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.fub.mapsforge.project.detector.model.inference.features;
+
+import de.fub.agg2graph.gpseval.data.Waypoint;
+import de.fub.agg2graph.gpseval.features.MaxNSpeedFeature;
+import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
+
+/**
+ *
+ * @author Serdar
+ */
+@NbBundle.Messages({
+    "CLT_Max3rdVelocityFeature_Name=Third Maximal Velocity",
+    "CLT_Max3rdVelocityFeature_Description=Feature that computes the third highest Velocity value which a track contains."
+})
+@ServiceProvider(service = FeatureProcess.class)
+public class Max3rdVelocityFeatureProcess extends FeatureProcess {
+
+    private final MaxNSpeedFeature feature = new MaxNSpeedFeature(3);
+    private TrackSegment gpsTrack;
+
+    public Max3rdVelocityFeatureProcess() {
+        this(null);
+    }
+
+    public Max3rdVelocityFeatureProcess(Detector detector) {
+        super(detector);
+    }
+
+    @Override
+    protected void start() {
+        feature.reset();
+        for (Waypoint waypoint : gpsTrack.getWayPointList()) {
+            feature.addWaypoint(waypoint);
+        }
+    }
+
+    @Override
+    public String getName() {
+        return Bundle.CLT_Max3rdVelocityFeature_Name();
+    }
+
+    @Override
+    public String getDescription() {
+        return Bundle.CLT_Max3rdVelocityFeature_Description();
+    }
+
+    @Override
+    public void setInput(TrackSegment gpsTrack) {
+        this.gpsTrack = gpsTrack;
+    }
+
+    @Override
+    public Double getResult() {
+        return feature.getResult();
+    }
+}

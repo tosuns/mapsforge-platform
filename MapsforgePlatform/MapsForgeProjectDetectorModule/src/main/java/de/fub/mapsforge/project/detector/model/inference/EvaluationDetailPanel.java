@@ -28,6 +28,7 @@ public class EvaluationDetailPanel extends javax.swing.JPanel implements Explore
      */
     public EvaluationDetailPanel() {
         initComponents();
+        propertySheetView1.setDescriptionAreaVisible(false);
     }
 
     public EvaluationDetailPanel(Evaluation evaluation) {

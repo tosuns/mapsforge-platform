@@ -4,7 +4,7 @@
  */
 package de.fub.gpxmodule.nodes;
 
-import de.fub.gpxmodule.xml.gpx.Rte;
+import de.fub.gpxmodule.xml.Rte;
 import java.beans.IntrospectionException;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;

@@ -4,7 +4,7 @@
  */
 package de.fub.gpxmodule.factories;
 
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Wpt;
 import java.beans.IntrospectionException;
 import java.util.List;
 import org.openide.nodes.BeanNode;

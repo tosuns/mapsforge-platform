@@ -53,10 +53,12 @@ public class GpxWayPoint extends Waypoint {
 
     public GpxWayPoint(Map<String, String> propertyMap) {
         for (Entry<String, String> entry : propertyMap.entrySet()) {
+            putPropertyValue(entry.getKey(), entry.getValue());
             if (entry.getValue() != null) {
                 try {
                     if (PROP_NAME_ELEVATION.equals(entry.getKey())) {
                         elevation = Double.parseDouble(entry.getValue());
+
                     } else if (PROP_NAME_MAG_VAR.equals(entry.getKey())) {
                         magVar = Double.parseDouble(entry.getValue());
                     } else if (PROP_NAME_GEOID_HEIGHT.equals(entry.getKey())) {

@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
-import de.fub.agg2graph.gpseval.features.MaxAccelerationFeature;
+import de.fub.agg2graph.gpseval.features.MaxNAccelerationFeature;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = FeatureProcess.class)
 public class MaxAccelerationFeatureProcess extends FeatureProcess {
 
-    private final MaxAccelerationFeature feature = new MaxAccelerationFeature();
+    private final MaxNAccelerationFeature feature = new MaxNAccelerationFeature(1);
     private TrackSegment gpxTrack;
 
     public MaxAccelerationFeatureProcess() {
@@ -36,9 +36,11 @@ public class MaxAccelerationFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
+//        long currentTimeMillis = System.currentTimeMillis();
         for (Waypoint waypoint : gpxTrack.getWayPointList()) {
             feature.addWaypoint(waypoint);
         }
+//        System.out.println(MessageFormat.format("Duration : {0}", (System.currentTimeMillis() - currentTimeMillis)));
     }
 
     @Override

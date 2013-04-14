@@ -16,10 +16,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum(String.class)
 public enum InferenceMode {
 
-    @XmlEnumValue("trainingsMode")
-    TRAININGS_MODE("Training"),
     @XmlEnumValue("crossvalidationMode")
     CROSS_VALIDATION_MODE("Crossvalidation"),
+    @XmlEnumValue("trainingsMode")
+    TRAININGS_MODE("Training"),
     @XmlEnumValue("inferenceMode")
     INFERENCE_MODE("Inference"),
     ALL_MODE("All Mode");

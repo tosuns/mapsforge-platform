@@ -7,7 +7,7 @@ package de.fub.gpxmodule.nodes;
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.factories.GPXChildNodeFactory;
 import de.fub.gpxmodule.service.GPXProvider;
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.Gpx;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import org.netbeans.api.annotations.common.StaticResource;

@@ -42,17 +42,24 @@ public class DataSetNode extends AbstractNode {
 
     private void init() {
         if (dataSet.getUrl() != null) {
-            FileObject fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
-            if (fileObject == null) {
-                fileValid = false;
-                setShortDescription("File points to an invalid path.");
-                fireIconChange();
-            } else {
-                try {
-                    dataObject = DataObject.find(fileObject);
-                    setShortDescription(fileObject.getPath());
-                } catch (DataObjectNotFoundException ex) {
-                    Exceptions.printStackTrace(ex);
+            FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
+
+            if (datasourceFileObject != null) {
+                FileObject fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
+                if (fileObject == null) {
+                    fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
+                }
+                if (fileObject == null) {
+                    fileValid = false;
+                    setShortDescription("File points to an invalid path.");
+                    fireIconChange();
+                } else {
+                    try {
+                        dataObject = DataObject.find(fileObject);
+                        setShortDescription(fileObject.getPath());
+                    } catch (DataObjectNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             }
         }

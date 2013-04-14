@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.Gpx;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;

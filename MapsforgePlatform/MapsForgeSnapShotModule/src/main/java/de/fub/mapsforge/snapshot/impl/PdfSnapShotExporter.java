@@ -77,7 +77,7 @@ public class PdfSnapShotExporter extends AbstractComponentSnapShotExporter {
                             PdfGraphics2D pdfGraphics2D = null;
                             try {
                                 Dimension preferredSize = component.getPreferredSize();
-                                Dimension dimension = DimensionUtil.computeToA4Pdf(preferredSize);
+                                Dimension dimension = preferredSize; //DimensionUtil.computeToA4Pdf(preferredSize);
                                 // step 1
                                 Document document = new Document(new Rectangle(dimension.width, dimension.height));
                                 // step 2

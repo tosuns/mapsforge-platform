@@ -41,14 +41,14 @@ import org.openide.util.NbBundle;
     "CLT_Trainings_Process_Running=Training",
     "CLT_Inference_Process_Running=Clustering"
 })
-class DetectorRunController {
+class DetectorRunSupport {
 
     private final Detector detector;
-    private final Profile currentProfile;
+    private Profile currentProfile;
     private final ArrayList<DataConverter> converterList;
-    private static final Logger LOG = Logger.getLogger(DetectorRunController.class.getName());
+    private static final Logger LOG = Logger.getLogger(DetectorRunSupport.class.getName());
 
-    public DetectorRunController(Detector detector) {
+    public DetectorRunSupport(Detector detector) {
         assert detector != null;
         this.detector = detector;
         this.currentProfile = detector.getCurrentActiveProfile();
@@ -59,8 +59,10 @@ class DetectorRunController {
      *
      */
     void start() {
+        this.currentProfile = detector.getCurrentActiveProfile();
         final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), ""), new CancellableImpl());
         try {
+            detector.getInferenceModel().getResult().clear();
             handle.start();
             detector.setDetectorState(ProcessState.RUNNING);
 
@@ -85,6 +87,9 @@ class DetectorRunController {
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
             detector.setDetectorState(ProcessState.ERROR);
         } finally {
+            detector.getInferenceModel().getInput().clearAllInferenceData();
+            detector.getInferenceModel().getInput().clearAllTrainingsData();
+
             handle.finish();
         }
     }
@@ -93,8 +98,8 @@ class DetectorRunController {
      *
      */
     private void startTraining() {
-
         Map<String, List<TrackSegment>> trainingsMap = getTrainingsSet();
+
         if (this.currentProfile.getPreprocess().isActive()
                 && (this.currentProfile.getPreprocess().getMode() == DetectorMode.TRAINING
                 || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)) {
@@ -105,7 +110,7 @@ class DetectorRunController {
             try {
                 for (Entry<String, List<TrackSegment>> entry : entrySet) {
                     List<TrackSegment> tracks = entry.getValue();
-                    // TOCO could lead to an infinity loop or to a concurrent modification exception!
+                    // TODO could lead to an infinity loop or to a concurrent modification exception!
                     trainingsMap.put(entry.getKey(), applyPreProcessors(tracks));
                     filterHandle.progress(index++);
                 }
@@ -133,50 +138,47 @@ class DetectorRunController {
      */
     private void startInference() {
 
-        try {
+        List<TrackSegment> inferenceSet = getInferenceSet();
 
-            List<TrackSegment> inferenceSet = getInferenceSet();
+        // apply pre precossers
+        if (this.currentProfile.getPreprocess().isActive()
+                && (this.currentProfile.getPreprocess().getMode() == DetectorMode.INFERENCE
+                || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)) {
 
-            // apply pre precossers
-            if (this.currentProfile.getPreprocess().isActive()
-                    && (this.currentProfile.getPreprocess().getMode() == DetectorMode.INFERENCE
-                    || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)) {
+            inferenceSet = applyPreProcessors(inferenceSet);
+        }
 
-                inferenceSet = applyPreProcessors(inferenceSet);
-            }
+        InferenceModelInputDataSet inferenceModelInputDataSet = detector.getInferenceModel().getInput();
 
-            InferenceModelInputDataSet inferenceModelInputDataSet = detector.getInferenceModel().getInput();
+        if (inferenceModelInputDataSet == null) {
+            inferenceModelInputDataSet = new InferenceModelInputDataSet();
+        }
 
-            if (inferenceModelInputDataSet == null) {
-                inferenceModelInputDataSet = new InferenceModelInputDataSet();
-            }
+        inferenceModelInputDataSet.getInferenceSet().clear();
+        inferenceModelInputDataSet.getInferenceSet().addAll(inferenceSet);
 
-            inferenceModelInputDataSet.getInferenceSet().clear();
-            inferenceModelInputDataSet.getInferenceSet().addAll(inferenceSet);
+        detector.getInferenceModel().setInput(inferenceModelInputDataSet);
 
-            detector.getInferenceModel().setInput(inferenceModelInputDataSet);
+        // set state of inference model to inference
+        detector.getInferenceModel().setInferenceMode(InferenceMode.INFERENCE_MODE);
+        detector.getInferenceModel().run();
 
-            // set state of inference model to inference
-            detector.getInferenceModel().setInferenceMode(InferenceMode.INFERENCE_MODE);
-            detector.getInferenceModel().run();
+        // apply post processors
+        if (this.currentProfile.getPostprocess().isActive()
+                && (this.currentProfile.getPostprocess().getMode() == DetectorMode.INFERENCE
+                || this.currentProfile.getPostprocess().getMode() == DetectorMode.BOTH)) {
 
-            // apply post processors
-            if (this.currentProfile.getPostprocess().isActive()
-                    && (this.currentProfile.getPostprocess().getMode() == DetectorMode.INFERENCE
-                    || this.currentProfile.getPostprocess().getMode() == DetectorMode.BOTH)) {
+            InferenceModelResultDataSet resultDataset = detector.getInferenceModel().getResult();
 
-                InferenceModelResultDataSet resultDataset = detector.getInferenceModel().getResult();
-
-                if (resultDataset != null) {
-                    for (Task task : detector.getPostProcessorPipeline().getProcesses()) {
-                        // maybe here is a concurrent execution possible
-                        task.setInput(resultDataset);
-                        task.run();
-                    }
+            if (resultDataset != null) {
+                for (Task task : detector.getPostProcessorPipeline().getProcesses()) {
+                    // maybe here is a concurrent execution possible
+                    task.setInput(resultDataset);
+                    task.run();
                 }
             }
-        } finally {
         }
+
     }
 
     /**
@@ -201,7 +203,7 @@ class DetectorRunController {
      *
      * @return
      */
-    private Map<String, List<TrackSegment>> getTrainingsSet() {
+    public Map<String, List<TrackSegment>> getTrainingsSet() {
         HashMap<String, List<TrackSegment>> trainingsSet = new HashMap<String, List<TrackSegment>>();
         for (TransportMode transportMode : detector.getDetectorDescriptor().getDatasets().getTrainingSet().getTransportModeList()) {
             if (!trainingsSet.containsKey(transportMode.getName())) {
@@ -227,7 +229,7 @@ class DetectorRunController {
      *
      * @return
      */
-    private List<TrackSegment> getInferenceSet() {
+    public List<TrackSegment> getInferenceSet() {
         List<TrackSegment> inferenceSet = new ArrayList<TrackSegment>();
 
         for (DataSet dataset : detector.getDetectorDescriptor().getDatasets().getInferenceSet().getDatasetList()) {

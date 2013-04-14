@@ -148,28 +148,18 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
         @Override
         public Image getIcon(int type) {
             Image image = null;
-            Image backgroundIcon = null;
-            Image overlayIcon = null;
             switch (this.filterProcess.getProcessState()) {
                 case ERROR:
-                    backgroundIcon = IconRegister.findRegisteredIcon("processIconError.png");
-                    overlayIcon = IconRegister.findRegisteredIcon("errorHintIcon.png");
+                    image = IconRegister.findRegisteredIcon("processIconError.png");
                     break;
                 case INACTIVE:
-                    backgroundIcon = IconRegister.findRegisteredIcon("processIconNormal.png");
+                    image = IconRegister.findRegisteredIcon("processIconNormal.png");
                     break;
                 case RUNNING:
-                    backgroundIcon = IconRegister.findRegisteredIcon("processIconRun.png");
-                    overlayIcon = IconRegister.findRegisteredIcon("playHintIcon.png");
+                    image = IconRegister.findRegisteredIcon("processIconRun.png");
                     break;
                 default:
                     throw new AssertionError();
-            }
-
-            if (backgroundIcon != null && overlayIcon != null) {
-                image = ImageUtilities.mergeImages(backgroundIcon, overlayIcon, 0, 0);
-            } else if (backgroundIcon != null) {
-                image = backgroundIcon;
             }
 
             return image != null ? image : super.getIcon(type);

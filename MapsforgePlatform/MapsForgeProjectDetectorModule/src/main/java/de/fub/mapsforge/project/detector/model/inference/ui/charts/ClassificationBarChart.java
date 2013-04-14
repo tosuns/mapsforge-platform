@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.inference.ui;
+package de.fub.mapsforge.project.detector.model.inference.ui.charts;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

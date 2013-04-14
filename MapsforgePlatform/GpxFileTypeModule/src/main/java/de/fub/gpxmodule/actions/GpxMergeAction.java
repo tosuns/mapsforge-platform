@@ -6,7 +6,8 @@ package de.fub.gpxmodule.actions;
 
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.actions.ui.MergeForm;
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.ObjectFactory;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -138,7 +139,7 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            marshaller.marshal(gpx, outputStream);
+            marshaller.marshal(new ObjectFactory().createGpx(gpx), outputStream);
         } catch (FileAlreadyLockedException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {

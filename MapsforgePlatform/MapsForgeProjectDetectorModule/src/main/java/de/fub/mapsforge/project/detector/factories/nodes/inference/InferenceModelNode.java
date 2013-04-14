@@ -21,6 +21,9 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.nodes.Children;
 import org.openide.nodes.Sheet;
 import org.openide.util.ImageUtilities;
@@ -81,7 +84,7 @@ public class InferenceModelNode extends CustomAbstractnode implements ChangeList
 
     private void updateNode() {
         if (detector != null) {
-
+            detector.create(InferenceModelNode.this);
             AbstractInferenceModel oldInferenceModel = getLookup().lookup(AbstractInferenceModel.class);
             if (oldInferenceModel != null) {
                 content.remove(oldInferenceModel);

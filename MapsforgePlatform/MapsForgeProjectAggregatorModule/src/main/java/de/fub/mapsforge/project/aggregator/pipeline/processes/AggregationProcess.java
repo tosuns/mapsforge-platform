@@ -134,12 +134,14 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
                             }
 
                             List<PointGhostPointPair> pointGhostPointPairs = mergeHandler.getPointGhostPointPairs();
-                            for (PointGhostPointPair pgpp : pointGhostPointPairs) {
-                                List<ILocation> line = new ArrayList<ILocation>(2);
-                                line.add(new GPSPoint(pgpp.point));
-                                line.add(new GPSPoint(pgpp.ghostPoint));
-                                mergeLayer.add(line);
-                                totalPointGhostPointPairs++;
+                            if (pointGhostPointPairs != null) {
+                                for (PointGhostPointPair pgpp : pointGhostPointPairs) {
+                                    List<ILocation> line = new ArrayList<ILocation>(2);
+                                    line.add(new GPSPoint(pgpp.point));
+                                    line.add(new GPSPoint(pgpp.ghostPoint));
+                                    mergeLayer.add(line);
+                                    totalPointGhostPointPairs++;
+                                }
                             }
                         }
                     }

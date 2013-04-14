@@ -14,6 +14,10 @@ public abstract class AbstractDetectorProcess<I, O> extends DetectorProcess<I, O
 
     private ProcessDescriptor processDescriptor = null;
 
+    public AbstractDetectorProcess() {
+        this(null);
+    }
+
     public AbstractDetectorProcess(Detector detector) {
         super(detector);
     }

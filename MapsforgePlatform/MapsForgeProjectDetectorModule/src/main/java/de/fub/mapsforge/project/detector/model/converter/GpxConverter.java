@@ -6,13 +6,14 @@ package de.fub.mapsforge.project.detector.model.converter;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.gpxmodule.GPXDataObject;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.Trk;
+import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.detector.model.gpx.GpxWayPoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.utils.GPSUtils;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class GpxConverter implements DataConverter {
                 if (dataObject instanceof GPXDataObject) {
                     gpx = ((GPXDataObject) dataObject).getGpx();
                     if (gpx == null) {
-                        throw new DataConverterException("Failed to convert specified file: " + fileObject.getPath());
+                        throw new DataConverterException(MessageFormat.format("Failed to convert specified file: {0}", fileObject.getPath()));
                     } else {
                         trackSegmentList = convertToTrackSegment(gpx);
                     }
@@ -94,7 +95,7 @@ public class GpxConverter implements DataConverter {
 
     protected Map<String, String> createWaypointPropertymap(Wpt previouseWpt, Wpt gpxWpt) {
         HashMap<String, String> map = new HashMap<String, String>();
-        Collection<String> propertyList = new Waypoint().getPropertyList();
+        Collection<String> propertyList = new GpxWayPoint().getPropertyList();
         for (String property : propertyList) {
             if (GpxWayPoint.PROP_NAME_BEARING.equals(property)) {
                 // gpx version 1.1 does not support bearing information
@@ -110,7 +111,7 @@ public class GpxConverter implements DataConverter {
                 //at this point of development we don't use segment number for filtering
             } else if (GpxWayPoint.PROP_NAME_SPEED.equals(property)) {
                 if (gpxWpt.getLon() != null && gpxWpt.getLat() != null && gpxWpt.getTime() != null) {
-                    map.put(Waypoint.PROP_NAME_SPEED, String.valueOf(GPSUtils.computeSpeed(previouseWpt, gpxWpt)));
+                    map.put(Waypoint.PROP_NAME_SPEED, String.valueOf(GPSUtils.computeVelocity(previouseWpt, gpxWpt)));
                 }
             } else if (GpxWayPoint.PROP_NAME_TIMESTAMP.equals(property)) {
                 if (gpxWpt.getTime() != null) {

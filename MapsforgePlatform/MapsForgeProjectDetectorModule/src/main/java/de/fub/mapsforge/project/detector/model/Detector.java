@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.PostProcessorPipeline;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
@@ -25,6 +26,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -48,6 +50,7 @@ public class Detector extends ModelSynchronizer {
     private ProcessState detectorState = ProcessState.INACTIVE;
     private ModelSynchronizerClient dataObjectModelSynchronizerClient;
     private Profile currentActiveProfile = null;
+    private DetectorRunSupport detectorRunSupport;
 
     public Detector(DetectorDataObject dataObject) {
         assert dataObject != null;
@@ -141,8 +144,27 @@ public class Detector extends ModelSynchronizer {
         "CLT_Running_Process={0}: Running {1}..."})
     public void start() {
         synchronized (MUTEX_PROCESS_RUNNING) {
-            new DetectorRunController(Detector.this).start();
+            getDetectorRunSupport().start();
         }
+    }
+
+    private DetectorRunSupport getDetectorRunSupport() {
+        synchronized (MUTEX_PROCESS_RUNNING) {
+            if (detectorRunSupport == null) {
+                detectorRunSupport = new DetectorRunSupport(Detector.this);
+            }
+            return detectorRunSupport;
+        }
+    }
+
+    public Map<String, List<TrackSegment>> getTrainingsSet() {
+        synchronized (MUTEX_PROCESS_RUNNING) {
+            return getDetectorRunSupport().getTrainingsSet();
+        }
+    }
+
+    public List<TrackSegment> getInferenceSet() {
+        return getDetectorRunSupport().getInferenceSet();
     }
 
     /**

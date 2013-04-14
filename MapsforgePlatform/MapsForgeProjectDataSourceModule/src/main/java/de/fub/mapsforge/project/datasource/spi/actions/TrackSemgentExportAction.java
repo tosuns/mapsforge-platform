@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.datasource.spi.actions;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.ObjectFactory;
-import de.fub.gpxmodule.xml.gpx.Trk;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.ObjectFactory;
+import de.fub.gpxmodule.xml.Trk;
 import de.fub.mapsforge.project.datasource.GPXDatasourceNode;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
 import de.fub.mapsforge.project.datasource.spi.TrackSegmentBehaviour;
@@ -98,20 +98,25 @@ public class TrackSemgentExportAction extends AbstractAction {
 
     private Gpx getExportGpx() {
         Children children = explorerManger.getRootContext().getChildren();
-        Trk trk = new Trk();
 
+        final Gpx gpx = new Gpx();
         for (Node node : children.getNodes()) {
             if (node instanceof TrackSegmentBehaviour) {
                 TrksegWrapper trkseg = node.getLookup().lookup(TrksegWrapper.class);
                 TrackSegmentBehaviour trackNode = (TrackSegmentBehaviour) node;
                 if (trackNode.isVisible() && trkseg != null) {
+
+                    Trk trk = new Trk();
+                    trk.setName(trkseg.getTrackName());
+                    trk.setDesc(trkseg.getTrackDescription());
                     trk.getTrkseg().add(trkseg.getTrkseg());
+                    gpx.getTrk().add(trk);
                 }
             }
         }
 
-        final Gpx gpx = new Gpx();
-        gpx.getTrk().add(trk);
+
+
         return gpx;
     }
 

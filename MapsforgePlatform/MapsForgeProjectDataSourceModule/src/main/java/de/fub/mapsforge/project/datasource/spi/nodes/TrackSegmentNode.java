@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.datasource.spi.nodes;
 
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.datasource.spi.TrackSegmentBehaviour;
 import de.fub.mapsforge.project.datasource.spi.TrksegWrapper;
 import java.awt.Color;
@@ -47,17 +47,21 @@ public class TrackSegmentNode extends AbstractNode implements TrackSegmentBehavi
     }
 
     private void updateNode() {
-        double latMax = -90;
-        double lonMin = 180;
-        double latMin = 90;
-        double lonMax = -180;
-        for (Wpt wpt : trkseg.getTrkseg().getTrkpt()) {
-            latMax = Math.max(wpt.getLat().doubleValue(), latMax);
-            latMin = Math.min(wpt.getLat().doubleValue(), latMin);
-            lonMax = Math.max(wpt.getLon().doubleValue(), lonMax);
-            lonMin = Math.min(wpt.getLon().doubleValue(), lonMin);
+        if (trkseg.getTrackName() == null && trkseg.getTrackDescription() == null) {
+            double latMax = -90;
+            double lonMin = 180;
+            double latMin = 90;
+            double lonMax = -180;
+            for (Wpt wpt : trkseg.getTrkseg().getTrkpt()) {
+                latMax = Math.max(wpt.getLat().doubleValue(), latMax);
+                latMin = Math.min(wpt.getLat().doubleValue(), latMin);
+                lonMax = Math.max(wpt.getLon().doubleValue(), lonMax);
+                lonMin = Math.min(wpt.getLon().doubleValue(), lonMin);
+            }
+            setDisplayName(MessageFormat.format(NAME_PATTERN, latMax, lonMin, latMin, lonMax));
+        } else {
+            setDisplayName(MessageFormat.format("TrackName: {0}, Description: {1}", trkseg.getTrackName(), trkseg.getTrackDescription()));
         }
-        setDisplayName(MessageFormat.format(NAME_PATTERN, latMax, lonMin, latMin, lonMax));
     }
 
     @Override
