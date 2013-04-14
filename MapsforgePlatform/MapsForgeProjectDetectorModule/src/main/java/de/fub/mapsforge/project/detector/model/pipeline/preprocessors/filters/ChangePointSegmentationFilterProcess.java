@@ -97,9 +97,9 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
 
     @Override
     protected void start() {
-        if (gpsTracks != null) {
-            result.clear();
+        result.clear();
 
+        if (gpsTracks != null) {
             for (TrackSegment trackSegment : gpsTracks) {
 
                 // 1. step determine (non) walking points
@@ -114,8 +114,8 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
                 // 4. step partion original segment with the help of the change point in the
                 // walking segment in the certainPartition list.
                 result.addAll(partitionTrackSegment(trackSegment, certainPartition));
-                gpsTracks.clear();
             }
+            gpsTracks.clear();
         }
     }
 

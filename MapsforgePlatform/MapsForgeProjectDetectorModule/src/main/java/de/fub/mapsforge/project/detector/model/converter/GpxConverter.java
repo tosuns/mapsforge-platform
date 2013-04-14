@@ -6,10 +6,10 @@ package de.fub.mapsforge.project.detector.model.converter;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.gpxmodule.GPXDataObject;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.Trk;
+import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.detector.model.gpx.GpxWayPoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.utils.GPSUtils;

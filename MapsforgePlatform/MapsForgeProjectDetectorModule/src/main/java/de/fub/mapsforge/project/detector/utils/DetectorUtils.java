@@ -36,6 +36,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -45,6 +46,7 @@ public class DetectorUtils {
 
     private static final Object DETECTOR_FILE_OPERATION_MUTEX = new Object();
     private static final Logger LOG = Logger.getLogger(DetectorUtils.class.getName());
+    private static RequestProcessor requestProcessor;
 
     public static <T> T createInstance(Class<T> clazz, String className) {
         return createInstance(clazz, className, (Object[]) null);
@@ -401,5 +403,12 @@ public class DetectorUtils {
         public DetectorCopyException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
             super(message, cause, enableSuppression, writableStackTrace);
         }
+    }
+
+    public static RequestProcessor getDefaultRequestProcessor() {
+        if (requestProcessor == null) {
+            requestProcessor = new RequestProcessor(Detector.class.getName(), Runtime.getRuntime().availableProcessors() * 2);
+        }
+        return requestProcessor;
     }
 }

@@ -6,10 +6,10 @@ package de.fub.mapsforge.project.detector.utils;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.Trk;
+import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import java.math.BigDecimal;
 import java.util.Date;

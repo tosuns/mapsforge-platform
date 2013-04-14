@@ -21,7 +21,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_HtmlSnapShotExporter_Description=Exports a compoent as Svg & Html file",
     "CLT_HtmlSnapShotExporter_Name=Html"
 })
-@ServiceProvider(service = ComponentSnapShotExporter.class)
+//@ServiceProvider(service = ComponentSnapShotExporter.class)
 public class HtmlSnapShotExporter extends AbstractComponentSnapShotExporter {
 
     @StaticResource

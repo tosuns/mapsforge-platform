@@ -4,7 +4,7 @@
  */
 package de.fub.gpxmodule.nodes;
 
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Wpt;
 import java.beans.IntrospectionException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;

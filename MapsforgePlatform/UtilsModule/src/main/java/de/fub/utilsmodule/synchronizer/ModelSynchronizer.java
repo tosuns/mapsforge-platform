@@ -4,8 +4,10 @@
  */
 package de.fub.utilsmodule.synchronizer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -28,6 +30,7 @@ public abstract class ModelSynchronizer {
     private final HashMap<ChangeListener, ModelSynchronizerClient> listener = new HashMap<ChangeListener, ModelSynchronizerClient>();
 
     public final void modelChanged(ModelSynchronizerClient client) {
+        final List<Entry<Integer, ModelSynchronizerClient>> clients = new ArrayList<Entry<Integer, ModelSynchronizerClient>>();
         synchronized (MUTEX) {
             // get current msc from the map
             HashSet<ModelSynchronizerClient> hashSet = new HashSet<ModelSynchronizerClient>(listenerMap.values());
@@ -38,26 +41,28 @@ public abstract class ModelSynchronizer {
                     listenerMap.values().remove(modelSynchronizerClient);
                 }
             }
+            clients.addAll(listenerMap.entrySet());
+        }
 
-            // iterate in order through all mscs
-            for (Entry<Integer, ModelSynchronizerClient> entry : listenerMap.entrySet()) {
-                if (!entry.getValue().equals(client)) {
-                    entry.getValue().updateModel();
-                }
+        // iterate in order through all mscs
+        for (Entry<Integer, ModelSynchronizerClient> entry : clients) {
+            if (!entry.getValue().equals(client)) {
+                entry.getValue().updateModel();
             }
         }
+
     }
 
     public final ModelSynchronizerClient create(ChangeListener changeListener) {
-        synchronized (MUTEX) {
-            if (!listener.containsKey(changeListener)) {
+        if (!listener.containsKey(changeListener)) {
+            synchronized (MUTEX) {
                 ModelSynchronizerClient modelSynchronizerClient = new ModelSynchronizerClient(changeListener, ModelSynchronizer.this);
                 listenerSet.add(modelSynchronizerClient);
                 listenerMap.put(listenerSet.size() - 1, modelSynchronizerClient);
                 listener.put(changeListener, modelSynchronizerClient);
             }
-            return listener.get(changeListener);
         }
+        return listener.get(changeListener);
     }
 
     protected void synchronize() {

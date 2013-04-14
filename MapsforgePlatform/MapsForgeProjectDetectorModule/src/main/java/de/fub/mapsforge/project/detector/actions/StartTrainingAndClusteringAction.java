@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.actions;
 
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
+import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
@@ -13,7 +14,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.cookies.OpenCookie;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.RequestProcessor;
 
 @ActionID(
         category = "Detector",
@@ -36,7 +36,7 @@ public final class StartTrainingAndClusteringAction implements ActionListener {
         if (openCookie != null) {
             openCookie.open();
         }
-        RequestProcessor.getDefault().post(new Runnable() {
+        DetectorUtils.getDefaultRequestProcessor().post(new Runnable() {
             @Override
             public void run() {
                 detector.getInferenceModel().setInferenceMode(InferenceMode.ALL_MODE);

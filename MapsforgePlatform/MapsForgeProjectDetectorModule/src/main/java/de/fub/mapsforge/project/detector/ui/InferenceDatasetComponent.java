@@ -260,7 +260,7 @@ public class InferenceDatasetComponent extends javax.swing.JPanel implements Exp
                     NotifyDescriptor.Confirmation.YES_NO_OPTION);
             Object notify = DialogDisplayer.getDefault().notify(nd);
             if (NotifyDescriptor.YES_OPTION == notify) {
-                dataset.inferenceSet.getDatasetList().remove(data);
+                dataset.dataset.remove(data);
                 dataset.fireChange();
             }
         }

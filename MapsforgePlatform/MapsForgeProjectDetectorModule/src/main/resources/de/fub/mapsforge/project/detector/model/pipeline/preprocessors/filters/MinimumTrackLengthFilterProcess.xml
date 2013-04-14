@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.MinimumTrackLengthFilterProcess"
+    name="Minimum Track Length Filter"
+    description="This process filters all track segments whose length is shorter then the specified min track length parameter.">
+    <properties>
+
+        <!-- length value in meters -->
+        <property id="min.track.length"
+                  name="Minimum track length"
+                  description="Specifies the minimum length (in meters) that a track must have."
+                  value="150"
+                  javaType="java.lang.Double"/>
+    </properties>
+</dec:processunit>

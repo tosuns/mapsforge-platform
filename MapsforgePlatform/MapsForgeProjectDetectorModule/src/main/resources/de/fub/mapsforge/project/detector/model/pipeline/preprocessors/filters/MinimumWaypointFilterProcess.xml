@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.MinimumWaypointFilterProcess"
+    name="Minimum Waypoints Filter"
+    description="This Process filters all track segment whose don't contain the amount of waypoint specified as parameter.">
+    <properties>
+
+        <!-- way point count -->
+        <property id="min.way.point.count"
+                  name="Minimum Waypoint Count"
+                  description="Specifies the minimum amount of waypoint a track segment must contain."
+                  value="50"
+                  javaType="java.lang.Integer"/>
+    </properties>
+</dec:processunit>

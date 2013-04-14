@@ -6,10 +6,10 @@ package de.fub.gpxmodule;
 
 import de.fub.gpxmodule.nodes.GpxNode;
 import de.fub.gpxmodule.service.GPXProvider;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.Trk;
+import de.fub.gpxmodule.xml.Trkseg;
+import de.fub.gpxmodule.xml.Wpt;
 import geofiletypeapi.GeoDataObject;
 import java.awt.geom.Rectangle2D;
 import java.beans.IntrospectionException;

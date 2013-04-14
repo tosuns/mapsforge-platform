@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.datasource.spi;
 
-import de.fub.gpxmodule.xml.gpx.Trkseg;
+import de.fub.gpxmodule.xml.Trkseg;
 import java.awt.Color;
 
 /**

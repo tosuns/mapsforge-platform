@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.datasource.spi.actions;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.ObjectFactory;
-import de.fub.gpxmodule.xml.gpx.Trk;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.ObjectFactory;
+import de.fub.gpxmodule.xml.Trk;
 import de.fub.mapsforge.project.datasource.GPXDatasourceNode;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
 import de.fub.mapsforge.project.datasource.spi.TrackSegmentBehaviour;

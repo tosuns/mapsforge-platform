@@ -11,6 +11,7 @@ import de.fub.mapsforge.project.detector.model.inference.actions.ToolbarDetector
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Dimension;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -28,6 +29,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.Toolbar;
 import org.openide.awt.UndoRedo;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -130,8 +132,14 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         actionsForPath.addAll(Utilities.actionsForPath("Mapsforge/Gpx/MapView/Actions"));
         for (Action action : actionsForPath) {
             if (action instanceof Presenter.Toolbar) {
-                Presenter.Toolbar presenter = (Presenter.Toolbar) action;
-                toolbar.add(presenter.getToolbarPresenter());
+                try {
+                    Presenter.Toolbar presenter = (Presenter.Toolbar) action.getClass().newInstance();
+                    toolbar.add(presenter.getToolbarPresenter());
+                } catch (InstantiationException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalAccessException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             } else if (action == null) {
                 toolbar.add(new Toolbar.Separator());
             }
@@ -196,6 +204,12 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public void componentShowing() {
+        String displayNString = MessageFormat.format("{0}[{1}]",
+                detector.getDataObject().getName(),
+                detector.getInferenceModel().getName());
+        TopComponent topComponent = callback.getTopComponent();
+        topComponent.setDisplayName(displayNString);
+        topComponent.setHtmlDisplayName(displayNString);
     }
 
     @Override

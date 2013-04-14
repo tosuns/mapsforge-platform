@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.datasource.spi.nodes;
 
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.datasource.spi.TrackSegmentBehaviour;
 import de.fub.mapsforge.project.datasource.spi.TrksegWrapper;
 import java.awt.Color;

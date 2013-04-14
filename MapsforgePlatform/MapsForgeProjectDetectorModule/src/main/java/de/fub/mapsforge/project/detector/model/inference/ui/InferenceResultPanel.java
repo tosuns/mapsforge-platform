@@ -274,36 +274,37 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         absDataset.clear();
         dataItemList.clear();
         Map<String, List<Instance>> resultMap = classificationResult.getResultMap();
+        if (!resultMap.isEmpty()) {
+            double sum = 0;
 
-        double sum = 0;
+            for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
+                sum += entry.getValue().size();
+            }
+            CategoryPlot plot = getClassificationBarChart().getPlot();
+            CategoryItemRenderer relRenderer = plot.getRenderer(0);
+            CategoryItemRenderer absRenderer = plot.getRenderer(1);
 
-        for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-            sum += entry.getValue().size();
+
+            for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
+                double abs = entry.getValue().size();
+                double rel = entry.getValue().size() / sum * 100;
+                absDataset.addValue(null, "Instances (rel.)", entry.getKey());
+                absDataset.addValue(abs, "Instances (abs.)", entry.getKey());
+                relDataset.addValue(rel, "Instances (rel.)", entry.getKey());
+                relDataset.addValue(null, "Instances (abs.)", entry.getKey());
+                dataItemList.add(new DataItem(entry.getKey(), rel, abs));
+            }
+            final LegendItemCollection result = new LegendItemCollection();
+            result.add(relRenderer.getLegendItem(0, 0));
+            result.add(absRenderer.getLegendItem(1, 1));
+
+            double classified = (sum / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
+            double notClassified = ((classificationResult.getInstanceToTrackSegmentMap().size() - sum) / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
+            getClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", classified));
+            getNotClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", notClassified));
+
+            repaint();
         }
-        CategoryPlot plot = getClassificationBarChart().getPlot();
-        CategoryItemRenderer relRenderer = plot.getRenderer(0);
-        CategoryItemRenderer absRenderer = plot.getRenderer(1);
-
-
-        for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-            double abs = entry.getValue().size();
-            double rel = entry.getValue().size() / sum * 100;
-            absDataset.addValue(null, "Instances (rel.)", entry.getKey());
-            absDataset.addValue(abs, "Instances (abs.)", entry.getKey());
-            relDataset.addValue(rel, "Instances (rel.)", entry.getKey());
-            relDataset.addValue(null, "Instances (abs.)", entry.getKey());
-            dataItemList.add(new DataItem(entry.getKey(), rel, abs));
-        }
-        final LegendItemCollection result = new LegendItemCollection();
-        result.add(relRenderer.getLegendItem(0, 0));
-        result.add(absRenderer.getLegendItem(1, 1));
-
-        double classified = (sum / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
-        double notClassified = ((classificationResult.getInstanceToTrackSegmentMap().size() - sum) / classificationResult.getInstanceToTrackSegmentMap().size() * 100);
-        getClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", classified));
-        getNotClassifiedInstances().setText(MessageFormat.format("{0, number, 000.00} %", notClassified));
-
-        repaint();
     }
 
     private static class NodeFactory extends ChildFactory<DataItem> implements ChangeListener {

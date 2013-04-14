@@ -4,7 +4,7 @@
  */
 package de.fub.gpxmodule.nodes;
 
-import de.fub.gpxmodule.xml.gpx.Trkseg;
+import de.fub.gpxmodule.xml.Trkseg;
 import java.beans.IntrospectionException;
 import java.util.List;
 import javax.swing.Action;

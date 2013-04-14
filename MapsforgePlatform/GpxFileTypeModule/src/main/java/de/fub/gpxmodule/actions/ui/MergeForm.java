@@ -39,7 +39,7 @@ public class MergeForm extends javax.swing.JPanel implements DocumentListener {
         getDescriptor().createNotificationLineSupport();
         getFilename().getDocument().addDocumentListener(MergeForm.this);
         getFoldername().getDocument().addDocumentListener(MergeForm.this);
-        getFilename().setText("merge_1.xml");
+        getFilename().setText("merge_1.gpx");
     }
 
     public JTextField getFilename() {

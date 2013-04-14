@@ -23,6 +23,10 @@ public abstract class DetectorProcess<I, O> extends AbstractProcess<I, O> implem
     private final Detector detector;
     private Node node;
 
+    public DetectorProcess() {
+        this(null);
+    }
+
     public DetectorProcess(Detector detector) {
         super();
         this.detector = detector;

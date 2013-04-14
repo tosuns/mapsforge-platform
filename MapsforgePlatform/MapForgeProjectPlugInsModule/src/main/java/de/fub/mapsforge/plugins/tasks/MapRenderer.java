@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.plugins.tasks;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.Gpx;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.Source;

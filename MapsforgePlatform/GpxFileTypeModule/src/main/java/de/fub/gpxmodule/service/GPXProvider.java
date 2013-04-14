@@ -4,7 +4,7 @@
  */
 package de.fub.gpxmodule.service;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
+import de.fub.gpxmodule.xml.Gpx;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer2;
 import javax.swing.event.ChangeListener;
 

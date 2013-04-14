@@ -6,10 +6,10 @@ package de.fub.gpxmodule.factories;
 
 import de.fub.gpxmodule.nodes.RteNode;
 import de.fub.gpxmodule.nodes.TrkNode;
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.Rte;
-import de.fub.gpxmodule.xml.gpx.Trk;
-import de.fub.gpxmodule.xml.gpx.Wpt;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.Rte;
+import de.fub.gpxmodule.xml.Trk;
+import de.fub.gpxmodule.xml.Wpt;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.util.List;

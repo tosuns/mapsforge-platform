@@ -44,19 +44,14 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
         this.detector = detector;
         detector.addPropertyChangeListener(WeakListeners.propertyChange(DetectorNode.this, detector));
         modelSynchronizerClient = detector.create(DetectorNode.this);
+        update();
         sheet = Sheet.createDefault();
     }
 
     private void update() {
-        detector.notifyModified();
-    }
-
-    @Override
-    public String getDisplayName() {
-        if (detector != null && detector.getDetectorDescriptor() != null) {
-            return detector.getDetectorDescriptor().getName();
+        if (detector.getDetectorDescriptor() != null) {
+            setDisplayName(detector.getDetectorDescriptor().getName());
         }
-        return super.getDisplayName();
     }
 
     @Override
@@ -127,6 +122,7 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
         for (Sheet.Set set : setMap.values()) {
             sheet.put(set);
         }
+        update();
         fireIconChange();
     }
 }

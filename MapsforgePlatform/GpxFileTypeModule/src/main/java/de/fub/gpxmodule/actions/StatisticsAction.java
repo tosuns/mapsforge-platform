@@ -5,7 +5,7 @@
 package de.fub.gpxmodule.actions;
 
 import de.fub.gpxmodule.actions.ui.StatisticForm;
-import de.fub.gpxmodule.xml.gpx.Trkseg;
+import de.fub.gpxmodule.xml.Trkseg;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;

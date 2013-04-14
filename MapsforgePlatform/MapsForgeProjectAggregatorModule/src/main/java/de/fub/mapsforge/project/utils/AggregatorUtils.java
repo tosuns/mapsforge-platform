@@ -4,8 +4,8 @@
  */
 package de.fub.mapsforge.project.utils;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
-import de.fub.gpxmodule.xml.gpx.ObjectFactory;
+import de.fub.gpxmodule.xml.Gpx;
+import de.fub.gpxmodule.xml.ObjectFactory;
 import de.fub.mapforgeproject.utils.MapsForgeProjectUtils;
 import de.fub.mapsforge.project.aggregator.factories.CategoryNodeFactory;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
