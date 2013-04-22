@@ -8,9 +8,6 @@ import de.fub.gpxmodule.xml.Trkseg;
 import java.beans.IntrospectionException;
 import java.util.List;
 import javax.swing.Action;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.Children;
 import org.openide.util.Lookup;
@@ -21,12 +18,6 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Serdar
  */
-@ActionReferences(
-        @ActionReference(id =
-        @ActionID(
-        category = "GPX",
-        id = "de.fub.gpxmodule.actions.StatisticsAction"),
-        path = "Projects/Mapsforge/Module/GpxFile/Trknode/Actions"))
 public class TrkSegNode extends BeanNode<Trkseg> {
 
     public TrkSegNode(Trkseg t) throws IntrospectionException {

@@ -13,13 +13,15 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.roadgen;
 
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
+import de.fub.agg2graph.structs.IEdge;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -75,7 +77,7 @@ public class DefaultIntersectionParser implements IIntersectionParser {
         Set<AggNode> candidates = getIntersectionCandidates(agg);
         for (AggNode candidate : candidates) {
             Intersection intersection = new Intersection(candidate);
-            logger.info("intersection found: " + intersection);
+            logger.info(MessageFormat.format("intersection found: {0}", intersection));
             // intersection.out = candidate.getVisibleOut();
             // intersection.in = candidate.getVisibleIn();
             roadNetwork.intersections.add(intersection);
@@ -94,19 +96,45 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                 road.setFrom(startIntersection);
                 startIntersection.out.add(road);
                 AggConnection currentConn = c;
+                HashSet<AggConnection> set = new HashSet<AggConnection>();
                 // follow the road to the next intersection
                 while (currentConn.getTo().getIntersection() == null) {
                     road.path.add(currentConn);
-
                     if (currentConn.getTo().getVisibleOut() == null
-                            || !currentConn.getTo().getVisibleOut().iterator()
-                            .hasNext()) {
-                        Intersection newIntersection = new Intersection(
-                                currentConn.getTo());
+                            || !currentConn.getTo().getVisibleOut().iterator().hasNext()) {
+
+                        Intersection newIntersection = new Intersection(currentConn.getTo());
+                        newIntersection.in.add(road);
+                        newIntersections.add(newIntersection);
+                        break;
+                    } else if (set.contains(currentConn)) {
+                        IEdge<AggNode> node = null;
+
+                        if (!road.path.isEmpty()) {
+                            // we get the last node of the path
+                            node = road.path.get(road.path.size() - 1);
+                        } else {
+                            // current node is the first node in the path
+                            node = currentConn;
+                        }
+                        // create a inter section
+                        Intersection newIntersection = new Intersection(node.getTo());
                         newIntersection.in.add(road);
                         newIntersections.add(newIntersection);
                         break;
                     } else {
+                        if (currentConn.getTo().getVisibleOut().size() != 1) {
+                            logger.severe("Error not exactly one element in set!");
+                        }
+
+                        // check whether there is a cycle
+                        // and if so break loop
+                        if (set.contains(currentConn)) {
+                            // attempt to make the condition
+                            currentConn.getTo().setIntersection(null);
+                            break;
+                        }
+                        set.add(currentConn);
                         currentConn = currentConn.getTo().getVisibleOut()
                                 .iterator().next(); // there is only one,
                         // otherwise
@@ -115,12 +143,16 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                         // itself
                     }
                 }
-                road.path.add(currentConn);
-                Intersection endIntersection = currentConn.getTo()
-                        .getIntersection();
-                road.setTo(endIntersection);
-                endIntersection.in.add(road);
-                roadNetwork.roads.add(road);
+
+                /// add road to road network only when there is valid end intersection
+                if (currentConn.getTo().getIntersection() != null) {
+                    road.path.add(currentConn);
+                    Intersection endIntersection = currentConn.getTo()
+                            .getIntersection();
+                    road.setTo(endIntersection);
+                    endIntersection.in.add(road);
+                    roadNetwork.roads.add(road);
+                }
             }
         }
         roadNetwork.intersections.addAll(newIntersections);

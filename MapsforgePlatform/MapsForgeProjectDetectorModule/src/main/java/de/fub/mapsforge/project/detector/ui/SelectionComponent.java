@@ -18,6 +18,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -458,6 +460,12 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
         @Override
         protected boolean createKeys(List<DetectorProcess> toPopulate) {
+            Collections.sort(list, new Comparator<DetectorProcess>() {
+                @Override
+                public int compare(DetectorProcess o1, DetectorProcess o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
             toPopulate.addAll(list);
             return true;
         }

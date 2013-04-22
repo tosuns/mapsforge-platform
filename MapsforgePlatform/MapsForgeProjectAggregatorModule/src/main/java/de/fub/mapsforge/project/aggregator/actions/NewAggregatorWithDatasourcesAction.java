@@ -9,6 +9,7 @@ import de.fub.mapsforge.project.aggregator.actions.wizards.aggregator.Aggregator
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -66,6 +67,11 @@ public final class NewAggregatorWithDatasourcesAction extends AbstractAction imp
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        setEnabled(context.allInstances().size() > 0);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setEnabled(context.allInstances().size() > 0);
+            }
+        });
     }
 }

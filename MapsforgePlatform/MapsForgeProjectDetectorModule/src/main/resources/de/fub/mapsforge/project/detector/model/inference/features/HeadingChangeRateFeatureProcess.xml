@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dec:processunit
+    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
+    javaType="de.fub.mapsforge.project.detector.model.inference.features.HeadingChangeRateFeatureProcess"
+    name="Heading Change Rate Feature"
+    description="Computes the heading change rate of a gps segment. The heading change rate is determined via a threashold parameter.">
+    <properties>
+        <!-- velocity value in degree-->
+        <property id="minimum.angle.threshold"
+                  name="Angle Threshold"
+                  value="19"
+                  javaType="java.lang.Double"
+                  description="If the heading of a gps point exceeds this value, then the point will be used for the heading change rate of the segment."/>
+    </properties>
+</dec:processunit>
