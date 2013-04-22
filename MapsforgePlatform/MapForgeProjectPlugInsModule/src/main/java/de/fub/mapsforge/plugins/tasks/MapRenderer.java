@@ -223,10 +223,10 @@ public class MapRenderer extends Task {
             File tmpdirFile = new File(tmpdir);
             if (tmpdirFile.exists()) {
                 FileObject fileObject = FileUtil.toFileObject(tmpdirFile);
-                if (fileObject.getFileObject(name) == null) {
-                    return fileObject.createFolder(name);
+                if (fileObject.getFileObject(hashCode() + name) == null) {
+                    return fileObject.createFolder(hashCode() + name);
                 } else {
-                    return fileObject.getFileObject(name);
+                    return fileObject.getFileObject(hashCode() + name);
                 }
             }
         }

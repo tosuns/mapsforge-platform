@@ -5,6 +5,9 @@
 package de.fub.agg2graph.gpseval.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
+import de.fub.agg2graph.structs.GPSCalc;
+import java.text.MessageFormat;
+import java.util.logging.Logger;
 
 /**
  * Feature that computes the average acceleration of gps tracks.
@@ -16,6 +19,7 @@ public class AvgAccelerationFeature extends Feature {
     private int pointCount = 0;
     private Waypoint lastWaypoint = null;
     private double sumAcceleration = 0;
+    private Double lastVelocity = null;
 
     @Override
     public void reset() {
@@ -30,13 +34,21 @@ public class AvgAccelerationFeature extends Feature {
                 && entry != null
                 && entry.getTimestamp() != null
                 && lastWaypoint.getTimestamp() != null) {
-            double timeDiff = ((double) (entry.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime())) / 1000;
-            double speedDiff = entry.getSpeed() - lastWaypoint.getSpeed();
+            double timeDiff = ((double) (entry.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime())) / 1000 + 0.1;
+
 
             if (timeDiff > 0) {
-                double acceleration = speedDiff / timeDiff;
-                sumAcceleration += acceleration;
-                pointCount++;
+                double distance = GPSCalc.getDistVincentyFast(lastWaypoint.getLat(), lastWaypoint.getLon(), entry.getLat(), entry.getLon());
+                double velocity = distance / timeDiff;
+
+
+                if (lastVelocity != null) {
+                    double acceleration = (velocity - lastVelocity) / timeDiff;
+                    Logger.getLogger(getClass().getName()).info(MessageFormat.format("acceleration: {0}", acceleration));
+                    sumAcceleration += acceleration;
+                    pointCount++;
+                }
+                lastVelocity = velocity;
             }
         }
         lastWaypoint = entry;

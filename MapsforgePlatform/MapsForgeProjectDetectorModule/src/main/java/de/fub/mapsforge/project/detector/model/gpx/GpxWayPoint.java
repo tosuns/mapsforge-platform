@@ -11,7 +11,7 @@ import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_LONGITUDE;
 import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_PRECISION;
 import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_SEGEMENTS;
 import static de.fub.agg2graph.gpseval.data.Waypoint.PROP_NAME_SPEED;
-import de.fub.gpxmodule.xml.gpx.Fix;
+import de.fub.gpxmodule.xml.Fix;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;

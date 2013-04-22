@@ -17,7 +17,7 @@ import java.util.PriorityQueue;
 public class MaxNSpeedFeature extends Feature {
 
     private PriorityQueue<Double> priorityQueue = new PriorityQueue<Double>();
-    private int n = 1;
+    private int maxN = 1;
     private Waypoint lastWaypoint;
 
     public MaxNSpeedFeature() {
@@ -29,7 +29,7 @@ public class MaxNSpeedFeature extends Feature {
     }
 
     public int getMaxN() {
-        return n;
+        return maxN;
     }
 
     /**
@@ -39,7 +39,7 @@ public class MaxNSpeedFeature extends Feature {
      */
     public final void setMaxN(int n) {
         assert n > 0;
-        this.n = n;
+        this.maxN = n;
         reset();
     }
 
@@ -61,9 +61,9 @@ public class MaxNSpeedFeature extends Feature {
                 velocity = GPSCalc.getDistVincentyFast(lastWaypoint.getLat(), lastWaypoint.getLon(), waypoint.getLat(), waypoint.getLon()) / seconds;
             }
             priorityQueue.add(velocity);
-            if (priorityQueue.size() > n) {
+            if (priorityQueue.size() > maxN) {
                 priorityQueue.poll();
-                assert priorityQueue.size() == n;
+                assert priorityQueue.size() == maxN;
             }
         }
         lastWaypoint = waypoint;

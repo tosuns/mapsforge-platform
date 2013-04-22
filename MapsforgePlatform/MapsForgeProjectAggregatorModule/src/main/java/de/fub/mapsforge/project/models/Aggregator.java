@@ -103,13 +103,12 @@ public class Aggregator extends ModelSynchronizer {
         } else {
             sourceFolder = new File(descriptor.getCacheFolderPath());
             if (!sourceFolder.exists()) {
-                try {
-                    sourceFolder.createNewFile();
-                } catch (IOException ex) {
+
+                if (!sourceFolder.mkdir()) {
                     // failed to create the cache folder. Fall back
                     // to create the cache folder in the same folder where
                     // the .agg file lies.
-                    LOG.log(Level.WARNING, MessageFormat.format("{0}.\\n sourceFolder: {1}! Creating default sourceFolder in the same folder where the agg file lies !", ex.getMessage(), sourceFolder.getAbsolutePath()), ex); //NO18N
+                    LOG.log(Level.WARNING, MessageFormat.format("sourceFolder: {0}! Creating default sourceFolder in the same folder where the agg file lies !", sourceFolder.getAbsolutePath())); //NO18N
                     sourceFolder = createDefaultCacheFolder();
                 }
             }

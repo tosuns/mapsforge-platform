@@ -61,7 +61,10 @@ public class AttributeSelectionBarChart extends javax.swing.JPanel {
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-
+        barRenderer.setBaseFillPaint(Color.BLUE);
+        barRenderer.setBasePaint(Color.BLUE);
+        barRenderer.setAutoPopulateSeriesFillPaint(false);
+        barRenderer.setAutoPopulateSeriesPaint(false);
         plot.setRenderer(barRenderer);
         chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);

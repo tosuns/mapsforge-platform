@@ -84,6 +84,7 @@ public class GpxConverter implements DataConverter {
                         Map<String, String> gpxWaypointPropertymap = createWaypointPropertymap(lastWpt, wpt);
                         GpxWayPoint gpxWayPoint1 = new GpxWayPoint(gpxWaypointPropertymap);
                         trackSegment.getWayPointList().add(gpxWayPoint1);
+                        lastWpt = wpt;
                     }
                     trackSegmentList.add(trackSegment);
                 }

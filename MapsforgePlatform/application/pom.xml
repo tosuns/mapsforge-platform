@@ -303,6 +303,11 @@
             <artifactId>gpxfileType</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>de.fub.mapsforge</groupId>
+            <artifactId>gpxanalysis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

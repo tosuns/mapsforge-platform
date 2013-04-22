@@ -8,8 +8,6 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.ui.AttributeSelectionComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -42,7 +40,7 @@ public final class PerformAttributeSelection implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ev) {
         AttributeSelectionComponent component = new AttributeSelectionComponent(detector);
-        DialogDescriptor dd = new DialogDescriptor(component, Bundle.CLT_PerformAttributeSelection_Dialog_Title());
-        DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
+        component.open();
+        component.requestVisible();
     }
 }

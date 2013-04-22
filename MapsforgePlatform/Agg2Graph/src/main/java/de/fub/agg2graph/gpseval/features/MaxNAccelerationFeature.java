@@ -17,6 +17,7 @@ public class MaxNAccelerationFeature extends Feature {
     private PriorityQueue<Double> priorityQueue = new PriorityQueue<Double>();
     private int maxN = 1;
     private Waypoint lastWaypoint;
+    private Double lastVelocity = null;
 
     public MaxNAccelerationFeature(int n) {
         setMaxN(n);
@@ -35,19 +36,33 @@ public class MaxNAccelerationFeature extends Feature {
         if (lastWaypoint != null
                 && lastWaypoint.getTimestamp() != null
                 && waypoint.getTimestamp() != null) {
-            double squareSeconds = Math.max(0, Math.pow((waypoint.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime()) / 1000, 2));
-            if (squareSeconds > 0) {
-                // meter per sec^2
-                acceleration = GPSCalc.getDistVincentyFast(lastWaypoint.getLat(), lastWaypoint.getLon(), waypoint.getLat(), waypoint.getLon()) / squareSeconds;
-            }
-            priorityQueue.add(acceleration);
+            double timeDiff = Math.max(0, (waypoint.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime()) / 1000);
 
-            if (priorityQueue.size() > maxN) {
-                priorityQueue.poll();
-                assert priorityQueue.size() == maxN;
+            if (timeDiff > 0) {
+
+                double distance = GPSCalc.getDistVincentyFast(lastWaypoint.getLat(), lastWaypoint.getLon(), waypoint.getLat(), waypoint.getLon());
+                // meter per sec^2
+                double velocity = distance / timeDiff;
+
+                if (lastVelocity != null) {
+
+                    acceleration = (velocity - lastVelocity) / timeDiff;
+                    addToQueue(acceleration);
+                }
+
+                lastVelocity = velocity;
             }
         }
         lastWaypoint = waypoint;
+    }
+
+    private void addToQueue(double acceleration) {
+        priorityQueue.add(acceleration);
+
+        if (priorityQueue.size() > maxN) {
+            priorityQueue.poll();
+            assert priorityQueue.size() == maxN;
+        }
     }
 
     @Override

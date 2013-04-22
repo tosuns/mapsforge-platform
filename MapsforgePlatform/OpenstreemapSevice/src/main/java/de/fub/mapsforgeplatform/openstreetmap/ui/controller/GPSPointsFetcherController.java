@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.ui.controller;
 
-import de.fub.gpxmodule.xml.gpx.Gpx;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
 import de.fub.mapsforgeplatform.openstreetmap.ui.GPSPointsFetcherTopComponent;
+import de.fub.mapsforgeplatform.xml.gpx.Gpx;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;

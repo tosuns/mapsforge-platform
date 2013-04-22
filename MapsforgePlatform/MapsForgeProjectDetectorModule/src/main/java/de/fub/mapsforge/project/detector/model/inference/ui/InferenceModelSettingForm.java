@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.inference.ui;
 import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
+import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -116,7 +117,8 @@ public class InferenceModelSettingForm extends javax.swing.JPanel implements Act
     @Override
     public void stateChanged(ChangeEvent evt) {
         if (evt.getSource().equals(selectionComponent1.getSelectedItems())) {
-            List<ProcessDescriptor> featureList = inferenecModel.getInferenceModelDescriptor().getFeatures().getFeatureList();
+            InferenceModelDescriptor inferenceModelDescriptor = inferenecModel.getInferenceModelDescriptor();
+            List<ProcessDescriptor> featureList = inferenceModelDescriptor.getFeatures().getFeatureList();
             featureList.clear();
 
             for (DetectorProcess item : selectionComponent1.getSelectedItems()) {

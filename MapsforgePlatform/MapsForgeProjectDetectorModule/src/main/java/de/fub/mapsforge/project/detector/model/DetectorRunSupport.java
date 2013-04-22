@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_Trainings_Process_Running=Training",
+    "CLT_Trainings_Process_Running=Running",
     "CLT_Inference_Process_Running=Clustering"
 })
 class DetectorRunSupport {
@@ -72,13 +72,13 @@ class DetectorRunSupport {
                     startTraining();
                     break;
                 case INFERENCE_MODE:
-                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
+                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Inference_Process_Running()));
                     startInference();
                     break;
                 case ALL_MODE:
                     handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
                     startTraining();
-                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Trainings_Process_Running()));
+                    handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Inference_Process_Running()));
                     startInference();
                     break;
             }
