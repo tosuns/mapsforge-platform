@@ -25,6 +25,11 @@
         To create your own repository, use: nbm:populate-repository
         -->
         <repository>
+            <id>main-repository</id>
+            <name>Main Repository</name>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>netbeans</id>
             <name>NetBeans</name>
             <url>http://bits.netbeans.org/maven2/</url>
@@ -55,7 +60,7 @@
             <version>1.0b8</version>
         </dependency>
         <dependency>
-            <groupId>org.apache</groupId>
+            <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.6</version>
         </dependency>

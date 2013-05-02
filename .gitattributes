@@ -779,6 +779,15 @@ MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/mapsforgeplatform
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/mapsforgeplatform/openstreetmap/ui/Bundle.properties -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/mapsforgeplatform/openstreetmap/ui/downloadIcon.png -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/mapsforgeplatform/openstreetmap/ui/gpxo.png -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/_maven.repositories -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210-sources.jar -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210-sources.jar.sha1 -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210.jar -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210.jar.lastUpdated -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210.jar.sha1 -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210.pom -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210.pom.lastUpdated -text
+MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210.pom.sha1 -text
 MapsforgePlatform/OpenstreetMap/pom.xml -text
 MapsforgePlatform/OpenstreetMap/src/main/nbm/manifest.mf -text
 MapsforgePlatform/OpenstreetMap/src/main/resources/de/fub/openstreetmap/Bundle.properties -text
