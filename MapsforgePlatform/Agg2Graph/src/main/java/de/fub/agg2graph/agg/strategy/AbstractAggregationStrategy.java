@@ -58,7 +58,7 @@ public abstract class AbstractAggregationStrategy implements
         if (lastNode != null) {
             agg.addConnection(new AggConnection(lastNode, node, agg));
         }
-        LOG.log(Level.INFO, "Added node {0}", node);
+        LOG.log(Level.FINEST, "Added node {0}", node);
     }
 
     public List<IMergeHandler> getMatches() {

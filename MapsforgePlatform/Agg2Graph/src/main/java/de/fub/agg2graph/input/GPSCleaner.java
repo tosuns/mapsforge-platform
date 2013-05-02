@@ -60,7 +60,7 @@ public class GPSCleaner {
             GPSPoint point = pointList.get(i);
             ILocation lastPoint = currentSegment.size() > 0 ? currentSegment
                     .get(currentSegment.size() - 1) : null;
-            LOG.log(Level.INFO, "Examining point {0}", point);
+            LOG.log(Level.FINEST, "Examining point {0}", point);
 
             double length = 0;
             if (cleaningOptions.filterByEdgeLength || cleaningOptions.filterByEdgeLengthIncrease) {
@@ -75,14 +75,14 @@ public class GPSCleaner {
                     LOG.fine(String.format(
                             "edge length %s to %s: %.2f < %.2f", lastPoint,
                             point, length, cleaningOptions.minEdgeLength));
-                    LOG.log(Level.INFO, "short edge, dropping point {0}", point);
+                    LOG.log(Level.FINEST, "short edge, dropping point {0}", point);
                     continue;
                 }
                 if (length > cleaningOptions.maxEdgeLength) {
                     LOG.fine(String.format(
                             "edge length %s to %s: %.2f > %.2f", lastPoint,
                             point, length, cleaningOptions.maxEdgeLength));
-                    LOG.log(Level.INFO, "long edge, still NOT dropping point {0}", point);
+                    LOG.log(Level.FINEST, "long edge, still NOT dropping point {0}", point);
                     // make new segment
                     if (currentSegment.size() > cleaningOptions.minSegmentLength) {
                         result.add(currentSegment);
@@ -122,14 +122,14 @@ public class GPSCleaner {
                         // is it zigzagged?
                         if (((angleHere > 180 - cleaningOptions.maxZigzagAngle) && (angleBefore < cleaningOptions.maxZigzagAngle))
                                 || ((angleHere < cleaningOptions.maxZigzagAngle) && (angleBefore > 180 - cleaningOptions.maxZigzagAngle))) {
-                            LOG.log(Level.INFO, "found zigzag");
-                            LOG.log(Level.INFO, String.format("%.3f <- -> %.3f",
+                            LOG.log(Level.FINEST, "found zigzag");
+                            LOG.log(Level.FINEST, String.format("%.3f <- -> %.3f",
                                     angleBefore, angleHere));
                             i++;
                             continue;
                         }
                     } else {
-                        LOG.log(Level.INFO, "something bad");
+                        LOG.log(Level.FINEST, "something bad");
                     }
                 }
             }
@@ -152,8 +152,8 @@ public class GPSCleaner {
                         // is it a fake circle?
                         if ((angleHere > 180 - cleaningOptions.maxFakeCircleAngle)
                                 && (angleBefore > 180 - cleaningOptions.maxFakeCircleAngle)) {
-                            LOG.log(Level.INFO, "found fake circle");
-                            LOG.log(Level.INFO, String.format("%.3f <- -> %.3f",
+                            LOG.log(Level.FINEST, "found fake circle");
+                            LOG.log(Level.FINEST, String.format("%.3f <- -> %.3f",
                                     angleBefore, angleHere));
                             // insert as second but last element
                             GPSPoint oldLastPoint = currentSegment
@@ -177,7 +177,7 @@ public class GPSCleaner {
                 currentSegment = new GPSSegment();
             }
 
-            LOG.log(Level.INFO, "adding point {0}", point);
+            LOG.log(Level.FINEST, "adding point {0}", point);
             currentSegment.add(point);
         }
 

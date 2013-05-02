@@ -26,6 +26,7 @@ import de.fub.agg2graph.agg.TraceDistanceFactory;
 import de.fub.agg2graph.structs.GPSEdge;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.GPSSegment;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,8 +35,7 @@ import java.util.logging.Logger;
 
 public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
 
-    private static final Logger logger = Logger
-            .getLogger("agg2graph.agg.gpxmerge.strategy");
+    private static final Logger LOG = Logger.getLogger(GpxmergeAggregationStrategy.class.getName());
     public double maxInitDistance = 100;
     public double maxPathDifference = 2;
 
@@ -50,7 +50,7 @@ public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
 
     @Override
     public void aggregate(GPSSegment segment) {
-        logger.setLevel(Level.ALL);
+        LOG.setLevel(Level.ALL);
 
         matches = new ArrayList<IMergeHandler>();
 
@@ -60,7 +60,7 @@ public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
             int i = 0;
             while (i < segment.size()) {
                 AggNode node = new AggNode(segment.get(i), aggContainer);
-                node.setID("A-" + segment.get(i).getID());
+                node.setID(MessageFormat.format("A-{0}", segment.get(i).getID()));
                 addNodeToAgg(aggContainer, node);
                 lastNode = node;
                 i++;
@@ -80,9 +80,8 @@ public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
             nearEdges = aggContainer.getCachingStrategy().getCloseConnections(
                     currentEdge, maxInitDistance);
             boolean addNode = true;
-            logger.warning(nearEdges.size() + " near edges");
-            if (nearEdges.size() == 0) {
-            } else {
+            LOG.warning(MessageFormat.format("{0} near edges", nearEdges.size()));
+            if (!nearEdges.isEmpty()) {
                 IMergeHandler mergeHandler = null;
                 mergeHandler = baseMergeHandler.getCopy();
                 mergeHandler.setAggContainer(aggContainer);
@@ -120,7 +119,7 @@ public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
             }
             if (addNode) {
                 AggNode node = new AggNode(firstPoint, aggContainer);
-                node.setID("A-" + firstPoint.getID());
+                node.setID(MessageFormat.format("A-{0}", firstPoint.getID()));
                 addNodeToAgg(aggContainer, node);
                 lastNode = node;
             }

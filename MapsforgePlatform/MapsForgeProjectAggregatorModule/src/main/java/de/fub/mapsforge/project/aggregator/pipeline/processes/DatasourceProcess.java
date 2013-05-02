@@ -142,7 +142,7 @@ public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<
         } finally {
             handle.finish();
         }
-        LOG.log(Level.INFO, "segments: {0}", segments.toString());
+        LOG.log(Level.FINEST, "segments: {0}", segments.toString());
     }
 
     @Override
