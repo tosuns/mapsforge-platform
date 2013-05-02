@@ -1,0 +1,12 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Sat Apr 13 19:27:21 CEST 2013
+http\://yakumo\:8080/artifactory/repo/.error=
+http\://bits.netbeans.org/maven2/.error=
+http\://localhost\:8081/artifactory/repo/.lastUpdated=1360090418037
+http\://repo.maven.apache.org/maven2/.lastUpdated=1365873655577
+http\://bits.netbeans.org/maven2/.lastUpdated=1360090417967
+http\://yakumo\:8081/artifactory/repo/.error=
+http\://repo.maven.apache.org/maven2/.error=
+http\://localhost\:8080/artifactory/libs-release-local/.lastUpdated=1365874041446
+http\://yakumo\:8081/artifactory/repo/.lastUpdated=1365873830390
+http\://yakumo\:8080/artifactory/repo/.lastUpdated=1365873856634
