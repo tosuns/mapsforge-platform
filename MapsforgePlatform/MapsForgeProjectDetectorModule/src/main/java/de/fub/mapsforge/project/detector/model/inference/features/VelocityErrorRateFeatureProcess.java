@@ -36,8 +36,10 @@ public class VelocityErrorRateFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-        for (Waypoint waypoint : trackSegment.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (trackSegment != null) {
+            for (Waypoint waypoint : trackSegment.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
         trackSegment = null;
     }
@@ -67,6 +69,7 @@ public class VelocityErrorRateFeatureProcess extends FeatureProcess {
     public Double getResult() {
         double result = feature.getResult();
         feature.reset();
+        trackSegment = null;
         return result;
     }
 }

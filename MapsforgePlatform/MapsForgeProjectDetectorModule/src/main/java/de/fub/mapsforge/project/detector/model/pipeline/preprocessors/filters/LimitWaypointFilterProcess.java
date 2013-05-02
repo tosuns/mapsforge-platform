@@ -83,7 +83,9 @@ public class LimitWaypointFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return this.gpxTracks;
+        List<TrackSegment> segmentList = this.gpxTracks;
+        this.gpxTracks = null;
+        return segmentList;
     }
 
     @Override

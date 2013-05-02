@@ -36,8 +36,10 @@ public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-        for (Waypoint waypoint : gpxTrack.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (gpxTrack != null) {
+            for (Waypoint waypoint : gpxTrack.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
     }
 
@@ -58,6 +60,9 @@ public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        this.gpxTrack = null;
+        return result;
     }
 }

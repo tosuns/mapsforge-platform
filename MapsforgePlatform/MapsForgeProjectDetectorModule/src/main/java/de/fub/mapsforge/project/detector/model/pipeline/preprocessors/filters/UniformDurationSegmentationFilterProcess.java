@@ -96,8 +96,9 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        ArrayList<TrackSegment> arrayList = new ArrayList<TrackSegment>(this.result);
-        this.result.clear();
+        List<TrackSegment> arrayList = this.result;
+        this.result = null;
+        this.gpsTracks = null;
         return arrayList;
 
     }

@@ -36,8 +36,10 @@ public class TrackLengthFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-        for (Waypoint waypoint : track.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (track != null) {
+            for (Waypoint waypoint : track.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
     }
 
@@ -58,6 +60,9 @@ public class TrackLengthFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        track = null;
+        return result;
     }
 }

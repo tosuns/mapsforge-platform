@@ -86,7 +86,9 @@ public class MinTimeDiffWaypointFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return this.gpxTracks;
+        List<TrackSegment> list = this.gpxTracks;
+        this.gpxTracks = null;
+        return list;
     }
 
     @Override

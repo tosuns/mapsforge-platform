@@ -80,7 +80,9 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return gpsTracks;
+        List<TrackSegment> list = gpsTracks;
+        gpsTracks = null;
+        return list;
     }
 
     @Override

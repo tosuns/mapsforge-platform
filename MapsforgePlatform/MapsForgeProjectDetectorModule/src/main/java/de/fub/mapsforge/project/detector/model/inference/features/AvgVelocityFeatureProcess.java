@@ -48,10 +48,11 @@ public class AvgVelocityFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-        for (Waypoint waypoint : gpsTrack.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (gpsTrack != null) {
+            for (Waypoint waypoint : gpsTrack.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
-
     }
 
     @Override
@@ -71,6 +72,9 @@ public class AvgVelocityFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        this.gpsTrack = null;
+        return result;
     }
 }

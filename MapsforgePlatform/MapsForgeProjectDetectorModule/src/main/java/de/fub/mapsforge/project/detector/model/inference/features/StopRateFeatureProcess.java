@@ -76,7 +76,10 @@ public class StopRateFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        trackSegement = null;
+        return result;
     }
 
     private double getMinimumVelocityThreshold() {
