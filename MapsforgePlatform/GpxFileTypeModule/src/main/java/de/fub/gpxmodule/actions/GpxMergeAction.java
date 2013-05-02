@@ -91,6 +91,8 @@ public final class GpxMergeAction extends AbstractAction implements ContextAware
                     try {
                         if (parentFolder.getFileObject(foldername) == null) {
                             parentFolder = parentFolder.createFolder(foldername);
+                        } else {
+                            parentFolder = parentFolder.getFileObject(foldername);
                         }
                         if (parentFolder.getFileObject(filename) == null) {
                             parentFolder = parentFolder.createData(filename);

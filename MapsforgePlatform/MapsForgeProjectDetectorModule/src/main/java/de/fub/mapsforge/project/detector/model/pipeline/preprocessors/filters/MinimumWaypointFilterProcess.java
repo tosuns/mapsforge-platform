@@ -68,7 +68,9 @@ public class MinimumWaypointFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return trackSegments;
+        List<TrackSegment> list = trackSegments;
+        trackSegments = null;
+        return list;
     }
 
     private Integer getMinWaypointCount() {

@@ -108,6 +108,13 @@
                 <artifactId>nbm-maven-plugin</artifactId>
                 <version>3.8</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>de.fub.mapsforge.gpx.analysis.models</publicPackage>
+                        <publicPackage>de.fub.mapsforge.gpx.analysis.ui</publicPackage>
+                        <publicPackage>de.fub.mapsforge.gpx.analysis.ui.charts</publicPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>

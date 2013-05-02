@@ -6,6 +6,7 @@ package de.fub.mapsforge.gpx.analysis.ui.charts;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.geom.Ellipse2D;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -48,6 +49,8 @@ public class LineChart extends javax.swing.JPanel {
         plot.setRangeAxisLocation(0, AxisLocation.BOTTOM_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
         plot.getRenderer(0).setSeriesPaint(0, Color.BLUE);
+        plot.getRenderer(0).setSeriesShape(0, new Ellipse2D.Double(0, 0, 2, 2));
+        plot.getRenderer(0).setBaseShape(new Ellipse2D.Double(0, 0, 2, 2));
 
         chartPanel = new ChartPanel(chart, false);
         add(chartPanel, BorderLayout.CENTER);

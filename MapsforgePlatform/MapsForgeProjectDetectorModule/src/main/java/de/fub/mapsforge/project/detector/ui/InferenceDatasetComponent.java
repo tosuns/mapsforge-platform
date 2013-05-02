@@ -144,7 +144,7 @@ public class InferenceDatasetComponent extends javax.swing.JPanel implements Exp
 
         @Override
         public Action[] getActions(boolean context) {
-            return new Action[]{new AddDatasetAction(dataset)};
+            return new Action[]{new AddDatasetAction(dataset), new RemoveAllDatasetAction(dataset)};
         }
 
         @Override
@@ -255,14 +255,31 @@ public class InferenceDatasetComponent extends javax.swing.JPanel implements Exp
         @Override
         public void actionPerformed(ActionEvent e) {
             NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
-                    NbBundle.getMessage(TrainingDatasetComponent.class, "TrainingDatasetComponent.CLT_RemoveDatasetAction_Text"),
-                    NbBundle.getMessage(TrainingDatasetComponent.class, "TrainingDatasetComponent.CLT_RemoveDatasetAction_Title"),
+                    NbBundle.getMessage(InferenceDatasetComponent.class, "TrainingDatasetComponent.CLT_RemoveDatasetAction_Text"),
+                    NbBundle.getMessage(InferenceDatasetComponent.class, "TrainingDatasetComponent.CLT_RemoveDatasetAction_Title"),
                     NotifyDescriptor.Confirmation.YES_NO_OPTION);
             Object notify = DialogDisplayer.getDefault().notify(nd);
             if (NotifyDescriptor.YES_OPTION == notify) {
                 dataset.dataset.remove(data);
                 dataset.fireChange();
             }
+        }
+    }
+
+    private static class RemoveAllDatasetAction extends AbstractAction {
+
+        private static final long serialVersionUID = 1L;
+        private final InferenceDatasetWrapper dataset;
+
+        public RemoveAllDatasetAction(InferenceDatasetWrapper dataset) {
+            super(NbBundle.getMessage(InferenceDatasetComponent.class, "TrainingDatasetComponent.CLT_RemoveAllDatasetItemsAction_Name"));
+            this.dataset = dataset;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dataset.dataset.clear();
+            dataset.fireChange();
         }
     }
 }

@@ -30,11 +30,11 @@ public class FeatureFactory {
     private void registerBuiltInFeatures() {
         registerFeatureClass(AvgBearingChangeFeature.class);
         registerFeatureClass(AvgPrecisionFeature.class);
-        registerFeatureClass(AvgSpeedFeature.class);
+        registerFeatureClass(AvgVelocityFeature.class);
         registerFeatureClass(AvgTransportationDistanceFeature.class);
 
         registerFeatureClass(MaxPrecisionFeature.class);
-        registerFeatureClass(MaxSpeedFeature.class);
+        registerFeatureClass(MaxVelocityFeature.class);
         registerFeatureClass(MaxAccelerationFeature.class);
 
         registerFeatureClass(MinPrecisionFeature.class);

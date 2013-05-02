@@ -1,4 +1,6 @@
 * text=auto !eol
+MapsforgePlatform/Agg2Graph/LibFolder/jsi-1.0b8.jar -text
+MapsforgePlatform/Agg2Graph/LibFolder/opencsv-2.3.jar -text
 MapsforgePlatform/Agg2Graph/nb-configuration.xml -text
 MapsforgePlatform/Agg2Graph/pom.xml -text
 MapsforgePlatform/Agg2Graph/src/main/java/com/viniciusfortuna/transit/gtfs/Agency.java -text
@@ -61,16 +63,17 @@ MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/data/filter/W
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/AvgAccelerationFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/AvgBearingChangeFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/AvgPrecisionFeature.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/AvgSpeedFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/AvgTransportationDistanceFeature.java -text
+MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/AvgVelocityFeature.java -text
+MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/ErrorRateFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/Feature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/FeatureFactory.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/HeadingChangeRateFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxAccelerationFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxNAccelerationFeature.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxNSpeedFeature.java -text
+MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxNVelocityFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxPrecisionFeature.java -text
-MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxSpeedFeature.java -text
+MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MaxVelocityFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MeanVelocityFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/MinPrecisionFeature.java -text
 MapsforgePlatform/Agg2Graph/src/main/java/de/fub/agg2graph/gpseval/features/SegmentsFeature.java -text
@@ -469,6 +472,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/EditInferenceModelAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/EditPostProcessorsAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/EditPreprocessorsAction.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/GpxCleanerAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/NewDetectorWizardAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/PerformAttributeSelection.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/actions/RunAction.java -text
@@ -508,6 +512,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/AbstractDetectorProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/Detector.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/DetectorProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/TrainingsDataProvider.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/gpx/GpxWayPoint.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/gpx/TrackSegment.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/AbstractInferenceModel.java -text
@@ -523,8 +528,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgAcceleratopmFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgBearingChangeFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgPrecisionFeatureProcess.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgSpeedFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgTransportationDistanceFeatureProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/AvgVelocityFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/FeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/HeadingChangeRateFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/Max2ndAccelerationFeatureProcess.java -text
@@ -539,6 +544,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/StopRateFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/TrackLengthFeatureProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/VarianceOfVelocityFeatureProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/features/VelocityErrorRateFeatureProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/impl/BayesNetworkInferenceModel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/impl/ShowGraphAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/CrossValidationProcessHandler.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/EvaluationProcessHandler.java -text
@@ -567,6 +574,9 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/charts/AttributeSelectionBarChart.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/charts/AttributeSelectionBarChart.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/PostProcessorPipeline.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/DataAnalyzeTask.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/DataAnalyzeTaskTopComponent.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/DataAnalyzeTaskTopComponent.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/Task.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/FilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/PreProcessorPipeline.java -text
@@ -580,6 +590,17 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/ResegmentationFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/UniformDurationSegmentationFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/UniformLengthSegmentationFilterProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartContainer.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartContainer.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartPanel.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartPanel.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/HistogramChartContainer.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/HistogramChartContainer.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/HistogramPanel.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/HistogramPanel.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/TrainingDataAnalyizerComponent.form -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/TrainingDataAnalyizerComponent.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/TrainingDatasetStatistic.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/DataSet.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/DataSets.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/xmls/Descriptor.java -text
@@ -646,7 +667,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/gpx10to11Transformer.xsl -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/layer.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/J48InferenceModel.xml -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/AvgSpeedFeatureProcess.xml -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/AvgVelocityFeatureProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/HeadingChangeRateFeatureProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/Max2ndAccelerationFeatureProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/Max2ndVelocityFeatureProcess.xml -text
@@ -656,7 +677,9 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/StopRateFeatureProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/TrackLengthFeatureProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/VarianceOfVelocityFeatureProcess.xml -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/VelocityErrorRateFeatureProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/features/featureIcon.png -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/impl/BayesNetworkInferenceModel.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/inferenceModelIcon.png -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/processhandler/CrossValidationProcessHandler.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/processhandler/InferenceDataProcessHandler.xml -text
@@ -665,6 +688,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/ui/binaryTreeIcon.png -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/ui/charts/Bundle.properties -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/inference/ui/exportIcon.png -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/DataAnalyzeTask.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/ChangePointSegmentationFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/LimitWaypointFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/MinDistanceWaypointFilterProcess.xml -text
@@ -676,6 +700,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsf
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/UniformDurationSegmentationFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/UniformLengthSegmentationFilterProcess.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/filterIcon16.png -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/statistics/Bundle.properties -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/statistics/refreshIcon.png -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/xmls/DetectorTestTemplate.xml -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/model/xsds/detectorDescriptor.xsd -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/resources/de/fub/mapsforge/project/detector/ui/Bundle.properties -text
@@ -796,6 +822,7 @@ MapsforgePlatform/XmlCatalogModule/src/main/java/fu/berlin/mapsforge/xmlcatalogm
 MapsforgePlatform/XmlCatalogModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/XmlCatalogModule/src/main/resources/fu/berlin/mapsforge/xmlcatalogmodule/Bundle.properties -text
 MapsforgePlatform/XmlCatalogModule/src/main/resources/fu/berlin/mapsforge/xmlcatalogmodule/layer.xml -text
+MapsforgePlatform/application/app.conf -text
 MapsforgePlatform/application/nb-configuration.xml -text
 MapsforgePlatform/application/nbactions.xml -text
 MapsforgePlatform/application/pom.xml -text

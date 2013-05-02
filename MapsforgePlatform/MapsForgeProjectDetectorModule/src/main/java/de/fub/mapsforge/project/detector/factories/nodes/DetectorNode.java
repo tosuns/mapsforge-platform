@@ -12,7 +12,6 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -30,17 +29,14 @@ import org.openide.util.lookup.ProxyLookup;
  */
 public class DetectorNode extends DataNode implements PropertyChangeListener, ChangeListener {
 
-    private static final Logger LOG = Logger.getLogger(DetectorNode.class.getName());
-    private static final String TAB_NAME = "tabName";
     private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private HashMap<String, Sheet.Set> setMap = new HashMap<String, Sheet.Set>();
     private Sheet sheet;
     private final Detector detector;
 
     public DetectorNode(Detector detector) {
-        super(detector.getDataObject(),
-                Children.create(new DetectorSubNodeFactory(detector), true),
-                new ProxyLookup(Lookups.fixed(detector, detector.getDataObject()), detector.getDataObject().getLookup()));
+        super(detector.getDataObject(), Children.create(new DetectorSubNodeFactory(detector), true),
+                new ProxyLookup(Lookups.fixed(detector, detector.getDataObject()), detector.getLookup()));
         this.detector = detector;
         detector.addPropertyChangeListener(WeakListeners.propertyChange(DetectorNode.this, detector));
         modelSynchronizerClient = detector.create(DetectorNode.this);
@@ -55,11 +51,21 @@ public class DetectorNode extends DataNode implements PropertyChangeListener, Ch
     }
 
     @Override
-    public String getShortDescription() {
+    public String getDisplayName() {
+        String name = super.getDisplayName();
         if (detector != null && detector.getDetectorDescriptor() != null) {
-            return detector.getDetectorDescriptor().getDescription();
+            name = detector.getDetectorDescriptor().getName();
         }
-        return super.getShortDescription();
+        return name;
+    }
+
+    @Override
+    public String getShortDescription() {
+        String description = super.getShortDescription();
+        if (detector != null && detector.getDetectorDescriptor() != null) {
+            description = detector.getDetectorDescriptor().getDescription();
+        }
+        return description;
     }
 
     @Override

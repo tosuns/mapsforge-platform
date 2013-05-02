@@ -25,11 +25,9 @@ import com.viniciusfortuna.transit.gtfs.GtfsReader;
 import com.viniciusfortuna.transit.gtfs.GtfsSpec;
 import com.viniciusfortuna.transit.gtfs.Stop;
 import de.fub.agg2graph.structs.GPSCalc;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -112,7 +110,7 @@ public class StopTree {
      */
     public Double getNearestDistance(Point p) {
         Stop stop = getNearestStop(p);
-        return GPSCalc.getDistance(p.y, p.x, stop.latitude, stop.longitude);
+        return stop == null ? Double.MAX_VALUE : GPSCalc.getDistance(p.y, p.x, stop.latitude, stop.longitude);
     }
 
     public Stop getNearestStop(Point p) {

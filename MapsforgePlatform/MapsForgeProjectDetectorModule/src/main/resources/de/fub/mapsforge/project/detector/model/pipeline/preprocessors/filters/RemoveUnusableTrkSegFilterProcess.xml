@@ -4,5 +4,16 @@
     javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.RemoveUnusableTrkSegFilterProcess"
     name="Remove unusable track segments"
     description="Removes all track segments that don'T contain the minimum data to be able to classify the segments">
-    <properties/>
+    <properties>
+        <property javaType="java.lang.Boolean"
+                  id="remove.all.segments.shorter.than"
+                  value="false"
+                  name="Remove short Segment on/off"
+                  description="(De) activates the option whether segments with a length shorter than specified be the property Segment length should be removed or not"/>
+        <property javaType="java.lang.Double"
+                  id="to.be.removed.segments"
+                  value="50"
+                  name="Segment length"
+                  description="Segments which are shorter then the specified length will be removed if the the property Remove short segment on/off is activeated."/>
+    </properties>
 </dec:processunit>

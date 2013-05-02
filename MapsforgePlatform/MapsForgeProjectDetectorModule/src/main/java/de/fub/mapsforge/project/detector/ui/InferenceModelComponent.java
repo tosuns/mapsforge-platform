@@ -46,6 +46,7 @@ public class InferenceModelComponent extends javax.swing.JPanel implements Explo
     private Detector detector;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private final ArrayList<AbstractInferenceModel> registeredModels = new ArrayList<AbstractInferenceModel>();
+    private static BufferedImage EMPTY_IMAGE = null;
 
     /**
      * Creates new form InferenceModelComponent
@@ -259,7 +260,6 @@ public class InferenceModelComponent extends javax.swing.JPanel implements Explo
             return new InferenceModelFilterNode(inferenceModel.getNodeDelegate());
         }
     }
-    private static BufferedImage EMPTY_IMAGE = null;
 
     private static class InferenceModelFilterNode extends FilterNode {
 

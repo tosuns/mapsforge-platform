@@ -340,7 +340,9 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return this.result;
+        ArrayList<TrackSegment> arrayList = new ArrayList<TrackSegment>(this.result);
+        this.result.clear();
+        return arrayList;
     }
 
     private static class ChangePointSegment extends TrackSegment {

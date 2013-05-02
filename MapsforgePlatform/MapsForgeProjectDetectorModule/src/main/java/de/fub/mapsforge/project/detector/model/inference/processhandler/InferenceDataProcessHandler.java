@@ -134,16 +134,19 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
         } else {
             throw new InferenceModelClassifyException(MessageFormat.format("No attributes available. Attribute list lengeth == {0}", attributeList.size()));
         }
+        resultMap.clear();
+        instanceToTrackSegmentMap.clear();
     }
 
     protected void updateVisualRepresentation() {
+        final HashMap<String, List<Instance>> transportModeToInstanceMap = new HashMap<String, List<Instance>>(resultMap);
+        final HashMap<Instance, TrackSegment> instanceTrackSegmentMap = new HashMap<Instance, TrackSegment>(instanceToTrackSegmentMap);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                getInferenceResultPanel().updateView(new ClassificationResult(resultMap, instanceToTrackSegmentMap)); // TODO
+                getInferenceResultPanel().updateView(new ClassificationResult(transportModeToInstanceMap, instanceTrackSegmentMap)); // TODO
             }
         });
-
     }
 
     private void put(String className, Instance instance) {

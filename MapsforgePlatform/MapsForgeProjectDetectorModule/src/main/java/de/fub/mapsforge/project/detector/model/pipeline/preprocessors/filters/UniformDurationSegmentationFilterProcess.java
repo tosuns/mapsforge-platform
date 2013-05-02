@@ -9,6 +9,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
@@ -95,7 +96,10 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return this.result;
+        ArrayList<TrackSegment> arrayList = new ArrayList<TrackSegment>(this.result);
+        this.result.clear();
+        return arrayList;
+
     }
 
     private double getDurationProperty() {

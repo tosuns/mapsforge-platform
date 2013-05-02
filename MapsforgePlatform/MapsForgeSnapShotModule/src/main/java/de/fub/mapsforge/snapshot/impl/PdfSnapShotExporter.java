@@ -13,7 +13,6 @@ import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
 import de.fub.mapsforge.snapshot.api.AbstractComponentSnapShotExporter;
 import de.fub.mapsforge.snapshot.api.ComponentSnapShotExporter;
-import de.fub.mapsforge.snapshot.utils.DimensionUtil;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -76,7 +75,7 @@ public class PdfSnapShotExporter extends AbstractComponentSnapShotExporter {
                         if (component != null) {
                             PdfGraphics2D pdfGraphics2D = null;
                             try {
-                                Dimension preferredSize = component.getPreferredSize();
+                                Dimension preferredSize = component.getSize();
                                 Dimension dimension = preferredSize; //DimensionUtil.computeToA4Pdf(preferredSize);
                                 // step 1
                                 Document document = new Document(new Rectangle(dimension.width, dimension.height));
@@ -84,25 +83,25 @@ public class PdfSnapShotExporter extends AbstractComponentSnapShotExporter {
                                 PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(selectedFile));
                                 // step 3
                                 document.open();
-                                document.newPage();
+//                                document.newPage();
                                 // step 4
                                 PdfContentByte cb = writer.getDirectContent();
-                                PdfTemplate map = cb.createTemplate(dimension.width, dimension.height);
-                                pdfGraphics2D = new PdfGraphics2D(map, dimension.width, dimension.height);
-                                component.setPreferredSize(dimension);
-                                component.setSize(dimension);
-                                component.revalidate();
-                                component.repaint();
+//                                PdfTemplate map = cb.createTemplate(dimension.width * 10, dimension.height * 10);
+                                pdfGraphics2D = new PdfGraphics2D(cb, dimension.width, dimension.height);
+//                                component.setPreferredSize(dimension);
+//                                component.setSize(dimension);
+//                                component.revalidate();
+//                                component.repaint();
                                 // paintAll must be called, a simple paint does
                                 //not change the size of the component
-                                component.paintAll(pdfGraphics2D);
-                                component.setPreferredSize(preferredSize);
-                                component.setSize(preferredSize);
-                                component.revalidate();
-                                component.repaint();
+                                component.printAll(pdfGraphics2D);
+//                                component.setPreferredSize(preferredSize);
+//                                component.setSize(preferredSize);
+//                                component.revalidate();
+//                                component.repaint();
 
                                 pdfGraphics2D.dispose();
-                                cb.addTemplate(map, 0, 0);
+//                                cb.addTemplate(map, 0, 0);
                                 // step 5
                                 document.close();
                             } catch (FileNotFoundException ex) {

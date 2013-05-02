@@ -32,10 +32,14 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
+        <!--        <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
             <url>http://localhost:8080/artifactory/libs-release-local/</url>
+        </repository>-->
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/LibFolder</url>
         </repository>
     </repositories>
 

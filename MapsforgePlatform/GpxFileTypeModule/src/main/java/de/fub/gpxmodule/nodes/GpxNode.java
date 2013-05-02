@@ -34,7 +34,7 @@ public class GpxNode extends DataNode {
     private final GPXDataObject gpxDataObject;
 
     public GpxNode(GPXDataObject dataObject) throws IntrospectionException {
-        this(dataObject, Children.create(new GPXChildNodeFactory(dataObject.getGpx()), true));
+        this(dataObject, Children.create(new GPXChildNodeFactory(dataObject), true));
     }
 
     public GpxNode(GPXDataObject dataObject, Children chldrn) throws IntrospectionException {

@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
 public class DetectorDataObject extends MultiDataObject {
 
     private static final long serialVersionUID = 1L;
-    private transient DetectorNode delegateNode = null;
+    private transient Node delegateNode = null;
     private transient final ChangeSupport cs = new ChangeSupport(this);
     private transient DetectorDescriptor detectorDescriptor = null;
     private transient final FileChangeAdapter fileChangeListener = new FileChangeAdapterImpl();
@@ -140,6 +140,7 @@ public class DetectorDataObject extends MultiDataObject {
             if (detectorDescr != null) {
                 delegateNode = new DetectorNode(detector);
             } else {
+                delegateNode = Node.EMPTY;
             }
 
         }
@@ -231,6 +232,19 @@ public class DetectorDataObject extends MultiDataObject {
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
+    }
+
+    @Override
+    protected FileObject handleRename(String name) throws IOException {
+        try {
+            getDetectorDescriptor().setName(name);
+            save();
+        } catch (JAXBException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return super.handleRename(name); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void addChangeListener(ChangeListener listener) {

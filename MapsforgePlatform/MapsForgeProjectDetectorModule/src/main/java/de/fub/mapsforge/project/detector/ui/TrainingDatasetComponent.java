@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.ui;
 
-import de.fub.mapsforge.project.detector.factories.nodes.datasets.DataSetNode;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.TrainingSet;
@@ -15,6 +14,7 @@ import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,6 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
-import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
@@ -188,27 +187,51 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
 
         @Override
         protected Node createNodeForKey(final DataSet data) {
-            return new FilterNode(new DataSetNode(dataset.detector, data)) {
-                @Override
-                public Action[] getActions(boolean context) {
-                    return new Action[]{new RemoveDatasetAction(data, transportMode, dataset)};
-                }
-
-                @Override
-                public Image getIcon(int type) {
-                    return null;
-                }
-
-                @Override
-                public Image getOpenedIcon(int type) {
-                    return getIcon(type);
-                }
-            };
+            return new AbstractNodeImpl(data);
         }
 
         @Override
         public void stateChanged(ChangeEvent e) {
             refresh(true);
+        }
+
+        private class AbstractNodeImpl extends AbstractNode {
+
+            private final DataSet data;
+            private DataObject dataObject = null;
+
+            public AbstractNodeImpl(DataSet data) {
+                super(Children.LEAF);
+                this.data = data;
+                String path = MessageFormat.format("{0}/{1}", DetectorUtils.getDatasourceFileObject().getPath(), data.getUrl().substring(data.getUrl().indexOf("/") + 1));
+                File file = new File(path);
+                if (file.exists()) {
+                    FileObject fileObject = FileUtil.toFileObject(file);
+                    try {
+                        dataObject = DataObject.find(fileObject);
+                        setDisplayName(dataObject.getName());
+                    } catch (DataObjectNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                } else {
+                    setName(data.getUrl());
+                }
+            }
+
+            @Override
+            public Action[] getActions(boolean context) {
+                return new Action[]{new RemoveDatasetAction(data, transportMode, dataset)};
+            }
+
+            @Override
+            public Image getIcon(int type) {
+                return dataObject != null ? dataObject.getNodeDelegate().getIcon(type) : super.getIcon(type);
+            }
+
+            @Override
+            public Image getOpenedIcon(int type) {
+                return getIcon(type);
+            }
         }
     }
 
@@ -229,6 +252,8 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
         @Override
         public Action[] getActions(boolean context) {
             return new Action[]{new AddDatasetAction(tranportMode, dataset),
+                null,
+                new RemoveAllDatasetItemsAction(tranportMode, dataset),
                 null,
                 new RemoveTransportModeAction(tranportMode, dataset),
                 new RenameTransportModeAction(tranportMode, dataset)};
@@ -393,8 +418,9 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
                     DataObject dataObject = node.getLookup().lookup(DataObject.class);
                     transportMode.getDataset().addAll(collectData(dataObject));
                 }
+                int indexOf = dataset.getTransportModes().indexOf(transportMode);
                 dataset.getTransportModes().remove(transportMode);
-                dataset.getTransportModes().add(transportMode);
+                dataset.getTransportModes().add(indexOf == -1 ? 0 : indexOf, transportMode);
             }
         }
 
@@ -419,6 +445,27 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
                 }
             }
             return result;
+        }
+    }
+
+    private static class RemoveAllDatasetItemsAction extends AbstractAction {
+
+        private static final long serialVersionUID = 1L;
+        private final TransportMode transportMode;
+        private final TrainingDatasetWrapper dataset;
+
+        public RemoveAllDatasetItemsAction(TransportMode transportMode, TrainingDatasetWrapper dataset) {
+            super(NbBundle.getMessage(TrainingDatasetComponent.class, "TrainingDatasetComponent.CLT_RemoveAllDatasetItemsAction_Name"));
+            this.transportMode = transportMode;
+            this.dataset = dataset;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            transportMode.getDataset().clear();
+            int indexOf = dataset.getTransportModes().indexOf(transportMode);
+            dataset.getTransportModes().remove(transportMode);
+            dataset.getTransportModes().add(indexOf == -1 ? 0 : indexOf, transportMode);
         }
     }
 

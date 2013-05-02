@@ -48,6 +48,8 @@ public class MinimumTrackLengthFilterProcess extends FilterProcess {
                 trackSegments.remove(trackSegment);
             }
         }
+        trackLengthfeature.setInput(null);
+
     }
 
     @Override
@@ -73,7 +75,9 @@ public class MinimumTrackLengthFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return trackSegments;
+        List<TrackSegment> list = trackSegments;
+        trackSegments = null;
+        return list;
     }
 
     private double getMinTrackLengthParameter() {

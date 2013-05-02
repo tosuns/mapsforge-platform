@@ -5,16 +5,23 @@
 package de.fub.mapsforge.gpx.analysis.ui;
 
 import de.fub.gpxmodule.GPXDataObject;
+import de.fub.gpxmodule.service.GPXProvider;
 import de.fub.gpxmodule.xml.Gpx;
 import de.fub.mapsforge.gpx.analysis.models.GpxTrackSegmentStatistic;
 import de.fub.mapsforge.gpx.analysis.models.nodes.GpxRootNode;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.tree.TreeSelectionModel;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -25,6 +32,8 @@ import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
 /**
@@ -39,31 +48,53 @@ import org.openide.windows.TopComponent;
         preferredID = "GPXAnalysisVisual",
         position = 550)
 @NbBundle.Messages({"LBL_GPX_ANALYSIS_VISUAL=Analysis"})
-public class GpxAnalysisVisualElement extends javax.swing.JPanel implements MultiViewElement, ExplorerManager.Provider, PropertyChangeListener {
+public class GpxAnalysisVisualElement extends javax.swing.JPanel implements MultiViewElement, ExplorerManager.Provider, PropertyChangeListener, ChangeListener {
 
     private static final long serialVersionUID = 1L;
     private GPXDataObject obj;
     private MultiViewElementCallback callback;
     private final JToolBar toolbar = new JToolBar();
     private final ExplorerManager explorerManager = new ExplorerManager();
+    private GPXProvider gpxProvide;
+    private Lookup lookup;
 
     /**
      * Creates new form GpxAnalysisVisualElement
      */
     public GpxAnalysisVisualElement() {
         initComponents();
+
         beanTreeView1.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         explorerManager.addPropertyChangeListener(WeakListeners.propertyChange(GpxAnalysisVisualElement.this, explorerManager));
+
+        toolbar.add(new JToolBar.Separator());
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int width = (int) (getSize().width * .33);
+                beanTreeView1.setMaximumSize(new Dimension(width, 0));
+                if (width > jSplitPane1.getDividerLocation()) {
+                    jSplitPane1.setDividerLocation(width);
+                }
+            }
+        });
     }
 
     public GpxAnalysisVisualElement(Lookup lkp) {
         this();
         obj = lkp.lookup(GPXDataObject.class);
         assert obj != null;
+        lookup = new ProxyLookup(Lookups.fixed(gpxTrkSegAnalysizerTopComponent1), lkp);
         init();
     }
 
     private void init() {
+        gpxProvide = obj.getLookup().lookup(GPXProvider.class);
+        gpxProvide.addChangeListener(WeakListeners.change(GpxAnalysisVisualElement.this, gpxProvide));
+        updateView();
+    }
+
+    private void updateView() {
         Gpx gpx = obj.getGpx();
         GpxRootNode gpxRootNode = new GpxRootNode(gpx);
         explorerManager.setRootContext(gpxRootNode);
@@ -83,26 +114,36 @@ public class GpxAnalysisVisualElement extends javax.swing.JPanel implements Mult
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel2 = new javax.swing.JPanel();
         beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
         jPanel1 = new javax.swing.JPanel();
         gpxTrkSegAnalysizerTopComponent1 = new de.fub.mapsforge.gpx.analysis.ui.GpxTrkSegAnalysizerTopComponent();
 
         setLayout(new java.awt.BorderLayout());
 
+        jPanel2.setPreferredSize(new java.awt.Dimension(470, 584));
+        jPanel2.setLayout(new java.awt.BorderLayout());
+
         beanTreeView1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        beanTreeView1.setPreferredSize(new java.awt.Dimension(300, 400));
         beanTreeView1.setRootVisible(false);
-        add(beanTreeView1, java.awt.BorderLayout.WEST);
+        jPanel2.add(beanTreeView1, java.awt.BorderLayout.CENTER);
+
+        jSplitPane1.setLeftComponent(jPanel2);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
         jPanel1.add(gpxTrkSegAnalysizerTopComponent1, java.awt.BorderLayout.CENTER);
 
-        add(jPanel1, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setRightComponent(jPanel1);
+
+        add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.openide.explorer.view.BeanTreeView beanTreeView1;
     private de.fub.mapsforge.gpx.analysis.ui.GpxTrkSegAnalysizerTopComponent gpxTrkSegAnalysizerTopComponent1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -122,7 +163,7 @@ public class GpxAnalysisVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public Lookup getLookup() {
-        return obj != null ? obj.getLookup() : Lookup.EMPTY;
+        return lookup != null ? lookup : Lookup.EMPTY;
     }
 
     @Override
@@ -189,5 +230,15 @@ public class GpxAnalysisVisualElement extends javax.swing.JPanel implements Mult
             gpxTrkSegAnalysizerTopComponent1.setStatistic(statistic);
 
         }
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                updateView();
+            }
+        });
     }
 }

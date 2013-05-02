@@ -16,7 +16,7 @@
       <Dimension value="[54, 300]"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[849, 300]"/>
+      <Dimension value="[0, 300]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -52,7 +52,7 @@
           <Dimension value="[0, 32]"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[100, 32]"/>
+          <Dimension value="[0, 32]"/>
         </Property>
       </Properties>
       <Constraints>
@@ -90,7 +90,7 @@
         </Property>
         <Property name="opaque" type="boolean" value="false"/>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[1368, 0]"/>
+          <Dimension value="[0, 0]"/>
         </Property>
       </Properties>
       <Constraints>
@@ -105,10 +105,18 @@
       </Layout>
       <SubComponents>
         <Component class="de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart" name="classificationBarChart">
+          <Properties>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[0, 420]"/>
+            </Property>
+          </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel6">
           <Properties>
             <Property name="opaque" type="boolean" value="false"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[0, 402]"/>
+            </Property>
           </Properties>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -121,6 +129,9 @@
                       <Color PropertyName="color" blue="cc" green="cc" red="cc" type="rgb"/>
                     </LineBorder>
                   </Border>
+                </Property>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[0, 402]"/>
                 </Property>
                 <Property name="propertyColumns" type="[Ljava.lang.String;" editor="org.netbeans.beaninfo.editors.StringArrayEditor">
                   <StringArray count="4">
@@ -183,6 +194,9 @@
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder bottom="1" left="8" right="8" top="1"/>
               </Border>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[0, 41]"/>
             </Property>
           </Properties>
           <Constraints>

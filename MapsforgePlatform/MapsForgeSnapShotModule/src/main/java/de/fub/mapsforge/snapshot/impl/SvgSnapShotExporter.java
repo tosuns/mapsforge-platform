@@ -6,7 +6,6 @@ package de.fub.mapsforge.snapshot.impl;
 
 import de.fub.mapsforge.snapshot.api.AbstractComponentSnapShotExporter;
 import de.fub.mapsforge.snapshot.api.ComponentSnapShotExporter;
-import de.fub.mapsforge.snapshot.utils.DimensionUtil;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -90,17 +89,17 @@ public final class SvgSnapShotExporter extends AbstractComponentSnapShotExporter
                                 svgGenerator.setSVGCanvasSize(dimension);
 
                                 // Ask the test to render into the SVG Graphics2D implementation.
-                                component.setPreferredSize(dimension);
-                                component.setSize(dimension);
-                                component.revalidate();
-                                component.repaint();
+//                                component.setPreferredSize(dimension);
+//                                component.setSize(dimension);
+//                                component.revalidate();
+//                                component.repaint();
                                 // paintAll must be called, a simple paint does
                                 //not change the size of the component
                                 component.paintAll(svgGenerator);
-                                component.setPreferredSize(preferredSize);
-                                component.setSize(preferredSize);
-                                component.revalidate();
-                                component.repaint();
+//                                component.setPreferredSize(preferredSize);
+//                                component.setSize(preferredSize);
+//                                component.revalidate();
+//                                component.repaint();
 
                                 // Finally, stream out SVG to the standard output using
                                 // UTF-8 encoding.

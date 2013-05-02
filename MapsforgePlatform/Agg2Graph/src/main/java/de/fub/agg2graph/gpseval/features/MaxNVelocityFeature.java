@@ -14,17 +14,17 @@ import java.util.PriorityQueue;
  *
  * @author Serdar
  */
-public class MaxNSpeedFeature extends Feature {
+public class MaxNVelocityFeature extends Feature {
 
     private PriorityQueue<Double> priorityQueue = new PriorityQueue<Double>();
     private int maxN = 1;
     private Waypoint lastWaypoint;
 
-    public MaxNSpeedFeature() {
+    public MaxNVelocityFeature() {
         this(1);
     }
 
-    public MaxNSpeedFeature(int nthMaxValue) {
+    public MaxNVelocityFeature(int nthMaxValue) {
         setMaxN(nthMaxValue);
     }
 

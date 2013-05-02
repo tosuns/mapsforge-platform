@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
-import de.fub.agg2graph.gpseval.features.AvgSpeedFeature;
+import de.fub.agg2graph.gpseval.features.AvgVelocityFeature;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -18,20 +18,20 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_AvgSpeedFeature_Name=Average Speed",
-    "CLT_AvgSpeedFeature_Description=A feature for a classifier responsible to compotue the average speed of an GPS track."
+    "CLT_AvgSpeedFeature_Name=Average Velocity",
+    "CLT_AvgSpeedFeature_Description=A feature for a classifier responsible to compotue the average velocity of an GPS track."
 })
 @ServiceProvider(service = FeatureProcess.class)
-public class AvgSpeedFeatureProcess extends FeatureProcess {
+public class AvgVelocityFeatureProcess extends FeatureProcess {
 
     private TrackSegment gpsTrack;
-    private final AvgSpeedFeature feature = new AvgSpeedFeature();
+    private final AvgVelocityFeature feature = new AvgVelocityFeature();
 
-    public AvgSpeedFeatureProcess() {
+    public AvgVelocityFeatureProcess() {
         this(null);
     }
 
-    public AvgSpeedFeatureProcess(Detector detector) {
+    public AvgVelocityFeatureProcess(Detector detector) {
         super(detector);
         init();
     }

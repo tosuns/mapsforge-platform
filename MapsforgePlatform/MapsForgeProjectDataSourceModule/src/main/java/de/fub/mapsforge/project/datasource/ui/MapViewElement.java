@@ -19,7 +19,6 @@ import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.color.ColorUtil;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -82,7 +81,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     private final ExplorerManager explorerManager = new ExplorerManager();
     private GPXDataObject obj;
     private transient MultiViewElementCallback callback;
-    private GPXProvider gpxProvide;
+    private transient GPXProvider gpxProvide;
     private boolean modelChanged = true;
     // mouselistener to check and display only the treseg that are visible
     private MouseListener mouseListener = new MouseAdapterImpl();
@@ -95,6 +94,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         obj = lkp.lookup(GPXDataObject.class);
         assert obj != null;
         init();
+        initOutlineView();
     }
 
     private void init() {
@@ -117,19 +117,23 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         TableColumnModel columnModel = outline.getColumnModel();
         // replace the node column in which the segments bounding box is displayed
         // to the end of the columns
-        TableColumn column = outline.getColumn("Segment");
-        columnModel.removeColumn(column);
-        columnModel.addColumn(column);
 
-        // set a fix width for the visible checkbox column
-        column = outline.getColumn("V");
-        if (column != null) {
-            column.setMaxWidth(24);
-            column.setMinWidth(24);
-            column.setPreferredWidth(24);
+        int columnIndex = columnModel.getColumnIndex("Segment");
+        if (columnIndex == 0) {
+            TableColumn column = outline.getColumn("Segment");
+            columnModel.removeColumn(column);
+            columnModel.addColumn(column);
+
+            // set a fix width for the visible checkbox column
+            column = outline.getColumn("V");
+            if (column != null) {
+                column.setMaxWidth(24);
+                column.setMinWidth(24);
+                column.setPreferredWidth(24);
+            }
+            outlineView1.revalidate();
+            outline.repaint();
         }
-        outlineView1.revalidate();
-        outline.repaint();
     }
 
     private void initToolBar() {
@@ -154,6 +158,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
 
     private void update() {
         abstractMapViewer1.removeAllMapMarkers();
+        trackSegmentList.clear();
         if (gpxProvide != null) {
             Gpx gpx = gpxProvide.getGpx();
             if (gpx != null) {
@@ -225,15 +230,15 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private de.fub.mapviewer.ui.AbstractMapViewer abstractMapViewer1;
+    private transient de.fub.mapviewer.ui.AbstractMapViewer abstractMapViewer1;
     private javax.swing.JSplitPane jSplitPane1;
-    private org.openide.explorer.view.OutlineView outlineView1;
+    private transient org.openide.explorer.view.OutlineView outlineView1;
     private javax.swing.JPanel outlineViewPanel;
     // End of variables declaration//GEN-END:variables
 
     public void setSplitPanelVisible(boolean visible) {
         this.splitPanelVisble = visible;
-        Component rightComponent = jSplitPane1.getRightComponent();
+
         if (splitPanelVisble) {
             jSplitPane1.setDividerSize(5);
             jSplitPane1.setDividerLocation(.75);
@@ -269,7 +274,6 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
 
     @Override
     public void componentOpened() {
-        initOutlineView();
     }
 
     @Override

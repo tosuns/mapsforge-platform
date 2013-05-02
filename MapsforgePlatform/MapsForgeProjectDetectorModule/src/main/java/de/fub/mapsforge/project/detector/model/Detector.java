@@ -24,6 +24,7 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +32,16 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
  * @author Serdar
  */
-public class Detector extends ModelSynchronizer {
+public class Detector extends ModelSynchronizer implements Lookup.Provider {
 
     public static final String PROP_NAME_DETECTOR_STATE = "detector.state";
     private static final Logger LOG = Logger.getLogger(Detector.class.getName());
@@ -51,6 +55,7 @@ public class Detector extends ModelSynchronizer {
     private ModelSynchronizerClient dataObjectModelSynchronizerClient;
     private Profile currentActiveProfile = null;
     private DetectorRunSupport detectorRunSupport;
+    private ProxyLookup lookup;
 
     public Detector(DetectorDataObject dataObject) {
         assert dataObject != null;
@@ -62,14 +67,8 @@ public class Detector extends ModelSynchronizer {
      *
      */
     private void init() {
-
-        this.dataObject.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                reinit();
-                modelChanged(null);
-            }
-        });
+        this.lookup = new ProxyLookup(Lookups.fixed(Detector.this, dataObject, new DefaultTrainingsDataProviderImpl()), dataObject.getLookup());
+        this.dataObject.addChangeListener(new ChangeListenerImpl());
         reinit();
     }
 
@@ -296,13 +295,41 @@ public class Detector extends ModelSynchronizer {
 
     @Override
     public String toString() {
-        return "Detector{ name=" + getDetectorDescriptor().getName() + ", description=" + getDetectorDescriptor().getDescription() + '}';
+        return MessageFormat.format("Detector{ name={0}, description={1}{2}", getDetectorDescriptor().getName(), getDetectorDescriptor().getDescription(), '}');
     }
 
     @Override
     public void updateSource() {
         if (dataObject != null) {
             dataObject.modifySourceEditor();
+        }
+    }
+
+    @Override
+    public Lookup getLookup() {
+        return lookup;
+    }
+
+    private class ChangeListenerImpl implements ChangeListener {
+
+        public ChangeListenerImpl() {
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            reinit();
+            modelChanged(null);
+        }
+    }
+
+    class DefaultTrainingsDataProviderImpl implements TrainingsDataProvider {
+
+        public DefaultTrainingsDataProviderImpl() {
+        }
+
+        @Override
+        public Map<String, List<TrackSegment>> getData() {
+            return getTrainingsSet();
         }
     }
 }

@@ -4,6 +4,7 @@
  */
 package de.fub.mapforgeproject.api.statistics;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,7 +116,7 @@ public interface StatisticProvider {
 
         @Override
         public String toString() {
-            return "StatisticItem{" + "name=" + name + ", value=" + value + ", description=" + description + '}';
+            return MessageFormat.format("StatisticItem{name={0}, value={1}, description={2}{3}", name, value, description, '}');
         }
     }
 

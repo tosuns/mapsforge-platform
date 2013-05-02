@@ -17,6 +17,8 @@
  */
 package de.fub.agg2graph.structs;
 
+import de.fub.agg2graph.gpseval.data.MutableWaypoint;
+import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.utils.MathUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,6 +33,37 @@ import org.jscience.mathematics.vector.Float64Vector;
  *
  */
 public class GPSCalc {
+
+    /**
+     * computes the heading / angle of the gps point
+     * <code>lastWaypoint</code> with the help of its predecessor and successor
+     * point.
+     *
+     * The method shifts the
+     * <code>lastWaypoint</code> and
+     * <code>waypoint</code> to the zero vector and measures the angle between
+     * both of those vectors, according to
+     * {@link http://www.mathe-online.at/materialien/Andreas.Pester/files/Vectors/winkel_zwischen_vektoren.htm}
+     *
+     * @param secondLasWaypoint
+     * @param lastWaypoint
+     * @param waypoint
+     * @return degree between 0° and 359°
+     */
+    public static double computeHeading(Waypoint secondLasWaypoint, Waypoint lastWaypoint, Waypoint waypoint) {
+        // get vectors and shift to origin
+        MutableWaypoint vector1 = new MutableWaypoint();
+        vector1.setLat(lastWaypoint.getLat() - secondLasWaypoint.getLat());
+        vector1.setLon(lastWaypoint.getLon() - secondLasWaypoint.getLon());
+        MutableWaypoint vector2 = new MutableWaypoint();
+        vector2.setLat(waypoint.getLat() - lastWaypoint.getLat());
+        vector2.setLon(waypoint.getLon() - lastWaypoint.getLon());
+
+        double x = vector1.getLat() * vector2.getLat() + vector1.getLon() * vector2.getLon();
+        double y = StrictMath.sqrt(StrictMath.pow(vector1.getLat(), 2) + StrictMath.pow(vector1.getLon(), 2)) * StrictMath.sqrt(Math.pow(vector2.getLat(), 2) + Math.pow(vector2.getLon(), 2));
+        double header = StrictMath.acos(x / y) * 180 / Math.PI;
+        return header;
+    }
 
     /**
      * in meters
@@ -61,9 +94,9 @@ public class GPSCalc {
     public static double getSimpleDistance(double lat1, double lon1,
             double lat2, double lon2) {
         double lat = (lat1 + lat2) / 2 * 0.01745;
-        double dx = 111.3 * Math.cos(lat) * (lon1 - lon2);
+        double dx = 111.3 * StrictMath.cos(lat) * (lon1 - lon2);
         double dy = 111.3 * (lat1 - lat2);
-        double distance = Math.sqrt(dx * dx + dy * dy);
+        double distance = StrictMath.sqrt(dx * dx + dy * dy);
         return distance * 1000;
     }
 
@@ -125,6 +158,55 @@ public class GPSCalc {
             lambda = L + (1 - C) * f * sinAlpha
                     * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
         } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
+
+        if (iterLimit == 0) {
+            return Double.NaN; // formula failed to converge
+        }
+        double uSq = cosSqAlpha * (a * a - b * b) / (b * b);
+        double A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
+        double B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+        double deltaSigma = B
+                * sinSigma
+                * (cos2SigmaM + B
+                / 4
+                * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) - B / 6 * cos2SigmaM
+                * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+        double dist = b * A * (sigma - deltaSigma);
+
+        return dist;
+    }
+
+    public static double getDistVincentySlow(double lat1, double lon1, double lat2, double lon2) {
+        double a = 6378137, b = 6356752.314245, f = 1 / 298.257223563; // WGS-84 ellipsoid params
+        double L = Math.toRadians(lon2 - lon1);
+        double U1 = StrictMath.atan((1 - f) * StrictMath.tan(Math.toRadians(lat1)));
+        double U2 = StrictMath.atan((1 - f) * StrictMath.tan(Math.toRadians(lat2)));
+        double sinU1 = StrictMath.sin(U1), cosU1 = StrictMath.cos(U1);
+        double sinU2 = StrictMath.sin(U2), cosU2 = StrictMath.cos(U2);
+
+        double sinLambda, cosLambda, sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, cos2SigmaM;
+        double lambda = L, lambdaP, iterLimit = 100;
+        do {
+            sinLambda = StrictMath.sin(lambda);
+            cosLambda = StrictMath.cos(lambda);
+            sinSigma = StrictMath.sqrt((cosU2 * sinLambda) * (cosU2 * sinLambda)
+                    + (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda) * (cosU1 * sinU2 - sinU1 * cosU2 * cosLambda));
+            if (sinSigma == 0) {
+                return 0; // co-incident points
+            }
+            cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda;
+            sigma = StrictMath.atan2(sinSigma, cosSigma);
+            sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma;
+            cosSqAlpha = 1 - sinAlpha * sinAlpha;
+            cos2SigmaM = cosSigma - 2 * sinU1 * sinU2 / cosSqAlpha;
+            if (Double.isNaN(cos2SigmaM)) {
+                cos2SigmaM = 0; // equatorial line: cosSqAlpha=0 (§6)
+            }
+            double C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+            lambdaP = lambda;
+            lambda = L + (1 - C) * f * sinAlpha
+                    * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+        } while (StrictMath.abs(lambda - lambdaP) > 1e-12 && --iterLimit > 0);
 
         if (iterLimit == 0) {
             return Double.NaN; // formula failed to converge

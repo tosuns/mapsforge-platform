@@ -147,7 +147,6 @@
     <xs:complexType name="profile">
         <xs:sequence>
             <xs:element name="preprocess" type="tns:preprocessor"/>
-            <xs:element name="inference" type="tns:inference"/>
             <xs:element name="postprocess" type="tns:postprocess"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>

@@ -15,6 +15,7 @@ import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -61,8 +62,8 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
 
         plot = barChart.getCategoryPlot();
         NumberAxis preciAxis = new NumberAxis(NbBundle.getMessage(PrecisionRecallBarChartPanel.class, "CLT_Value_Axis_Name"));
-//        preciAxis.setAutoRange(false);
-        preciAxis.setRange(0, 100);
+        preciAxis.setAutoRange(true);
+        preciAxis.setUpperMargin(.20);
         plot.setRangeAxis(0, preciAxis);
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
@@ -70,6 +71,8 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+        barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        barRenderer.setBaseItemLabelsVisible(true);
         barRenderer.setSeriesPaint(0, precColor);
         barRenderer.setSeriesPaint(1, recColor);
 

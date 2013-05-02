@@ -115,15 +115,21 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
         setMaximumSize(new java.awt.Dimension(2147483647, 350));
-        setMinimumSize(new java.awt.Dimension(58, 300));
-        setPreferredSize(new java.awt.Dimension(801, 300));
+        setMinimumSize(new java.awt.Dimension(0, 300));
+        setPreferredSize(new java.awt.Dimension(0, 300));
         setLayout(new java.awt.BorderLayout(0, 8));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));
+        jPanel2.setMinimumSize(new java.awt.Dimension(0, 32));
         jPanel2.setOpaque(false);
+        jPanel2.setPreferredSize(new java.awt.Dimension(0, 429));
         jPanel2.setLayout(new java.awt.GridLayout(1, 2));
 
+        jPanel6.setMinimumSize(new java.awt.Dimension(0, 10));
+        jPanel6.setPreferredSize(new java.awt.Dimension(0, 420));
         jPanel6.setLayout(new java.awt.GridLayout(1, 0));
+
+        barChartPanel.setPreferredSize(new java.awt.Dimension(0, 420));
         jPanel6.add(barChartPanel);
 
         jPanel2.add(jPanel6);
@@ -138,12 +144,13 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         jPanel3.setBackground(new java.awt.Color(255, 216, 178));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
         jPanel3.setMinimumSize(new java.awt.Dimension(0, 32));
-        jPanel3.setPreferredSize(new java.awt.Dimension(100, 32));
+        jPanel3.setPreferredSize(new java.awt.Dimension(0, 32));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         title.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(title, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.title.text")); // NOI18N
+        title.setPreferredSize(new java.awt.Dimension(0, 29));
         jPanel3.add(title, java.awt.BorderLayout.CENTER);
 
         add(jPanel3, java.awt.BorderLayout.NORTH);
@@ -157,6 +164,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
 
         jPanel4.setBackground(new java.awt.Color(255, 216, 178));
         jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 8, 1, 8));
+        jPanel4.setPreferredSize(new java.awt.Dimension(0, 41));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.jLabel1.text")); // NOI18N
@@ -342,7 +350,10 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
             Property<?> property = new PropertySupport.ReadOnly<Double>("precision", Double.class, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Precision_Text"), "The precision value that this classifier obtained for the given label.") {
                 @Override
                 public Double getValue() throws IllegalAccessException, InvocationTargetException {
-                    return evaluation.precision(classIndex);
+                    double precision = evaluation.precision(classIndex) * 100;
+                    String formatedString = MessageFormat.format("{0, number, 000.00}", precision).replaceAll(",", "\\.");
+                    Double result = Double.valueOf(formatedString);
+                    return result;
                 }
             };
             set.put(property);
@@ -351,7 +362,10 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
             property = new PropertySupport.ReadOnly<Double>("recall", Double.class, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Recall_Text"), "The recall value that this classifier obtained for the given label.") {
                 @Override
                 public Double getValue() throws IllegalAccessException, InvocationTargetException {
-                    return evaluation.recall(classIndex);
+                    double recall = evaluation.recall(classIndex);
+                    String formatedString = MessageFormat.format("{0, number, 000.00}", recall).replaceAll(",", "\\.");
+                    Double result = Double.valueOf(formatedString);
+                    return result;
                 }
             };
             set.put(property);

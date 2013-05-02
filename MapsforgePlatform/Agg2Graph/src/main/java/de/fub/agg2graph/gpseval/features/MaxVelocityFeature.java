@@ -5,7 +5,7 @@ import de.fub.agg2graph.gpseval.data.Waypoint;
 /**
  * The MaxSpeedFeature determines the maximum speed of a GPS-track.
  */
-public class MaxSpeedFeature extends Feature {
+public class MaxVelocityFeature extends Feature {
 
     private double mMaxSpeed = 0;
 

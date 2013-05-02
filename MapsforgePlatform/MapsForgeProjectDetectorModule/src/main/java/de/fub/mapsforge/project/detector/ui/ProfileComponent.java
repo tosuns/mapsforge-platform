@@ -43,7 +43,7 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
     private Profile profile;
     private Lookup lookup;
     private Detector detector;
-    private static final Profile EMPTY_PROFILE = createEmptyProfile();
+//    private static final Profile EMPTY_PROFILE = createEmptyProfile();
     private final ObservableArrayList<Profile> profileList = new ObservableArrayList<Profile>();
 
     /**
@@ -72,8 +72,6 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
         Profile emptyProfile = new Profile();
         emptyProfile.getPreprocess().setActive(false);
         emptyProfile.getPreprocess().setMode(DetectorMode.INFERENCE);
-        emptyProfile.getInference().setChangePointSequencerActive(false);
-        emptyProfile.getInference().setMode(DetectorMode.INFERENCE);
         emptyProfile.getPostprocess().setActive(false);
         emptyProfile.getPostprocess().setMode(DetectorMode.INFERENCE);
         return emptyProfile;
@@ -87,13 +85,6 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
             this.preprocessMode.setSelectedItem(this.profile.getPreprocess().getMode());
         } else {
             this.preprocessMode.setSelectedIndex(0);
-        }
-
-        this.inferenceActive.setSelected(this.profile.getInference().isChangePointSequencerActive());
-        if (this.profile.getInference().getMode() != null) {
-            this.inferenceMode.setSelectedItem(this.profile.getInference().getMode());
-        } else {
-            this.inferenceMode.setSelectedIndex(0);
         }
 
         this.postprocessActive.setSelected(this.profile.getPostprocess().isActive());
@@ -110,9 +101,6 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
 
         this.profile.getPreprocess().setActive(this.preprocessActive.isSelected());
         this.profile.getPreprocess().setMode((DetectorMode) this.preprocessMode.getSelectedItem());
-
-        this.profile.getInference().setChangePointSequencerActive(this.inferenceActive.isSelected());
-        this.profile.getInference().setMode((DetectorMode) this.inferenceMode.getSelectedItem());
 
         this.profile.getPostprocess().setActive(this.postprocessActive.isSelected());
         this.profile.getPostprocess().setMode((DetectorMode) this.postprocessMode.getSelectedItem());
@@ -145,10 +133,6 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        inferenceActive = new javax.swing.JCheckBox();
-        inferenceMode = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         postprocessActive = new javax.swing.JCheckBox();
         postprocessMode = new javax.swing.JComboBox();
@@ -165,7 +149,7 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
         listView1 = new CustomListView();
         jLabel5 = new javax.swing.JLabel();
 
-        setMinimumSize(new java.awt.Dimension(460, 370));
+        setMinimumSize(new java.awt.Dimension(460, 0));
         setPreferredSize(new java.awt.Dimension(460, 370));
         setLayout(new java.awt.BorderLayout());
 
@@ -173,45 +157,6 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ProfileComponent.class, "ProfileComponent.jLabel1.text")); // NOI18N
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ProfileComponent.class, "ProfileComponent.jPanel2.border.title"))); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(inferenceActive, org.openide.util.NbBundle.getMessage(ProfileComponent.class, "ProfileComponent.inferenceActive.text")); // NOI18N
-        inferenceActive.setToolTipText(org.openide.util.NbBundle.getMessage(ProfileComponent.class, "ProfileComponent.inferenceActive.toolTipText")); // NOI18N
-        inferenceActive.setIconTextGap(30);
-        inferenceActive.setMargin(new java.awt.Insets(2, -2, 2, 2));
-
-        inferenceMode.setModel(getDefaultModel());
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(ProfileComponent.class, "ProfileComponent.jLabel3.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(inferenceActive)
-                        .addGap(0, 13, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inferenceMode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(inferenceActive)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inferenceMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(ProfileComponent.class, "ProfileComponent.jPanel3.border.title"))); // NOI18N
 
@@ -330,7 +275,6 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
@@ -344,7 +288,7 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(profileName)))))
+                                .addComponent(profileName, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -356,15 +300,14 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deleteButton)
                     .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanel4.add(jPanel6, java.awt.BorderLayout.CENTER);
@@ -394,7 +337,7 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(listView1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE))
+                .addComponent(listView1, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
         );
 
         add(jPanel5, java.awt.BorderLayout.WEST);
@@ -430,15 +373,11 @@ public class ProfileComponent extends javax.swing.JPanel implements ExplorerMana
     private javax.swing.JButton addButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton editButton;
-    private javax.swing.JCheckBox inferenceActive;
-    private javax.swing.JComboBox inferenceMode;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

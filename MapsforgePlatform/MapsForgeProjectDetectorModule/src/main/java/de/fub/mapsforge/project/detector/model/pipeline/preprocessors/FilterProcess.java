@@ -30,7 +30,6 @@ import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;

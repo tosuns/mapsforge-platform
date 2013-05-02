@@ -17,9 +17,25 @@ import javax.swing.event.ChangeListener;
 public class TrackSegment {
 
     private final ObservableArrayList<Waypoint> wayPointList = new ObservableArrayList<Waypoint>();
+    private String label;
+
+    public TrackSegment() {
+    }
+
+    public TrackSegment(String label) {
+        this.label = label;
+    }
 
     public List<Waypoint> getWayPointList() {
         return wayPointList;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public boolean add(Waypoint e) {

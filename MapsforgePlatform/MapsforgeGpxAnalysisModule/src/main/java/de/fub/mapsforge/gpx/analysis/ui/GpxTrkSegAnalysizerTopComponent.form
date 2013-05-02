@@ -109,9 +109,6 @@
                             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[100, 300]"/>
                             </Property>
-                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                              <Dimension value="[400, 300]"/>
-                            </Property>
                           </Properties>
                         </Component>
                         <Component class="javax.swing.Box$Filler" name="filler1">

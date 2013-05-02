@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.detector.model.xmls;
 
 import de.fub.mapsforge.project.detector.DetectorMode;
+import java.text.MessageFormat;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -17,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author Serdar
  */
 @XmlRootElement(name = "profile")
-@XmlType(name = "profile", propOrder = {"name", "preprocess", "inference", "postprocess"})
+@XmlType(name = "profile", propOrder = {"name", "preprocess", "postprocess"})
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Profile {
 
@@ -25,8 +26,6 @@ public class Profile {
     private String name;
     @XmlElement(name = "preprocess", required = true)
     private Preprocess preprocess = new Preprocess();
-    @XmlElement(name = "inference", required = true)
-    private Inference inference = new Inference();
     @XmlElement(name = "postprocess", required = true)
     private Postprocess postprocess = new Postprocess();
 
@@ -53,14 +52,6 @@ public class Profile {
         return preprocess;
     }
 
-    public void setInference(Inference inference) {
-        this.inference = inference;
-    }
-
-    public Inference getInference() {
-        return inference;
-    }
-
     public void setPostprocess(Postprocess postprocess) {
         this.postprocess = postprocess;
     }
@@ -71,7 +62,7 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "Profile{" + "name=" + name + ", preprocess=" + preprocess + ", inference=" + inference + ", postprocess=" + postprocess + '}';
+        return MessageFormat.format("Profile{name={0}, preprocess={1}, postprocess={2}{3}", name, preprocess, postprocess, '}');
     }
 
     @XmlType(name = "preprocessor")
@@ -109,46 +100,7 @@ public class Profile {
 
         @Override
         public String toString() {
-            return "Preprocess{" + "active=" + active + ", mode=" + mode + '}';
-        }
-    }
-
-    @XmlType(name = "inference")
-    @XmlAccessorType(XmlAccessType.FIELD)
-    public static class Inference {
-
-        @XmlAttribute(name = "changePointSequenceActive")
-        private boolean changePointSequencerActive = false;
-        @XmlAttribute(name = "mode")
-        private DetectorMode mode = DetectorMode.INFERENCE;
-
-        public Inference() {
-        }
-
-        public Inference(boolean changePointSequncerActive, DetectorMode mode) {
-            this.changePointSequencerActive = changePointSequncerActive;
-            this.mode = mode;
-        }
-
-        public boolean isChangePointSequencerActive() {
-            return changePointSequencerActive;
-        }
-
-        public void setChangePointSequencerActive(boolean changePointSequencerActive) {
-            this.changePointSequencerActive = changePointSequencerActive;
-        }
-
-        public DetectorMode getMode() {
-            return mode;
-        }
-
-        public void setMode(DetectorMode mode) {
-            this.mode = mode;
-        }
-
-        @Override
-        public String toString() {
-            return "Inference{" + "changePointSequencerActive=" + changePointSequencerActive + ", mode=" + mode + '}';
+            return MessageFormat.format("Preprocess{active={0}, mode={1}{2}", active, mode, '}');
         }
     }
 
@@ -187,7 +139,7 @@ public class Profile {
 
         @Override
         public String toString() {
-            return "Postprocess{" + "active=" + active + ", mode=" + mode + '}';
+            return MessageFormat.format("Postprocess{active={0}, mode={1}{2}", active, mode, '}');
         }
     }
 }

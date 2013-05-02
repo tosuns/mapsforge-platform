@@ -38,7 +38,7 @@ import org.openide.util.NbBundle;
  * @author Serdar
  */
 @NbBundle.Messages({
-    "CLT_Trainings_Process_Running=Running",
+    "CLT_Trainings_Process_Running=Training",
     "CLT_Inference_Process_Running=Clustering"
 })
 class DetectorRunSupport {
@@ -87,9 +87,11 @@ class DetectorRunSupport {
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
             detector.setDetectorState(ProcessState.ERROR);
         } finally {
+            detector.getInferenceModel().getResult().clear();
             detector.getInferenceModel().getInput().clearAllInferenceData();
             detector.getInferenceModel().getInput().clearAllTrainingsData();
-
+            detector.getInferenceSet().clear();
+            detector.getTrainingsSet().clear();
             handle.finish();
         }
     }

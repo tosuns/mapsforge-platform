@@ -24,16 +24,11 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.Toolbar;
 import org.openide.awt.UndoRedo;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
@@ -49,15 +44,6 @@ import org.openide.windows.TopComponent;
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "DetectorInferenceModelVisual",
         position = 1000)
-@ActionReferences({
-    @ActionReference(
-            id =
-            @ActionID(
-            category = "SnapShot",
-            id = "de.fub.mapsforge.snapshot.api.SnapShotExporterDelegateAction"),
-            path = "Mapsforge/Gpx/MapView/Actions",
-            position = 250,
-            separatorAfter = 275)})
 @NbBundle.Messages({
     "LBL_Detector_InferenceModel_VISUAL=Evaluation",})
 public class InferenceModelVisuaElement extends javax.swing.JPanel implements MultiViewElement, ChangeListener {
@@ -131,17 +117,10 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         List<Action> actionsForPath = new ArrayList<Action>();
         actionsForPath.addAll(Utilities.actionsForPath("Mapsforge/Gpx/MapView/Actions"));
         for (Action action : actionsForPath) {
-            if (action instanceof Presenter.Toolbar) {
-                try {
-                    Presenter.Toolbar presenter = (Presenter.Toolbar) action.getClass().newInstance();
-                    toolbar.add(presenter.getToolbarPresenter());
-                } catch (InstantiationException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IllegalAccessException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            } else if (action == null) {
+            if (action == null) {
                 toolbar.add(new Toolbar.Separator());
+            } else {
+                toolbar.add(action);
             }
         }
         toolbar.add(new ToolbarDetectorStartAction(detector).getToolbarPresenter());
@@ -164,6 +143,7 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
         setLayout(new java.awt.BorderLayout());
 
         contentPanel.setBackground(new java.awt.Color(255, 255, 255));
+        contentPanel.setMaximumSize(new java.awt.Dimension(0, 35635));
         contentPanel.setLayout(new javax.swing.BoxLayout(contentPanel, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane1.setViewportView(contentPanel);
 
@@ -232,9 +212,6 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
-        if (this.callback != null) {
-            this.callback.getTopComponent().setDisplayName(detector.getInferenceModel().getName());
-        }
     }
 
     @Override

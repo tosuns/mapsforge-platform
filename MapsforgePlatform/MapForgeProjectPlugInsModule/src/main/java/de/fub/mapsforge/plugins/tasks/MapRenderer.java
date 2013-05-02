@@ -86,8 +86,11 @@ public class MapRenderer extends Task {
         setProcessState(ProcessState.INACTIVE);
         try {
             Aggregator createAggregator = createAggregator();
+            if (createAggregator == null) {
+                throw new FileNotFoundException();
+            }
         } catch (FileNotFoundException ex) {
-            setProcessState(ProcessState.ERROR);
+            setProcessState(ProcessState.SETTING_ERROR);
         }
     }
 
@@ -205,6 +208,8 @@ public class MapRenderer extends Task {
                 if (isOpenAfterFinished()) {
                     new OpenEditorTask(aggregatorList).run();
                 }
+            } else {
+                setProcessState(ProcessState.SETTING_ERROR);
             }
         } catch (FileNotFoundException ex) {
             throw new AggregatorProcessPipeline.PipelineException(ex.getMessage(), ex);
@@ -319,7 +324,6 @@ public class MapRenderer extends Task {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            // do nothing
         }
     }
 

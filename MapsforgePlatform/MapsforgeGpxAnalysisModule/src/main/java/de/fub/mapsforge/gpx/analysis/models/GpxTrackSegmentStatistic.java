@@ -6,9 +6,9 @@ package de.fub.mapsforge.gpx.analysis.models;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.AvgAccelerationFeature;
-import de.fub.agg2graph.gpseval.features.AvgSpeedFeature;
+import de.fub.agg2graph.gpseval.features.AvgVelocityFeature;
 import de.fub.agg2graph.gpseval.features.MaxNAccelerationFeature;
-import de.fub.agg2graph.gpseval.features.MaxNSpeedFeature;
+import de.fub.agg2graph.gpseval.features.MaxNVelocityFeature;
 import de.fub.agg2graph.gpseval.features.MeanVelocityFeature;
 import de.fub.agg2graph.gpseval.features.TrackLengthFeature;
 import de.fub.gpxmodule.xml.Trkseg;
@@ -18,7 +18,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -83,7 +82,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
 
     public double getAverageVelocity() {
         if (averageVelocity == null) {
-            AvgSpeedFeature avgSpeedFeature = new AvgSpeedFeature();
+            AvgVelocityFeature avgSpeedFeature = new AvgVelocityFeature();
             for (Waypoint waypoint : this.list) {
                 avgSpeedFeature.addWaypoint(waypoint);
             }
@@ -105,7 +104,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
 
     public double getMaxVelocity() {
         if (maxVelocity == null) {
-            MaxNSpeedFeature maxVelocityFeature = new MaxNSpeedFeature(1);
+            MaxNVelocityFeature maxVelocityFeature = new MaxNVelocityFeature(1);
             for (Waypoint waypoint : this.list) {
                 maxVelocityFeature.addWaypoint(waypoint);
             }
@@ -156,8 +155,9 @@ public class GpxTrackSegmentStatistic implements Statistic {
 
         private final GpxTrackSegmentStatistic statistics;
         private static final String MESSAGE_PATTERN = "{0, number, 0.00}";
-        private static final MessageFormat MESSAGE_FORMAT = new MessageFormat(MESSAGE_PATTERN, Locale.ENGLISH);
+//        private static final MessageFormat MESSAGE_FORMAT = new MessageFormat(MESSAGE_PATTERN, Locale.ENGLISH);
         private static final double KILOMETER_PER_HOUR_FACTOR = 3.6;
+        private static final String SUPPRESS_CUSTOM_EDITOR_PROPERTY = "suppressCustomEditor";
 
         public StatisticNode(GpxTrackSegmentStatistic statistics) {
             super(Children.LEAF);
@@ -197,7 +197,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                     return value;
                 }
             };
-            property.setValue("suppressCustomEditor", Boolean.TRUE);
+            property.setValue(SUPPRESS_CUSTOM_EDITOR_PROPERTY, Boolean.TRUE);
             set.put(property);
 
             property = new PropertySupport.ReadOnly<String>("avgVelocity", String.class, Bundle.avgVelocity_Name(), Bundle.avgVelocity_Description()) {
@@ -211,7 +211,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                     return value;
                 }
             };
-            property.setValue("suppressCustomEditor", Boolean.TRUE);
+            property.setValue(SUPPRESS_CUSTOM_EDITOR_PROPERTY, Boolean.TRUE);
             set.put(property);
 
             property = new PropertySupport.ReadOnly<String>("maxAcceleration", String.class, Bundle.maxAcceleration_Name(), Bundle.maxAcceleration_Description()) {
@@ -225,7 +225,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                     return value;
                 }
             };
-            property.setValue("suppressCustomEditor", Boolean.TRUE);
+            property.setValue(SUPPRESS_CUSTOM_EDITOR_PROPERTY, Boolean.TRUE);
             set.put(property);
 
             property = new PropertySupport.ReadOnly<String>("maxVelocity", String.class, Bundle.maxVelocity_Name(), Bundle.maxVelocity_Description()) {
@@ -239,7 +239,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                     return value;
                 }
             };
-            property.setValue("suppressCustomEditor", Boolean.TRUE);
+            property.setValue(SUPPRESS_CUSTOM_EDITOR_PROPERTY, Boolean.TRUE);
             set.put(property);
 
             property = new PropertySupport.ReadOnly<String>("meanVelocity", String.class, Bundle.meanVelocity_Name(), Bundle.meanVelocity_Description()) {
@@ -253,7 +253,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                     return value;
                 }
             };
-            property.setValue("suppressCustomEditor", Boolean.TRUE);
+            property.setValue(SUPPRESS_CUSTOM_EDITOR_PROPERTY, Boolean.TRUE);
             set.put(property);
 
             property = new PropertySupport.ReadOnly<String>("totalLength", String.class, Bundle.totalLength_Name(), Bundle.totalLength_Description()) {
@@ -267,7 +267,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                     return value;
                 }
             };
-            property.setValue("suppressCustomEditor", Boolean.TRUE);
+            property.setValue(SUPPRESS_CUSTOM_EDITOR_PROPERTY, Boolean.TRUE);
             set.put(property);
 
             property = new PropertySupport.ReadOnly<Integer>("pointCount", Integer.class, Bundle.waypointCount_Name(), Bundle.waypointCount_Description()) {

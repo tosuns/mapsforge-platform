@@ -85,6 +85,7 @@ public class AggregatorWizardWithDatasourcesAction implements ActionListener {
                                 AggregatorDescriptor aggregator = aggregatorDataObject.getAggregatorDescriptor();
                                 aggregator.setName((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_NAME));
                                 aggregator.setDescription((String) wiz.getProperty(AggregatorWizardAction.PROP_NAME_DESCRIPTION));
+                                aggregator.getDatasources().clear();
 
                                 for (GPXDataObject gpxFile : datasources) {
 

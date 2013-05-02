@@ -97,6 +97,9 @@ public class ResegmentationFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return resultList;
+        ArrayList<TrackSegment> arrayList = new ArrayList<TrackSegment>(this.resultList);
+        this.resultList.clear();
+        this.trackSegments = null;
+        return arrayList;
     }
 }
