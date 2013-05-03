@@ -9,6 +9,7 @@ import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
@@ -41,6 +42,9 @@ public class ResegmentationFilterProcess extends FilterProcess {
 
     @Override
     protected void start() {
+        if (resultList == null) {
+            resultList = new ArrayList<TrackSegment>();
+        }
         TrackSegment subSegment = null;
         for (TrackSegment segment : trackSegments) {
             subSegment = new TrackSegment();

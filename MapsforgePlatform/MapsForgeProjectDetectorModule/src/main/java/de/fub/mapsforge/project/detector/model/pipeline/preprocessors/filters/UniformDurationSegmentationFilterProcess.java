@@ -37,6 +37,9 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
     @Override
     protected void start() {
         if (gpsTracks != null) {
+            if (result == null) {
+                result = new ArrayList<TrackSegment>(gpsTracks.size());
+            }
             result.clear();
 
             for (TrackSegment trackSegment : gpsTracks) {
