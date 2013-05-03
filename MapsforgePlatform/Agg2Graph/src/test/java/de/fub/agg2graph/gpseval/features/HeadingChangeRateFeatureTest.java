@@ -6,6 +6,7 @@ package de.fub.agg2graph.gpseval.features;
 
 import de.fub.agg2graph.gpseval.data.MutableWaypoint;
 import de.fub.agg2graph.gpseval.data.Waypoint;
+import de.fub.agg2graph.structs.GPSCalc;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 import junit.framework.Assert;
@@ -31,7 +32,7 @@ public class HeadingChangeRateFeatureTest {
         Waypoint firstWaypoint = createFirstWaypoint();
         Waypoint secondWaypoint = createSecondWaypoint();
         Waypoint thirdWaypoint = createThirdWaypoint();
-        double heading = instance.computeHeading(firstWaypoint, secondWaypoint, thirdWaypoint);
+        double heading = GPSCalc.computeHeading(firstWaypoint, secondWaypoint, thirdWaypoint);
 
         LOG.info(MessageFormat.format("heading2: {0}°", heading));
         Assert.assertEquals(45, heading, 0.01);

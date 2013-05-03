@@ -114,11 +114,16 @@ public class PersistentTileCache implements TileCache {
                     if (tileFolder != null) {
                         File tileObject = getTile(tileFolder);
                         if (tileObject != null) {
-                            inputStream = new FileInputStream(tileObject);
-                            BufferedImage read = ImageIO.read(inputStream);
-                            tile = new Tile(ts, x, y, z, read);
-                            tile.setLoaded(true);
-                            memTileCache.addTile(tile);
+                            long lastChacked = System.currentTimeMillis() - tileObject.lastModified();
+                            if (lastChacked <= (7 * 24 * 60 * 60 * 1000)) {
+                                inputStream = new FileInputStream(tileObject);
+                                BufferedImage read = ImageIO.read(inputStream);
+                                tile = new Tile(ts, x, y, z, read);
+                                tile.setLoaded(true);
+                                memTileCache.addTile(tile);
+                            } else {
+                                requestProcessor.post(new PersistJob(x, y, z, tile));
+                            }
                         }
                     }
                 } else {
@@ -164,12 +169,12 @@ public class PersistentTileCache implements TileCache {
                     outputStream = new FileOutputStream(tileFileObject);
                     ImageIO.write(tile.getImage(), "png", outputStream);
                     tiles.add(MessageFormat.format(PATH_PATTERN, x, y, z));
-                    LOG.log(Level.INFO, "tile persist job finished for file {0}", tileFileObject.getAbsolutePath());
+                    LOG.log(Level.FINEST, "tile persist job finished for file {0}", tileFileObject.getAbsolutePath());
                 } else {
                     throw new IOException();
                 }
             } catch (Exception ex) {
-                LOG.log(Level.INFO, ex.getMessage(), ex);
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             } finally {
                 if (outputStream != null) {
                     try {

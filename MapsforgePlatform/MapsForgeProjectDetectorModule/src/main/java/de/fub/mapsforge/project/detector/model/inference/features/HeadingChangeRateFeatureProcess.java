@@ -75,7 +75,10 @@ public class HeadingChangeRateFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        this.trackSegment = null;
+        return result;
     }
 
     private Double getAngleThreshold() {

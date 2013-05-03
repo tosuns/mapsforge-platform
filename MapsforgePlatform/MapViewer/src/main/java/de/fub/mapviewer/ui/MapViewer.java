@@ -4,11 +4,11 @@
  */
 package de.fub.mapviewer.ui;
 
+import de.fub.mapviewer.ui.caches.PersistentTileCache;
 import de.fub.mapviewer.ui.caches.ProxyTileCache;
 import java.awt.event.MouseEvent;
 import org.openstreetmap.gui.jmapviewer.DefaultMapController;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-import org.openstreetmap.gui.jmapviewer.MemoryTileCache;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
 
 /**
@@ -21,9 +21,9 @@ public class MapViewer extends JMapViewer {
     private transient ProxyTileCache proxTileCache;
 
     public MapViewer() {
-        super(new MemoryTileCache(), 8);
-        init();
-//        this(new ProxyTileCache(new PersistentTileCache()), Runtime.getRuntime().availableProcessors() * 4);
+        this(new ProxyTileCache(new PersistentTileCache()), Runtime.getRuntime().availableProcessors() * 4);
+//        init();
+
     }
 
     public MapViewer(TileCache tileCache, int downloadThreadCount) {

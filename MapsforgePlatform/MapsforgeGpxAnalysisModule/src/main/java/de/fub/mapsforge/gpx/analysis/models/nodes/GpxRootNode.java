@@ -7,7 +7,6 @@ package de.fub.mapsforge.gpx.analysis.models.nodes;
 import de.fub.mapsforge.gpx.analysis.models.factories.TrackNodeFactory;
 import de.fub.gpxmodule.xml.Gpx;
 import java.util.concurrent.Callable;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 
 /**

@@ -74,17 +74,14 @@
     <profiles activeProfile="PlainProfile2">
         <profile name="default">
             <preprocess active="true" mode="inference"/>
-            <inference changePointSequenceActive="false" mode="inference"/>
             <postprocess active="true" mode="inference"/>
         </profile>
         <profile name="PlainProfile">
             <preprocess active="true" mode="inference"/>
-            <inference changePointSequenceActive="false" mode="inference"/>
             <postprocess active="true" mode="inference"/>
         </profile>
         <profile name="PlainProfile2">
             <preprocess active="true" mode="inference"/>
-            <inference changePointSequenceActive="false" mode="inference"/>
             <postprocess active="true" mode="inference"/>
         </profile>
     </profiles>

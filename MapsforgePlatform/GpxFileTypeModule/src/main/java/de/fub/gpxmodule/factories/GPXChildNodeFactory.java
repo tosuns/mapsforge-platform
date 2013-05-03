@@ -4,6 +4,7 @@
  */
 package de.fub.gpxmodule.factories;
 
+import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.nodes.RteNode;
 import de.fub.gpxmodule.nodes.TrkNode;
 import de.fub.gpxmodule.xml.Gpx;
@@ -13,6 +14,10 @@ import de.fub.gpxmodule.xml.Wpt;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.util.List;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.BeanNode;
 import org.openide.nodes.ChildFactory;
@@ -27,16 +32,23 @@ import org.openide.util.Lookup;
  */
 public class GPXChildNodeFactory extends ChildFactory<Node> {
 
-    private final Gpx gpx;
+    private final GPXDataObject dataObject;
+    private final FileChangeListener fcl = new FileChangeAdapter() {
+        @Override
+        public void fileChanged(FileEvent fe) {
+            refresh(true);
+        }
+    };
 
-    public GPXChildNodeFactory(Gpx gpx) {
-        assert gpx != null;
-        this.gpx = gpx;
+    public GPXChildNodeFactory(GPXDataObject dataObject) {
+        assert dataObject != null;
+        this.dataObject = dataObject;
+        this.dataObject.getPrimaryFile().addFileChangeListener(FileUtil.weakFileChangeListener(fcl, this.dataObject.getPrimaryFile()));
     }
 
     @Override
     protected boolean createKeys(List<Node> list) {
-
+        Gpx gpx = dataObject.getGpx();
         if (gpx.getTrk() != null) {
             for (Trk trk : gpx.getTrk()) {
                 try {

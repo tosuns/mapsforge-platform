@@ -1,0 +1,9 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Fri Feb 22 02:15:17 CET 2013
+http\://localhost\:8081/artifactory/repo/.lastUpdated=1361495717402
+http\://repo.maven.apache.org/maven2/.lastUpdated=1361495671068
+http\://bits.netbeans.org/maven2/.lastUpdated=1361495665908
+http\://matsim.org/m2repo/.lastUpdated=1361495667848
+http\://matsim.org/m2repo/.error=
+http\://bits.netbeans.org/maven2/.error=
+http\://repo.maven.apache.org/maven2/.error=

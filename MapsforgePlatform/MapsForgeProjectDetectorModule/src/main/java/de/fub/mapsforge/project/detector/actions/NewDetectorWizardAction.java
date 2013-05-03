@@ -62,11 +62,11 @@ import org.openide.util.WeakListeners;
 public final class NewDetectorWizardAction implements ActionListener, WizardDescriptor.Iterator<WizardDescriptor>, PropertyChangeListener {
 
     public static final String PROP_NAME_DATAOBJECT = "detector.wizard.dataObject";
+    public static final String PROP_NAME_CREATE_VIA_TEMPLATE = "create.via.template";
     private WizardDescriptor wiz;
     private int index;
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     private final ChangeSupport cs = new ChangeSupport(this);
-    public static final String PROP_NAME_CREATE_VIA_TEMPLATE = "create.via.template";
     private List<WizardDescriptor.Panel<WizardDescriptor>> viaTemplatePanels = null;
     private List<WizardDescriptor.Panel<WizardDescriptor>> withoutTemplatePanels = null;
     private final DataObject context;

@@ -53,7 +53,7 @@ public class ColorUtil {
                     lastBrightnessValue = 0;
                 }
             }
-            LOG.info(MessageFormat.format("lastHueValue = {0}\nlastBrightnessValue = {1}\nLastBrightnessStep = {2}\nlastSatrationValue = {3}",
+            LOG.fine(MessageFormat.format("lastHueValue = {0}\nlastBrightnessValue = {1}\nLastBrightnessStep = {2}\nlastSatrationValue = {3}",
                     lastHueValue,
                     lastBrightnessValue,
                     lastBrightnessStep,

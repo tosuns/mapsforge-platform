@@ -4,6 +4,7 @@
  */
 package de.fub.mapviewer.ui;
 
+import de.fub.mapviewer.ui.caches.PersistentTileCache;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -40,6 +41,7 @@ public class AbstractMapViewer extends javax.swing.JPanel {
         mapViewer.addMouseWheelListener(mouseListener);
         mapViewer.addComponentListener(mouseListener);
         mapViewer.setZoomContolsVisible(false);
+//        mapViewer.setTileCache(new PersistentTileCache());
     }
 
     public MapViewer getMapViewer() {

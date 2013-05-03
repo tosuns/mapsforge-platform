@@ -37,6 +37,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -66,6 +68,7 @@ public class TileManager {
 
     public TileManager(DefaultCachingStrategy dcs) {
         this.dcs = dcs;
+        clear();
     }
 
     public TileManager(DefaultCachingStrategy dcs, AggContainer agg,
@@ -88,8 +91,7 @@ public class TileManager {
                 } else {
                     Point2D.Double point = new Point2D.Double(loc
                             .getLon(), loc.getLat());
-                    assert currentTile.size.contains(point);
-                    return currentTile;
+                    return currentTile.size.contains(point) ? currentTile : getRoot();
                 }
             }
 
@@ -144,11 +146,11 @@ public class TileManager {
         try {
             dcs.getTc().loadTile(targetTile);
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } catch (SAXException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
         targetTile.elements.add(elem);
         nodeCounter++;
@@ -157,14 +159,14 @@ public class TileManager {
         // }
 
         // do we need to split?
-        if (targetTile != null
-                && targetTile.getElemCount() > maxElementsPerTile
+        if (targetTile.getElemCount() > maxElementsPerTile
                 && targetTile.size.getWidth() >= minimumSplitSize.getWidth()
                 && targetTile.size.getHeight() >= minimumSplitSize.getHeight()) {
             targetTile.split();
         }
         return targetTile;
     }
+    private static final Logger LOG = Logger.getLogger(TileManager.class.getName());
 
     public void removeElement(AggNode elem) {
         Tile<AggNode> targetTile = getTile(elem);
@@ -221,11 +223,11 @@ public class TileManager {
                         try {
                             dcs.getTc().loadTile(subTile);
                         } catch (ParserConfigurationException e) {
-                            e.printStackTrace();
+                            LOG.log(Level.SEVERE, e.getMessage(), e);
                         } catch (SAXException e) {
-                            e.printStackTrace();
+                            LOG.log(Level.SEVERE, e.getMessage(), e);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            LOG.log(Level.SEVERE, e.getMessage(), e);
                         }
                         result.addAll(subTile.getInnerNodes());
                     } else // partial overlap?
@@ -233,11 +235,11 @@ public class TileManager {
                         try {
                             dcs.getTc().loadTile(subTile);
                         } catch (ParserConfigurationException e) {
-                            e.printStackTrace();
+                            LOG.log(Level.SEVERE, e.getMessage(), e);
                         } catch (SAXException e) {
-                            e.printStackTrace();
+                            LOG.log(Level.SEVERE, e.getMessage(), e);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            LOG.log(Level.SEVERE, e.getMessage(), e);
                         }
                         tileQueue.add(subTile);
                     } else // no overlap
@@ -365,7 +367,7 @@ public class TileManager {
         return root.toDebugString();
     }
 
-    public void clear() {
+    public final void clear() {
         nodeCounter = 0;
         connCounter = 0;
         dcs.getTc().clear();

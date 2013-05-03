@@ -18,8 +18,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -49,6 +47,7 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     private static final long serialVersionUID = 1L;
     private final ObservableList<DetectorProcess> allItems = new ObservableArrayList<DetectorProcess>();
     private final ObservableList<DetectorProcess> selectedItems = new ObservableArrayList<DetectorProcess>();
+    private boolean hasParent = false;
 
     /**
      * Creates new form SelectionComponent
@@ -61,8 +60,8 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
     private void init() {
         allItems.clear();
 
-        getAllListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(allItems), true)));
-        getSelectedListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(selectedItems), true)));
+        getAllListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(allItems), false)));
+        getSelectedListExplorerManager().setRootContext(new AbstractNode(Children.create(new DetectorProcessNodeFactory(selectedItems), false)));
 
         getAllListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getAllListExplorerManager()));
         getSelectedListExplorerManager().addPropertyChangeListener(WeakListeners.propertyChange(SelectionComponent.this, getSelectedListExplorerManager()));
@@ -78,6 +77,18 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
         registerMouseClickListener();
         checkButtonState();
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        hasParent = true;
+    }
+
+    @Override
+    public void removeNotify() {
+        hasParent = false;
+        super.removeNotify();
     }
 
     public ObservableList<DetectorProcess> getAllItems() {
@@ -206,48 +217,50 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (ExplorerManager.PROP_NODE_CHANGE.equals(evt.getPropertyName())) {
-            if (getAllListExplorerManager().equals(evt.getSource())) {
-            } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
-                Object newValue = evt.getNewValue();
-                Object oldValue = evt.getOldValue();
-                LOG.info(MessageFormat.format("{0}. {1}", newValue, oldValue));
-            }
-        } else if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
-            Node[] selectedNodes = new Node[0];
-            if (getAllListExplorerManager().equals(evt.getSource())) {
-                selectedNodes = getAllListExplorerManager().getSelectedNodes();
-            } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
-                selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
-
-                if (selectedNodes.length == 1) {
-                    DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
-                    int indexOf = selectedItems.indexOf(detectorProcess);
-                    getMoveUpButton().setEnabled(indexOf != 0);
-                    getMoveDownButton().setEnabled(indexOf != selectedItems.size() - 1);
-                } else if (selectedNodes.length == 0) {
-                    getMoveUpButton().setEnabled(false);
-                    getMoveDownButton().setEnabled(false);
+        if (hasParent) {
+            if (ExplorerManager.PROP_NODE_CHANGE.equals(evt.getPropertyName())) {
+                if (getAllListExplorerManager().equals(evt.getSource())) {
+                } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
+                    Object newValue = evt.getNewValue();
+                    Object oldValue = evt.getOldValue();
+                    LOG.info(MessageFormat.format("{0}. {1}", newValue, oldValue));
                 }
-            }
-            if (selectedNodes.length == 1) {
-                DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
-                if (detectorProcess != null) {
-                    getDescription().setText(detectorProcess.getDescription());
-                }
-            } else if (selectedNodes.length > 1) {
-                StringBuilder stringBuilder = new StringBuilder();
+            } else if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
+                Node[] selectedNodes = new Node[0];
+                if (getAllListExplorerManager().equals(evt.getSource())) {
+                    selectedNodes = getAllListExplorerManager().getSelectedNodes();
+                } else if (getSelectedListExplorerManager().equals(evt.getSource())) {
+                    selectedNodes = getSelectedListExplorerManager().getSelectedNodes();
 
-                for (Node node : selectedNodes) {
-                    DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
-                    if (detectorProcess != null) {
-                        stringBuilder.append(detectorProcess.toString()).append("/\n");
+                    if (selectedNodes.length == 1) {
+                        DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
+                        int indexOf = selectedItems.indexOf(detectorProcess);
+                        getMoveUpButton().setEnabled(indexOf != 0);
+                        getMoveDownButton().setEnabled(indexOf != selectedItems.size() - 1);
+                    } else if (selectedNodes.length == 0) {
+                        getMoveUpButton().setEnabled(false);
+                        getMoveDownButton().setEnabled(false);
                     }
                 }
-                stringBuilder.delete(stringBuilder.toString().lastIndexOf("/"), stringBuilder.toString().length() - 1);
-                getDescription().setText(stringBuilder.toString());
-            } else {
-                getDescription().setText(null);
+                if (selectedNodes.length == 1) {
+                    DetectorProcess detectorProcess = selectedNodes[0].getLookup().lookup(DetectorProcess.class);
+                    if (detectorProcess != null) {
+                        getDescription().setText(detectorProcess.getDescription());
+                    }
+                } else if (selectedNodes.length > 1) {
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    for (Node node : selectedNodes) {
+                        DetectorProcess detectorProcess = node.getLookup().lookup(DetectorProcess.class);
+                        if (detectorProcess != null) {
+                            stringBuilder.append(detectorProcess.toString()).append("/\n");
+                        }
+                    }
+                    stringBuilder.delete(stringBuilder.toString().lastIndexOf("/"), stringBuilder.toString().length() - 1);
+                    getDescription().setText(stringBuilder.toString());
+                } else {
+                    getDescription().setText(null);
+                }
             }
         }
     }
@@ -460,13 +473,8 @@ public final class SelectionComponent extends javax.swing.JPanel implements Acti
 
         @Override
         protected boolean createKeys(List<DetectorProcess> toPopulate) {
-            Collections.sort(list, new Comparator<DetectorProcess>() {
-                @Override
-                public int compare(DetectorProcess o1, DetectorProcess o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
-            toPopulate.addAll(list);
+            ArrayList<DetectorProcess> arrayList = new ArrayList<DetectorProcess>(list);
+            toPopulate.addAll(arrayList);
             return true;
         }
 

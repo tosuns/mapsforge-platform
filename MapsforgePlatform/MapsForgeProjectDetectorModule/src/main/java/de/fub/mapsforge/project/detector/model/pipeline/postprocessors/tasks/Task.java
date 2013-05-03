@@ -145,6 +145,9 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
                 case ERROR:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconError.png");
                     break;
+                case SETTING_ERROR:
+                    backgroundIcon = IconRegister.findRegisteredIcon("processIconError.png");
+                    break;
                 case INACTIVE:
                     backgroundIcon = IconRegister.findRegisteredIcon("processIconNormal.png");
                     break;

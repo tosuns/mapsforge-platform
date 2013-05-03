@@ -6,7 +6,7 @@ import de.fub.agg2graph.structs.GPSCalc;
 /**
  * The AvgSpeedFeature calculates the average speed for a GPS-track.
  */
-public class AvgSpeedFeature extends Feature {
+public class AvgVelocityFeature extends Feature {
 
     private int mCount = 0;
     private double mSumSpeed = 0;
@@ -41,5 +41,6 @@ public class AvgSpeedFeature extends Feature {
     public void reset() {
         mCount = 0;
         mSumSpeed = 0;
+        lasWaypoint = null;
     }
 }

@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
-import de.fub.agg2graph.gpseval.features.MaxNSpeedFeature;
+import de.fub.agg2graph.gpseval.features.MaxNVelocityFeature;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
@@ -22,7 +22,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = FeatureProcess.class)
 public class Max3rdVelocityFeatureProcess extends FeatureProcess {
 
-    private final MaxNSpeedFeature feature = new MaxNSpeedFeature(3);
+    private final MaxNVelocityFeature feature = new MaxNVelocityFeature(3);
     private TrackSegment gpsTrack;
 
     public Max3rdVelocityFeatureProcess() {
@@ -36,8 +36,10 @@ public class Max3rdVelocityFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-        for (Waypoint waypoint : gpsTrack.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (gpsTrack != null) {
+            for (Waypoint waypoint : gpsTrack.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
     }
 
@@ -58,6 +60,9 @@ public class Max3rdVelocityFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        gpsTrack = null;
+        return result;
     }
 }

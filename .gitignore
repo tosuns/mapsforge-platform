@@ -10,6 +10,7 @@ MapsforgePlatform/MapForgeProject/target
 MapsforgePlatform/MapForgeProjectPlugInsModule/target
 MapsforgePlatform/MapViewer/target
 MapsforgePlatform/MapsForgeProjectAggregatorModule/target
+MapsforgePlatform/MapsForgeProjectDataSourceModule/src/main/resources/de/fub/mapsforge/project/datasource/ui/Thumbs.db
 MapsforgePlatform/MapsForgeProjectDataSourceModule/target
 MapsforgePlatform/MapsForgeProjectDetectorModule/target
 MapsforgePlatform/MapsForgeSnapShotModule/target

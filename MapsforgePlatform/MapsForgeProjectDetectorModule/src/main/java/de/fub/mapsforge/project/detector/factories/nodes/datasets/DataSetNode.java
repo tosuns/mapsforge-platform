@@ -11,7 +11,12 @@ import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
 import java.text.MessageFormat;
 import javax.swing.Action;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
@@ -32,10 +37,22 @@ public class DataSetNode extends AbstractNode {
     private final Detector detector;
     private boolean fileValid = true;
     private DataObject dataObject;
+    private final FileChangeListener fcl = new FileChangeAdapter() {
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            fireIconChange();
+        }
+
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            fireIconChange();
+        }
+    };
 
     public DataSetNode(Detector detector, DataSet dataSet) {
         super(Children.LEAF, Lookup.EMPTY);
         this.detector = detector;
+        this.dataObject = this.detector.getDataObject();
         this.dataSet = dataSet;
         init();
     }
@@ -45,7 +62,11 @@ public class DataSetNode extends AbstractNode {
             FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
 
             if (datasourceFileObject != null) {
-                FileObject fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
+                FileObject fileObject = null;
+                int indexOf = dataSet.getUrl().indexOf("/");
+                if (indexOf > -1) {
+                    fileObject = datasourceFileObject.getFileObject(dataSet.getUrl().substring(indexOf + 1));
+                }
                 if (fileObject == null) {
                     fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
                 }
@@ -56,6 +77,7 @@ public class DataSetNode extends AbstractNode {
                 } else {
                     try {
                         dataObject = DataObject.find(fileObject);
+                        fileObject.addFileChangeListener(FileUtil.weakFileChangeListener(fcl, fileObject));
                         setShortDescription(fileObject.getPath());
                     } catch (DataObjectNotFoundException ex) {
                         Exceptions.printStackTrace(ex);

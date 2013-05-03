@@ -6,8 +6,6 @@ package de.fub.agg2graph.gpseval.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
-import java.text.MessageFormat;
-import java.util.logging.Logger;
 
 /**
  * Feature that computes the average acceleration of gps tracks.
@@ -19,7 +17,7 @@ public class AvgAccelerationFeature extends Feature {
     private int pointCount = 0;
     private Waypoint lastWaypoint = null;
     private double sumAcceleration = 0;
-    private Double lastVelocity = null;
+    private Double lastVelocity = 0d;
 
     @Override
     public void reset() {
@@ -29,29 +27,36 @@ public class AvgAccelerationFeature extends Feature {
     }
 
     @Override
-    public void addWaypoint(Waypoint entry) {
+    public void addWaypoint(Waypoint waypoint) {
         if (lastWaypoint != null
-                && entry != null
-                && entry.getTimestamp() != null
+                && waypoint != null
+                && waypoint.getTimestamp() != null
                 && lastWaypoint.getTimestamp() != null) {
-            double timeDiff = ((double) (entry.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime())) / 1000 + 0.1;
 
+            double distance = GPSCalc.getDistVincentyFast(
+                    lastWaypoint.getLat(),
+                    lastWaypoint.getLon(),
+                    waypoint.getLat(),
+                    waypoint.getLon());
+            double timeDiff = (waypoint.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime()) / 1000d;
 
             if (timeDiff > 0) {
-                double distance = GPSCalc.getDistVincentyFast(lastWaypoint.getLat(), lastWaypoint.getLon(), entry.getLat(), entry.getLon());
+
                 double velocity = distance / timeDiff;
 
 
-                if (lastVelocity != null) {
-                    double acceleration = (velocity - lastVelocity) / timeDiff;
-                    Logger.getLogger(getClass().getName()).info(MessageFormat.format("acceleration: {0}", acceleration));
+                double acceleration = (velocity - lastVelocity) / timeDiff;
+//                Logger.getLogger(getClass().getName()).info(MessageFormat.format("acceleration: {0}", acceleration));
+                // consider positive acceleration only
+                if (acceleration > 0) {
                     sumAcceleration += acceleration;
                     pointCount++;
                 }
+
                 lastVelocity = velocity;
             }
         }
-        lastWaypoint = entry;
+        lastWaypoint = waypoint;
     }
 
     @Override

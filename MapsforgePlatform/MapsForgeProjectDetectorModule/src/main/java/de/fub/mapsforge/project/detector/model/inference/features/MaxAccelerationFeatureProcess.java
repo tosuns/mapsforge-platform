@@ -36,11 +36,11 @@ public class MaxAccelerationFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-//        long currentTimeMillis = System.currentTimeMillis();
-        for (Waypoint waypoint : gpxTrack.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (gpxTrack != null) {
+            for (Waypoint waypoint : gpxTrack.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
-//        System.out.println(MessageFormat.format("Duration : {0}", (System.currentTimeMillis() - currentTimeMillis)));
     }
 
     @Override
@@ -60,6 +60,9 @@ public class MaxAccelerationFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        gpxTrack = null;
+        return result;
     }
 }

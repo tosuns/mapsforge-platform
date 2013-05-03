@@ -25,6 +25,11 @@
         To create your own repository, use: nbm:populate-repository
         -->
         <repository>
+            <id>main-repository</id>
+            <name>Main Repository</name>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
             <id>netbeans</id>
             <name>NetBeans</name>
             <url>http://bits.netbeans.org/maven2/</url>
@@ -32,10 +37,14 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
+        <!--        <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
             <url>http://localhost:8080/artifactory/libs-release-local/</url>
+        </repository>-->
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/LibFolder</url>
         </repository>
     </repositories>
 
@@ -51,7 +60,7 @@
             <version>1.0b8</version>
         </dependency>
         <dependency>
-            <groupId>org.apache</groupId>
+            <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.6</version>
         </dependency>

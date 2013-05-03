@@ -7,6 +7,7 @@ package de.fub.utilsmodule.actions;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import javax.swing.AbstractAction;
+import javax.swing.SwingUtilities;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.loaders.DataObject;
@@ -67,7 +68,12 @@ public final class SaveAsTemplateAction extends AbstractAction implements Lookup
 
     @Override
     public void resultChanged(LookupEvent ev) {
-        setEnabled(!result.allInstances().isEmpty());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setEnabled(!result.allInstances().isEmpty());
+            }
+        });
     }
 
     public interface SaveAsTemplateHandler extends Cookie {

@@ -11,9 +11,13 @@ import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.components.CustomOutlineView;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
@@ -42,6 +46,7 @@ import weka.core.Instance;
  */
 public class InferenceResultPanel extends javax.swing.JPanel implements ExplorerManager.Provider {
 
+    private static final Logger LOG = Logger.getLogger(InferenceResultPanel.class.getName());
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private final ObservableList<DataItem> dataItemList = new ObservableArrayList<DataItem>();
@@ -85,13 +90,13 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
         setMinimumSize(new java.awt.Dimension(54, 300));
-        setPreferredSize(new java.awt.Dimension(849, 300));
+        setPreferredSize(new java.awt.Dimension(0, 300));
         setLayout(new java.awt.BorderLayout(0, 8));
 
         jPanel3.setBackground(new java.awt.Color(255, 216, 178));
         jPanel3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(204, 204, 204)));
         jPanel3.setMinimumSize(new java.awt.Dimension(0, 32));
-        jPanel3.setPreferredSize(new java.awt.Dimension(100, 32));
+        jPanel3.setPreferredSize(new java.awt.Dimension(0, 32));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         title.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -103,14 +108,18 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));
         jPanel2.setOpaque(false);
-        jPanel2.setPreferredSize(new java.awt.Dimension(1368, 0));
+        jPanel2.setPreferredSize(new java.awt.Dimension(0, 0));
         jPanel2.setLayout(new java.awt.GridLayout(1, 2));
+
+        classificationBarChart.setPreferredSize(new java.awt.Dimension(0, 420));
         jPanel2.add(classificationBarChart);
 
         jPanel6.setOpaque(false);
+        jPanel6.setPreferredSize(new java.awt.Dimension(0, 402));
         jPanel6.setLayout(new java.awt.BorderLayout());
 
         outlineView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        outlineView.setPreferredSize(new java.awt.Dimension(0, 402));
         outlineView.setPropertyColumns(new String[] {"instancesAbs", "Instances (abs.)", "instancesRel", "Instances (rel.)"});
         jPanel6.add(outlineView, java.awt.BorderLayout.CENTER);
 
@@ -127,6 +136,7 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
 
         jPanel4.setBackground(new java.awt.Color(255, 216, 178));
         jPanel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 8, 1, 8));
+        jPanel4.setPreferredSize(new java.awt.Dimension(0, 41));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(InferenceResultPanel.class, "InferenceResultPanel.jLabel1.text")); // NOI18N
@@ -283,16 +293,17 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
             CategoryPlot plot = getClassificationBarChart().getPlot();
             CategoryItemRenderer relRenderer = plot.getRenderer(0);
             CategoryItemRenderer absRenderer = plot.getRenderer(1);
+            ArrayList<String> arrayList = new ArrayList<String>(resultMap.keySet());
+            Collections.sort(arrayList);
 
-
-            for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-                double abs = entry.getValue().size();
-                double rel = entry.getValue().size() / sum * 100;
-                absDataset.addValue(null, "Instances (rel.)", entry.getKey());
-                absDataset.addValue(abs, "Instances (abs.)", entry.getKey());
-                relDataset.addValue(rel, "Instances (rel.)", entry.getKey());
-                relDataset.addValue(null, "Instances (abs.)", entry.getKey());
-                dataItemList.add(new DataItem(entry.getKey(), rel, abs));
+            for (String transportMode : arrayList) {
+                double abs = resultMap.get(transportMode).size();
+                double rel = abs / sum * 100;
+                absDataset.addValue(null, "Instances (rel.)", transportMode);
+                absDataset.addValue(abs, "Instances (abs.)", transportMode);
+                relDataset.addValue(rel, "Instances (rel.)", transportMode);
+                relDataset.addValue(null, "Instances (abs.)", transportMode);
+                dataItemList.add(new DataItem(transportMode, rel, abs));
             }
             final LegendItemCollection result = new LegendItemCollection();
             result.add(relRenderer.getLegendItem(0, 0));
@@ -382,7 +393,14 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
             Property<?> property = new ReadOnly<Double>("instancesAbs", Double.class, "Instances (abs.)", "") {
                 @Override
                 public Double getValue() throws IllegalAccessException, InvocationTargetException {
-                    return dataItem.getAbsData();
+                    String formattedString = MessageFormat.format("{0, number, 000.00}", dataItem.getAbsData()).replaceAll(",", "\\.");
+                    Double value = 0d;
+                    try {
+                        value = Double.valueOf(formattedString);
+                    } catch (Exception ex) {
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                    }
+                    return value;
                 }
             };
             set.put(property);
@@ -390,11 +408,19 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
             property = new ReadOnly<Double>("instancesRel", Double.class, "Instances (rel.)", "") {
                 @Override
                 public Double getValue() throws IllegalAccessException, InvocationTargetException {
-                    return dataItem.getRelData();
+                    Double value = dataItem.getRelData();
+                    if (!Double.isNaN(dataItem.getRelData())) {
+                        String formattedString = MessageFormat.format("{0, number, 000.00}", dataItem.getRelData()).replaceAll(",", "\\.");
+                        try {
+                            value = Double.valueOf(formattedString);
+                        } catch (Exception ex) {
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                        }
+                    }
+                    return value;
                 }
             };
             set.put(property);
-
             return sheet;
         }
     }

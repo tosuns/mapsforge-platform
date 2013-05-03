@@ -17,6 +17,7 @@ import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -66,8 +67,11 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         plot.mapDatasetToRangeAxis(1, 1);
 
         NumberAxis relAxis = new NumberAxis(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Axis_Name"));
-        relAxis.setRange(0, 100);
+        relAxis.setAutoRange(true);
+        relAxis.setUpperMargin(.20);
         NumberAxis absAxis = new NumberAxis(NbBundle.getMessage(ClassificationBarChart.class, "CLT_Value_Rel_Axis_Name"));
+        absAxis.setAutoRange(true);
+        absAxis.setUpperMargin(.20);
 
         plot.setRangeAxis(0, relAxis);
         plot.setRangeAxis(1, absAxis);
@@ -79,12 +83,16 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         relRenderer.setAutoPopulateSeriesPaint(false);
         relRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
         relRenderer.setBarPainter(new StandardBarPainter());
+        relRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        relRenderer.setBaseItemLabelsVisible(true);
 
         BarRenderer absRenderer = new BarRenderer();
         absRenderer.setBasePaint(absColor);
         absRenderer.setAutoPopulateSeriesPaint(false);
         absRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
         absRenderer.setBarPainter(new StandardBarPainter());
+        absRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        absRenderer.setBaseItemLabelsVisible(true);
 
         plot.setRenderer(0, relRenderer);
         plot.setRenderer(1, absRenderer);

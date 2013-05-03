@@ -97,6 +97,9 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
 
     @Override
     protected void start() {
+        if (result == null) {
+            result = new ArrayList<TrackSegment>();
+        }
         result.clear();
 
         if (gpsTracks != null) {
@@ -340,7 +343,10 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return this.result;
+        List<TrackSegment> arrayList = this.result;
+        this.result = null;
+        this.gpsTracks = null;
+        return arrayList;
     }
 
     private static class ChangePointSegment extends TrackSegment {

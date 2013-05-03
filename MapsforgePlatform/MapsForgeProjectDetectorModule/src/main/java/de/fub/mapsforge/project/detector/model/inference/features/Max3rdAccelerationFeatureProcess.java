@@ -36,8 +36,10 @@ public class Max3rdAccelerationFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
-        for (Waypoint waypoint : tracks.getWayPointList()) {
-            feature.addWaypoint(waypoint);
+        if (tracks != null) {
+            for (Waypoint waypoint : tracks.getWayPointList()) {
+                feature.addWaypoint(waypoint);
+            }
         }
     }
 
@@ -58,6 +60,9 @@ public class Max3rdAccelerationFeatureProcess extends FeatureProcess {
 
     @Override
     public Double getResult() {
-        return feature.getResult();
+        double result = feature.getResult();
+        feature.reset();
+        tracks = null;
+        return result;
     }
 }

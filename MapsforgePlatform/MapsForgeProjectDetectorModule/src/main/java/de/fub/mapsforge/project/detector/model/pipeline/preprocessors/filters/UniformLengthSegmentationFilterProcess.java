@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.openide.util.NbBundle.Messages;
@@ -38,6 +39,9 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
     @Override
     protected void start() {
         if (gpsTracks != null) {
+            if (result== null) {
+                result = new ArrayList<TrackSegment>(gpsTracks.size());
+            }
             result.clear();
             TrackSegment shortSegement = new TrackSegment();
 
@@ -102,7 +106,10 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
 
     @Override
     public List<TrackSegment> getResult() {
-        return this.result;
+        List<TrackSegment> arrayList = this.result;
+        this.result = null;
+        this.gpsTracks = null;
+        return arrayList;
     }
 
     private double getLengthProperty() {

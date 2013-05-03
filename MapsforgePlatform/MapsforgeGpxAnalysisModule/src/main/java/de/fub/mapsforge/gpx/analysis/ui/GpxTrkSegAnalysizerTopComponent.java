@@ -11,7 +11,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.logging.Logger;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.data.xy.XYSeries;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -87,7 +89,7 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
                             lastWaypoint.getLon(),
                             waypoint.getLat(),
                             waypoint.getLon());
-                    double timeDiff = (waypoint.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime()) / 1000;
+                    double timeDiff = (waypoint.getTimestamp().getTime() - lastWaypoint.getTimestamp().getTime()) / 1000d;
 
                     if (timeDiff > 0) {
                         velocity = (distance / timeDiff);
@@ -97,7 +99,8 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
                         velocityDataset.addOrUpdate(totalDistance, velocity * 3.6);
                         if (lastVelocity != null) {
                             acceleration = (velocity - lastVelocity) / timeDiff;
-                            accelerationDataset.addOrUpdate(totalDistance, acceleration * 3.6);
+                            Logger.getLogger(getClass().getName()).info(MessageFormat.format("acceleration: {0}", acceleration));
+                            accelerationDataset.addOrUpdate(totalDistance, acceleration);
                         } else {
                             accelerationDataset.addOrUpdate(totalDistance, 0);
                         }

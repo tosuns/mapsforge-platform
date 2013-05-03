@@ -4,10 +4,13 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
+import de.fub.mapsforge.project.detector.DetectorMode;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
+import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.Profile;
 import java.awt.Image;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.JToolBar;
 import org.jfree.chart.title.TextTitle;
@@ -321,9 +325,11 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
         private final Detector detector;
         private List<AttributeWrapper> rankedAttributeList = new ArrayList<AttributeWrapper>();
         private List<AttributeWrapper> selectedAttributeList = new ArrayList<AttributeWrapper>();
+        private final Profile currentProfile;
 
         private AttributeSelectionTask(Detector detector) {
             this.detector = detector;
+            this.currentProfile = this.detector.getCurrentActiveProfile();
         }
 
         private AbstractInferenceModel getInferenceModel() {
@@ -352,6 +358,27 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
             trainingSet.setClassIndex(0);
             Map<String, List<TrackSegment>> dataset = detector.getTrainingsSet();
 
+            // check whether the current active profile is set to filter the trainings set
+            // if so, apply the current filters
+            if (this.currentProfile.getPreprocess().isActive()
+                    && (this.currentProfile.getPreprocess().getMode() == DetectorMode.TRAINING
+                    || this.currentProfile.getPreprocess().getMode() == DetectorMode.BOTH)) {
+                final ProgressHandle filterHandle = ProgressHandleFactory.createHandle("Applying Preprocessors...");
+                Set<Map.Entry<String, List<TrackSegment>>> entrySet = dataset.entrySet();
+                filterHandle.start(entrySet.size());
+                int index = 0;
+                try {
+                    for (Map.Entry<String, List<TrackSegment>> entry : entrySet) {
+                        List<TrackSegment> tracks = entry.getValue();
+                        // TODO could lead to an infinity loop or to a concurrent modification exception!
+                        dataset.put(entry.getKey(), applyPreProcessors(tracks));
+                        filterHandle.progress(index++);
+                    }
+                } finally {
+                    filterHandle.finish();
+                }
+            }
+
             for (Map.Entry<String, List<TrackSegment>> entry : dataset.entrySet()) {
                 for (TrackSegment trackSegment : entry.getValue()) {
                     Instance instance = getInstance(entry.getKey(), trackSegment);
@@ -361,6 +388,19 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
 
             assert trainingSet.numInstances() > 0 : "Training set is empty and has no instances"; //NO18N
             return trainingSet;
+        }
+
+        private List<TrackSegment> applyPreProcessors(List<TrackSegment> dataset) {
+            List<TrackSegment> gpsTracks = new ArrayList<TrackSegment>();
+            List<TrackSegment> tracks = dataset;
+            for (FilterProcess filterProcess : detector.getPreProcessorPipeline().getProcesses()) {
+                filterProcess.setInput(tracks);
+                filterProcess.run();
+                tracks = filterProcess.getResult();
+            }
+
+            gpsTracks.addAll(tracks);
+            return gpsTracks;
         }
 
         private void classEvaluation(Instances trainingSet) {

@@ -22,11 +22,14 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.actions.Presenter;
@@ -41,8 +44,9 @@ import org.openide.util.actions.Presenter;
 @ActionRegistration(
         lazy = false,
         displayName = "#CTL_SnapShotExporterAction")
+@ActionReference(path = "Toolbars/SnapShot", position = 6)
 @NbBundle.Messages("CTL_SnapShotExporterAction=Export")
-public class SnapShotExporterDelegateAction extends AbstractAction implements Presenter.Toolbar {
+public final class SnapShotExporterDelegateAction extends AbstractAction implements Presenter.Toolbar, LookupListener {
 
     @StaticResource
     private static final String EXPORT_ICON_PATH = "de/fub/mapsforge/snapshot/exportIcon.png";
@@ -51,9 +55,13 @@ public class SnapShotExporterDelegateAction extends AbstractAction implements Pr
     private HashMap<JCheckBoxMenuItem, ComponentSnapShotExporter> exporterMap = new HashMap<JCheckBoxMenuItem, ComponentSnapShotExporter>();
     private JButton button;
     private ButtonGroup buttonGroup = new ButtonGroup();
+    private Lookup.Result<Component> componentListener;
 
     public SnapShotExporterDelegateAction() {
         super();
+        componentListener = Utilities.actionsGlobalContext().lookupResult(Component.class);
+        componentListener.addLookupListener(SnapShotExporterDelegateAction.this);
+        resultChanged(new LookupEvent(componentListener));
     }
 
     @Override
@@ -120,15 +128,21 @@ public class SnapShotExporterDelegateAction extends AbstractAction implements Pr
 
     private Icon getIcon() {
         Image image = IconRegister.findRegisteredIcon("exportIcon.png");
-        if (image == null) {
-            return ImageUtilities.loadImageIcon(EXPORT_ICON_PATH, false);
-        } else {
-            return new ImageIcon(image);
-        }
+        return image == null
+                ? ImageUtilities.loadImageIcon(EXPORT_ICON_PATH, false)
+                : new ImageIcon(image);
     }
 
     @Override
     public Component getToolbarPresenter() {
         return getPresenter();
+    }
+
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        if (button != null) {
+            boolean active = !componentListener.allInstances().isEmpty();
+            button.setEnabled(active);
+        }
     }
 }

@@ -95,7 +95,7 @@ public class DetectorDescriptorTest {
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/features/AvgTransportationDistanceFeatureProcess.xml");
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/features/MaxAccelerationFeatureProcess.xml");
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/features/MaxPrecisionFeatureProcess.xml");
-        marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/features/MaxSpeedFeatureProcess.xml");
+        marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/features/MaxVelocityFeatureProcess.xml");
         marshall(ProcessDescriptor.class, "/de/fub/mapsforge/project/detector/model/inference/features/MinPrecisionFeatureProcess.xml");
 
         // filters

@@ -14,6 +14,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -57,7 +58,8 @@ public class AttributeSelectionBarChart extends javax.swing.JPanel {
 
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
         plot.setBackgroundPaint(Color.white);
-        plot.getRangeAxis().setRange(0, 100);
+        plot.getRangeAxis().setAutoRange(true);
+
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
@@ -65,6 +67,9 @@ public class AttributeSelectionBarChart extends javax.swing.JPanel {
         barRenderer.setBasePaint(Color.BLUE);
         barRenderer.setAutoPopulateSeriesFillPaint(false);
         barRenderer.setAutoPopulateSeriesPaint(false);
+        barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        barRenderer.setBaseItemLabelsVisible(true);
+
         plot.setRenderer(barRenderer);
         chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);

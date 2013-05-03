@@ -35,11 +35,11 @@
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2/</url>
         </repository>
-        <repository>
+        <!--        <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
             <url>http://yakumo:8081/artifactory/repo/</url>
-        </repository>   
+        </repository>-->
     </repositories>
 
     <build>
@@ -54,6 +54,7 @@
                         <brandingToken>${brandingToken}</brandingToken>
                         <cluster>${brandingToken}</cluster>
                         <useOSGiDependencies>true</useOSGiDependencies>
+                        <etcConfFile>app.conf</etcConfFile>
                         <!--<additionalArguments>-J-Xmx512m</additionalArguments>-->
                     </configuration>
                 </plugin>
@@ -96,17 +97,16 @@
         <module>SettingsModule</module>
         <module>MapsForgeProjectDetectorModule</module>
         <module>JFreeChartLib</module>
-    <module>MapForgeProjectPlugInsModule</module>
-    <module>ITextLib</module>
-    <module>ApacheBatikLib</module>
-    <module>MapsForgeSnapShotModule</module>
-    <module>MapsforgeGpxAnalysisModule</module>
-  </modules>
+        <module>MapForgeProjectPlugInsModule</module>
+        <module>ITextLib</module>
+        <module>ApacheBatikLib</module>
+        <module>MapsForgeSnapShotModule</module>
+        <module>MapsforgeGpxAnalysisModule</module>
+    </modules>
 
     <properties>
         <netbeans.version>RELEASE73</netbeans.version>
         <brandingToken>mapsforgeplatform</brandingToken>
-        <netbeans.run.params.ide/>
-        <netbeans.run.params>${netbeans.run.params.ide} -J-Xmx512m</netbeans.run.params>
+        <netbeans.run.params.ide></netbeans.run.params.ide>
     </properties>
 </project>

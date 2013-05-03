@@ -13,16 +13,10 @@ import de.fub.gpxmodule.xml.Wpt;
 import geofiletypeapi.GeoDataObject;
 import java.awt.geom.Rectangle2D;
 import java.beans.IntrospectionException;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -38,7 +32,11 @@ import org.netbeans.spi.xml.cookies.ValidateXMLSupport;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataNode;
 import org.openide.loaders.DataObject;
@@ -47,7 +45,7 @@ import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Children;
 import org.openide.nodes.CookieSet;
 import org.openide.nodes.Node;
-import org.openide.text.DataEditorSupport;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -131,15 +129,15 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
 
     private static final long serialVersionUID = 1L;
     private transient Lookup lookup = null;
-    protected transient final Set<ChangeListener> changeListenerSet = Collections.synchronizedSet(new HashSet<ChangeListener>());
+    private transient ChangeSupport cs = new ChangeSupport(this);
     private Gpx gpx = null;
-    private transient final PropertyChangeListener pcl = new PropertyChangeListenerImpl();
+    private transient final FileChangeListener pcl = new FileChangeListenerImpl();
     private GpxVersion gpxVersion = GpxVersion.GPX_1_1;
 
     public GPXDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/gpx+xml", true);
-        addPropertyChangeListener(pcl);
+        pf.addFileChangeListener(FileUtil.weakFileChangeListener(pcl, pf));
     }
 
     @Override
@@ -258,22 +256,17 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
 
     @Override
     public void addChangeListener(ChangeListener listener) {
-        this.changeListenerSet.add(listener);
+        this.cs.addChangeListener(listener);
     }
 
     @Override
     public void removeChangeListener(ChangeListener listener) {
-        this.changeListenerSet.remove(listener);
+        this.cs.removeChangeListener(listener);
     }
 
     @Override
     public void modelChanged(Object uiComponent, Gpx model) {
-        ChangeEvent changeEvent = new ChangeEvent(uiComponent);
-        for (ChangeListener changeListener : changeListenerSet) {
-            if (uiComponent != changeListener) {
-                changeListener.stateChanged(changeEvent);
-            }
-        }
+        cs.fireChange();
     }
 
     @Override
@@ -302,22 +295,20 @@ public class GPXDataObject extends GeoDataObject implements GPXProvider {
         return boundingBox;
     }
 
-    private class PropertyChangeListenerImpl implements PropertyChangeListener {
+    private class FileChangeListenerImpl extends FileChangeAdapter {
 
-        public PropertyChangeListenerImpl() {
+        public FileChangeListenerImpl() {
         }
 
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (DataObject.PROP_MODIFIED.equals(evt.getPropertyName())) {
-                try {
-                    DataEditorSupport editorSupport = getLookup().lookup(DataEditorSupport.class);
-                    updateGpx(editorSupport.getInputStream());
-                    modelChanged(GPXDataObject.this, gpx);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        public void fileChanged(FileEvent fe) {
+            try {
+                updateGpx();
+                cs.fireChange();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
+
         }
     }
 

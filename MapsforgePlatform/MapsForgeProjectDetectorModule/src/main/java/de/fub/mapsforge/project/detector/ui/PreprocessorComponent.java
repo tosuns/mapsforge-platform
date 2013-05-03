@@ -12,6 +12,7 @@ import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.utilsmodule.Collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,7 +34,9 @@ public class PreprocessorComponent extends javax.swing.JPanel implements ChangeL
         initComponents();
         selectionComponent1.getAllItemListTitle().setText("Registered Preprocessors"); //NO18N
         selectionComponent1.getSelectedItemListTitle().setText("Selected Preprocessors"); //NO18N
-        selectionComponent1.getAllItems().addAll(Lookup.getDefault().lookupResult(FilterProcess.class).allInstances());
+        ArrayList<FilterProcess> arrayList = new ArrayList<FilterProcess>(Lookup.getDefault().lookupResult(FilterProcess.class).allInstances());
+        Collections.sort(arrayList);
+        selectionComponent1.getAllItems().addAll(arrayList);
     }
 
     public PreprocessorComponent(Lookup lookup) {
@@ -76,7 +79,7 @@ public class PreprocessorComponent extends javax.swing.JPanel implements ChangeL
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public synchronized void stateChanged(ChangeEvent e) {
 
         List<ProcessDescriptor> preprocessorList = detector.getDetectorDescriptor().getPreprocessors().getPreprocessorList();
 
