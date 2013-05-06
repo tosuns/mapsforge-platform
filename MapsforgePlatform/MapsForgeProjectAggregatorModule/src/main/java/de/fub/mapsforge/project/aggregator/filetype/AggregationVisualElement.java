@@ -77,7 +77,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 @MultiViewElement.Registration(
         displayName = "#LBL_AggregationBuilder_VISUAL",
         iconBase = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png",
-        mimeType = "text/aggregationbuilder+xml",
+        mimeType = {"text/aggregationbuilder+xml", "application/map"},
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "AggregationVisualElement",
         position = 1000)

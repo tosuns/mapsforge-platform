@@ -22,6 +22,7 @@ import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -234,5 +235,10 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
     public boolean cancel() {
         canceled.set(true);
         return canceled.get();
+    }
+
+    @Override
+    public Component getVisualRepresentation() {
+        return null;
     }
 }

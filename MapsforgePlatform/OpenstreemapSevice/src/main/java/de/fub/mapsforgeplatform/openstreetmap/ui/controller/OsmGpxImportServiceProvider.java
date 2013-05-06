@@ -199,7 +199,7 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
 
             try {
                 openstreetMapService = new OpenstreetMapService();
-                de.fub.mapsforgeplatform.xml.gpx.Gpx gpx = openstreetMapService.gpsPoints(
+                de.fub.mapsforgeplatform.xml.gpx.Gpx gpx = openstreetMapService.getGpsTracks(
                         de.fub.mapsforgeplatform.xml.gpx.Gpx.class,
                         String.valueOf(boundingBox.getLeftLongitude()),
                         String.valueOf(boundingBox.getBottomLatitude()),

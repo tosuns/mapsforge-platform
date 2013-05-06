@@ -39,11 +39,17 @@ public class OpenstreetMapService {
      * <LI>output [OPTIONAL, DEFAULT VALUE: "xml"]
      * @return response object (instance of responseType class)
      */
-    public <T> T gpsPoints(Class<T> responseType, String leftLong, String bottomLat, String rightLong, String topLat, String page) throws com.sun.jersey.api.client.UniformInterfaceException {
+    public <T> T getGpsTracks(Class<T> responseType, String leftLong, String bottomLat, String rightLong, String topLat, String page) throws com.sun.jersey.api.client.UniformInterfaceException {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
         qParams.add("bbox", MessageFormat.format("{0},{1},{2},{3}", leftLong, bottomLat, rightLong, topLat));
         qParams.add("page", page);
         return webResource.path("trackpoints").queryParams(qParams).accept(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T getOSMMap(Class<T> responseType, String leftLong, String bottomLat, String rightLong, String topLat) {
+        javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
+        qParams.add("bbox", MessageFormat.format("{0},{1},{2},{3}", leftLong, bottomLat, rightLong, topLat));
+        return webResource.path("map").queryParams(qParams).accept(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     public void close() {

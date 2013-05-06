@@ -15,6 +15,7 @@ import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
+import java.awt.Component;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +136,7 @@ public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContain
 
         if (getResult() != null) {
             // create road network statistics
-            section = new StatisticSection("Road Network Statistics", "Displays statistical data of the generated road network");
+            section = new StatisticSection("Road Network Statistics", "Displays statistical data of the generated road network"); // NO18N
             statisticData.add(section);
             Map<String, Double> data = Statistics.getData(getResult());
             for (Entry<String, Double> entry : data.entrySet()) {
@@ -149,5 +150,10 @@ public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContain
     public boolean cancel() {
         canceled.set(true);
         return canceled.get();
+    }
+
+    @Override
+    public Component getVisualRepresentation() {
+        return null;
     }
 }

@@ -21,6 +21,7 @@ import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
+import java.awt.Component;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,5 +205,10 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
     public boolean cancel() {
         canceled.set(true);
         return canceled.get();
+    }
+
+    @Override
+    public Component getVisualRepresentation() {
+        return null;
     }
 }

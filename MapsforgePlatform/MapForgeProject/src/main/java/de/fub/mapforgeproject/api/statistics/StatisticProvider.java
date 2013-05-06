@@ -4,6 +4,7 @@
  */
 package de.fub.mapforgeproject.api.statistics;
 
+import java.awt.Component;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,18 @@ import java.util.List;
  */
 public interface StatisticProvider {
 
+    /**
+     * The name of this statistic provider.
+     *
+     * @return String the name, null not permitted.
+     */
     public String getName();
 
+    /**
+     * A description for this statistic provider.
+     *
+     * @return String the description of this provider, null not permitted.
+     */
     public String getDescription();
 
     /**
@@ -30,6 +41,14 @@ public interface StatisticProvider {
      * data is available and should provide a hint how to solve the problem.
      */
     public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException;
+
+    /**
+     * Returns a visual representation. The provider itself is responsible to
+     * update/refresh the visual representation.
+     *
+     * @return a Component if this Provider support it, otherwise null.
+     */
+    public Component getVisualRepresentation();
 
     public static class StatisticSection {
 

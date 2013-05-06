@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.plugins.tasks;
+package de.fub.mapsforge.plugins.tasks.map;
 
 import de.fub.mapsforge.project.MapsForgeAggregatorHelper;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
