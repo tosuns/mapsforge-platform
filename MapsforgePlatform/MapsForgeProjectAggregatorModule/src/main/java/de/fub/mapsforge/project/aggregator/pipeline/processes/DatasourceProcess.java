@@ -16,6 +16,7 @@ import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProces
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
@@ -174,5 +175,10 @@ public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<
     public boolean cancel() {
         canceled.set(true);
         return canceled.get();
+    }
+
+    @Override
+    public Component getVisualRepresentation() {
+        return null;
     }
 }

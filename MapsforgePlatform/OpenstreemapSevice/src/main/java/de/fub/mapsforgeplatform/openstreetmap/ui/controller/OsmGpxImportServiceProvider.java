@@ -39,12 +39,12 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = GPXImportService.class)
 public class OsmGpxImportServiceProvider implements GPXImportService, TaskListener {
 
-    private FileObject destFolder;
     private static final Logger LOG = Logger.getLogger(OsmGpxImportServiceProvider.class.getName());
+    private FileObject destFolder;
     private final Object MUTEX = new Object();
-    private MapViewerBoundingBoxProvider view = new MapViewerBoundingBoxProvider();
+    private final MapViewerBoundingBoxProvider view = new MapViewerBoundingBoxProvider();
+    private final RequestProcessor requestProcessor = new RequestProcessor(getClass().getName(), Runtime.getRuntime().availableProcessors() * 4);
     private int workUnits;
-    private RequestProcessor requestProcessor = new RequestProcessor(getClass().getName(), Runtime.getRuntime().availableProcessors() * 4);
     private ProgressHandle handler;
     private int workUnit;
     private Date timestamp = null;
@@ -199,7 +199,7 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
 
             try {
                 openstreetMapService = new OpenstreetMapService();
-                de.fub.mapsforgeplatform.xml.gpx.Gpx gpx = openstreetMapService.gpsPoints(
+                de.fub.mapsforgeplatform.xml.gpx.Gpx gpx = openstreetMapService.getGpsTracks(
                         de.fub.mapsforgeplatform.xml.gpx.Gpx.class,
                         String.valueOf(boundingBox.getLeftLongitude()),
                         String.valueOf(boundingBox.getBottomLatitude()),

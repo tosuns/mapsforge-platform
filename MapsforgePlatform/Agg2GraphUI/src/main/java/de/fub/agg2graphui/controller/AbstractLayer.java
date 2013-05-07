@@ -143,7 +143,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     /**
      * @return the itemList
      */
-    protected List<T> getItemList() {
+    public List<T> getItemList() {
         synchronized (ITEM_LIST_MUTEX) {
             return new ArrayList<T>(itemList);
         }

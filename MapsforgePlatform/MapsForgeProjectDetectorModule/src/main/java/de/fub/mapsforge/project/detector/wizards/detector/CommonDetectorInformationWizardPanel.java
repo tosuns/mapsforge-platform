@@ -6,17 +6,15 @@ package de.fub.mapsforge.project.detector.wizards.detector;
 
 import de.fub.mapsforge.project.detector.actions.NewDetectorWizardAction;
 import java.io.File;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import org.openide.WizardDescriptor;
 import org.openide.loaders.DataObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.WeakListeners;
 
-public class CommonDetectorInformationWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, DocumentListener {
+public class CommonDetectorInformationWizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -37,8 +35,7 @@ public class CommonDetectorInformationWizardPanel implements WizardDescriptor.Pa
         if (component == null) {
 
             component = new CommonDetectorInformationVisualPanel();
-            Document document = component.getDetectorName().getDocument();
-            document.addDocumentListener(WeakListeners.create(DocumentListener.class, CommonDetectorInformationWizardPanel.this, document));
+            component.addChangeListener(WeakListeners.change(CommonDetectorInformationWizardPanel.this, component));
         }
         return component;
     }
@@ -59,7 +56,7 @@ public class CommonDetectorInformationWizardPanel implements WizardDescriptor.Pa
             String filelocation = getComponent().getFilelocation().getText();
             if (filelocation != null) {
                 File file = new File(filelocation);
-                if (file.exists()) {
+                if (!file.exists()) {
                     return true;
                 }
             }
@@ -103,17 +100,7 @@ public class CommonDetectorInformationWizardPanel implements WizardDescriptor.Pa
     }
 
     @Override
-    public void insertUpdate(DocumentEvent e) {
-        cs.fireChange();
-    }
-
-    @Override
-    public void removeUpdate(DocumentEvent e) {
-        cs.fireChange();
-    }
-
-    @Override
-    public void changedUpdate(DocumentEvent e) {
+    public void stateChanged(ChangeEvent e) {
         cs.fireChange();
     }
 }

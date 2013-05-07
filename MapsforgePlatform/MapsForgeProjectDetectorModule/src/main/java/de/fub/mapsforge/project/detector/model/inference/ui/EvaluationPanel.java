@@ -362,7 +362,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
             property = new PropertySupport.ReadOnly<Double>("recall", Double.class, NbBundle.getMessage(EvaluationPanel.class, "EvaluationPanel.CLT_Recall_Text"), "The recall value that this classifier obtained for the given label.") {
                 @Override
                 public Double getValue() throws IllegalAccessException, InvocationTargetException {
-                    double recall = evaluation.recall(classIndex);
+                    double recall = evaluation.recall(classIndex) * 100;
                     String formatedString = MessageFormat.format("{0, number, 000.00}", recall).replaceAll(",", "\\.");
                     Double result = Double.valueOf(formatedString);
                     return result;

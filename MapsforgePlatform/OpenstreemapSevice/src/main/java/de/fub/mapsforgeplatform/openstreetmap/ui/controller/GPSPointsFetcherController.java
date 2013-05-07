@@ -164,7 +164,7 @@ public class GPSPointsFetcherController {
             OutputStream outputStream = null;
             try {
                 openstreetMapService = new OpenstreetMapService();
-                Gpx gpx = openstreetMapService.gpsPoints(Gpx.class, leftLongitude, bottomLatitude, rightLongitude, topLatitude, page);
+                Gpx gpx = openstreetMapService.getGpsTracks(Gpx.class, leftLongitude, bottomLatitude, rightLongitude, topLatitude, page);
                 if (gpx != null && gpx.getTrk() != null && !gpx.getTrk().isEmpty()) {
                     String bboxFolderName = MessageFormat.format("{0}_{1}_{2}_{3}", leftLongitude, bottomLatitude, rightLongitude, topLatitude);
 

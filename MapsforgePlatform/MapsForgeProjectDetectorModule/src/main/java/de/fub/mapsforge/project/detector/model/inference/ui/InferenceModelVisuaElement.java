@@ -166,7 +166,16 @@ public class InferenceModelVisuaElement extends javax.swing.JPanel implements Mu
 
     @Override
     public Action[] getActions() {
-        return new Action[]{};
+        Action[] retValue;
+        // the multiviewObserver was passed to the element in setMultiViewCallback() method.
+        if (callback != null) {
+            retValue = callback.createDefaultActions();
+            // add you own custom actions here..
+        } else {
+            // fallback..
+            retValue = new Action[0];
+        }
+        return retValue;
     }
 
     @Override

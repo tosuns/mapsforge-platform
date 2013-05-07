@@ -9,9 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.loaders.DataObject;
+import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -22,6 +24,7 @@ public final class CommonDetectorInformationVisualPanel extends JPanel implement
 
     private static final long serialVersionUID = 1L;
     private DataObject dataObject;
+    private ChangeSupport cs = new ChangeSupport(this);
 
     /**
      * Creates new form CommonDetectorInformationVisualPanel
@@ -208,6 +211,7 @@ public final class CommonDetectorInformationVisualPanel extends JPanel implement
                 filelocation.setText(MessageFormat.format("{0}/{1}", dataObject.getPrimaryFile().getPath(), detector));
             }
         }
+        cs.fireChange();
     }
 
     public JTextField getFilelocation() {
@@ -217,5 +221,13 @@ public final class CommonDetectorInformationVisualPanel extends JPanel implement
     void setFolder(DataObject dataObject) {
         this.dataObject = dataObject;
         updateLocation();
+    }
+
+    public void addChangeListener(ChangeListener listener) {
+        cs.addChangeListener(listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        cs.removeChangeListener(listener);
     }
 }

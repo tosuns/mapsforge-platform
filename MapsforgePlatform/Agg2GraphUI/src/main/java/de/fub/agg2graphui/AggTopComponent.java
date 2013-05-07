@@ -33,8 +33,6 @@ public final class AggTopComponent extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private transient MapViewListener mouseListener = new MapViewListener(this);
-    // explorerManager for nodes that represent the current
-    // state of the dataflow step
 
     public AggTopComponent() {
         initComponents();
@@ -53,13 +51,14 @@ public final class AggTopComponent extends JPanel {
     public void showArea(DoubleRect area) {
 //        OSMMapRect mapRect = new OSMMapRect(area);
 //        mapViewer.addMapRectangle(mapRect);
-//        mapViewer.setDisplayToFitMapRectangle();
+//        setDisplayToFitMapRectangle();
 //        mapViewer.removeMapRectangle(mapRect);
         mapViewer.addMapMarker(new MapMarkerDot(area.getX(), area.getY()));
         mapViewer.addMapMarker(new MapMarkerDot(area.getWidth(), area.getHeight()));
-        mapViewer.setDisplayToFitMapMarkers();
+        setDisplayToFitMapMarkers();
         removeAllMarkers();
         updateZoomLevel();
+        updateBoundingBox();
     }
 
     public void setDisplayToFitMapMarkers() {
@@ -155,6 +154,16 @@ public final class AggTopComponent extends JPanel {
             mapViewer.setZoom(tileSource.getMaxZoom());
         }
         mapViewer.setTileSource(tileSource);
+    }
+
+    public void setStatusBarVisible(boolean visible) {
+        if (this.statusbar.isVisible() != visible) {
+            this.statusbar.setVisible(visible);
+        }
+    }
+
+    public boolean isStatusBarVisible() {
+        return this.statusbar.isVisible();
     }
 
     /**

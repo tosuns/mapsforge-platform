@@ -107,12 +107,15 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
         private ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
         public TaskProcessNode(Task taskProcess) {
-            super(Children.LEAF, Lookups.fixed(taskProcess));
+            this(Children.LEAF, taskProcess);
+        }
+
+        public TaskProcessNode(Children children, Task taskProcess) {
+            super(children, Lookups.fixed(taskProcess));
             this.taskProcess = taskProcess;
             this.taskProcess.addPropertyChangeListener(WeakListeners.propertyChange(TaskProcessNode.this, this.taskProcess));
             setDisplayName(taskProcess.getName());
             setShortDescription(taskProcess.getDescription());
-
         }
 
         @Override

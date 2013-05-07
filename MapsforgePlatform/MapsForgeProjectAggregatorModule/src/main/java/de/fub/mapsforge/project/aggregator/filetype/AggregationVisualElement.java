@@ -13,14 +13,15 @@ import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.ui.component.StatisticsPanel;
 import de.fub.mapsforge.project.utils.LayerTableCellRender;
 import de.fub.utilsmodule.icons.IconRegister;
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import geofiletypeapi.GeoUtil;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
@@ -77,7 +78,7 @@ import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 @MultiViewElement.Registration(
         displayName = "#LBL_AggregationBuilder_VISUAL",
         iconBase = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png",
-        mimeType = "text/aggregationbuilder+xml",
+        mimeType = {"text/aggregationbuilder+xml", "application/map"},
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "AggregationVisualElement",
         position = 1000)
@@ -93,16 +94,18 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private static final String STATISTICS_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/statisticsIcon.png";
     @StaticResource
     private static final String FIT_MAP_TO_SIZE_BUTTON_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/zoomToMap.png";
+    @StaticResource
+    private static final String STATUS_BAR_VISIBLE_ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/statusbarIcon.png";
     private final JToolBar toolbar = new JToolBar();
     private final ExplorerManager explorerManager = new ExplorerManager();
     private transient final RequestProcessor requestProcessor = new RequestProcessor();
-    private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
+//    private transient final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
     private transient final ViewUpdater viewUpdater = new ViewUpdater();
     private transient final LayerNodeFactory nodeFactory = new LayerNodeFactory();
     private transient final Lookup lookup;
     private transient MultiViewElementCallback callback;
     private transient Aggregator aggregator;
-    private transient Image defaulImage;
+//    private transient Image defaulImage;
     private JToggleButton layerViewButton;
     private JButton layersButton;
     private JButton processButton;
@@ -111,6 +114,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private JPopupMenu layersMenu;
     private JPopupMenu processMenu;
     private JComboBox<TileSource> tileSourceComboBox;
+    private JToggleButton statusBarButton;
 
     /**
      * Creates new form AggregationVisualElement
@@ -125,7 +129,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());
         explorerManager.setRootContext(new AbstractNode(Children.create(nodeFactory, true)));
         aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationVisualElement.this, aggregator));
-        modelSynchronizerClient = aggregator.create(viewUpdater);
+        aggregator.create(viewUpdater);
         initGuiComponents();
     }
 
@@ -189,7 +193,9 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         "CLT_Show_Hide_Layer_View=Shows/Hides Layer View",
         "CLT_Statistics_Button_Tooltip=Displays all available Statistics of this Aggregator.",
         "CLT_Statistics_Window=Statistics",
-        "CLT_Fit_Map_To_Size_Tooltip=Zoom the map to the size of the viewport."})
+        "CLT_Fit_Map_To_Size_Tooltip=Zoom the map to the size of the viewport.",
+        "CLT_StatusBar_Button_Tooltip=Status bar enable/disable"
+    })
     private void setUpToolbar() {
 
         // set up tilesource combobox
@@ -319,6 +325,22 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             processMenu.removeAll();
             initProcessPopupMenu();
         }
+
+        if (this.statusBarButton == null) {
+            statusBarButton = new JToggleButton(ImageUtilities.loadImageIcon(STATUS_BAR_VISIBLE_ICON_PATH, true));
+            statusBarButton.setToolTipText(Bundle.CLT_StatusBar_Button_Tooltip());
+            statusBarButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    aggComponent.setStatusBarVisible(statusBarButton.isSelected());
+                }
+            });
+            // default setting: status bar is visible
+            statusBarButton.doClick();
+            toolbar.addSeparator();
+            toolbar.add(statusBarButton);
+            toolbar.addSeparator();
+        }
     }
 
     private void updateLayerView() {
@@ -378,7 +400,16 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public Action[] getActions() {
-        return new Action[0];
+        Action[] retValue;
+        // the multiviewObserver was passed to the element in setMultiViewCallback() method.
+        if (callback != null) {
+            retValue = callback.createDefaultActions();
+            // add you own custom actions here..
+        } else {
+            // fallback..
+            retValue = new Action[0];
+        }
+        return retValue;
     }
 
     @Override
@@ -398,16 +429,25 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     public void componentShowing() {
         List<Source> sourceList = aggregator.getSourceList();
         if (sourceList != null) {
+            Area totalBoundingBox = new Area();
+
             for (Source source : sourceList) {
                 String url = source.getUrl();
                 if (url != null) {
                     File file = new File(url);
                     Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
                     if (boundingBox != null) {
-                        aggComponent.showArea(new DoubleRect(boundingBox.getX(), boundingBox.getY(), boundingBox.getWidth(), boundingBox.getHeight()));
+                        totalBoundingBox.add(new Area(boundingBox));
                     }
                 }
             }
+            Rectangle2D bounds = totalBoundingBox.getBounds2D();
+            aggComponent.showArea(
+                    new DoubleRect(
+                    bounds.getX(),
+                    bounds.getY(),
+                    bounds.getWidth(),
+                    bounds.getHeight()));
         }
     }
 
