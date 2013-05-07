@@ -17,6 +17,7 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -28,16 +29,28 @@ public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implem
     private ArrayList<Aggregator> aggregatorList = new ArrayList<Aggregator>();
 
     public MapRendererChildNodeFactory(MapRenderer mapRenderer) {
+        assert mapRenderer != null;
         this.mapRenderer = mapRenderer;
+        init();
+
+    }
+
+    private void init() {
+        // add change listener to aggregator list of mapRenderer process
         this.mapRenderer.getAggregatorList().addChangeListener(
                 WeakListeners.change(
                 MapRendererChildNodeFactory.this,
                 this.mapRenderer.getAggregatorList()));
+        // add process listener to mapRenderer process
         this.mapRenderer.addProcessListener(
                 WeakListeners.create(
                 ProcessPipeline.ProcessListener.class,
                 MapRendererChildNodeFactory.this,
                 this.mapRenderer));
+        // if the list contains aggregators than add them to the aggregatorList
+        if (!this.mapRenderer.getAggregatorList().isEmpty()) {
+            aggregatorList.addAll(mapRenderer.getAggregatorList());
+        }
     }
 
     @Override
@@ -48,7 +61,7 @@ public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implem
 
     @Override
     protected Node createNodeForKey(Aggregator aggregator) {
-        return new MapRendererSubNode(aggregator);
+        return new MapRendererSubNode(mapRenderer, aggregator);
     }
 
     @Override
@@ -69,7 +82,9 @@ public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implem
 
     @Override
     public void finished() {
+        aggregatorList.clear();
         aggregatorList.addAll(mapRenderer.getAggregatorList());
+        refresh(true);
     }
 
     @Override
@@ -84,8 +99,8 @@ public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implem
 
         private final Aggregator aggregator;
 
-        public MapRendererSubNode(Aggregator aggregator) {
-            super(aggregator.getDataObject().getNodeDelegate());
+        public MapRendererSubNode(MapRenderer mapRenderer, Aggregator aggregator) {
+            super(aggregator.getDataObject().getNodeDelegate(), Children.LEAF, Lookups.fixed(mapRenderer.getProcessParentDetector(), aggregator, aggregator.getDataObject()));
             this.aggregator = aggregator;
         }
 

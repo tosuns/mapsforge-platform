@@ -335,9 +335,9 @@ MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wiza
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/xml/mapsforge.xml -text
 MapsforgePlatform/MapForgeProject/src/test/java/de/fub/mapforgeproject/xml/MapsForgeXmlTest.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/pom.xml -text
-MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/AggregatorRoadNetworkStatisticPair.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/EvaluateMapAction.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/EvaluateMapsAction.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/EvalutationItem.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/MapComparationTopComponent.form -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/MapComparationTopComponent.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/OSMMapEvaluator.java -text
@@ -463,6 +463,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/map
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon32.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layersIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/layerview.png -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/statusbarIcon.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/filetype/zoomToMap.png -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/Bundle.properties -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/resources/de/fub/mapsforge/project/aggregator/graph/layoutIcon.png -text

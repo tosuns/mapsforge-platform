@@ -158,7 +158,16 @@ public class GpxAnalysisVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public Action[] getActions() {
-        return new Action[0];
+        Action[] retValue;
+        // the multiviewObserver was passed to the element in setMultiViewCallback() method.
+        if (callback != null) {
+            retValue = callback.createDefaultActions();
+            // add you own custom actions here..
+        } else {
+            // fallback..
+            retValue = new Action[0];
+        }
+        return retValue;
     }
 
     @Override

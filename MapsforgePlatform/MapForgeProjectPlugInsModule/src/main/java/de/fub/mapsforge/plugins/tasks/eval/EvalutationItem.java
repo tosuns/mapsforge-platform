@@ -11,12 +11,12 @@ import de.fub.mapsforge.project.models.Aggregator;
  *
  * @author Serdar
  */
-public class AggregatorRoadNetworkStatisticPair {
+public class EvalutationItem {
 
     private final Aggregator aggregator;
     private final RoadNetworkProcess roadNetworkProcess;
 
-    public AggregatorRoadNetworkStatisticPair(Aggregator aggregator, RoadNetworkProcess roadNetworkProcess) {
+    public EvalutationItem(Aggregator aggregator, RoadNetworkProcess roadNetworkProcess) {
         this.aggregator = aggregator;
         this.roadNetworkProcess = roadNetworkProcess;
     }

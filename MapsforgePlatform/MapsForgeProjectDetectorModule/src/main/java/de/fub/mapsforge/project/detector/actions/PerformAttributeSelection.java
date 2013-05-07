@@ -13,6 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.SwingUtilities;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -67,7 +68,13 @@ public final class PerformAttributeSelection extends AbstractAction implements C
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (detector != null) {
-            setEnabled(detector.getDetectorState() != ProcessState.RUNNING);
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    setEnabled(detector.getDetectorState() != ProcessState.RUNNING);
+                }
+            });
+
         }
     }
 

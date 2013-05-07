@@ -68,7 +68,7 @@ public class OsmPanel extends JMapViewer {
      * @author Johannes Mitlmeier
      *
      */
-    public class OSMMapRect implements MapRectangle {
+    public static class OSMMapRect implements MapRectangle {
 
         public boolean debug = false;
         private Coordinate topLeft;

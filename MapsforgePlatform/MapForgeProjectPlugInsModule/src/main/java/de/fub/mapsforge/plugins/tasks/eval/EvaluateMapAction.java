@@ -23,7 +23,7 @@ import org.openide.util.RequestProcessor;
 @ActionID(
         category = "Detector",
         id = "de.fub.mapsforge.plugins.tasks.eval.EvaluateMapAction")
-@ActionRegistration(lazy = true,
+@ActionRegistration(lazy = false,
         displayName = "#CTL_MapEvaluateAction")
 //@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 255)
 @ActionReference(path = "Projects/Mapsforge/Detector/Tasks/MapRenderer/Actions", position = 2000)
@@ -31,30 +31,37 @@ import org.openide.util.RequestProcessor;
 public final class EvaluateMapAction extends AbstractAction implements ContextAwareAction {
 
     private static final long serialVersionUID = 1L;
-    private final Aggregator aggregator;
+    private Aggregator aggregator;
     private RoadNetwork roadNetwork;
 
+    public EvaluateMapAction() {
+        super(Bundle.CTL_MapEvaluateAction());
+    }
+
     public EvaluateMapAction(Lookup actionContext) {
+        this();
         aggregator = actionContext.lookup(Aggregator.class);
         validate();
     }
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                setEnabled(false);
-                try {
-                    if (roadNetwork != null) {
-                        OSMMapEvaluator evaluator = new OSMMapEvaluator(roadNetwork);
-                        evaluator.evaluate();
+        if (aggregator != null) {
+            RequestProcessor.getDefault().post(new Runnable() {
+                @Override
+                public void run() {
+                    setEnabled(false);
+                    try {
+                        if (roadNetwork != null) {
+                            OSMMapEvaluator evaluator = new OSMMapEvaluator(roadNetwork);
+                            evaluator.evaluate();
+                        }
+                    } finally {
+                        setEnabled(true);
                     }
-                } finally {
-                    setEnabled(true);
                 }
-            }
-        });
+            });
+        }
     }
 
     private RoadNetwork getRoadNetwork() {
@@ -79,7 +86,7 @@ public final class EvaluateMapAction extends AbstractAction implements ContextAw
         if (aggregator != null) {
             roadNetwork = getRoadNetwork();
             if (roadNetwork != null) {
-                setEnabled(enabled);
+                setEnabled(true);
             }
         }
     }

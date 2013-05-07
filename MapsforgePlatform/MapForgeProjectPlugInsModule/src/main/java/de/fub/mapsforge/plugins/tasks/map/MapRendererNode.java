@@ -8,7 +8,6 @@ import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Properties;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.util.List;
-import java.util.concurrent.Callable;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

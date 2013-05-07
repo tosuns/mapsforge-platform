@@ -32,7 +32,6 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.loaders.DataObject;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
@@ -128,7 +127,16 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
 
     @Override
     public Action[] getActions() {
-        return new Action[]{new LayoutAction(null, ImageUtilities.loadImageIcon(LAYOUT_BUTTON_ICON_PATH, true))};
+        Action[] retValue;
+        // the multiviewObserver was passed to the element in setMultiViewCallback() method.
+        if (callback != null) {
+            retValue = callback.createDefaultActions();
+            // add you own custom actions here..
+        } else {
+            // fallback..
+            retValue = new Action[0];
+        }
+        return retValue;
     }
 
     @Override

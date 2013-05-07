@@ -8,7 +8,6 @@ import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess;
 import de.fub.mapsforge.project.models.Aggregator;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,17 +23,19 @@ import org.openide.util.Exceptions;
 public class SimpleMapsEvaluator {
 
     private final Collection<? extends Aggregator> aggregatorList;
+    private final String evaluatorName;
 
-    public SimpleMapsEvaluator(Collection<? extends Aggregator> instanceList) {
+    public SimpleMapsEvaluator(String evaluatorName, Collection<? extends Aggregator> instanceList) {
         this.aggregatorList = instanceList;
+        this.evaluatorName = evaluatorName;
     }
 
     public void evaluate() {
-        ArrayList<AggregatorRoadNetworkStatisticPair> roadNetworkStatisticList = new ArrayList<AggregatorRoadNetworkStatisticPair>(aggregatorList.size());
+        ArrayList<EvalutationItem> roadNetworkStatisticList = new ArrayList<EvalutationItem>(aggregatorList.size());
         try {
             for (Aggregator aggregator : aggregatorList) {
                 RoadNetworkProcess roadNetworkStatistic = getRoadNetworkStatistic(aggregator);
-                roadNetworkStatisticList.add(new AggregatorRoadNetworkStatisticPair(aggregator, roadNetworkStatistic));
+                roadNetworkStatisticList.add(new EvalutationItem(aggregator, roadNetworkStatistic));
             }
             handleEvaluation(roadNetworkStatisticList);
         } catch (IllegalStateException ex) {
@@ -62,11 +63,12 @@ public class SimpleMapsEvaluator {
         return roadNetworkProcess;
     }
 
-    private void handleEvaluation(List<AggregatorRoadNetworkStatisticPair> roadNetworkStatisticList) {
-        final MapComparationTopComponent mapComparationTopComponent = new MapComparationTopComponent(roadNetworkStatisticList);
+    private void handleEvaluation(final List<EvalutationItem> roadNetworkStatisticList) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                MapComparationTopComponent mapComparationTopComponent = new MapComparationTopComponent(roadNetworkStatisticList);
+                mapComparationTopComponent.setDisplayName(evaluatorName);
                 mapComparationTopComponent.open();
                 mapComparationTopComponent.requestActive();
             }

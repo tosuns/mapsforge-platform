@@ -139,6 +139,18 @@
             <type>jar</type>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>Agg2GraphUI</artifactId>
+            <groupId>de.fub</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>GeoFileTypeApi</artifactId>
+            <groupId>fu.berlin.mapsforge</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

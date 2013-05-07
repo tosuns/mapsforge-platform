@@ -6,12 +6,17 @@ package de.fub.mapsforge.plugins.tasks.eval;
 
 import java.util.List;
 import javax.swing.Box;
+import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 
 /**
  *
  * @author Serdar
  */
+@NbBundle.Messages({
+    "CLT_MapComparationTopComponent_Name=RoadNetwork Evaluation",
+    "CLT_MapComparationTopComponent_Description=Evaluation the provided map in contect of certain features."
+})
 public class MapComparationTopComponent extends TopComponent {
 
     private static final long serialVersionUID = 1L;
@@ -21,12 +26,15 @@ public class MapComparationTopComponent extends TopComponent {
      */
     public MapComparationTopComponent() {
         initComponents();
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+        setDisplayName(Bundle.CLT_MapComparationTopComponent_Name());
+        setToolTipText(Bundle.CLT_MapComparationTopComponent_Description());
     }
 
-    public MapComparationTopComponent(List<AggregatorRoadNetworkStatisticPair> roadNetworkStatisticList) {
+    public MapComparationTopComponent(List<EvalutationItem> roadNetworkStatisticList) {
         this();
 
-        for (AggregatorRoadNetworkStatisticPair pair : roadNetworkStatisticList) {
+        for (EvalutationItem pair : roadNetworkStatisticList) {
             RoadNetworkStatisticComparationPanel panel = new RoadNetworkStatisticComparationPanel(pair);
             contentPanel.add(panel);
             contentPanel.add(Box.createVerticalStrut(8));
