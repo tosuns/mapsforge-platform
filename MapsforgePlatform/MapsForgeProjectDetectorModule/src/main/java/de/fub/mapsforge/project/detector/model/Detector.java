@@ -294,11 +294,6 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
     }
 
     @Override
-    public String toString() {
-        return MessageFormat.format("Detector{ name={0}, description={1}{2}", getDetectorDescriptor().getName(), getDetectorDescriptor().getDescription(), '}');
-    }
-
-    @Override
     public void updateSource() {
         if (dataObject != null) {
             dataObject.modifySourceEditor();
@@ -308,6 +303,11 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
     @Override
     public Lookup getLookup() {
         return lookup;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("Detector{ name={0}, description={1}{2}", getDetectorDescriptor().getName(), getDetectorDescriptor().getDescription(), '}');
     }
 
     private class ChangeListenerImpl implements ChangeListener {
@@ -322,7 +322,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
         }
     }
 
-    class DefaultTrainingsDataProviderImpl implements TrainingsDataProvider {
+    private class DefaultTrainingsDataProviderImpl implements TrainingsDataProvider {
 
         public DefaultTrainingsDataProviderImpl() {
         }

@@ -22,6 +22,7 @@ public class Property implements PropertyDescriptor {
     private String value;
     private String javaType;
     private String description;
+    private String id;
 
     public Property() {
     }
@@ -29,6 +30,17 @@ public class Property implements PropertyDescriptor {
     public Property(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    @XmlAttribute(name = "id", required = true)
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     @XmlAttribute(name = "name", required = true)

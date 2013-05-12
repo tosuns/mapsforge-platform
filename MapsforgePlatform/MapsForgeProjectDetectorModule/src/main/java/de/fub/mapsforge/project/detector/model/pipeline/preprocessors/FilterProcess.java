@@ -53,19 +53,20 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     @Override
     protected ProcessDescriptor createProcessDescriptor() {
         ProcessDescriptor processDescriptor = null;
-        if (getDetector() == null) {
-            try {
-                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
+        if (getDetector() != null) {
             for (ProcessDescriptor filterProcessDescriptor : getDetector().getDetectorDescriptor().getPreprocessors().getPreprocessorList()) {
                 if (filterProcessDescriptor != null
                         && getClass().getName().equals(filterProcessDescriptor.getJavaType())) {
                     processDescriptor = filterProcessDescriptor;
                     break;
                 }
+            }
+        } else {
+            try {
+                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                processDescriptor = new ProcessDescriptor();
             }
         }
         return processDescriptor;
@@ -79,6 +80,10 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     @Override
     public JComponent getSettingsView() {
         return null;
+    }
+
+    public FilterScope getFilterScope() {
+        return FilterScope.TRAINING_AND_INFERENCE;
     }
 
     @Override
@@ -182,5 +187,15 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
                 reinitSet();
             }
         }
+    }
+
+    public enum FilterScope {
+
+        // Training = CrossValidation + Trainings
+        TRAINING,
+        // only inference
+        INFERENCE,
+        // training and inference
+        TRAINING_AND_INFERENCE;
     }
 }

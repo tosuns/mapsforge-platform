@@ -41,8 +41,10 @@ public class ProxyTileCache implements TileCache {
     }
 
     @Override
-    public Tile getTile(TileSource ts, int i, int i1, int i2) {
-        return tileCache != null ? tileCache.getTile(ts, i, i1, i2) : buffer.get(MessageFormat.format("{0}/{1}/{2}", i, i1, i2));
+    public Tile getTile(TileSource ts, int x, int y, int z) {
+        return tileCache != null
+                ? tileCache.getTile(ts, x, y, z)
+                : buffer.get(MessageFormat.format("{0}/{1}/{2}/{3}", ts.getName(), x, y, z));
     }
 
     @Override
@@ -50,7 +52,12 @@ public class ProxyTileCache implements TileCache {
         if (tileCache != null) {
             tileCache.addTile(tile);
         } else {
-            buffer.put(MessageFormat.format("{0}/{1}/{2}", tile.getXtile(), tile.getYtile(), tile.getZoom()), tile);
+            buffer.put(MessageFormat.format("{0}/{1}/{2}/{3}",
+                    tile.getSource().getName(),
+                    tile.getXtile(),
+                    tile.getYtile(),
+                    tile.getZoom()),
+                    tile);
         }
     }
 

@@ -94,11 +94,11 @@ public class LayerContainer extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(0, 300));
         setLayout(new java.awt.BorderLayout());
 
-        backgroundPanel.setBackground(new java.awt.Color(255, 255, 255));
+        backgroundPanel.setBackground(new java.awt.Color(249, 249, 249));
         backgroundPanel.setPreferredSize(new java.awt.Dimension(0, 278));
         backgroundPanel.setLayout(new java.awt.BorderLayout());
 
-        layerPanel.setBackground(new java.awt.Color(255, 255, 255));
+        layerPanel.setBackground(new java.awt.Color(249, 249, 249));
         layerPanel.setPreferredSize(new java.awt.Dimension(0, 278));
 
         javax.swing.GroupLayout layerPanelLayout = new javax.swing.GroupLayout(layerPanel);

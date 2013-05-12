@@ -31,7 +31,7 @@ public class NodeProperty extends PropertySupport.ReadWrite<Object> {
         try {
             ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
             value = PropertyDescriptorUtil.getValue(classLoader.loadClass(property.getJavaType()), property);
-        } catch (ClassNotFoundException ex) {
+        } catch (Exception ex) {
             value = PropertyDescriptorUtil.getValue(Object.class, property);
         }
     }

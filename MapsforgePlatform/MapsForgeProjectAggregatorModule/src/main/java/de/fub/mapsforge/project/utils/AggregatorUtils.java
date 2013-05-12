@@ -117,29 +117,24 @@ public class AggregatorUtils {
             for (final Field field : clazz.getDeclaredFields()) {
                 final Property property = propertyMap.get(field.getName());
                 if (property != null) {
-                    try {
-                        if (!field.isAccessible()) {
-                            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                                @Override
-                                public Void run() {
-                                    try {
-                                        field.setAccessible(true);
-                                        field.set(instance, getValue(Class.forName(property.getJavaType()), property));
-                                        field.setAccessible(false);
-                                    } catch (IllegalArgumentException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    } catch (ReflectiveOperationException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    }
-                                    return null;
-                                }
-                            });
-                        } else {
-                            field.set(instance, getValue(Class.forName(property.getJavaType()), property));
+                    AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                        @Override
+                        @SuppressWarnings("empty-statement")
+                        public Void run() {
+                            boolean accessible = field.isAccessible();
+                            try {
+                                field.setAccessible(true);
+                                field.set(instance, getValue(Class.forName(property.getJavaType()), property));
+                            } catch (IllegalArgumentException ex) {
+                                Exceptions.printStackTrace(ex);
+                            } catch (ReflectiveOperationException ex) {
+                                Exceptions.printStackTrace(ex);
+                            } finally {
+                                field.setAccessible(accessible);
+                            }
+                            return null;
                         }
-                    } catch (ReflectiveOperationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    });
                 }
             }
             returnInstance = instance;
@@ -174,7 +169,10 @@ public class AggregatorUtils {
         return MapsForgeProjectUtils.findProject(fileObject);
     }
 
-    @NbBundle.Messages({"# {0} - filepath", "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"})
+    @NbBundle.Messages({
+        "# {0} - filepath",
+        "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"
+    })
     public static ProcessDescriptor getProcessDescriptor(Class<? extends AbstractAggregationProcess> processClass) throws IOException {
         ProcessDescriptor descriptor = null;
         String filePatn = MessageFormat.format("/{0}.xml", processClass.getName().replaceAll("\\.", "/"));

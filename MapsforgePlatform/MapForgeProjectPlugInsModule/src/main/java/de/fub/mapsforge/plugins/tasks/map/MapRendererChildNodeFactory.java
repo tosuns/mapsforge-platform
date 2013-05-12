@@ -105,6 +105,12 @@ public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implem
         }
 
         @Override
+        public Action getPreferredAction() {
+            Action[] actions = getActions(false);
+            return actions.length > 0 ? actions[0] : null;
+        }
+
+        @Override
         public Action[] getActions(boolean context) {
             List<? extends Action> actionsForPath = Utilities.actionsForPath("Projects/Mapsforge/Detector/Tasks/MapRenderer/Actions");
             return actionsForPath.toArray(new Action[actionsForPath.size()]);

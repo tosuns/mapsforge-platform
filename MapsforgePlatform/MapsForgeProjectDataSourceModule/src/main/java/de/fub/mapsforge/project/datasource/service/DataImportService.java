@@ -11,7 +11,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author Serdar
  */
-public interface GPXImportService extends ActionListener {
+public interface DataImportService extends ActionListener {
 
     public void setDestinationFolder(FileObject destinationFoldert);
 

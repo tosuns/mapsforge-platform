@@ -7,6 +7,7 @@ package de.fub.mapsforge.plugins.tasks.eval;
 import java.util.List;
 import javax.swing.Box;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 
 /**
@@ -29,6 +30,7 @@ public class MapComparationTopComponent extends TopComponent {
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
         setDisplayName(Bundle.CLT_MapComparationTopComponent_Name());
         setToolTipText(Bundle.CLT_MapComparationTopComponent_Description());
+        associateLookup(Lookups.fixed(contentPanel));
     }
 
     public MapComparationTopComponent(List<EvalutationItem> roadNetworkStatisticList) {
@@ -39,6 +41,11 @@ public class MapComparationTopComponent extends TopComponent {
             contentPanel.add(panel);
             contentPanel.add(Box.createVerticalStrut(8));
         }
+    }
+
+    @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_NEVER;
     }
 
     /**

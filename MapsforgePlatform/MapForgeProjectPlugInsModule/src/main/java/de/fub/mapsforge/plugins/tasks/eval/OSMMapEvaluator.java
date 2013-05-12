@@ -20,6 +20,9 @@ public class OSMMapEvaluator {
     }
 
     public void evaluate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Step 1: convert roadNetwork to osm
+        // Step 2: fetch osm map with bounding box of roadnetwork
+        // Strp 3: Build graphs for both osm files
+        // Step 4: start mapMatcher
     }
 }

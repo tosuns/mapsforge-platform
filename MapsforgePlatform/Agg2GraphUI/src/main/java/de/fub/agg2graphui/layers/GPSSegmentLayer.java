@@ -27,15 +27,15 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
     }
 
     @Override
-    protected void drawDrawables(List<Drawable> drawables, Graphics2D graphics, Rectangle rectangle) {
+    protected void drawDrawables(Graphics2D graphics, Rectangle rectangle) {
         List<GPSSegment> itemList = getItemList();
         for (GPSSegment segment : itemList) {
             GPSPoint lastPoint = null;
             for (GPSPoint point : segment) {
                 if (lastPoint != null) {
-                    drawLine(lastPoint, point, getOptions());
+                    drawLine(lastPoint, point, getRenderingOptions());
                 }
-                drawPoint(point, getOptions());
+                drawPoint(point, getRenderingOptions());
                 lastPoint = point;
             }
         }

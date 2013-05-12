@@ -32,6 +32,7 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -44,11 +45,11 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
-    private List<GPSSegment> inputList;
     private static final Logger LOG = Logger.getLogger(AggregationProcess.class.getName());
-    private final MergingLayer mergeLayer;
-    private final MatchingLayer matchingLayer;
-    private final AggContainerLayer aggregationLayer;
+    private List<GPSSegment> inputList;
+    private MergingLayer mergeLayer;
+    private MatchingLayer matchingLayer;
+    private AggContainerLayer aggregationLayer;
     private int totalAggNodeCount = 0;
     private int totalGPSPointCount = 0;
     private int totalPointGhostPointPairs = 0;
@@ -59,6 +60,15 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
     public AggregationProcess(Aggregator aggregator) {
         super(aggregator);
+        init();
+    }
+
+    private void init() {
+        initLayers();
+        initSettings();
+    }
+
+    private void initLayers() {
         mergeLayer = new MergingLayer();
         matchingLayer = new MatchingLayer();
         aggregationLayer = new AggContainerLayer();
@@ -66,6 +76,9 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
         getLayers().add(matchingLayer);
         getLayers().add(mergeLayer);
         getLayers().add(aggregationLayer);
+    }
+
+    private void initSettings() {
     }
 
     @Override
@@ -76,6 +89,7 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
     @Override
     public AggContainer getResult() {
         synchronized (RUN_MUTEX) {
+            this.inputList = null;
             return getAggregator().getAggContainer();
         }
     }
@@ -161,20 +175,22 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
         }
     }
 
+    @NbBundle.Messages("CLT_AggregationProcess_Name=Aggregation")
     @Override
     public String getName() {
         if (getProcessDescriptor() != null) {
             return getProcessDescriptor().getDisplayName();
         }
-        return "Aggregation";
+        return Bundle.CLT_AggregationProcess_Name();
     }
 
+    @NbBundle.Messages("CLT_AggregationProcess_Description=Aggregation process")
     @Override
     public String getDescription() {
         if (getProcessDescriptor() != null) {
             return getProcessDescriptor().getDescription();
         }
-        return "Aggregation process";
+        return Bundle.CLT_AggregationProcess_Description();
     }
 
     @Override
@@ -192,11 +208,25 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
         List<StatisticSection> statisticSections = new ArrayList<StatisticProvider.StatisticSection>();
         statisticSections.add(getPerformanceData());
 
-        StatisticSection section = new StatisticSection("Aggregation Statistics", "Displays all statistics data which are computed during the aggregation.");
+        StatisticSection section = new StatisticSection(
+                "Aggregation Statistics",
+                "Displays all statistics data which are computed during the aggregation.");
         statisticSections.add(section);
-        section.getStatisticsItemList().add(new StatisticItem("Total Aggregation Node Count", String.valueOf(totalAggNodeCount), "The total amount of aggreagtion nodes, which are created during this aggregation process."));
-        section.getStatisticsItemList().add(new StatisticItem("Total GPS Point Count", String.valueOf(totalGPSPointCount), "The total amount of GPS Point that are added during the aggregation."));
-        section.getStatisticsItemList().add(new StatisticItem("Total Count Point/GhostPoint Pairs ", String.valueOf(totalPointGhostPointPairs), "The total amount of paris of Point/Ghostpoint."));
+
+        section.getStatisticsItemList().add(new StatisticItem(
+                "Total Aggregation Node Count",
+                String.valueOf(totalAggNodeCount),
+                "The total amount of aggreagtion nodes, which are created during this aggregation process."));
+
+        section.getStatisticsItemList().add(new StatisticItem(
+                "Total GPS Point Count",
+                String.valueOf(totalGPSPointCount),
+                "The total amount of GPS Point that are added during the aggregation."));
+
+        section.getStatisticsItemList().add(new StatisticItem(
+                "Total Count Point/GhostPoint Pairs ",
+                String.valueOf(totalPointGhostPointPairs),
+                "The total amount of paris of Point/Ghostpoint."));
 
         return statisticSections;
     }

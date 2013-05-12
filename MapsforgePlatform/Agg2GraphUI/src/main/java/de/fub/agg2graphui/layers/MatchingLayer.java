@@ -20,20 +20,20 @@ public class MatchingLayer extends AbstractLayer<List<? extends ILocation>> {
 
     public MatchingLayer() {
         super("Matching Layer", "Matching Layer", new RenderingOptions());
-        getOptions().setColor(new Color(232, 23, 79)); // red
-        getOptions().setzIndex(1);
-        getOptions().setOpacity(0.7);
+        getRenderingOptions().setColor(new Color(232, 23, 79)); // red
+        getRenderingOptions().setzIndex(1);
+        getRenderingOptions().setOpacity(0.7);
     }
 
     @Override
-    protected void drawDrawables(List<Drawable> drawables, Graphics2D graphics, Rectangle rectangle) {
+    protected void drawDrawables(Graphics2D graphics, Rectangle rectangle) {
         for (List<? extends ILocation> locationList : getItemList()) {
             ILocation lastLocation = null;
             for (ILocation location : locationList) {
                 if (lastLocation != null) {
-                    drawLine(lastLocation, location, getOptions(), 1, true);
+                    drawLine(lastLocation, location, null, getRenderingOptions(), 1, true);
                 }
-                drawPoint(location, getOptions());
+                drawPoint(location, getRenderingOptions());
                 lastLocation = location;
             }
         }

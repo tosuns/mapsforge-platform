@@ -33,6 +33,7 @@ public final class EvaluateMapAction extends AbstractAction implements ContextAw
     private static final long serialVersionUID = 1L;
     private Aggregator aggregator;
     private RoadNetwork roadNetwork;
+    private Lookup context;
 
     public EvaluateMapAction() {
         super(Bundle.CTL_MapEvaluateAction());
@@ -40,27 +41,29 @@ public final class EvaluateMapAction extends AbstractAction implements ContextAw
 
     public EvaluateMapAction(Lookup actionContext) {
         this();
-        aggregator = actionContext.lookup(Aggregator.class);
+        this.context = actionContext;
         validate();
     }
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        if (aggregator != null) {
-            RequestProcessor.getDefault().post(new Runnable() {
-                @Override
-                public void run() {
-                    setEnabled(false);
-                    try {
-                        if (roadNetwork != null) {
-                            OSMMapEvaluator evaluator = new OSMMapEvaluator(roadNetwork);
-                            evaluator.evaluate();
+        if (context != null) {
+            if (aggregator != null) {
+                RequestProcessor.getDefault().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setEnabled(false);
+                        try {
+                            if (roadNetwork != null) {
+                                OSMMapEvaluator evaluator = new OSMMapEvaluator(roadNetwork);
+                                evaluator.evaluate();
+                            }
+                        } finally {
+                            setEnabled(true);
                         }
-                    } finally {
-                        setEnabled(true);
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -83,10 +86,17 @@ public final class EvaluateMapAction extends AbstractAction implements ContextAw
 
     private void validate() {
         setEnabled(false);
-        if (aggregator != null) {
-            roadNetwork = getRoadNetwork();
-            if (roadNetwork != null) {
+        if (context != null) {
+            Collection<? extends Aggregator> allInstances = context.lookupResult(Aggregator.class).allInstances();
+            if (allInstances.size() == 1) {
                 setEnabled(true);
+                aggregator = allInstances.iterator().next();
+                if (aggregator != null) {
+                    roadNetwork = getRoadNetwork();
+                    if (roadNetwork != null) {
+                        setEnabled(true);
+                    }
+                }
             }
         }
     }

@@ -18,14 +18,17 @@ public class Line implements Drawable {
     private RenderingOptions renderingOptions;
     private float weightFactor = 1;
     private boolean directed;
+    private String label;
 
     public Line(ILocation from, ILocation to, RenderingOptions ro,
             float weightFactor) {
         this(from, to, ro, weightFactor, false);
+        this.label = new String();
     }
 
     public Line(ILocation from, ILocation to, RenderingOptions ro,
             float weightFactor, boolean directed) {
+        this.label = new String();
         this.from = from;
         this.to = to;
         this.renderingOptions = ro;
@@ -36,6 +39,14 @@ public class Line implements Drawable {
     @Override
     public RenderingOptions getRenderingOptions() {
         return renderingOptions;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     /**

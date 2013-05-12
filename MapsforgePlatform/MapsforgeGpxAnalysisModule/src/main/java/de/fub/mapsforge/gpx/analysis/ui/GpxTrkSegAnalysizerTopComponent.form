@@ -163,6 +163,8 @@
                             <AuxValue name="classDetails" type="java.lang.String" value="Box.Filler.VerticalStrut"/>
                           </AuxValues>
                         </Component>
+                        <Component class="de.fub.mapsforge.gpx.analysis.ui.charts.ChartPanelComponent" name="headingChart">
+                        </Component>
                       </SubComponents>
                     </Container>
                   </SubComponents>

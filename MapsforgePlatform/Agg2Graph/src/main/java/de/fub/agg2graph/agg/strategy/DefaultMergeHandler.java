@@ -35,6 +35,7 @@ import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graph.ui.gui.jmv.Layer;
 import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.awt.Color;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,8 +51,8 @@ public class DefaultMergeHandler implements IMergeHandler {
             .getLogger("agg2graph.agg.default.merge");
     private List<AggNode> aggNodes = null;
     private List<GPSPoint> gpsPoints = null;
-    public int maxLookahead = 4;
-    public double minContinuationAngle = 45;
+    private int maxLookahead = 4;
+    private double minContinuationAngle = 45;
     // helper stuff
     private Map<AggConnection, List<PointGhostPointPair>> newNodesPerConn;
     private List<PointGhostPointPair> pointGhostPointPairs;
@@ -60,10 +61,9 @@ public class DefaultMergeHandler implements IMergeHandler {
     private AggContainer aggContainer;
     private RenderingOptions roMatchGPS;
     // cleaning stuff
-    private RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(0,
-            125);
+    private RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(0, 125);
     private static AggCleaner cleaner = new AggCleaner().enableDefault();
-    public double maxPointGhostDist = 40; // meters
+    private double maxPointGhostDist = 40; // meters
     private double distance = 0;
     private AggNode beforeNode;
 
@@ -89,6 +89,42 @@ public class DefaultMergeHandler implements IMergeHandler {
         this(aggContainer);
         this.aggNodes = aggNodes;
         this.gpsPoints = gpsPoints;
+    }
+
+    public int getMaxLookahead() {
+        return maxLookahead;
+    }
+
+    public void setMaxLookahead(int maxLookahead) {
+        this.maxLookahead = maxLookahead;
+    }
+
+    public double getMinContinuationAngle() {
+        return minContinuationAngle;
+    }
+
+    public void setMinContinuationAngle(double minContinuationAngle) {
+        this.minContinuationAngle = minContinuationAngle;
+    }
+
+    public double getMaxPointGhostDist() {
+        return maxPointGhostDist;
+    }
+
+    public void setMaxPointGhostDist(double maxPointGhostDist) {
+        this.maxPointGhostDist = maxPointGhostDist;
+    }
+
+    public double getEpsilon() {
+        return rdpf.getEpsilon();
+    }
+
+    public double getMaxSegmentLength() {
+        return rdpf.getMaxSegmentLength();
+    }
+
+    public void setMaxSegmentLength(double maxSegmentLength) {
+        rdpf.setMaxSegmentLength(maxSegmentLength);
     }
 
     @Override
@@ -307,7 +343,7 @@ public class DefaultMergeHandler implements IMergeHandler {
                 AggNode addNode = node;
                 if (afterHit) {
                     addNode = new AggNode(node);
-                    addNode.setID("dup-" + node.getID());
+                    addNode.setID(MessageFormat.format("dup-{0}", node.getID()));
                 }
                 PointGhostPointPair pair = PointGhostPointPair
                         .createAggToTrace(addNode, newNode, pointIndex,

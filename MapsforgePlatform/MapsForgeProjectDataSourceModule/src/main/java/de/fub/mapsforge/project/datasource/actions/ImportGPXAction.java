@@ -7,7 +7,7 @@ package de.fub.mapsforge.project.datasource.actions;
 import de.fub.mapforgeproject.MapsForgeProject;
 import de.fub.mapforgeproject.xml.MapsForge;
 import de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory;
-import de.fub.mapsforge.project.datasource.service.GPXImportService;
+import de.fub.mapsforge.project.datasource.service.DataImportService;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +77,7 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
             if (project != null) {
                 gpxDataSourceFolder = getGPXDataSourceFolder();
                 if (gpxDataSourceFolder != null) {
-                    for (GPXImportService service : getImportServiceProviderClasses()) {
+                    for (DataImportService service : getImportServiceProviderClasses()) {
                         contextMenu.add(new DelegateAction(service, gpxDataSourceFolder));
                     }
                 }
@@ -99,10 +99,10 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
         return datasourceFolder;
     }
 
-    private ArrayList<GPXImportService> getImportServiceProviderClasses() {
-        ArrayList<GPXImportService> list = new ArrayList<GPXImportService>();
-        Result<GPXImportService> result = Lookup.getDefault().lookupResult(GPXImportService.class);
-        for (GPXImportService service : result.allInstances()) {
+    private ArrayList<DataImportService> getImportServiceProviderClasses() {
+        ArrayList<DataImportService> list = new ArrayList<DataImportService>();
+        Result<DataImportService> result = Lookup.getDefault().lookupResult(DataImportService.class);
+        for (DataImportService service : result.allInstances()) {
             list.add(service);
         }
         return list;
@@ -134,10 +134,10 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
     private static class DelegateAction extends AbstractAction {
 
         private static final long serialVersionUID = 1L;
-        private final GPXImportService delegate;
+        private final DataImportService delegate;
         private final FileObject dataSourceFileObject;
 
-        private DelegateAction(GPXImportService delegate, FileObject dataSourceFileObject) {
+        private DelegateAction(DataImportService delegate, FileObject dataSourceFileObject) {
             assert delegate != null;
             this.delegate = delegate;
             putValue(NAME, delegate.getName());
@@ -147,7 +147,7 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                GPXImportService service = this.delegate.getClass().newInstance();
+                DataImportService service = this.delegate.getClass().newInstance();
                 service.setDestinationFolder(dataSourceFileObject);
                 service.actionPerformed(e);
             } catch (InstantiationException ex) {
@@ -158,8 +158,8 @@ public final class ImportGPXAction extends AbstractAction implements ContextAwar
         }
     }
 
-    @ServiceProvider(service = GPXImportService.class)
-    public static class ImportFormDiskAction implements GPXImportService {
+    @ServiceProvider(service = DataImportService.class)
+    public static class ImportFormDiskAction implements DataImportService {
 
         private FileObject gpxDataSourceFolder;
 

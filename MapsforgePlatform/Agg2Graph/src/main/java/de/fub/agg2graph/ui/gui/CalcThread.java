@@ -26,13 +26,18 @@ import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 public class CalcThread extends Thread {
@@ -84,15 +89,15 @@ public class CalcThread extends Thread {
                 if (parent.deselectedTraceFiles.contains(file)) {
                     continue;
                 }
-                System.out.println("processing file " + file);
+                System.out.println(MessageFormat.format("processing file {0}", file));
                 List<GPSSegment> segments = GPXReader.getSegments(file);
                 if (segments == null) {
-                    System.out.println("Bad file: " + file);
+                    System.out.println(MessageFormat.format("Bad file: {0}", file));
                     continue;
                 }
                 for (GPSSegment segment : segments) {
                     parent.parseDim(segment);
-                    segment.addIDs("I" + stepStorage.inputSegmentList.size());
+                    segment.addIDs(MessageFormat.format("I{0}", stepStorage.inputSegmentList.size()));
                     stepStorage.rawLayer.addObject(segment);
                     stepStorage.inputSegmentList.add(segment);
                 }
@@ -147,23 +152,20 @@ public class CalcThread extends Thread {
                     stepStorage);
             repaintEverything();
         } else if (task.equals("osm")) {
-            stepStorage.clear(levels.get(task));
-            if (stepStorage.getExporter().getTargetFile() == null) {
-                stepStorage.getExporter()
-                        .setTargetFile(new File("osm-out.xml"));
-            }
-            stepStorage.getExporter().export(stepStorage.getRoadNetwork());
-            if (stepStorage.isOpenOsmExportFile()
-                    && stepStorage.getExporter().getTargetFile().exists()) {
-                System.out.println("opening file "
-                        + stepStorage.getExporter().getTargetFile());
-                try {
-                    Desktop.getDesktop().open(
-                            stepStorage.getExporter().getTargetFile());
-                } catch (IOException e) {
-                    System.out.println(e.getLocalizedMessage());
-                    e.printStackTrace();
+            try {
+                stepStorage.clear(levels.get(task));
+                File file = new File("osm-out.xml");
+                stepStorage.getExporter().export(stepStorage.getRoadNetwork(), new FileOutputStream(file));
+                if (stepStorage.isOpenOsmExportFile() && file.exists()) {
+                    System.out.println(MessageFormat.format("opening file {0}", file));
+                    try {
+                        Desktop.getDesktop().open(file);
+                    } catch (IOException ex) {
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                    }
                 }
+            } catch (FileNotFoundException ex) {
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         stepStorage.levelReached = levels.get(task);
@@ -178,6 +180,7 @@ public class CalcThread extends Thread {
                 task)));
         parent.setLoading(false);
     }
+    private static final Logger LOG = Logger.getLogger(CalcThread.class.getName());
 
     private void repaintEverything() {
         parent.setPainting(true);

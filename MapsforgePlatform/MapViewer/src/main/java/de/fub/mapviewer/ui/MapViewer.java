@@ -22,8 +22,6 @@ public class MapViewer extends JMapViewer {
 
     public MapViewer() {
         this(new ProxyTileCache(new PersistentTileCache()), Runtime.getRuntime().availableProcessors() * 4);
-//        init();
-
     }
 
     public MapViewer(TileCache tileCache, int downloadThreadCount) {

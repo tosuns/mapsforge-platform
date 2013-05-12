@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <agg:aggregator xmlns:agg="http://inf.fu-berlin.de/mapsforge/aggregation/schema"
-                aggregationStrategyClass="de.fub.agg2graph.agg.strategy.DefaultAggregationStrategy"
+                aggregationStrategyClass="de.fub.mapsforge.project.aggregator.pipeline.wrapper.DefaultAggregationStrategy"
                 description="Standard Aggregator Template."
                 name="Standard Aggregator"
-                tileCachingStrategyClass="de.fub.agg2graph.agg.tiling.DefaultCachingStrategy">
+                tileCachingStrategyClass="de.fub.mapsforge.project.aggregator.pipeline.wrapper.DefaultCachingStrategy">
     <datasources>
     </datasources>
     <pipeline>

@@ -66,7 +66,7 @@ public class MapRenderer extends Task {
             if (aggregatorTemplate == null) {
                 throw new FileNotFoundException();
             } else {
-                aggregatorTemplate.getDataObject().delete();
+                aggregatorTemplate.getDataObject().getPrimaryFile().delete();
             }
         } catch (FileNotFoundException ex) {
             setProcessState(ProcessState.SETTING_ERROR);
@@ -79,13 +79,14 @@ public class MapRenderer extends Task {
         if (!aggregatorList.isEmpty()) {
             for (Aggregator aggregator : aggregatorList) {
                 try {
-                    aggregator.getDataObject().delete();
+                    aggregator.getDataObject().getPrimaryFile().delete();
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
             aggregatorList.clear();
         }
+        // this is hack and should have a better work around.
         fireProcessFinishedEvent();
     }
 
@@ -100,17 +101,25 @@ public class MapRenderer extends Task {
                 for (Entry<String, List<Gpx>> entry : resultDataSet.entrySet()) {
                     try {
                         if (entry.getValue() != null && !entry.getValue().isEmpty()) {
-                            aggregator.getAggregatorDescriptor().setName(entry.getKey());
+                            // specify the name of the aggregator
+                            aggregator.getAggregatorDescriptor().setName(
+                                    MessageFormat.format("{0} [{1}]",
+                                    entry.getKey(),
+                                    getDetector().getDetectorDescriptor().getName()));
 
+                            // to be sure there is no datasource in the template
+                            // we clear the source list of the aggregator
                             List<Source> sourceList = aggregator.getSourceList();
                             sourceList.clear();
 
-                            FileObject createTempFolder = mapRendererSupport.createTempFolder(
+                            FileObject tmpFolder = mapRendererSupport.createTempFolder(
                                     URLEncoder.encode(
-                                    MessageFormat.format("Transportation: {0}", entry.getKey()), "UTF-8"));
+                                    MessageFormat.format("Transportation: {0}",
+                                    aggregator.getAggregatorDescriptor().getName()),
+                                    "UTF-8"));
 
                             for (Gpx gpx : entry.getValue()) {
-                                File tmpFile = mapRendererSupport.createTmpfile(createTempFolder);
+                                File tmpFile = mapRendererSupport.createTmpfile(tmpFolder);
                                 try {
                                     AggregatorUtils.saveGpxToFile(tmpFile, gpx);
                                     sourceList.add(new Source(tmpFile.getAbsolutePath()));

@@ -11,9 +11,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.logging.Logger;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.data.xy.XYSeries;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -69,10 +67,14 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
         velocityDataset.clear();
         XYSeries accelerationDataset = accelerationChart.getDataset();
         accelerationDataset.clear();
+        XYSeries headingDataset = headingChart.getDataset();
+        headingDataset.clear();
+
         if (statistic != null) {
             // get track
             List<Waypoint> trackSegment = statistic.getTrackSegment();
 
+            Waypoint secondLastWayPoint = null;
             Waypoint lastWaypoint = null;
             double totalDistance = 0;
             Double lastVelocity = null;
@@ -99,15 +101,21 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
                         velocityDataset.addOrUpdate(totalDistance, velocity * 3.6);
                         if (lastVelocity != null) {
                             acceleration = (velocity - lastVelocity) / timeDiff;
-                            Logger.getLogger(getClass().getName()).info(MessageFormat.format("acceleration: {0}", acceleration));
                             accelerationDataset.addOrUpdate(totalDistance, acceleration);
                         } else {
                             accelerationDataset.addOrUpdate(totalDistance, 0);
                         }
                     }
-                    lastVelocity = velocity;
-                }
 
+                    lastVelocity = velocity;
+
+                    if (secondLastWayPoint != null) {
+                        double heading = GPSCalc.computeHeading(secondLastWayPoint, lastWaypoint, waypoint);
+                        headingDataset.addOrUpdate(totalDistance, heading);
+                    }
+
+                }
+                secondLastWayPoint = lastWaypoint;
                 lastWaypoint = waypoint;
             }
         }
@@ -117,18 +125,25 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
         // set chart titles
         velocityChart.setTitle(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.velocity.chart.name"));
         accelerationChart.setTitle(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.acceleration.chart.name"));
+        headingChart.setTitle(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.heading.chart.name"));
 
-        // coonfig domain axis
+        // config domain axis
         ValueAxis domainAxis = velocityChart.getDomainAxis();
         domainAxis.setLabel(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.velocity.chart.domainaxis.name"));
         domainAxis = accelerationChart.getDomainAxis();
         domainAxis.setLabel(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.acceleration.chart.domainaxis.name"));
+        domainAxis = headingChart.getDomainAxis();
+        domainAxis.setLabel(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.heading.chart.domainaxis.name"));
 
-        // and value axis
+
+        // confing value axis
         ValueAxis rangeAxis = velocityChart.getRangeAxis();
         rangeAxis.setLabel(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.velocity.chart.valueaxis.name"));
         rangeAxis = accelerationChart.getRangeAxis();
         rangeAxis.setLabel(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.acceleration.chart.valueaxis.name"));
+        rangeAxis = headingChart.getRangeAxis();
+        rangeAxis.setLabel(NbBundle.getMessage(GpxTrkSegAnalysizerTopComponent.class, "GpxTrkSegAnalysizerTopComponent.heading.chart.valueaxis.name"));
+
     }
 
     /**
@@ -149,6 +164,7 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
         accelerationChart = new de.fub.mapsforge.gpx.analysis.ui.charts.ChartPanelComponent();
         filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
+        headingChart = new de.fub.mapsforge.gpx.analysis.ui.charts.ChartPanelComponent();
         statisticForm1 = new de.fub.mapsforge.gpx.analysis.ui.StatisticForm();
 
         setLayout(new java.awt.BorderLayout());
@@ -172,7 +188,6 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
         velocityChart.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         velocityChart.setMaximumSize(new java.awt.Dimension(2147483647, 300));
         velocityChart.setMinimumSize(new java.awt.Dimension(100, 300));
-        velocityChart.setPreferredSize(new java.awt.Dimension(400, 300));
         jPanel3.add(velocityChart);
         jPanel3.add(filler1);
 
@@ -182,6 +197,7 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
         accelerationChart.setPreferredSize(new java.awt.Dimension(875, 300));
         jPanel3.add(accelerationChart);
         jPanel3.add(filler4);
+        jPanel3.add(headingChart);
 
         jScrollPane1.setViewportView(jPanel3);
 
@@ -201,6 +217,7 @@ public final class GpxTrkSegAnalysizerTopComponent extends TopComponent {
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler3;
     private javax.swing.Box.Filler filler4;
+    private de.fub.mapsforge.gpx.analysis.ui.charts.ChartPanelComponent headingChart;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

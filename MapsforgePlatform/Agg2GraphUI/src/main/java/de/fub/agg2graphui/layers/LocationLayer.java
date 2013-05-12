@@ -26,13 +26,13 @@ public class LocationLayer extends AbstractLayer<ILocation> {
     }
 
     @Override
-    protected void drawDrawables(List<Drawable> drawables, Graphics2D g2, Rectangle rectangle) {
+    protected void drawDrawables(Graphics2D g2, Rectangle rectangle) {
         ILocation lastLocation = null;
         for (ILocation location : getItemList()) {
             if (lastLocation != null) {
-                drawLine(lastLocation, location, getOptions(), 1);
+                drawLine(lastLocation, location, getRenderingOptions(), 1);
             }
-            drawPoint(location, getOptions());
+            drawPoint(location, getRenderingOptions());
             lastLocation = location;
         }
     }

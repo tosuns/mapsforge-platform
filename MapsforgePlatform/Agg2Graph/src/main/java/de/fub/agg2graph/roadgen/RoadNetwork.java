@@ -35,16 +35,12 @@ import java.util.Set;
 public class RoadNetwork {
 
     public IAggFilter aggFilter = AggFilterFactory.getObject();
-    public IIntersectionParser intersectionParser = IntersectionParserFactory
-            .getObject();
+    public IIntersectionParser intersectionParser = IntersectionParserFactory.getObject();
     public Set<Intersection> intersections;
     public Set<Road> roads;
-    public IRoadTypeClassifier roadTypeClassifier = RoadTypeClassifierFactory
-            .getObject();
-    public IRoadNetworkFilter roadNetworkFilter = RoadNetworkFilterFactory
-            .getObject();
-    public IRoadObjectMerger roadObjectMerger = RoadObjectMergerFactory
-            .getObject();
+    public IRoadTypeClassifier roadTypeClassifier = RoadTypeClassifierFactory.getObject();
+    public IRoadNetworkFilter roadNetworkFilter = RoadNetworkFilterFactory.getObject();
+    public IRoadObjectMerger roadObjectMerger = RoadObjectMergerFactory.getObject();
 
     public RoadNetwork() {
         clear();

@@ -43,7 +43,7 @@ public class LayerNode extends AbstractNode {
         AbstractLayer layer = getLookup().lookup(AbstractLayer.class);
 
         if (layer != null) {
-            final RenderingOptions renderSettings = layer.getOptions();
+            final RenderingOptions renderSettings = layer.getRenderingOptions();
 
             Property<?> property = new PropertySupport.ReadWrite<Color>("strokeColor", Color.class, "Stroke Color", "") {
                 @Override

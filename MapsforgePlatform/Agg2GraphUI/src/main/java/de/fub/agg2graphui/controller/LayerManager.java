@@ -28,7 +28,6 @@ public class LayerManager implements LayerListener {
     private final Set<LayerListener> layerListenerSet = Collections.synchronizedSet(new HashSet<LayerListener>());
     private Rectangle2D.Double projectionArea; // visible rect in projection
     private Rectangle2D.Double gpsArea; // visible rect in gps coordinates
-    private Dimension size; // pixels x pixels
     private float thicknessFactor = 1;
     private boolean renderWeight = true; // false = renderAvgDist
     private final MapViewer mapViewer;
@@ -80,6 +79,7 @@ public class LayerManager implements LayerListener {
 
     public synchronized void addLayer(AbstractLayer<?> layer) {
         assert layer != null;
+        layer.getRenderingOptions().setzIndex(layers.size());
         layers.add(layer);
         layer.setLayerManager(this);
         layer.addLayerListener(LayerManager.this);

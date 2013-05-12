@@ -14,11 +14,11 @@ import org.openide.nodes.Node;
  *
  * @author Serdar
  */
-public class GPXFactory extends ChildFactory<Node> {
+public class GPXChildNodeFactory extends ChildFactory<Node> {
 
     private final ArrayList<Node> nodes = new ArrayList<Node>();
 
-    public GPXFactory() {
+    public GPXChildNodeFactory() {
     }
 
     @Override

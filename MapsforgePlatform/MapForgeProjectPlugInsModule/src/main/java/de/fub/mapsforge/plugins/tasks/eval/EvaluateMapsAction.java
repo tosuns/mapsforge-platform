@@ -43,26 +43,30 @@ public final class EvaluateMapsAction extends AbstractAction implements ContextA
     }
 
     private void validate() {
-        Collection<? extends Aggregator> allInstances = context.lookupResult(Aggregator.class).allInstances();
-        setEnabled(allInstances.size() > 1);
+        if (context != null) {
+            Collection<? extends Aggregator> allInstances = context.lookupResult(Aggregator.class).allInstances();
+            setEnabled(allInstances.size() > 1);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        Collection<? extends Aggregator> aggregatorList = context.lookupResult(Aggregator.class).allInstances();
-        Collection<? extends Detector> detectorList = context.lookupResult(Detector.class).allInstances();
-        if (!aggregatorList.isEmpty() && !detectorList.isEmpty()) {
+        if (context != null) {
+            Collection<? extends Aggregator> aggregatorList = context.lookupResult(Aggregator.class).allInstances();
+            Collection<? extends Detector> detectorList = context.lookupResult(Detector.class).allInstances();
+            if (!aggregatorList.isEmpty() && !detectorList.isEmpty()) {
 
-            final SimpleMapsEvaluator evaluator = new SimpleMapsEvaluator(
-                    MessageFormat.format("{0} [{1}]",
-                    detectorList.iterator().next().getDetectorDescriptor().getName(),
-                    Bundle.CLT_MapComparationTopComponent_Name()), aggregatorList);
-            RequestProcessor.getDefault().post(new Runnable() {
-                @Override
-                public void run() {
-                    evaluator.evaluate();
-                }
-            });
+                final SimpleMapsEvaluator evaluator = new SimpleMapsEvaluator(
+                        MessageFormat.format("{0} [{1}]",
+                        detectorList.iterator().next().getDetectorDescriptor().getName(),
+                        Bundle.CLT_MapComparationTopComponent_Name()), aggregatorList);
+                RequestProcessor.getDefault().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        evaluator.evaluate();
+                    }
+                });
+            }
         }
     }
 

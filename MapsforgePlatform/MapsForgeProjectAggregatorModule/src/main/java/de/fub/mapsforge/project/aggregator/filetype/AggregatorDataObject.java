@@ -296,7 +296,7 @@ public class AggregatorDataObject extends MultiDataObject {
             displayName = "#LBL_AggregationBuilder_EDITOR",
             iconBase = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png",
             mimeType = "text/aggregationbuilder+xml",
-            persistenceType = TopComponent.PERSISTENCE_ALWAYS,
+            persistenceType = TopComponent.PERSISTENCE_NEVER,
             preferredID = "AggregationBuilder",
             position = 3000)
     @Messages("LBL_AggregationBuilder_EDITOR=Source")
