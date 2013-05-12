@@ -81,6 +81,8 @@ class DetectorRunSupport {
                     handle.setDisplayName(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), Bundle.CLT_Inference_Process_Running()));
                     startInference();
                     break;
+                default:
+                    break;
             }
             detector.setDetectorState(ProcessState.INACTIVE);
         } catch (Exception ex) {

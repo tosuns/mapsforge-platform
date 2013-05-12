@@ -16,7 +16,6 @@ import de.fub.utilsmodule.icons.IconRegister;
 import geofiletypeapi.GeoUtil;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -108,7 +107,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 //    private transient Image defaulImage;
     private JToggleButton layerViewButton;
     private JButton layersButton;
-    private JButton processButton;
+    private JButton processRunButton;
     private JButton statisticsDataButton;
     private JButton fitToSizeButton;
     private JPopupMenu layersMenu;
@@ -209,14 +208,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                 new MapQuestOpenAerialTileSource()});
             tileSourceComboBox.setMaximumSize(new Dimension(100, 16));
             tileSourceComboBox.setSelectedIndex(0);
-            tileSourceComboBox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    if (tileSourceComboBox.getSelectedItem() instanceof TileSource) {
-                        aggComponent.setTileSource((TileSource) tileSourceComboBox.getSelectedItem());
-                    }
-                }
-            });
+            tileSourceComboBox.addItemListener(new TileSourceComboBoxItemListenerImpl());
             toolbar.add(tileSourceComboBox);
             toolbar.add(new JToolBar.Separator());
         }
@@ -225,17 +217,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         if (statisticsDataButton == null) {
             statisticsDataButton = new JButton(ImageUtilities.loadImageIcon(STATISTICS_BUTTON_ICON_PATH, true));
             statisticsDataButton.setToolTipText(Bundle.CLT_Statistics_Button_Tooltip());
-            statisticsDataButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (aggregator != null) {
-                        StatisticsPanel statisticsPanel = new StatisticsPanel(aggregator.getStatistics());
-                        DialogDescriptor dd = new DialogDescriptor(statisticsPanel, Bundle.CLT_Statistics_Window());
-                        dd.setOptionType(DialogDescriptor.DEFAULT_OPTION);
-                        DialogDisplayer.getDefault().notifyLater(dd);
-                    }
-                }
-            });
+            statisticsDataButton.addActionListener(new StatisticsDataButtonActionListenerImpl());
             toolbar.add(statisticsDataButton);
             toolbar.add(new JToolBar.Separator());
         }
@@ -246,21 +228,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             initPopupMenu();
             layersButton = DropDownButtonFactory.createDropDownButton(ImageUtilities.loadImageIcon(LAYER_ICON_PATH, true), layersMenu);
             layersButton.setToolTipText(Bundle.CLT_Show_Hide_Layers());
-            layersButton.addActionListener(new ActionListener() {
-                private boolean allVisible = true;
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    allVisible = !allVisible;
-                    MenuElement[] subElements = layersMenu.getSubElements();
-                    for (MenuElement element : subElements) {
-                        if (element instanceof JCheckBoxMenuItem) {
-                            JCheckBoxMenuItem item = (JCheckBoxMenuItem) element;
-                            item.doClick();
-                        }
-                    }
-                }
-            });
+            layersButton.addActionListener(new LayerButtonActionListenerImpl());
             toolbar.add(layersButton);
         } else {
             layersMenu.removeAll();
@@ -272,12 +240,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             layerViewButton = new JToggleButton(ImageUtilities.loadImageIcon(LAYERVIEW_ICON_PATH, true));
             layerViewButton.setSelected(false);
             layerViewButton.setToolTipText(Bundle.CLT_Show_Hide_Layer_View());
-            layerViewButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateLayerView();
-                }
-            });
+            layerViewButton.addActionListener(new LayerViewButtonActionListenerImpl());
             toolbar.add(layerViewButton);
 
         }
@@ -286,12 +249,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         if (fitToSizeButton == null) {
             fitToSizeButton = new JButton(ImageUtilities.loadImageIcon(FIT_MAP_TO_SIZE_BUTTON_ICON_PATH, true));
             fitToSizeButton.setToolTipText(Bundle.CLT_Fit_Map_To_Size_Tooltip());
-            fitToSizeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    componentShowing();
-                }
-            });
+            fitToSizeButton.addActionListener(new FitToSizeButtonActionListenerImpl());
             toolbar.add(fitToSizeButton);
             toolbar.add(new JToolBar.Separator());
         }
@@ -301,26 +259,10 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             processMenu = new JPopupMenu();
             initProcessPopupMenu();
             Image buttonImageIcon = IconRegister.findRegisteredIcon("toolbarProcessRunIcon.png");
-            processButton = DropDownButtonFactory.createDropDownButton(new ImageIcon(buttonImageIcon), processMenu);
-            processButton.setToolTipText(Bundle.CLT_Process_Button_Tooltip());
-            processButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                        requestProcessor.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                aggregator.start(new ArrayList<AbstractAggregationProcess<?, ?>>(aggregator.getPipeline().getProcesses()));
-                            }
-                        });
-                    } else {
-                        NotifyDescriptor nd = new NotifyDescriptor.Message(Bundle.CLT_Information_Message(), NotifyDescriptor.ERROR_MESSAGE);
-
-                        DialogDisplayer.getDefault().notifyLater(nd);
-                    }
-                }
-            });
-            toolbar.add(processButton);
+            processRunButton = DropDownButtonFactory.createDropDownButton(new ImageIcon(buttonImageIcon), processMenu);
+            processRunButton.setToolTipText(Bundle.CLT_Process_Button_Tooltip());
+            processRunButton.addActionListener(new ProcessRunButtonActionListenerImpl());
+            toolbar.add(processRunButton);
         } else {
             processMenu.removeAll();
             initProcessPopupMenu();
@@ -329,12 +271,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         if (this.statusBarButton == null) {
             statusBarButton = new JToggleButton(ImageUtilities.loadImageIcon(STATUS_BAR_VISIBLE_ICON_PATH, true));
             statusBarButton.setToolTipText(Bundle.CLT_StatusBar_Button_Tooltip());
-            statusBarButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    aggComponent.setStatusBarVisible(statusBarButton.isSelected());
-                }
-            });
+            statusBarButton.addActionListener(new StatusBarButtonActionListenerImpl());
             // default setting: status bar is visible
             statusBarButton.doClick();
             toolbar.addSeparator();
@@ -427,28 +364,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public void componentShowing() {
-        List<Source> sourceList = aggregator.getSourceList();
-        if (sourceList != null) {
-            Area totalBoundingBox = new Area();
-
-            for (Source source : sourceList) {
-                String url = source.getUrl();
-                if (url != null) {
-                    File file = new File(url);
-                    Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
-                    if (boundingBox != null) {
-                        totalBoundingBox.add(new Area(boundingBox));
-                    }
-                }
-            }
-            Rectangle2D bounds = totalBoundingBox.getBounds2D();
-            aggComponent.showArea(
-                    new DoubleRect(
-                    bounds.getX(),
-                    bounds.getY(),
-                    bounds.getWidth(),
-                    bounds.getHeight()));
-        }
+        updateMap();
     }
 
     @Override
@@ -501,6 +417,31 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         return explorerManager;
     }
 
+    private void updateMap() {
+        List<Source> sourceList = aggregator.getSourceList();
+        if (sourceList != null) {
+            Area totalBoundingBox = new Area();
+
+            for (Source source : sourceList) {
+                String url = source.getUrl();
+                if (url != null) {
+                    File file = new File(url);
+                    Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
+                    if (boundingBox != null) {
+                        totalBoundingBox.add(new Area(boundingBox));
+                    }
+                }
+            }
+            Rectangle2D bounds = totalBoundingBox.getBounds2D();
+            aggComponent.showArea(
+                    new DoubleRect(
+                    bounds.getX(),
+                    bounds.getY(),
+                    bounds.getWidth(),
+                    bounds.getHeight()));
+        }
+    }
+
     private class ViewUpdater implements ChangeListener {
 
         @Override
@@ -527,6 +468,109 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
         @Override
         public void actionPerformed(ActionEvent e) {
             layer.setVisible(jCheckBoxMenuItem.getState());
+        }
+    }
+
+    private class TileSourceComboBoxItemListenerImpl implements ItemListener {
+
+        public TileSourceComboBoxItemListenerImpl() {
+        }
+
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (tileSourceComboBox.getSelectedItem() instanceof TileSource) {
+                aggComponent.setTileSource((TileSource) tileSourceComboBox.getSelectedItem());
+            }
+        }
+    }
+
+    private class StatisticsDataButtonActionListenerImpl implements ActionListener {
+
+        public StatisticsDataButtonActionListenerImpl() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (aggregator != null) {
+                StatisticsPanel statisticsPanel = new StatisticsPanel(aggregator.getStatistics());
+                DialogDescriptor dd = new DialogDescriptor(statisticsPanel, Bundle.CLT_Statistics_Window());
+                dd.setOptionType(DialogDescriptor.DEFAULT_OPTION);
+                DialogDisplayer.getDefault().notifyLater(dd);
+            }
+        }
+    }
+
+    private class LayerButtonActionListenerImpl implements ActionListener {
+
+        public LayerButtonActionListenerImpl() {
+        }
+        private boolean allVisible = true;
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            allVisible = !allVisible;
+            MenuElement[] subElements = layersMenu.getSubElements();
+            for (MenuElement element : subElements) {
+                if (element instanceof JCheckBoxMenuItem) {
+                    JCheckBoxMenuItem item = (JCheckBoxMenuItem) element;
+                    item.doClick();
+                }
+            }
+        }
+    }
+
+    private class LayerViewButtonActionListenerImpl implements ActionListener {
+
+        public LayerViewButtonActionListenerImpl() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateLayerView();
+        }
+    }
+
+    private class FitToSizeButtonActionListenerImpl implements ActionListener {
+
+        public FitToSizeButtonActionListenerImpl() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateMap();
+        }
+    }
+
+    private class ProcessRunButtonActionListenerImpl implements ActionListener {
+
+        public ProcessRunButtonActionListenerImpl() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                requestProcessor.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        aggregator.start(new ArrayList<AbstractAggregationProcess<?, ?>>(aggregator.getPipeline().getProcesses()));
+                    }
+                });
+            } else {
+                NotifyDescriptor nd = new NotifyDescriptor.Message(Bundle.CLT_Information_Message(), NotifyDescriptor.ERROR_MESSAGE);
+
+                DialogDisplayer.getDefault().notifyLater(nd);
+            }
+        }
+    }
+
+    private class StatusBarButtonActionListenerImpl implements ActionListener {
+
+        public StatusBarButtonActionListenerImpl() {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            aggComponent.setStatusBarVisible(statusBarButton.isSelected());
         }
     }
 }

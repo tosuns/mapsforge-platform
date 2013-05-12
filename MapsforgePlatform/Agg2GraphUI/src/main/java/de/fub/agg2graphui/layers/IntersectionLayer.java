@@ -20,17 +20,17 @@ public class IntersectionLayer extends AbstractLayer<Intersection> {
 
     public IntersectionLayer() {
         super("intersections", "Intersections", new RenderingOptions());
-        getOptions().setColor(new Color(137, 0, 255)); // dark blue, semi transparent!
-        getOptions().setRenderingType(RenderingOptions.RenderingType.POINTS);
-        getOptions().setzIndex(4);
-        getOptions().setOpacity(0.5);
-        getOptions().setStrokeBaseWidthFactor(25);
+        getRenderingOptions().setColor(new Color(137, 0, 255)); // dark blue, semi transparent!
+        getRenderingOptions().setRenderingType(RenderingOptions.RenderingType.POINTS);
+        getRenderingOptions().setzIndex(4);
+        getRenderingOptions().setOpacity(0.5);
+        getRenderingOptions().setStrokeBaseWidthFactor(25);
     }
 
     @Override
-    protected void drawDrawables(List<Drawable> drawables, Graphics2D graphics, Rectangle rectangle) {
+    protected void drawDrawables(Graphics2D graphics, Rectangle rectangle) {
         // render intersections
-        RenderingOptions intersectionRo = getOptions().getCopy();
+        RenderingOptions intersectionRo = getRenderingOptions().getCopy();
 
         // compute a factor depending on the current zoom level to make the stroke width
         // more adaptive.

@@ -21,6 +21,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -126,7 +127,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         }
     }
 
-    public RenderingOptions getOptions() {
+    public RenderingOptions getRenderingOptions() {
         return options;
     }
 
@@ -241,14 +242,22 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     }
 
     protected void drawLine(ILocation location1, ILocation location2, RenderingOptions ro) {
-        drawLine(location1, location2, ro, 1);
+        drawLine(location1, location2, null, ro, 1);
     }
 
     protected void drawLine(ILocation location1, ILocation location2, RenderingOptions ro, float weightFactor) {
-        drawLine(location1, location2, ro, weightFactor, true);
+        drawLine(location1, location2, null, ro, weightFactor);
     }
 
-    protected void drawLine(ILocation location1, ILocation location2, RenderingOptions ro, float weightFactor, boolean flag) {
+    protected void drawLine(ILocation location1, ILocation location2, String label, RenderingOptions ro) {
+        drawLine(location1, location2, label, ro, 1);
+    }
+
+    protected void drawLine(ILocation location1, ILocation location2, String label, RenderingOptions ro, float weightFactor) {
+        drawLine(location1, location2, null, ro, weightFactor, true);
+    }
+
+    protected void drawLine(ILocation location1, ILocation location2, String label, RenderingOptions ro, float weightFactor, boolean flag) {
         if (location1 == null || location2 == null || ro.getRenderingType() == RenderingOptions.RenderingType.POINTS) {
             return;
         }
@@ -256,7 +265,9 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         // make sure we only render what's visible
         java.awt.Point p1 = getLayerManager().getMapViewer().getMapPosition(location1.getLat(), location1.getLon(), false);
         java.awt.Point p2 = getLayerManager().getMapViewer().getMapPosition(location2.getLat(), location2.getLon(), false);
-        drawables.add(new Line(new XYPoint(location1.getID(), p1.x, p1.y), new XYPoint(location2.getID(), p2.x, p2.y), ro, weightFactor, flag));
+        Line line = new Line(new XYPoint(location1.getID(), p1.x, p1.y), new XYPoint(location2.getID(), p2.x, p2.y), ro, weightFactor, flag);
+        line.setLabel(label);
+        drawables.add(line);
     }
 
     protected void drawPoint(ILocation location, RenderingOptions ro) {
@@ -278,84 +289,31 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
 //            Font labelFont = new Font(Font.SERIF, Font.PLAIN, 24);
             // queue draw operations
             setDrawnPointsCounter(0);
-
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
             synchronized (DRAWABLE_LIST_MUTEX) {
-
                 drawables.clear();
-
                 if (isVisible()) {
-
-                    drawDrawables(drawables, g2d, rectangle);
-
+                    drawDrawables(g2d, rectangle);
 //                    labelFont = labelFont.deriveFont((float) (12 - 2 * Math.log(getDrawnPointsCounter())));
 //                    Polygon arrowHead = createArrow();
                     for (Drawable drawObject : getDrawables()) {
                         // set color
-                        if (drawObject == null) {
-                            continue;
-                        }
-                        RenderingOptions ro = drawObject.getRenderingOptions();
-                        Color lineColor = new Color(
-                                (ro.getColor().getRed() / 255f),
-                                (ro.getColor().getGreen() / 255f),
-                                (ro.getColor().getBlue() / 255f),
-                                (float) ro.getOpacity());
-                        g2d.setColor(lineColor);
+                        if (drawObject != null) {
+                            RenderingOptions ro = drawObject.getRenderingOptions();
+                            Color lineColor = new Color(
+                                    (ro.getColor().getRed() / 255f),
+                                    (ro.getColor().getGreen() / 255f),
+                                    (ro.getColor().getBlue() / 255f),
+                                    (float) ro.getOpacity());
+                            g2d.setColor(lineColor);
 
-                        if (drawObject instanceof Point) {
-                            Point p = (Point) drawObject;
-                            // draw point
-                            if (ro.getRenderingType() == RenderingOptions.RenderingType.POINTS) {
-                                float width = ro.getStrokeBaseWidthFactor() * RenderingOptions.getBasicStroke().getLineWidth();
-                                g2d.fillOval((int) (p.getAt().getX() - width / 2), (int) (p.getAt().getY() - width / 2), (int) width, (int) width);
-                            }
-                            // draw label
-                            // do not draw label if not fully opaque
-                            if (ro.getOpacity() < 1) {
-                                continue;
-                            }
-                            if (p.getAt().getID() == null
-                                    || ro.getLabelRenderingType() == RenderingOptions.LabelRenderingType.NEVER) {
-                                continue;
-                            }
-                            if (ro.getLabelRenderingType() == RenderingOptions.LabelRenderingType.INTELLIGENT
-                                    && getDrawnPointsCounter() > MAX_VISIBLE_POINTS_INTELLIGENT_LABELS) {
-                                continue;
-                            }
-                            g2d.drawString(p.getAt().getID(), (int) p.getAt().getX(), (int) (p.getAt().getY() + getLayerManager().getMapViewer().getHeight() * 0.075));
-
-                        } else if (drawObject instanceof Line) {
-                            // draw line
-                            if (ro.getRenderingType() == RenderingOptions.RenderingType.POINTS) {
-                                continue;
-                            }
-                            Line line = (Line) drawObject;
-                            float width = line.getWeightFactor() * getLayerManager().getThicknessFactor();
-                            g2d.setStroke(ro.getStroke(width));
-                            g2d.drawLine((int) line.getFrom().getX(), (int) line.getFrom().getY(), (int) line.getTo().getX(), (int) line.getTo().getY());
-                            // make a nice arrow :) (code from
-                            // http://stackoverflow.com/a/3094933)
-                            if (ro.getRenderingType() == RenderingOptions.RenderingType.LINES) {
-                                continue;
-                            }
-                            if (ro.getRenderingType() == RenderingOptions.RenderingType.INTELLIGENT_ALL
-                                    && getDrawnPointsCounter() > MAX_VISIBLE_POINTS_INTELLIGENT_POINT) {
-                                continue;
-                            }
-                            if (line.isDirected()) {
-
-
-                                double angle = Math.atan2(line.getTo().getY() - line.getFrom().getY(), line.getTo().getX() - line.getFrom().getX());
-                                AffineTransform oldTx = g2d.getTransform();
-                                AffineTransform tx = new AffineTransform(oldTx);
-                                tx.translate(line.getTo().getX(), line.getTo().getY());
-                                tx.rotate((angle - Math.PI / 2d));
-                                g2d.setTransform(tx);
-                                g2d.setStroke(ro.getStroke(getLayerManager().getThicknessFactor()));
-                                g2d.drawLine(0, 0, (int) (6 + width * 2), (int) (-8 - width * 2));
-                                g2d.drawLine(0, 0, (int) (-6 - width * 2), (int) (-8 - width * 2));
-                                g2d.setTransform(oldTx);
+                            if (drawObject instanceof Point) {
+                                Point p = (Point) drawObject;
+                                paintPoint(p, g2d);
+                            } else if (drawObject instanceof Line) {
+                                Line line = (Line) drawObject;
+                                paintLine(line, g2d);
                             }
                         }
                     }
@@ -364,6 +322,88 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         } finally {
             g2d.dispose();
         }
+    }
+
+    private void paintPoint(Point point, Graphics2D g2d) {
+        RenderingOptions renderingOptions = point.getRenderingOptions();
+        // draw point
+        if (renderingOptions.getRenderingType() == RenderingOptions.RenderingType.POINTS) {
+            float width = renderingOptions.getStrokeBaseWidthFactor() * RenderingOptions.getBasicStroke().getLineWidth();
+            g2d.fillOval((int) (point.getAt().getX() - width / 2), (int) (point.getAt().getY() - width / 2), (int) width, (int) width);
+        }
+        // draw label
+        // do not draw label if not fully opaque
+        if (renderingOptions.getOpacity() >= 1
+                && point.getAt().getID() != null
+                && renderingOptions.getLabelRenderingType() != RenderingOptions.LabelRenderingType.NEVER
+                && (renderingOptions.getLabelRenderingType() != RenderingOptions.LabelRenderingType.INTELLIGENT
+                || getDrawnPointsCounter() <= MAX_VISIBLE_POINTS_INTELLIGENT_LABELS)) {
+
+            g2d.drawString(point.getAt().getID(),
+                    (int) point.getAt().getX(),
+                    (int) (point.getAt().getY() + getLayerManager().getMapViewer().getHeight() * 0.075));
+        }
+    }
+
+    private void paintLine(Line line, Graphics2D g2d) {
+        // draw line
+        if (line.getRenderingOptions().getRenderingType() != RenderingOptions.RenderingType.POINTS) {
+
+            float width = line.getWeightFactor() * getLayerManager().getThicknessFactor();
+            Stroke stroke = line.getRenderingOptions().getStroke(width);
+            g2d.setStroke(stroke);
+            int x1 = (int) line.getFrom().getX();
+            int y1 = (int) line.getFrom().getY();
+            int x2 = (int) line.getTo().getX();
+            int y2 = (int) line.getTo().getY();
+            g2d.drawLine(x1, y1, x2, y2);
+
+            // paint the line label
+            paintLineLabel(line, g2d);
+
+            // make a nice arrow :) (code from
+            // http://stackoverflow.com/a/3094933)
+            if ((line.getRenderingOptions().getRenderingType() != RenderingOptions.RenderingType.LINES)
+                    && (line.getRenderingOptions().getRenderingType() != RenderingOptions.RenderingType.INTELLIGENT_ALL
+                    || getDrawnPointsCounter() <= MAX_VISIBLE_POINTS_INTELLIGENT_POINT)) {
+
+                // draw arrows
+                if (line.isDirected()) {
+                    paintArrows(line, g2d);
+                }
+            }
+        }
+    }
+
+    private void paintLineLabel(Line line, Graphics2D g2d) {
+        if (line.getLabel() != null) {
+            double angle = Math.atan2(line.getTo().getY() - line.getFrom().getY(), line.getTo().getX() - line.getFrom().getX());
+            AffineTransform oldTx = g2d.getTransform();
+
+            // rotate to vertical axis and draw string
+            AffineTransform tx = new AffineTransform(oldTx);
+            tx.translate(line.getTo().getX(), line.getTo().getY());
+            tx.rotate((angle - Math.PI / 2d));
+            g2d.setTransform(tx);
+            g2d.drawString(line.getLabel(), 0, 0);
+            g2d.setTransform(oldTx);
+        }
+    }
+
+    private void paintArrows(Line line, Graphics2D g2d) {
+        float width = line.getWeightFactor() * getLayerManager().getThicknessFactor();
+        double angle = Math.atan2(line.getTo().getY() - line.getFrom().getY(), line.getTo().getX() - line.getFrom().getX());
+        AffineTransform oldTx = g2d.getTransform();// rotate to vertical axis and draw string
+        AffineTransform tx = new AffineTransform(oldTx);
+        tx.translate(line.getTo().getX(), line.getTo().getY());
+        tx.rotate((angle - Math.PI / 2d));
+        g2d.setTransform(tx);
+        g2d.setStroke(line.getRenderingOptions().getStroke(getLayerManager().getThicknessFactor()));
+        // the diraction arrows of the line
+        g2d.drawLine(0, 0, (int) (6 + width * 2), (int) (-8 - width * 2));
+        g2d.drawLine(0, 0, (int) (-6 - width * 2), (int) (-8 - width * 2));
+
+        g2d.setTransform(oldTx);
     }
 
     protected void fireRepaintEvent() {
@@ -392,5 +432,5 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         fireRepaintEvent();
     }
 
-    protected abstract void drawDrawables(List<Drawable> drawables, Graphics2D graphics, Rectangle rectangle);
+    protected abstract void drawDrawables(Graphics2D graphics, Rectangle rectangle);
 }

@@ -26,7 +26,6 @@ import java.awt.Component;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
@@ -46,11 +45,9 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
     private static final String CLEAN_SETTINGS = "Cleaning Settings";
     private static final String RAMER_DOUGLAS_PEUCKER_SETTINGS = "Raimer Douglas Peucker Filter Settings";
-    private static final Logger LOG = Logger.getLogger(CleanProcess.class.getName());
     private ArrayList<GPSSegment> cleanSegmentList = new ArrayList<GPSSegment>();
     private List<GPSSegment> inputList = new ArrayList<GPSSegment>();
     private GPSCleaner gpsCleaner = new GPSCleaner();
-    private final Object MUTEX = new Object();
     private final GPSSegmentLayer gPSSegmentLayer;
     private int totalCleanSegmentCount = 0;
     private int totalCleanGPSPointCount = 0;
@@ -133,8 +130,7 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
             handle.start(inputList.size());
             try {
                 gPSSegmentLayer.clearRenderObjects();
-                RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(5);
-                int segCount = 0;
+                RamerDouglasPeuckerFilter rdpf = getFilterInstance();
                 int progess = 0;
                 for (GPSSegment segment : inputList) {
 
@@ -215,15 +211,19 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
         StatisticSection section = new StatisticSection("Cleaning Statistics", "Statistical data of the cleaning process."); //NO18N
         statisticSections.add(section);
+
         section.getStatisticsItemList().add(
                 new StatisticItem("Clean GPS Point Count",
                 String.valueOf(totalCleanGPSPointCount), "Total count of GPS points after cleaning.")); //NO18N
+
         section.getStatisticsItemList().add(
                 new StatisticItem("Clean Segment Count",
                 String.valueOf(totalCleanSegmentCount), "Total count of GPS segments after cleaning.")); //NO18N
+
         section.getStatisticsItemList().add(
                 new StatisticItem("Clean GPS Point/Segment Ratio",
                 String.valueOf(totalCleanGPSPointCount / (double) totalCleanSegmentCount), "The ratio of cleaned points to cleaned segements.")); //NO18N
+
         section.getStatisticsItemList().add(
                 new StatisticItem("Smoothed GPS Points",
                 String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter.")); //NO18N

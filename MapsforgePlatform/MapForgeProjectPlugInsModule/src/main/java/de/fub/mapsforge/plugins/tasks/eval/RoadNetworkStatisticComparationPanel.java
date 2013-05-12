@@ -11,6 +11,8 @@ import de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
 import geofiletypeapi.GeoUtil;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyVetoException;
@@ -38,6 +40,7 @@ public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPan
 
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
+    private Aggregator aggregator;
 
     /**
      * Creates new form RoadNetworkStatisticComparationPanel
@@ -47,31 +50,24 @@ public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPan
         if (aggTopComponent1.isStatusBarVisible()) {
             aggTopComponent1.setStatusBarVisible(false);
         }
+        aggTopComponent1.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateMap();
+                aggTopComponent1.setDisplayToFitMapMarkers();
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+                updateMap();
+                aggTopComponent1.setDisplayToFitMapMarkers();
+            }
+        });
         getPropertySheetView().setDescriptionAreaVisible(false);
     }
 
-    @SuppressWarnings("unchecked")
-    public RoadNetworkStatisticComparationPanel(EvalutationItem evaluationItem) {
-        this();
-        Aggregator aggregator = evaluationItem.getAggregator();
+    private void updateMap() {
         if (aggregator != null) {
-            getTitleLabel().setText(aggregator.getDataObject().getNodeDelegate().getDisplayName());
-            RoadNetworkProcess roadNetworkProcess = evaluationItem.getRoadNetworkProcess();
-            if (roadNetworkProcess != null) {
-                for (AbstractLayer<?> layer : roadNetworkProcess.getLayers()) {
-                    try {
-                        AbstractLayer cloneLayer = layer.getClass().newInstance();
-                        for (Object item : layer.getItemList()) {
-                            cloneLayer.add(item);
-                        }
-                        aggTopComponent1.addLayer(cloneLayer);
-                    } catch (InstantiationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IllegalAccessException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            }
             List<Source> sourceList = aggregator.getSourceList();
             if (sourceList != null) {
                 Area totalBoundingBox = new Area();
@@ -93,6 +89,32 @@ public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPan
                         bounds.getWidth(),
                         bounds.getHeight()));
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public RoadNetworkStatisticComparationPanel(EvalutationItem evaluationItem) {
+        this();
+        aggregator = evaluationItem.getAggregator();
+        if (aggregator != null) {
+            getTitleLabel().setText(aggregator.getDataObject().getNodeDelegate().getDisplayName());
+            RoadNetworkProcess roadNetworkProcess = evaluationItem.getRoadNetworkProcess();
+            if (roadNetworkProcess != null) {
+                for (AbstractLayer<?> layer : roadNetworkProcess.getLayers()) {
+                    try {
+                        AbstractLayer cloneLayer = layer.getClass().newInstance();
+                        for (Object item : layer.getItemList()) {
+                            cloneLayer.add(item);
+                        }
+                        aggTopComponent1.addLayer(cloneLayer);
+                    } catch (InstantiationException ex) {
+                        Exceptions.printStackTrace(ex);
+                    } catch (IllegalAccessException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+            updateMap();
         }
         StatisticNode statisticNode = new StatisticNode(evaluationItem);
         explorerManager.setRootContext(statisticNode);
@@ -257,12 +279,12 @@ public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPan
     private static class StatisticProperty extends ReadOnly<String> {
 
         private final StatisticProvider.StatisticItem item;
-        private static final String PROP_NAME_SUPPORTS_CUSTOM_EDITOR = "supportCustomEditor";
+        private static final String PROP_NAME_SUPPRESS_CUSTOM_EDITOR = "suppressCustomEditor";
 
         public StatisticProperty(StatisticProvider.StatisticItem item) {
             super(item.getName(), String.class, item.getName(), item.getDescription());
             this.item = item;
-            setValue(PROP_NAME_SUPPORTS_CUSTOM_EDITOR, Boolean.FALSE);
+            setValue(PROP_NAME_SUPPRESS_CUSTOM_EDITOR, Boolean.TRUE);
         }
 
         @Override

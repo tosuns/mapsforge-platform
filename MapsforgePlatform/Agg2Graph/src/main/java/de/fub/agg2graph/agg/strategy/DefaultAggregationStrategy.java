@@ -21,12 +21,14 @@ import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.agg.AggregationStrategyFactory;
 import de.fub.agg2graph.agg.IMergeHandler;
+import de.fub.agg2graph.agg.ITraceDistance;
 import de.fub.agg2graph.agg.MergeHandlerFactory;
 import de.fub.agg2graph.agg.TraceDistanceFactory;
 import de.fub.agg2graph.structs.BoundedQueue;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.structs.ILocation;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,11 +37,10 @@ import java.util.logging.Logger;
 
 public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
 
-    private static final Logger logger = Logger
-            .getLogger("agg2graph.agg.default.strategy");
-    public int maxLookahead = 7;
-    public double maxPathDifference = 1000;
-    public double maxInitDistance = 150;
+    private static final Logger logger = Logger.getLogger("agg2graph.agg.default.strategy");
+    private int maxLookahead = 7;
+    private double maxPathDifference = 1000;
+    private double maxInitDistance = 150;
 
     public enum State {
 
@@ -54,6 +55,30 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
     public DefaultAggregationStrategy() {
         traceDistance = TraceDistanceFactory.getObject();
         baseMergeHandler = MergeHandlerFactory.getObject();
+    }
+
+    public int getMaxLookahead() {
+        return maxLookahead;
+    }
+
+    public void setMaxLookahead(int maxLookahead) {
+        this.maxLookahead = maxLookahead;
+    }
+
+    public double getMaxPathDifference() {
+        return maxPathDifference;
+    }
+
+    public void setMaxPathDifference(double maxPathDifference) {
+        this.maxPathDifference = maxPathDifference;
+    }
+
+    public double getMaxInitDistance() {
+        return maxInitDistance;
+    }
+
+    public void setMaxInitDistance(double maxInitDistance) {
+        this.maxInitDistance = maxInitDistance;
     }
 
     @Override
@@ -132,16 +157,22 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
                 int length;
                 List<AggNode> bestPath = null;
                 int bestPathLength = 0;
+
                 for (List<AggNode> path : paths) {
                     Object[] returnValues = traceDistance.getPathDifference(
-                            path, segment, i, mergeHandler);
+                            path,
+                            segment,
+                            i,
+                            mergeHandler);
+
                     difference = (Double) returnValues[0];
-                    length = (int) Math.round(Double.valueOf(returnValues[1]
-                            .toString()));
+                    length = (int) Math.round(Double.valueOf(returnValues[1].toString()));
+
                     logger.info(String.format("Difference of path %s and %s is %.3f",
                             path,
                             segment.subList(i, i + length),
                             difference));
+
                     if (difference < bestDifference
                             || (difference == bestDifference && length > bestPathLength)) {
                         bestDifference = difference;
@@ -166,14 +197,16 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
                 }
 
                 state = isMatch ? State.IN_MATCH : State.NO_MATCH;
+
                 if (isMatch) {
+
                     // make a merge handler if the match would start here
                     if (lastState == State.NO_MATCH) {
                         mergeHandler = baseMergeHandler.getCopy();
                         mergeHandler.setAggContainer(aggContainer);
                     }
-                    logger.log(
-                            Level.FINE,
+
+                    logger.log(Level.FINE,
                             String.format(
                             "best path found: %s, value: %.8f\ncomsuming %d GPS points: %s",
                             bestPath, bestDifference, bestPathLength,
@@ -183,19 +216,20 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
                             + bestPathLength));
                     mergeHandler.setDistance(bestDifference);
                     logger.log(Level.FINE, "Path so far: {0}", mergeHandler);
+
                     i = i + bestPathLength - 1;
                 }
             }
 
-            if (!isMatch
-                    && (lastState == State.IN_MATCH && (state == State.NO_MATCH || i == segment
-                    .size() - 1))) {
+            if (!isMatch && (lastState == State.IN_MATCH
+                    && (state == State.NO_MATCH
+                    || i == segment.size() - 1))) {
                 finishMatch();
             } else if (!isMatch && lastState == State.NO_MATCH) {
                 // if there is no close points or no valid match, add it to the
                 // aggregation
                 AggNode node = new AggNode(currentPoint, aggContainer);
-                node.setID("A-" + currentPoint.getID());
+                node.setID(MessageFormat.format("A-{0}", currentPoint.getID()));
                 addNodeToAgg(aggContainer, node);
                 lastNode = node;
                 i++;

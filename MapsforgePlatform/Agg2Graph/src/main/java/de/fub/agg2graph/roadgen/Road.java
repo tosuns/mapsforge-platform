@@ -13,7 +13,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.roadgen;
 
@@ -65,18 +65,16 @@ public class Road extends AbstractEdge<Intersection> implements Hideable {
         List<ILocation> allNodes = new ArrayList<ILocation>(
                 pathNodes.size() + 2);
         if (getFrom() != null
-                && (pathNodes.size() == 0
-                || getFrom().getLat() != pathNodes.get(0).getLat() || getFrom()
-                .getLon() != pathNodes.get(0).getLon())) {
+                && (pathNodes.isEmpty()
+                || getFrom().getLat() != pathNodes.get(0).getLat()
+                || getFrom().getLon() != pathNodes.get(0).getLon())) {
             allNodes.add(getFrom());
         }
         allNodes.addAll(pathNodes);
         if (getTo() != null
-                && (pathNodes.size() == 0
-                || getTo().getLat() != pathNodes.get(
-                pathNodes.size() - 1).getLat() || getTo()
-                .getLon() != pathNodes.get(pathNodes.size() - 1)
-                .getLon())) {
+                && (pathNodes.isEmpty()
+                || getTo().getLat() != pathNodes.get(pathNodes.size() - 1).getLat()
+                || getTo().getLon() != pathNodes.get(pathNodes.size() - 1).getLon())) {
             allNodes.add(getTo());
         }
         return allNodes;

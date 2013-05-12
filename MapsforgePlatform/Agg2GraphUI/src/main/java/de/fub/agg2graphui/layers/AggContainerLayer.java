@@ -27,14 +27,14 @@ public class AggContainerLayer extends AbstractLayer<AggContainer> {
 
     public AggContainerLayer() {
         super("Aggregation Layer", "Aggregation Layer", new RenderingOptions());
-        getOptions().setColor(new Color(38, 36, 5)); // black
-        getOptions().setRenderingType(RenderingOptions.RenderingType.ALL);
-        getOptions().setzIndex(3);
-        getOptions().setOpacity(1);
+        getRenderingOptions().setColor(new Color(38, 36, 5)); // black
+        getRenderingOptions().setRenderingType(RenderingOptions.RenderingType.ALL);
+        getRenderingOptions().setzIndex(3);
+        getRenderingOptions().setOpacity(1);
     }
 
     @Override
-    protected void drawDrawables(List<Drawable> drawables, Graphics2D g2, Rectangle rectangle) {
+    protected void drawDrawables(Graphics2D g2, Rectangle rectangle) {
 
         for (AggContainer container : getItemList()) {
             Rectangle2D.Double visibleArea = getLayerManager().getGpsArea();
@@ -44,7 +44,7 @@ public class AggContainerLayer extends AbstractLayer<AggContainer> {
                 if (tiles != null) {
                     // draw them
                     g2.setColor(Color.WHITE);
-                    g2.setStroke(getOptions().getStroke(16)); // TODO debug code
+                    g2.setStroke(getRenderingOptions().getStroke(16)); // TODO debug code
                     for (Tile<AggNode> tile : tiles) {
                         // if (!tile.getID().equals("0-4-8-2-4-3-5-5-1-2"))
                         // {
@@ -109,12 +109,12 @@ public class AggContainerLayer extends AbstractLayer<AggContainer> {
                             conns.addAll(node.getOut());
                         }
                     }
-                    RenderingOptions roHighWeight = getOptions();
-                    RenderingOptions roLowWeight = getOptions();
+                    RenderingOptions roHighWeight = getRenderingOptions();
+                    RenderingOptions roLowWeight = getRenderingOptions();
                     if (getLayerManager().isRenderWeight()) {
-                        roHighWeight = getOptions().getCopy();
+                        roHighWeight = getRenderingOptions().getCopy();
                         roHighWeight.setColor(Color.BLACK);
-                        roLowWeight = getOptions().getCopy();
+                        roLowWeight = getRenderingOptions().getCopy();
                         roLowWeight.setColor(new Color(95, 95, 95));
                     }
                     // first paint all connections
@@ -126,7 +126,7 @@ public class AggContainerLayer extends AbstractLayer<AggContainer> {
                             lineWidth = conn.getWeight();
                         } else {
                             // render avgDist
-                            lineRo = getOptions();
+                            lineRo = getRenderingOptions();
                             lineWidth = Math.max(1, (int) conn.getAvgDist());
                         }
                         drawLine(conn.getFrom(), conn.getTo(), lineRo, lineWidth);
@@ -134,7 +134,7 @@ public class AggContainerLayer extends AbstractLayer<AggContainer> {
 
                     // then paint all nodes
                     for (AggNode node : nodes) {
-                        drawPoint(node, getOptions());
+                        drawPoint(node, getRenderingOptions());
                     }
                 }
             }

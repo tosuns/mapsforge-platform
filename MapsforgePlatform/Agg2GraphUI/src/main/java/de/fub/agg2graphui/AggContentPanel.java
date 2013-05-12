@@ -17,8 +17,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,8 +33,13 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
  *
  * @author Serdar
  */
-public class AggContentPanel extends MapViewer implements LayerManager.Provider, ExplorerManager.Provider, ChangeListener, PropertyChangeListener, LayerListener {
+public class AggContentPanel extends MapViewer implements
+        LayerManager.Provider,
+        ExplorerManager.Provider,
+        ChangeListener,
+        LayerListener {
 
+    private static final Logger LOG = Logger.getLogger(AggContentPanel.class.getName());
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private transient final LayerManager layerManager = new LayerManager(this);
@@ -44,7 +47,6 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
     private int highlightIndex = 0;
     private int savedZIndex = Integer.MAX_VALUE;
     private boolean transparentHighlighting = true;
-    private static final Logger LOG = Logger.getLogger(AggContentPanel.class.getName());
 
     /**
      * Creates new form AggContentPanel
@@ -54,27 +56,12 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
         setScrollWrapEnabled(true);
         layerManager.addChangeListener(AggContentPanel.this);
         layerManager.addLayerListener(AggContentPanel.this);
-        explorerManager.addPropertyChangeListener(AggContentPanel.this);
 
         for (MouseWheelListener listener : getMouseWheelListeners()) {
             removeMouseWheelListener(listener);
         }
-        addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                if (e.isControlDown()) {
-                    highlightLayer(e.getWheelRotation());
-                    e.consume();
-                } else {
-                    // push down
-                    if (getZoom() <= getTileController().getTileSource().getMaxZoom() || e.getWheelRotation() > 0) {
-                        setZoom(getZoom() - e.getWheelRotation(), e.getPoint());
-                        LOG.log(Level.INFO, "zoom level: {0}, Maxzoom: {1}", new Object[]{getZoom(), getTileController().getTileSource().getMaxZoom()});
-                    }
-                }
-                layerManager.requestUpdate();
-            }
-        });
+
+        addMouseWheelListener(new MouseWheelListenerImpl());
     }
 
     /**
@@ -100,9 +87,9 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
             this.labelsVisible = labelsVisible;
             for (AbstractLayer<?> layer : getLayerManager().getLayers()) {
                 if (labelsVisible) {
-                    layer.getOptions().setLabelRenderingType(RenderingOptions.LabelRenderingType.ALWAYS);
+                    layer.getRenderingOptions().setLabelRenderingType(RenderingOptions.LabelRenderingType.ALWAYS);
                 } else {
-                    layer.getOptions().setLabelRenderingType(RenderingOptions.LabelRenderingType.NEVER);
+                    layer.getRenderingOptions().setLabelRenderingType(RenderingOptions.LabelRenderingType.NEVER);
                 }
             }
             repaint();
@@ -128,18 +115,18 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
 
     private void highlightLayer(int wheelRotation) {
         if (savedZIndex != Integer.MAX_VALUE) {
-            getLayerManager().getLayers().get(highlightIndex).getOptions().setzIndex(savedZIndex);
+            getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().setzIndex(savedZIndex);
         }
         highlightIndex = (highlightIndex + wheelRotation + getLayerManager().getLayers().size())
                 % getLayerManager().getLayers().size();
-        savedZIndex = getLayerManager().getLayers().get(highlightIndex).getOptions().getzIndex();
-        getLayerManager().getLayers().get(highlightIndex).getOptions().setzIndex(999);
+        savedZIndex = getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().getzIndex();
+        getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().setzIndex(999);
 
         if (transparentHighlighting) {
             for (AbstractLayer<?> layer : getLayerManager().getLayers()) {
-                layer.getOptions().setOpacity(0.3);
+                layer.getRenderingOptions().setOpacity(0.3);
             }
-            getLayerManager().getLayers().get(highlightIndex).getOptions().setOpacity(1);
+            getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().setOpacity(1);
         }
         repaint();
     }
@@ -186,15 +173,15 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        repaint();
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
+        refreshView();
     }
 
     @Override
     public void requestRender(LayerEvent layerEvent) {
+        refreshView();
+    }
+
+    private void refreshView() {
         if (SwingUtilities.isEventDispatchThread()) {
             repaint();
         } else {
@@ -220,7 +207,30 @@ public class AggContentPanel extends MapViewer implements LayerManager.Provider,
 
         @Override
         public int compare(AbstractLayer<?> o1, AbstractLayer<?> o2) {
-            return o1.getOptions().getzIndex() - o2.getOptions().getzIndex();
+            return o1.getRenderingOptions().getzIndex() - o2.getRenderingOptions().getzIndex();
+        }
+    }
+
+    private class MouseWheelListenerImpl implements MouseWheelListener {
+
+        public MouseWheelListenerImpl() {
+        }
+
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            if (e.isControlDown()) {
+                highlightLayer(e.getWheelRotation());
+                e.consume();
+            } else {
+                // push down
+                if (getZoom() <= getTileController().getTileSource().getMaxZoom()
+                        || e.getWheelRotation() > 0) {
+                    setZoom(getZoom() - e.getWheelRotation(), e.getPoint());
+                    LOG.log(Level.FINEST, "zoom level: {0}, Maxzoom: {1}",
+                            new Object[]{getZoom(), getTileController().getTileSource().getMaxZoom()});
+                }
+            }
+            layerManager.requestUpdate();
         }
     }
 }

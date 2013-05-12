@@ -42,8 +42,30 @@ public abstract class AbstractAggregationStrategy implements
     protected AggNode lastNode = null;
 
     @Override
-    public void clear() {
-        lastNode = null;
+    public ITraceDistance getTraceDist() {
+        return traceDistance;
+    }
+
+    public IMergeHandler getBaseMergeHandler() {
+        return baseMergeHandler;
+    }
+
+    public IMergeHandler getMergeHandler() {
+        return mergeHandler;
+    }
+
+    public List<IMergeHandler> getMatches() {
+        return matches;
+    }
+
+    @Override
+    public AggContainer getAggContainer() {
+        return aggContainer;
+    }
+
+    @Override
+    public void setAggContainer(AggContainer aggContainer) {
+        this.aggContainer = aggContainer;
     }
 
     /**
@@ -61,43 +83,25 @@ public abstract class AbstractAggregationStrategy implements
         LOG.log(Level.FINEST, "Added node {0}", node);
     }
 
-    public List<IMergeHandler> getMatches() {
-        return matches;
-    }
-
     @Override
-    public void setAggContainer(AggContainer aggContainer) {
-        this.aggContainer = aggContainer;
-    }
-
-    @Override
-    public AggContainer getAggContainer() {
-        return aggContainer;
-    }
-
-    @Override
-    public AggConnection mergeConnections(AggConnection newConn,
-            AggConnection oldConn) {
+    public AggConnection mergeConnections(AggConnection newConn, AggConnection oldConn) {
         return oldConn;
     }
 
     @Override
-    public ITraceDistance getTraceDist() {
-        return traceDistance;
-    }
-
-    @Override
-    public AggConnection combineConnections(AggConnection firstConn,
-            AggConnection secondConn) {
-        AggConnection conn = new AggConnection(firstConn.getFrom(),
-                secondConn.getTo(), aggContainer);
+    public AggConnection combineConnections(AggConnection firstConn, AggConnection secondConn) {
+        AggConnection conn = new AggConnection(
+                firstConn.getFrom(),
+                secondConn.getTo(),
+                aggContainer);
         conn.setWeight((firstConn.getWeight() + secondConn.getWeight()) / 2);
         conn.setAvgDist((firstConn.getAvgDist() + secondConn.getAvgDist()) / 2);
         return conn;
     }
 
-    public IMergeHandler getMergeHandler() {
-        return mergeHandler;
+    @Override
+    public void clear() {
+        lastNode = null;
     }
 
     @Override

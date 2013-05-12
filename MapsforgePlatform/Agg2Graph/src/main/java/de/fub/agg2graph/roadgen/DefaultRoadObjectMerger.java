@@ -37,8 +37,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
 
     @Override
     public void mergeInteresections(RoadNetwork roadNetwork) {
-        List<Intersection[]> mergeableIntersections = new ArrayList<Intersection[]>(
-                10);
+        List<Intersection[]> mergeableIntersections = new ArrayList<Intersection[]>(100);
 
         for (Intersection i1 : roadNetwork.intersections) {
             if (!i1.isVisible()) {
@@ -92,7 +91,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
         if (i2.mergedTo != null) {
             i2 = i2.mergedTo;
         }
-        logger.info(MessageFormat.format("merging {0} with {1} dist: {2}", i1, i2, GPSCalc.getDistance(i1, i2)));
+        logger.fine(MessageFormat.format("merging {0} with {1} dist: {2}", i1, i2, GPSCalc.getDistance(i1, i2)));
         AggNode aggNode = new AggNode(GPSCalc.getMidwayLocation(i1, i2),
                 i1.baseNode.getAggContainer());
         Intersection newIntersection = new Intersection(aggNode);

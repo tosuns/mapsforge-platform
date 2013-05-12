@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import org.openide.cookies.OpenCookie;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -37,6 +38,10 @@ public class DelegateAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        OpenCookie openCookie = aggregator.getDataObject().getLookup().lookup(OpenCookie.class);
+        if (openCookie != null) {
+            openCookie.open();
+        }
         requestProcessor.post(new Runnable() {
             @Override
             public void run() {

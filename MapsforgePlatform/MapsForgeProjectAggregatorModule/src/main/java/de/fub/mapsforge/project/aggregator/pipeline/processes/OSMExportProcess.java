@@ -14,7 +14,9 @@ import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
@@ -76,21 +78,33 @@ public class OSMExportProcess extends AbstractXmlAggregationProcess<RoadNetwork,
             if (JFileChooser.APPROVE_OPTION == showSaveDialog) {
                 File selectedFile = fileChooser.getSelectedFile();
                 if (selectedFile != null) {
-                    try {
-                        if (!selectedFile.exists()) {
-                            selectedFile.createNewFile();
-                        }
-                        OsmExporter osmExport = new OsmExporter();
-                        osmExport.setTargetFile(selectedFile);
-                        osmExport.export(roadNetwork);
-
-                        fileObject = FileUtil.toFileObject(selectedFile);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    handleExport(selectedFile);
                 }
             }
             fireProcessProgressEvent(new ProcessPipeline.ProcessEvent<OSMExportProcess>(this, "Creating OSM File...", 100));
+        }
+    }
+
+    private void handleExport(File selectedFile) {
+        OutputStream outputStream = null;
+        try {
+            if (!selectedFile.exists()) {
+                selectedFile.createNewFile();
+            }
+            OsmExporter osmExport = new OsmExporter();
+            outputStream = new FileOutputStream(selectedFile);
+            osmExport.export(roadNetwork, outputStream);
+            fileObject = FileUtil.toFileObject(selectedFile);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
         }
     }
 

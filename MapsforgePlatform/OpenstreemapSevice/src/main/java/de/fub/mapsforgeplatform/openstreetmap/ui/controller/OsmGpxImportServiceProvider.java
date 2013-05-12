@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.ui.controller;
 
-import de.fub.mapsforge.project.datasource.service.GPXImportService;
+import de.fub.mapsforge.project.datasource.service.DataImportService;
 import de.fub.mapsforgeplatform.openstreetmap.service.LocationBoundingBoxService.BoundingBox;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
 import de.fub.mapsforgeplatform.openstreetmap.ui.MapViewerBoundingBoxProvider;
@@ -36,8 +36,8 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @NbBundle.Messages({"CLT_Name=OSM Import..."})
-@ServiceProvider(service = GPXImportService.class)
-public class OsmGpxImportServiceProvider implements GPXImportService, TaskListener {
+@ServiceProvider(service = DataImportService.class)
+public class OsmGpxImportServiceProvider implements DataImportService, TaskListener {
 
     private static final Logger LOG = Logger.getLogger(OsmGpxImportServiceProvider.class.getName());
     private FileObject destFolder;
@@ -82,6 +82,10 @@ public class OsmGpxImportServiceProvider implements GPXImportService, TaskListen
         return new Date(timestamp.getTime());
     }
 
+    @NbBundle.Messages({
+        "# {0} - start",
+        "# {1} - end",
+        "Fetching_GPX_Data=Downloading data {0} to {1}"})
     private void startDownLoadProcess() {
         timestamp = Calendar.getInstance().getTime();
         view.lockInputFields(true);

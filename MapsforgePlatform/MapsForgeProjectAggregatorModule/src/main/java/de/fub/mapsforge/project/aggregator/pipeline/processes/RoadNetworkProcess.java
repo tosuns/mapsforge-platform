@@ -9,7 +9,10 @@ import de.fub.agg2graph.management.Statistics;
 import de.fub.agg2graph.roadgen.Intersection;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.agg2graphui.layers.IntersectionLayer;
+import de.fub.agg2graphui.layers.PrimaryRoadNetworkLayer;
 import de.fub.agg2graphui.layers.RoadNetworkLayer;
+import de.fub.agg2graphui.layers.SecondaryRoadNetworkLayer;
+import de.fub.agg2graphui.layers.TertiaryRoadNetworkLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
@@ -41,7 +44,9 @@ public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContain
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
     private RoadNetwork roadNetwork = null;
     private IntersectionLayer intersectionLayer = new IntersectionLayer();
-    private RoadNetworkLayer roadNetworkLayer = new RoadNetworkLayer();
+    private RoadNetworkLayer primaryRoadNetworkLayer = new PrimaryRoadNetworkLayer();
+    private RoadNetworkLayer secondaryRoadNetworkLayer = new SecondaryRoadNetworkLayer();
+    private RoadNetworkLayer teritaryRoadNetworkLayer = new TertiaryRoadNetworkLayer();
 
     public RoadNetworkProcess() {
         this(null);
@@ -50,11 +55,14 @@ public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContain
     public RoadNetworkProcess(Aggregator container) {
         super(container);
         getLayers().add(intersectionLayer);
-        getLayers().add(roadNetworkLayer);
+        getLayers().add(primaryRoadNetworkLayer);
+        getLayers().add(secondaryRoadNetworkLayer);
+        getLayers().add(teritaryRoadNetworkLayer);
     }
 
     @Override
     public void setInput(AggContainer input) {
+        // we can access the aggContainer via the parent Aggregator instance.
     }
 
     @Override
@@ -64,7 +72,7 @@ public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContain
             ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
             try {
                 handle.start();
-                roadNetworkLayer.clearRenderObjects();
+                primaryRoadNetworkLayer.clearRenderObjects();
                 intersectionLayer.clearRenderObjects();
 
                 roadNetwork = new RoadNetwork();
@@ -82,8 +90,9 @@ public class RoadNetworkProcess extends AbstractXmlAggregationProcess<AggContain
                     handle.progress(++counter);
                 }
 
-                roadNetworkLayer.add(roadNetwork);
-
+                primaryRoadNetworkLayer.add(roadNetwork);
+                secondaryRoadNetworkLayer.add(roadNetwork);
+                teritaryRoadNetworkLayer.add(roadNetwork);
                 fireProcessProgressEvent(new ProcessPipeline.ProcessEvent<RoadNetworkProcess>(this, "Creating Roadnetwork...", 100));
             } finally {
                 handle.finish();
