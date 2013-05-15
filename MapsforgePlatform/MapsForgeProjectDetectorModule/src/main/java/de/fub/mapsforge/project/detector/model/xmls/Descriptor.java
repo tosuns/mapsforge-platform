@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.xmls;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -21,7 +22,7 @@ public class Descriptor {
     private String javaType;
     @XmlAttribute(name = "name", required = true)
     private String name;
-    @XmlAttribute(name = "description")
+    @XmlElement(name = "description")
     private String description;
 
     public Descriptor() {

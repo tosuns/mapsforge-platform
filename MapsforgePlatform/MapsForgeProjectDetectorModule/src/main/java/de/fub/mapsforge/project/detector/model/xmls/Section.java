@@ -26,7 +26,7 @@ public class Section {
     private String id;
     @XmlAttribute(name = "name", required = true)
     private String name;
-    @XmlAttribute(name = "description")
+    @XmlElement(name = "description")
     private String description;
 
     public Section() {

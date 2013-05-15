@@ -23,6 +23,7 @@ public class PropertySet {
     private List<Property> properties;
     private String name;
     private String description;
+    private String id;
 
     public PropertySet() {
     }
@@ -38,6 +39,15 @@ public class PropertySet {
         this.description = description;
     }
 
+    @XmlAttribute(name = "id", required = true)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @XmlAttribute(name = "name", required = true)
     public String getName() {
         return name;
@@ -47,7 +57,7 @@ public class PropertySet {
         this.name = name;
     }
 
-    @XmlAttribute(name = "description", required = true)
+    @XmlElement(name = "description", required = true)
     public String getDescription() {
         return description;
     }
