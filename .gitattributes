@@ -438,7 +438,15 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforg
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/processes/RoadNetworkProcess.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/DefaultAggregationStrategy.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/DefaultCachingStrategy.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/DefaultMergeHandler.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/DefaultTraceDistance.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/GpxmergeAggregationStrategy.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/GpxmergeTraceDistance.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/interfaces/AggregationStrategy.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/interfaces/Descriptor.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/interfaces/DescriptorFactory.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/interfaces/MergeHandler.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/pipeline/wrapper/interfaces/TraceDistance.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/xml/AggregatorDescriptor.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/xml/ProcessDescriptor.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/mapsforge/project/aggregator/xml/ProcessDescriptorList.java -text
@@ -546,9 +554,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/filetype/DetectorVisualElement.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/filetype/DetectorVisualElement.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/filetype/package-info.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/AbstractDetectorProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/Detector.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/DetectorProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/TrainingsDataProvider.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/gpx/GpxWayPoint.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/gpx/TrackSegment.java -text
@@ -627,6 +633,8 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/ResegmentationFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/UniformDurationSegmentationFilterProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/preprocessors/filters/UniformLengthSegmentationFilterProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/process/AbstractDetectorProcess.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/process/DetectorProcess.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartContainer.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartContainer.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/statistics/BarChartPanel.form -text
@@ -782,7 +790,12 @@ MapsforgePlatform/MapsforgeGpxAnalysisModule/src/main/resources/de/fub/mapsforge
 MapsforgePlatform/MapsforgeGpxAnalysisModule/src/main/resources/de/fub/mapsforge/gpx/analysis/ui/Bundle.properties -text
 MapsforgePlatform/MapsforgeGpxAnalysisModule/src/main/resources/de/fub/mapsforge/gpx/analysis/ui/charts/Bundle.properties -text
 MapsforgePlatform/OpenstreemapSevice/pom.xml -text
+MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/map/provider/OSMHighwayMapProvider.java -text
+MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/map/provider/OSMRailRoadMapProvider.java -text
+MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/map/provider/OSMSubwayRailRoadMapProvider.java -text
+MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/map/provider/OSMTramMapProvider.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/LocationBoundingBoxService.java -text
+MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/MapProvider.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/service/OpenstreetMapService.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/ui/MapViewerBoundingBoxProvider.form -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/mapsforgeplatform/openstreetmap/ui/MapViewerBoundingBoxProvider.java -text

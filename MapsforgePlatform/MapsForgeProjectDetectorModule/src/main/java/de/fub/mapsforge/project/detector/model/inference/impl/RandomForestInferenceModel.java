@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.impl;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
@@ -28,10 +27,6 @@ public class RandomForestInferenceModel extends AbstractInferenceModel {
     private RandomForest classifier = null;
 
     public RandomForestInferenceModel() {
-    }
-
-    public RandomForestInferenceModel(Detector detector) {
-        super(detector);
     }
 
     private void initToolBar() {

@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference;
 
 import de.fub.mapsforge.project.detector.factories.nodes.inference.InferenceModelNode;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import static de.fub.mapsforge.project.detector.model.inference.InferenceMode.CROSS_VALIDATION_MODE;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler;
@@ -14,6 +13,7 @@ import de.fub.mapsforge.project.detector.model.inference.processhandler.Inferenc
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceModelProcessHandler;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler;
 import de.fub.mapsforge.project.detector.model.inference.ui.InferenceModelSettingForm;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Features;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -42,6 +42,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 
@@ -124,11 +125,11 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     private InferenceModelDescriptor inferenceModelDescriptor = null;
 
     public AbstractInferenceModel() {
-        this(null);
     }
 
-    public AbstractInferenceModel(Detector detector) {
-        super(detector);
+    @Override
+    protected void setDetector(Detector detector) {
+        super.setDetector(detector);
         if (detector != null) {
             modelSynchronizerClient = detector.create(new ChangeListener() {
                 @Override
@@ -153,9 +154,13 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
             if (features != null) {
                 FeatureProcess feature = null;
                 for (ProcessDescriptor featureDescriptor : features.getFeatureList()) {
-                    feature = DetectorUtils.createInstance(FeatureProcess.class, featureDescriptor.getJavaType(), getDetector());
-                    if (feature != null) {
-                        addFeature(feature);
+                    try {
+                        feature = FeatureProcess.find(featureDescriptor.getJavaType(), getDetector());
+                        if (feature != null) {
+                            addFeature(feature);
+                        }
+                    } catch (DetectorProcessNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
                 }
             }
@@ -660,6 +665,31 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
 
     public void resetClassifier() {
         classifier = createClassifier();
+    }
+
+    public static synchronized AbstractInferenceModel find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
+        AbstractInferenceModel abstractInferenceModel = null;
+        try {
+            Class<?> clazz = null;
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            // prefer netbeans classloader
+            if (classLoader != null) {
+                clazz = classLoader.loadClass(qualifiedInstanceName);
+            } else {
+                // fall back
+                clazz = Class.forName(qualifiedInstanceName);
+            }
+            if (AbstractInferenceModel.class.isAssignableFrom(clazz)) {
+                @SuppressWarnings("unchecked")
+                Class<AbstractInferenceModel> abstractInferenceModelClass = (Class<AbstractInferenceModel>) clazz;
+                abstractInferenceModel = DetectorProcess.find(abstractInferenceModelClass, detector);
+            } else {
+                throw new DetectorProcessNotFoundException(MessageFormat.format("{0} is not type of {1}", clazz.getSimpleName(), AbstractInferenceModel.class.getSimpleName()));
+            }
+        } catch (Throwable ex) {
+            throw new DetectorProcessNotFoundException(ex);
+        }
+        return abstractInferenceModel;
     }
 
     /**

@@ -13,13 +13,13 @@ import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.PostProce
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.PreProcessorPipeline;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.PostProcessors;
 import de.fub.mapsforge.project.detector.model.xmls.PreProcessors;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Profile;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
@@ -81,23 +82,60 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
         if (detectorDescriptor != null) {
 
             // initialize the inference model
+            initializeInferenceModel();
+
+            // initialize the preprocessors
+            initalizePreProcessors();
+
+            // initialize the postprocessors
+            initializePostProcessors();
+
+            // determine active profile
+            initializeProfile();
+        } else {
+            setDetectorState(ProcessState.ERROR);
+        }
+    }
+
+    private void initializeInferenceModel() {
+        DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
+        if (detectorDescriptor != null) {
+
+            // initialize the inference model
             InferenceModelDescriptor inferenceModelDescriptor = detectorDescriptor.getInferenceModel();
             if (inferenceModelDescriptor != null) {
-                inferenceModel = DetectorUtils.createInferenceModel(inferenceModelDescriptor, Detector.this);
+                try {
+                    inferenceModel = AbstractInferenceModel.find(inferenceModelDescriptor.getJavaType(), Detector.this);
+                } catch (DetectorProcess.DetectorProcessNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
+        }
+    }
 
+    private void initalizePreProcessors() {
+        DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
+        if (detectorDescriptor != null) {
             // initialize the preprocessors
             PreProcessors preprocessors = detectorDescriptor.getPreprocessors();
             if (preprocessors != null) {
                 FilterProcess filter = null;
                 getPreProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : preprocessors.getPreprocessorList()) {
-                    filter = DetectorUtils.createInstance(FilterProcess.class, processDescriptor.getJavaType(), Detector.this);
-                    if (filter != null) {
+                    try {
+                        filter = FilterProcess.find(processDescriptor.getJavaType(), Detector.this);
                         getPreProcessorPipeline().add(filter);
+                    } catch (DetectorProcess.DetectorProcessNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
                 }
             }
+        }
+    }
+
+    private void initializePostProcessors() {
+        DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
+        if (detectorDescriptor != null) {
 
             // initialize the postprocessors
             PostProcessors postprocessors = detectorDescriptor.getPostprocessors();
@@ -105,13 +143,20 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
                 Task task = null;
                 getPostProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
-                    task = DetectorUtils.createInstance(Task.class, processDescriptor.getJavaType(), Detector.this);
-                    if (task != null) {
+                    try {
+                        task = Task.find(processDescriptor.getJavaType(), Detector.this);
                         getPostProcessorPipeline().add(task);
+                    } catch (DetectorProcess.DetectorProcessNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
                 }
             }
+        }
+    }
 
+    private void initializeProfile() {
+        DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
+        if (detectorDescriptor != null) {
             // determine active profile
             if (!detectorDescriptor.getProfiles().getProfileList().isEmpty()) {
                 if (detectorDescriptor.getProfiles() == null) {
@@ -129,8 +174,6 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
                     }
                 }
             }
-        } else {
-            setDetectorState(ProcessState.ERROR);
         }
     }
 

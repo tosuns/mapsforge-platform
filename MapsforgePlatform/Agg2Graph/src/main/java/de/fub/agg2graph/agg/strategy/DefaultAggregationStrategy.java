@@ -149,8 +149,7 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
                 isMatch = false;
             } else {
                 // there is candidates for a match start
-                List<List<AggNode>> paths = getPathsByDepth(nearPoints, 1,
-                        maxLookahead);
+                List<List<AggNode>> paths = getPathsByDepth(nearPoints, 1, maxLookahead);
                 // evaluate paths, pick best, continue
                 logger.log(Level.FINE, "Paths from {0} in agg: {1}", new Object[]{nearPoints, paths});
                 double bestDifference = Double.MAX_VALUE, difference;

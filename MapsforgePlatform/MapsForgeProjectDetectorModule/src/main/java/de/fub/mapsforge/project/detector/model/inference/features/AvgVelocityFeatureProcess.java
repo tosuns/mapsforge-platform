@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.AvgVelocityFeature;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -28,12 +27,6 @@ public class AvgVelocityFeatureProcess extends FeatureProcess {
     private final AvgVelocityFeature feature = new AvgVelocityFeature();
 
     public AvgVelocityFeatureProcess() {
-        this(null);
-    }
-
-    public AvgVelocityFeatureProcess(Detector detector) {
-        super(detector);
-        init();
     }
 
     private void init() {
@@ -47,6 +40,7 @@ public class AvgVelocityFeatureProcess extends FeatureProcess {
 
     @Override
     protected void start() {
+        init();
         feature.reset();
         if (gpsTrack != null) {
             for (Waypoint waypoint : gpsTrack.getWayPointList()) {

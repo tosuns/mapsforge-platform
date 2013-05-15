@@ -27,11 +27,14 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 public class DefaultCachingStrategy implements ICachingStrategy {
 
+    private static final Logger LOG = Logger.getLogger(DefaultCachingStrategy.class.getName());
     protected File sourceFolder = null;
     protected AggContainer agg;
     protected TileManager tm;
@@ -86,9 +89,9 @@ public class DefaultCachingStrategy implements ICachingStrategy {
         try {
             tc.saveTile(tm.getRoot());
         } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         } catch (TransformerException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -141,7 +144,7 @@ public class DefaultCachingStrategy implements ICachingStrategy {
             tm.removeConnection(conn); // reduces connection counter by 1
             conn = null;
         } else {
-            System.out.println("REMOVAL ERROR!");
+            LOG.log(Level.FINE, "REMOVAL ERROR!"); // NO18N
         }
     }
 

@@ -20,6 +20,9 @@ import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.DefaultAggregationStrategy;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
+import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Component;
 import java.awt.Image;
@@ -53,6 +56,7 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
     private int totalAggNodeCount = 0;
     private int totalGPSPointCount = 0;
     private int totalPointGhostPointPairs = 0;
+    private ProcessDescriptor processDescriptor = null;
 
     public AggregationProcess() {
         this(null);
@@ -65,7 +69,6 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
     private void init() {
         initLayers();
-        initSettings();
     }
 
     private void initLayers() {
@@ -78,7 +81,46 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
         getLayers().add(aggregationLayer);
     }
 
-    private void initSettings() {
+    @Override
+    public ProcessDescriptor getProcessDescriptor() {
+        if (processDescriptor == null) {
+            Aggregator aggregator = getAggregator();
+            if (aggregator != null && aggregator.getAggContainer() != null) {
+                for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
+                    if (descriptor != null
+                            && getClass().getName().equals(descriptor.getJavaType())) {
+                        processDescriptor = descriptor;
+                        break;
+                    }
+                }
+                if (processDescriptor == null) {
+                    processDescriptor = createProcessDescriptor();
+                }
+            } else {
+                processDescriptor = createProcessDescriptor();
+            }
+        }
+        return processDescriptor;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        // for the  default settings the call will be delegated to the default
+        // AggregationStrategy instance DefaulAggregationStrategy
+
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(AggregationProcess.class.getName());
+        descriptor.setDescription(Bundle.CLT_AggregationProcess_Name());
+        descriptor.setDisplayName(Bundle.CLT_AggregationProcess_Name());
+
+        DefaultAggregationStrategy defaultAggregationStrategy = new DefaultAggregationStrategy();
+        defaultAggregationStrategy.setAggregator(getAggregator());
+        PropertySection propertySection = defaultAggregationStrategy.getPropertySection();
+        if (propertySection != null) {
+            descriptor.getProperties().getSections().add(propertySection);
+        }
+
+        return descriptor;
     }
 
     @Override

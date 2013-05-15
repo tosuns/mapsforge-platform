@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.impl;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -46,11 +45,6 @@ public class J48InferenceModel extends AbstractInferenceModel {
     private J48 classifierJ48 = null;
 
     public J48InferenceModel() {
-        this(null);
-    }
-
-    public J48InferenceModel(Detector detector) {
-        super(detector);
     }
 
     private void initToolBar() {

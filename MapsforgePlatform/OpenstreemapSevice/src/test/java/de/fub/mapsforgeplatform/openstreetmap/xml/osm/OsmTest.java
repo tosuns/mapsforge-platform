@@ -53,7 +53,7 @@ public class OsmTest {
     public void serviceTest() {
         try {
             OpenstreetMapService openstreetMapService = new OpenstreetMapService();
-            Osm osmMap = openstreetMapService.getOSMMap(Osm.class, "13.5187958", "52.5321076", "13.51898731", "52.53313301");
+            Osm osmMap = openstreetMapService.getOSMHighwayMap(Osm.class, "13.5187958", "52.5321076", "13.51898731", "52.53313301");
             javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(Osm.class);
             javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
             marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N

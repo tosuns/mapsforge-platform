@@ -6,17 +6,12 @@ package de.fub.mapsforge.project.detector.model.inference.impl;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.StringReader;
 import java.text.MessageFormat;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.DialogDisplayer;

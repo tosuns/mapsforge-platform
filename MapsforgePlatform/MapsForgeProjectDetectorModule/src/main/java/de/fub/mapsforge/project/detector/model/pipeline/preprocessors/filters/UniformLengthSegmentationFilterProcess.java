@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -32,14 +31,10 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
     public UniformLengthSegmentationFilterProcess() {
     }
 
-    public UniformLengthSegmentationFilterProcess(Detector detector) {
-        super(detector);
-    }
-
     @Override
     protected void start() {
         if (gpsTracks != null) {
-            if (result== null) {
+            if (result == null) {
                 result = new ArrayList<TrackSegment>(gpsTracks.size());
             }
             result.clear();

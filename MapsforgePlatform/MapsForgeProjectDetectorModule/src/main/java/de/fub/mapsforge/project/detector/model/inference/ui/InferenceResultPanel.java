@@ -4,8 +4,8 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
-import de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart;
 import de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler;
+import de.fub.mapsforge.project.detector.model.inference.ui.charts.ClassificationBarChart;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.components.CustomOutlineView;

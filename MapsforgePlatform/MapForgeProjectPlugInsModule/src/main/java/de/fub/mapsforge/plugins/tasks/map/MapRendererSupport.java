@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.xmls.Property;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.OutputStream;
 import java.text.MessageFormat;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.OnStop;
 import org.openide.util.Exceptions;
 
 /**
@@ -72,6 +74,7 @@ final class MapRendererSupport {
         OutputStream outputStream = null;
         try {
             copyFileObject = File.createTempFile("tmp", ".agg");
+            copyFileObject.deleteOnExit();
             inputStream = fileObject.getInputStream();
             outputStream = new FileOutputStream(copyFileObject);
             FileUtil.copy(inputStream, outputStream);
@@ -116,5 +119,34 @@ final class MapRendererSupport {
             }
         }
         throw new FileNotFoundException("Couldn't find temp dir!"); // NO18N
+    }
+
+    @OnStop
+    public static class TempFolderCleaner implements Runnable {
+
+        @Override
+        public void run() {
+            String tmpdir = System.getProperty("java.io.tmpdir");
+            if (tmpdir != null) {
+                File tmpFile = new File(tmpdir);
+                if (tmpFile.exists()) {
+                    for (File file : tmpFile.listFiles(new FileFilterImpl())) {
+                        file.delete();
+                    }
+                }
+            }
+        }
+
+        private static class FileFilterImpl implements FileFilter {
+
+            public FileFilterImpl() {
+            }
+
+            @Override
+            public boolean accept(File pathname) {
+                return (pathname.isFile() && pathname.getAbsolutePath().endsWith(".agg"))
+                        || (pathname.isDirectory() && pathname.getAbsolutePath().matches("MapRendererTransportation"));
+            }
+        }
     }
 }

@@ -47,11 +47,12 @@ public class MapRenderer extends Task {
     private final MapRendererSupport mapRendererSupport = new MapRendererSupport(MapRenderer.this);
 
     public MapRenderer() {
-        this(null);
+        validate();
     }
 
-    public MapRenderer(Detector detector) {
-        super(detector);
+    @Override
+    protected void setDetector(Detector detector) {
+        super.setDetector(detector);
         validate();
     }
 
@@ -114,7 +115,7 @@ public class MapRenderer extends Task {
 
                             FileObject tmpFolder = mapRendererSupport.createTempFolder(
                                     URLEncoder.encode(
-                                    MessageFormat.format("Transportation: {0}",
+                                    MessageFormat.format("MapRendererTransportation: {0}",
                                     aggregator.getAggregatorDescriptor().getName()),
                                     "UTF-8"));
 

@@ -7,10 +7,11 @@ package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 import static de.fub.mapforgeproject.api.process.ProcessState.ERROR;
 import static de.fub.mapforgeproject.api.process.ProcessState.INACTIVE;
 import static de.fub.mapforgeproject.api.process.ProcessState.RUNNING;
-import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
@@ -28,6 +29,7 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -39,6 +41,9 @@ import org.openide.util.lookup.Lookups;
 public abstract class Task extends AbstractDetectorProcess<InferenceModelResultDataSet, Void> {
 
     private InferenceModelResultDataSet resultDataSet;
+
+    public Task() {
+    }
 
     @Override
     protected ProcessDescriptor createProcessDescriptor() {
@@ -60,14 +65,6 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
             }
         }
         return processDescriptor;
-    }
-
-    public Task() {
-        super(null);
-    }
-
-    public Task(Detector detector) {
-        super(detector);
     }
 
     @Override
@@ -97,6 +94,29 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
     @Override
     protected Image getDefaultImage() {
         return IconRegister.findRegisteredIcon("processIconNormal.png");
+    }
+
+    public static synchronized Task find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
+        Task taskProcess = null;
+        try {
+            Class<?> clazz = null;
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            // prefer netbeans classloader
+            if (classLoader != null) {
+                clazz = classLoader.loadClass(qualifiedInstanceName);
+            } else {
+                // fall back
+                clazz = Class.forName(qualifiedInstanceName);
+            }
+            if (Task.class.isAssignableFrom(clazz)) {
+                @SuppressWarnings("unchecked")
+                Class<Task> taskProcessClass = (Class<Task>) clazz;
+                taskProcess = DetectorProcess.find(taskProcessClass, detector);
+            }
+        } catch (Throwable ex) {
+            throw new DetectorProcessNotFoundException(ex);
+        }
+        return taskProcess;
     }
 
     @NbBundle.Messages({"CLT_Tesk_Parameter=Parameters"})

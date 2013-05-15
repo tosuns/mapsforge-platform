@@ -36,8 +36,8 @@ import java.util.logging.Logger;
 public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
 
     private static final Logger LOG = Logger.getLogger(GpxmergeAggregationStrategy.class.getName());
-    public double maxInitDistance = 100;
-    public double maxPathDifference = 2;
+    private double maxInitDistance = 100;
+    private double maxPathDifference = 2;
 
     /**
      * Preferably use the {@link AggregationStrategyFactory} for creating
@@ -46,6 +46,22 @@ public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
     public GpxmergeAggregationStrategy() {
         traceDistance = TraceDistanceFactory.getObject();
         baseMergeHandler = MergeHandlerFactory.getObject();
+    }
+
+    public double getMaxInitDistance() {
+        return maxInitDistance;
+    }
+
+    public void setMaxInitDistance(double maxInitDistance) {
+        this.maxInitDistance = maxInitDistance;
+    }
+
+    public double getMaxPathDifference() {
+        return maxPathDifference;
+    }
+
+    public void setMaxPathDifference(double maxPathDifference) {
+        this.maxPathDifference = maxPathDifference;
     }
 
     @Override

@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.data.filter.LimitWaypointFilter;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -36,12 +35,6 @@ public class LimitWaypointFilterProcess extends FilterProcess {
     private final LimitWaypointFilter filter = new LimitWaypointFilter();
 
     public LimitWaypointFilterProcess() {
-        this(null);
-    }
-
-    public LimitWaypointFilterProcess(Detector detector) {
-        super(detector);
-        init();
     }
 
     private void init() {
@@ -55,6 +48,7 @@ public class LimitWaypointFilterProcess extends FilterProcess {
 
     @Override
     protected void start() {
+        init();
         filter.reset();
         for (TrackSegment trackSegment : gpxTracks) {
             ArrayList<Waypoint> arrayList = new ArrayList<Waypoint>(trackSegment.getWayPointList());

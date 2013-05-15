@@ -191,7 +191,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
 
 
         try {
-            osmMap = openstreetMapService.getOSMMap(Osm.class,
+            osmMap = openstreetMapService.getOSMHighwayMap(Osm.class,
                     String.valueOf(leftLong), //leftlong
                     String.valueOf(bottomLat), // bottomlat
                     String.valueOf(rightLong), //rightlon

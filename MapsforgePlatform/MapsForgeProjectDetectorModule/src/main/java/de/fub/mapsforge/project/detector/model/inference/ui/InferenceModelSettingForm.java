@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui;
 
-import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.awt.event.ActionEvent;

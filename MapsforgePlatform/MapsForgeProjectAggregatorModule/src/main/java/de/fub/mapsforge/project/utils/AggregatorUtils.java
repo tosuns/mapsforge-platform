@@ -63,6 +63,7 @@ public class AggregatorUtils {
     public static final String ICON_PATH_ERROR = "de/fub/mapsforge/project/aggregator/aggregatorIconError.png";
     private static PaletteController palette;
     private static FileSystem inMemoryFileSystem;
+    private static Object MUTEX_CREATE_INSTANCE = new Object();
 
     public static PaletteController getProcessPalette() {
         if (palette == null) {
@@ -88,22 +89,29 @@ public class AggregatorUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T createInstance(Class<T> clazz, String className) {
-        T instance = null;
-        try {
-            Class<?> forName = Class.forName(className);
-//            if (!clazz.equals(forName)) {
-//                throw new IllegalArgumentException();
-//            }
-            Class<T> cl = (Class<T>) forName;
-            instance = cl.newInstance();
-        } catch (InstantiationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalAccessException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+        synchronized (MUTEX_CREATE_INSTANCE) {
+            T instance = null;
+            try {
+                Class<?> classInstance = null;
+                ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+                if (classLoader != null) {
+                    classInstance = classLoader.loadClass(className);
+                } else {
+                    classInstance = Class.forName(className);
+                }
+                if (clazz.isAssignableFrom(classInstance)) {
+                    Class<T> cl = (Class<T>) classInstance;
+                    instance = cl.newInstance();
+                }
+            } catch (InstantiationException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (ClassNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return instance;
         }
-        return instance;
     }
 
     public static <T> T createValue(Class<T> clazz, List<Property> properties) {

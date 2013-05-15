@@ -141,11 +141,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
             Property<?> prop = new ProcessProperty(modelSynchronizerClient, property) {
                 @Override
-                public boolean canRead() {
-                    return super.canRead(); //To change body of generated methods, choose Tools | Templates.
-                }
-
-                @Override
                 public boolean canWrite() {
                     return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
                 }
@@ -163,11 +158,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
             for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
                 ProcessProperty processProperty = new ProcessProperty(modelSynchronizerClient, property) {
-                    @Override
-                    public boolean canRead() {
-                        return super.canRead();
-                    }
-
                     @Override
                     public boolean canWrite() {
                         return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
@@ -205,11 +195,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
             private String value = aggregator.getAggregatorDescriptor().getName();
 
             @Override
-            public boolean canRead() {
-                return super.canRead();
-            }
-
-            @Override
             public boolean canWrite() {
                 return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
             }
@@ -236,11 +221,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                 Bundle.CLT_Property_Description_DisplayName(),
                 Bundle.CLT_Property_Description_Description()) {
             private String description = aggregator.getAggregatorDescriptor().getDescription();
-
-            @Override
-            public boolean canRead() {
-                return super.canRead();
-            }
 
             @Override
             public boolean canWrite() {
@@ -270,11 +250,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                 IAggregationStrategy.class) {
             private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
                     ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
-
-            @Override
-            public boolean canRead() {
-                return super.canRead();
-            }
 
             @Override
             public boolean canWrite() {
@@ -307,11 +282,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
                 ICachingStrategy.class) {
             private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getTileCachingStrategy() != null
                     ? new ClassWrapper(aggregator.getAggregatorDescriptor().getTileCachingStrategy()) : null;
-
-            @Override
-            public boolean canRead() {
-                return super.canRead();
-            }
 
             @Override
             public boolean canWrite() {

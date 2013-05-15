@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -30,10 +29,6 @@ public class MinimumWaypointFilterProcess extends FilterProcess {
     private Integer minWaypointCount = null;
 
     public MinimumWaypointFilterProcess() {
-    }
-
-    public MinimumWaypointFilterProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

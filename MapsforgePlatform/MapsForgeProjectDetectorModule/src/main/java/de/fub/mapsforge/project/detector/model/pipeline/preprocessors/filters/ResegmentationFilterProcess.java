@@ -6,10 +6,8 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
@@ -34,10 +32,6 @@ public class ResegmentationFilterProcess extends FilterProcess {
     private int pointCount = 0;
 
     public ResegmentationFilterProcess() {
-    }
-
-    public ResegmentationFilterProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

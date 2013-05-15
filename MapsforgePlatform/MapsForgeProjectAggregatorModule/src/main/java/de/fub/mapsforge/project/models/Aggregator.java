@@ -5,7 +5,6 @@
 package de.fub.mapsforge.project.models;
 
 import de.fub.agg2graph.agg.AggContainer;
-import de.fub.agg2graph.agg.IAggregationStrategy;
 import de.fub.agg2graph.agg.tiling.ICachingStrategy;
 import de.fub.mapforgeproject.api.process.Process;
 import de.fub.mapforgeproject.api.process.ProcessPipeline.PipelineListener;
@@ -13,6 +12,7 @@ import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.AggregationStrategy;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
@@ -114,7 +114,7 @@ public class Aggregator extends ModelSynchronizer {
             }
         }
 
-        IAggregationStrategy aggregateStrategy = AggregatorUtils.createInstance(IAggregationStrategy.class, descriptor.getAggregationStrategy());
+        AggregationStrategy aggregateStrategy = AggregationStrategy.Factory.find(descriptor.getAggregationStrategy(), Aggregator.this);
         ICachingStrategy cachingStrategy = AggregatorUtils.createInstance(ICachingStrategy.class, descriptor.getTileCachingStrategy());
 
         if (aggContainer != null) {
@@ -133,7 +133,11 @@ public class Aggregator extends ModelSynchronizer {
             AbstractAggregationProcess process = null;
             for (ProcessDescriptor processDescriptor : descriptor.getPipeline().getList()) {
                 process = createProcess(processDescriptor);
-                pipeline.add(process);
+                if (process != null) {
+                    pipeline.add(process);
+                } else {
+                    break;
+                }
             }
         } catch (AggregatorProcessPipeline.PipelineException ex) {
             setAggregatorState(AggregatorState.ERROR_NOT_EXECUTABLE);
@@ -367,6 +371,8 @@ public class Aggregator extends ModelSynchronizer {
                     break;
                 case ERROR:
                     setAggregatorState(Aggregator.AggregatorState.ERROR);
+                    break;
+                default:
                     break;
             }
         }

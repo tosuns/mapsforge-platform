@@ -4,10 +4,10 @@
  */
 package de.fub.mapsforge.project.detector.ui;
 
-import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
-import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.utilsmodule.Collections.ObservableList;
 import java.util.ArrayList;

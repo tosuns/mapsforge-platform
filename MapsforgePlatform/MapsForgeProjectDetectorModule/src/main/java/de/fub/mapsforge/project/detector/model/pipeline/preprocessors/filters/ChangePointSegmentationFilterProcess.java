@@ -7,7 +7,6 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapforgeproject.api.process.ProcessState;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.GpxWayPoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
@@ -55,11 +54,6 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
     public ChangePointSegmentationFilterProcess() {
     }
 
-    public ChangePointSegmentationFilterProcess(Detector detector) {
-        super(detector);
-        init();
-    }
-
     private void init() {
         ProcessDescriptor processDescriptor = getProcessDescriptor();
         if (processDescriptor != null) {
@@ -97,6 +91,8 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
 
     @Override
     protected void start() {
+        init();
+
         if (result == null) {
             result = new ArrayList<TrackSegment>();
         }
