@@ -41,6 +41,11 @@ public class AggregationProcessNode extends ProcessNode implements ChangeListene
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();
+        PropertySet[] propertySets = sheet.toArray();
+
+        for (PropertySet set : propertySets) {
+            sheet.remove(set.getName());
+        }
 
         if (abstractProcess != null) {
             ProcessDescriptor descriptor = abstractProcess.getProcessDescriptor();
@@ -55,7 +60,7 @@ public class AggregationProcessNode extends ProcessNode implements ChangeListene
                         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
                             Sheet.Set set = Sheet.createPropertiesSet();
                             sheet.put(set);
-                            set.setName(propertySet.getName());
+                            set.setName(propertySet.getId());
                             set.setDisplayName(propertySet.getName());
                             set.setShortDescription(propertySet.getDescription());
                             for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {

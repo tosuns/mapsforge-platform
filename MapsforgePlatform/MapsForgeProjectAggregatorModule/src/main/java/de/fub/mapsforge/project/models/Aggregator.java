@@ -13,20 +13,19 @@ import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.AggregationStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.CachingStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.DescriptorFactory;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
-import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
@@ -35,7 +34,6 @@ import javax.xml.bind.JAXBException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -114,8 +112,28 @@ public class Aggregator extends ModelSynchronizer {
             }
         }
 
-        AggregationStrategy aggregateStrategy = AggregationStrategy.Factory.find(descriptor.getAggregationStrategy(), Aggregator.this);
-        ICachingStrategy cachingStrategy = AggregatorUtils.createInstance(ICachingStrategy.class, descriptor.getTileCachingStrategy());
+        AggregationStrategy aggregateStrategy = null;
+        try {
+            aggregateStrategy = AggregationStrategy.Factory.find(descriptor.getAggregationStrategy(), Aggregator.this);
+        } catch (DescriptorFactory.InstanceNotFountException ex) {
+            try {
+                aggregateStrategy = AggregationStrategy.Factory.getDefault();
+            } catch (DescriptorFactory.InstanceNotFountException ex1) {
+                Exceptions.printStackTrace(ex1);
+            }
+        }
+
+
+        ICachingStrategy cachingStrategy = null;
+        try {
+            cachingStrategy = CachingStrategy.Factory.find(descriptor.getTileCachingStrategy());
+        } catch (DescriptorFactory.InstanceNotFountException ex) {
+            try {
+                cachingStrategy = CachingStrategy.Factory.getDefault();
+            } catch (DescriptorFactory.InstanceNotFountException ex1) {
+                Exceptions.printStackTrace(ex1);
+            }
+        }
 
         if (aggContainer != null) {
             aggContainer.setAggregationStrategy(aggregateStrategy);
@@ -276,40 +294,6 @@ public class Aggregator extends ModelSynchronizer {
         pcs.removePropertyChangeListener(listener);
     }
 
-    public AbstractAggregationProcess createProcess(ProcessDescriptor processDescriptor) {
-        synchronized (MUTEX_PROCESS_CREATOR) {
-            assert processDescriptor != null;
-            AbstractAggregationProcess<?, ?> aggregateProcess = null;
-            Set<Class<? extends AbstractAggregationProcess>> allClasses = Lookup.getDefault().lookupResult(AbstractAggregationProcess.class).allClasses();
-
-            for (Class<? extends AbstractAggregationProcess> clazz : allClasses) {
-                if (clazz != null && clazz.getName().equals(processDescriptor.getJavaType())) {
-                    try {
-                        Constructor<? extends AbstractAggregationProcess> constructor = clazz.getDeclaredConstructor(Aggregator.class);
-
-                        if (!constructor.isAccessible()) {
-                            constructor.setAccessible(true);
-                            aggregateProcess = constructor.newInstance(Aggregator.this);
-                            constructor.setAccessible(false);
-                        } else {
-                            aggregateProcess = constructor.newInstance(Aggregator.this);
-                        }
-                        aggregateProcess.setProcessDescriptor(processDescriptor);
-
-                    } catch (SecurityException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IllegalArgumentException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (ReflectiveOperationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                    break;
-                }
-            }
-            return aggregateProcess;
-        }
-    }
-
     public List<StatisticProvider> getStatistics() {
         List<StatisticProvider> statisticProviders = new ArrayList<StatisticProvider>();
         for (AbstractAggregationProcess<?, ?> process : getPipeline().getProcesses()) {
@@ -324,6 +308,20 @@ public class Aggregator extends ModelSynchronizer {
     public void updateSource() {
         if (dataObject != null) {
             dataObject.modifySourceEditor();
+        }
+    }
+
+    public AbstractAggregationProcess createProcess(ProcessDescriptor processDescriptor) {
+        synchronized (MUTEX_PROCESS_CREATOR) {
+            assert processDescriptor != null;
+            AbstractAggregationProcess<?, ?> aggregateProcess = null;
+            try {
+                aggregateProcess = AbstractAggregationProcess.find(processDescriptor.getJavaType(), Aggregator.this);
+                aggregateProcess.setProcessDescriptor(processDescriptor);
+            } catch (AbstractAggregationProcess.AbstractAggregationProcessNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return aggregateProcess;
         }
     }
 

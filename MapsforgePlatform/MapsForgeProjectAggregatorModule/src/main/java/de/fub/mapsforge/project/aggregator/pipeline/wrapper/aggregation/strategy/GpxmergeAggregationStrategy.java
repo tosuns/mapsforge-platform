@@ -2,12 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.aggregator.pipeline.wrapper;
+package de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy;
 
 import de.fub.agg2graph.agg.IMergeHandler;
 import de.fub.agg2graph.agg.ITraceDistance;
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.processes.AggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.AggregationStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.DescriptorFactory;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.MergeHandler;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.TraceDistance;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
@@ -15,18 +18,17 @@ import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.utilsmodule.node.property.ProcessProperty;
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import de.fub.utilsmodule.node.property.NodeProperty;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -39,7 +41,7 @@ import org.openide.util.lookup.ServiceProvider;
 @NbBundle.Messages({
     "GpxmergeAggregationStrategy_Name=Gpx Aggregation Strategy",
     "GpxmergeAggregationStrategy_Description=No description available",
-    "GpxmergeAggregationStrategy_Settings_Name=Setteings",
+    "GpxmergeAggregationStrategy_Settings_Name=Gpx Merge Aggregation Settings",
     "GpxmergeAggregationStrategy_Settings_Description=Parameters to configure this aggregations strategy",
     "GpxmergeAggregationStrategy_MaxPathDifference_Name=Max Path Difference",
     "GpxmergeAggregationStrategy_MaxPathDifference_Description=No description available",
@@ -71,7 +73,7 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
                         List<PropertySection> sections = descriptor.getProperties().getSections();
                         for (PropertySection section : sections) {
-                            if (Bundle.GpxmergeAggregationStrategy_Name().equals(section.getName())) {
+                            if (GpxmergeAggregationStrategy.class.getName().equals(section.getId())) {
                                 propertySection = section;
                                 break;
                             }
@@ -93,6 +95,7 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
         PropertySet propertySet = new PropertySet(
                 Bundle.GpxmergeAggregationStrategy_Settings_Name(),
                 Bundle.GpxmergeAggregationStrategy_Settings_Description());
+        propertySet.setId(GpxmergeAggregationStrategy.class.getName());
 
         Property property = new Property();
         property.setId(PROP_NAME_MAX_PATH_DIFFERENCE);
@@ -129,22 +132,33 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
         PropertySection section = new PropertySection(
                 Bundle.GpxmergeAggregationStrategy_Settings_Name(),
                 Bundle.GpxmergeAggregationStrategy_Settings_Description());
-
+        section.setId(GpxmergeAggregationStrategy.class.getName());
         section.getPropertySet().add(propertySet);
 
-        MergeHandler handler = MergeHandler.Factory.find(DefaultMergeHandler.class.getName());
-        if (handler != null) {
-            PropertySet set = handler.getPropertySet();
-            if (set != null) {
-                section.getPropertySet().add(set);
+        MergeHandler handler = null;
+        try {
+            handler = MergeHandler.Factory.getDefault();
+            if (handler != null) {
+                PropertySet set = handler.getPropertySet();
+                if (set != null) {
+                    section.getPropertySet().add(set);
+                }
             }
+        } catch (DescriptorFactory.InstanceNotFountException ex) {
+            Exceptions.printStackTrace(ex);
         }
-        TraceDistance traceHandler = TraceDistance.Factory.find(GpxmergeTraceDistance.class.getName());
-        if (traceHandler != null) {
-            PropertySet set = traceHandler.getPropertySet();
-            if (set != null) {
-                section.getPropertySet().add(set);
+
+        TraceDistance traceHandler = null;
+        try {
+            traceHandler = TraceDistance.Factory.find(GpxmergeTraceDistance.class.getName());
+            if (traceHandler != null) {
+                PropertySet set = traceHandler.getPropertySet();
+                if (set != null) {
+                    section.getPropertySet().add(set);
+                }
             }
+        } catch (DescriptorFactory.InstanceNotFountException ex) {
+            Exceptions.printStackTrace(ex);
         }
 
         return section;
@@ -167,24 +181,30 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
             for (PropertySet propertySet : propertySection.getPropertySet()) {
                 for (Property property : propertySet.getProperties()) {
                     try {
-                        if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
-                            setMaxInitDistance(Double.parseDouble(property.getValue()));
-                        } else if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
-                            setMaxPathDifference(Double.parseDouble(property.getValue()));
-                        } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
-                            MergeHandler handler = MergeHandler.Factory.find(property.getValue(), getAggregator());
-                            if (handler == null) {
-                                handler = new DefaultMergeHandler();
-                                handler.setAggregator(getAggregator());
+                        if (property.getValue() != null) {
+                            if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
+                                setMaxInitDistance(Double.parseDouble(property.getValue()));
+                                LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_MAX_INIT_DISTANCE, getMaxInitDistance()));
+                            } else if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
+                                setMaxPathDifference(Double.parseDouble(property.getValue()));
+                                LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_MAX_PATH_DIFFERENCE, getMaxPathDifference()));
+                            } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
+                                MergeHandler handler = MergeHandler.Factory.find(property.getValue(), getAggregator());
+                                if (handler == null) {
+                                    handler = new DefaultMergeHandler();
+                                    handler.setAggregator(getAggregator());
+                                }
+                                baseMergeHandler = handler;
+                                LOG.log(Level.FINE, PROP_NAME_BASE_MERGEHANDLER_TYPE + " {0}", baseMergeHandler.getClass());
+                            } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
+                                TraceDistance traceDistanceHandler = TraceDistance.Factory.find(property.getValue(), getAggregator());
+                                if (traceDistanceHandler == null) {
+                                    traceDistanceHandler = new GpxmergeTraceDistance();
+                                    traceDistanceHandler.setAggregator(aggregator);
+                                }
+                                traceDistance = traceDistanceHandler;
+                                LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_TRACE_DISTANCE_TYPE, traceDistance.getClass()));
                             }
-                            baseMergeHandler = handler;
-                        } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
-                            TraceDistance traceDistanceHandler = TraceDistance.Factory.find(property.getValue(), getAggregator());
-                            if (traceDistanceHandler == null) {
-                                traceDistanceHandler = new GpxmergeTraceDistance();
-                                traceDistanceHandler.setAggregator(aggregator);
-                            }
-                            traceDistance = traceDistanceHandler;
                         }
                     } catch (Exception ex) {
                         LOG.log(Level.SEVERE, ex.getMessage(), ex);
@@ -207,36 +227,99 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
         return nodeDelegate;
     }
 
-    private static class GpxAggregationStrategyNode extends AbstractNode implements ChangeListener {
+    private static class GpxAggregationStrategyNode extends AbstractNode {
 
         private final GpxmergeAggregationStrategy strategy;
-        private ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
         public GpxAggregationStrategyNode(GpxmergeAggregationStrategy strategy) {
             super(Children.LEAF);
             this.strategy = strategy;
-            if (this.strategy != null && this.strategy.getAggregator() != null) {
-                modelSynchronizerClient = this.strategy.getAggregator().create(GpxAggregationStrategyNode.this);
-            }
         }
 
         @Override
         protected Sheet createSheet() {
             Sheet sheet = Sheet.createDefault();
+            PropertySet[] sets = sheet.toArray();
+            for (PropertySet set : sets) {
+                sheet.remove(set.getName());
+            }
 
             if (this.strategy != null) {
-                PropertySection propertySection = this.strategy.getPropertySection();
+                final PropertySection propertySection = this.strategy.getPropertySection();
                 if (propertySection != null) {
 
                     for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : propertySection.getPropertySet()) {
-                        Sheet.Set set = Sheet.createPropertiesSet();
-                        set.setName(propertySet.getName());
-                        set.setDisplayName(propertySet.getName());
-                        set.setShortDescription(propertySet.getDescription());
-                        sheet.put(set);
+                        if (propertySet.getId().equals(GpxmergeAggregationStrategy.class.getName())) {
+                            Sheet.Set set = Sheet.createPropertiesSet();
+                            set.setName(propertySet.getName());
+                            set.setDisplayName(propertySet.getName());
+                            set.setShortDescription(propertySet.getDescription());
+                            sheet.put(set);
 
-                        for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-                            set.put(new ProcessProperty(modelSynchronizerClient, property));
+                            for (final de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
+                                if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
+                                    set.put(new NodeProperty(property));
+                                } else if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
+                                    set.put(new NodeProperty(property));
+                                } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
+                                    ClassProperty classProperty = new ClassProperty(property.getId(), property.getName(), property.getDescription(), MergeHandler.class) {
+                                        private ClassWrapper wrapper = strategy.getBaseMergeHandler() != null
+                                                ? new ClassWrapper(strategy.getBaseMergeHandler().getClass())
+                                                : null;
+
+                                        @Override
+                                        public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                                            return wrapper;
+                                        }
+
+                                        @Override
+                                        public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                                            if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                                                if (val == null) {
+                                                    throw new IllegalArgumentException("null is not a valid argument.");
+                                                } else if (!val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                                                    wrapper = val;
+                                                    property.setValue(val.getQualifiedName());
+                                                }
+                                            }
+                                        }
+                                    };
+                                    set.put(classProperty);
+                                } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
+                                    ClassProperty classProperty = new ClassProperty(property.getId(), property.getName(), property.getDescription(), TraceDistance.class) {
+                                        private ClassWrapper wrapper = strategy.getTraceDist() != null
+                                                ? new ClassWrapper(strategy.getTraceDist().getClass())
+                                                : null;
+
+                                        @Override
+                                        public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                                            return wrapper;
+                                        }
+
+                                        @Override
+                                        public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                                            if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                                                if (val == null) {
+                                                    throw new IllegalArgumentException("null is not a valid argument.");
+                                                } else if (!val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                                                    List<de.fub.mapsforge.project.aggregator.xml.PropertySet> propertySets = propertySection.getPropertySet();
+                                                    for (de.fub.mapsforge.project.aggregator.xml.PropertySet p : propertySets) {
+                                                        if (p.getId().equals(val.getQualifiedName())) {
+                                                            propertySets.remove(p);
+                                                            break;
+                                                        }
+                                                    }
+
+
+                                                    wrapper = val;
+                                                    property.setValue(val.getQualifiedName());
+                                                }
+                                            }
+                                        }
+                                    };
+                                    set.put(classProperty);
+                                }
+                            }
                         }
                     }
 
@@ -279,11 +362,6 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
             }
 
             return sheet;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            // do nothing
         }
     }
 }

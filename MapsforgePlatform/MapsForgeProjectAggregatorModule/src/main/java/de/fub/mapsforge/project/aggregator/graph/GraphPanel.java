@@ -86,15 +86,16 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener, Lo
 
     public void layoutGraph() {
         Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
-        final GraphLayout<AbstractAggregationProcess<?, ?>, String> layout = new GraphLayoutImpl();
-
-        AbstractAggregationProcess rootProcess = processes.iterator().next();
-        GraphLayoutSupport.setTreeGraphLayoutRootNode(layout, rootProcess);
-        SceneLayout sceneLayout = LayoutFactory.createSceneGraphLayout(graph, layout);
-        layout.setAnimated(false);
-        sceneLayout.invokeLayoutImmediately();
-        graph.revalidate();
-        repaint();
+        if (!processes.isEmpty()) {
+            final GraphLayout<AbstractAggregationProcess<?, ?>, String> layout = new GraphLayoutImpl();
+            AbstractAggregationProcess rootProcess = processes.iterator().next();
+            GraphLayoutSupport.setTreeGraphLayoutRootNode(layout, rootProcess);
+            SceneLayout sceneLayout = LayoutFactory.createSceneGraphLayout(graph, layout);
+            layout.setAnimated(false);
+            sceneLayout.invokeLayoutImmediately();
+            graph.revalidate();
+            repaint();
+        }
     }
 
     private void reinitGraph() {

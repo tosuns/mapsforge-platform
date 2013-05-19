@@ -16,6 +16,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -129,12 +130,19 @@ public class ProcessWidget extends Widget {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
+
                     Collection<String> findNodeEdges = processGraph.findNodeEdges(process, true, true);
-                    ProcessWidget.this.processGraph.removeNode(process);
+
                     for (String string : findNodeEdges) {
                         processGraph.removeEdge(string);
-                        processGraph.updateAggregatorPipeline();
                     }
+                    Set<?> objects = processGraph.getObjects();
+                    if (objects.contains(process)) {
+                        processGraph.removeNode(process);
+                    } else if (objects.isEmpty()) {
+                        processGraph.clearGraph();
+                    }
+                    processGraph.updateAggregatorPipeline();
                     getScene().validate();
                 }
             });

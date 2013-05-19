@@ -30,16 +30,31 @@ import java.util.logging.Logger;
 
 public class DefaultRoadObjectMerger implements IRoadObjectMerger {
 
-    private static final Logger logger = Logger
-            .getLogger("agg2graph.roadgen.merger");
-    public double maxIntersectionMergeDistance = 30;
-    public double maxRoadMergeDistance = 50;
+    private static final Logger logger = Logger.getLogger("agg2graph.roadgen.merger");
+    private double maxIntersectionMergeDistance = 30;
+    private double maxRoadMergeDistance = 50;
+
+    public double getMaxIntersectionMergeDistance() {
+        return maxIntersectionMergeDistance;
+    }
+
+    public void setMaxIntersectionMergeDistance(double maxIntersectionMergeDistance) {
+        this.maxIntersectionMergeDistance = maxIntersectionMergeDistance;
+    }
+
+    public double getMaxRoadMergeDistance() {
+        return maxRoadMergeDistance;
+    }
+
+    public void setMaxRoadMergeDistance(double maxRoadMergeDistance) {
+        this.maxRoadMergeDistance = maxRoadMergeDistance;
+    }
 
     @Override
     public void mergeInteresections(RoadNetwork roadNetwork) {
         List<Intersection[]> mergeableIntersections = new ArrayList<Intersection[]>(100);
 
-        for (Intersection i1 : roadNetwork.intersections) {
+        for (Intersection i1 : roadNetwork.getIntersections()) {
             if (!i1.isVisible()) {
                 continue;
             }
@@ -71,7 +86,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
         }
 
         // remove the rest
-        for (Intersection i : roadNetwork.intersections) {
+        for (Intersection i : roadNetwork.getIntersections()) {
             if (i.mergedTo != null) {
                 i = null;
             }
@@ -107,10 +122,10 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
         }
         i1.mergedTo = newIntersection;
         i2.mergedTo = newIntersection;
-        int before = roadNetwork.intersections.size();
-        roadNetwork.intersections.remove(i1);
-        roadNetwork.intersections.remove(i2);
-        roadNetwork.intersections.add(newIntersection);
+        int before = roadNetwork.getIntersections().size();
+        roadNetwork.getIntersections().remove(i1);
+        roadNetwork.getIntersections().remove(i2);
+        roadNetwork.getIntersections().add(newIntersection);
 //        assert before - 1 == roadNetwork.intersections.size();
     }
 
@@ -118,7 +133,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
     public void mergeRoads(RoadNetwork roadNetwork) {
         List<Road[]> mergeableRoads = new ArrayList<Road[]>(10);
 
-        for (Intersection i : roadNetwork.intersections) {
+        for (Intersection i : roadNetwork.getIntersections()) {
             for (Road r1 : i.out) {
                 // is there a road in the backwards direction?
                 Set<Road> backward = r1.getTo().out;
@@ -140,7 +155,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
         }
 
         // remove the rest
-        for (Road r : roadNetwork.roads) {
+        for (Road r : roadNetwork.getRoads()) {
             if (r.mergedTo != null) {
                 r = null;
             }
@@ -182,11 +197,11 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
 
         // merge and change the oneway attribute's value
         if (close) {
-            logger.info("merging " + r1 + " with " + r2);
+            logger.info(MessageFormat.format("merging {0} with {1}", r1, r2));
             r1.setOneWay(false);
             r2.getFrom().out.remove(r2);
             r2.getTo().in.remove(r2);
-            roadNetwork.roads.remove(r2);
+            roadNetwork.getRoads().remove(r2);
             r2.mergedTo = r1;
             r1.mergedTo = r1;
         }

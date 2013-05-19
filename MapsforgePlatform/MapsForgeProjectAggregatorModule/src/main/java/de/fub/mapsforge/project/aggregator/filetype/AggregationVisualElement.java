@@ -114,6 +114,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private JPopupMenu processMenu;
     private JComboBox<TileSource> tileSourceComboBox;
     private JToggleButton statusBarButton;
+    private transient final Object MUTEX_UPDATE = new Object();
 
     /**
      * Creates new form AggregationVisualElement
@@ -364,7 +365,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public void componentShowing() {
-        updateMap();
+        requestProcessor.post(new Runnable() {
+            @Override
+            public void run() {
+                updateMap();
+            }
+        });
     }
 
     @Override
@@ -418,27 +424,36 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     }
 
     private void updateMap() {
-        List<Source> sourceList = aggregator.getSourceList();
-        if (sourceList != null) {
-            Area totalBoundingBox = new Area();
+        if (fitToSizeButton.isEnabled()) {
+            synchronized (MUTEX_UPDATE) {
+                fitToSizeButton.setEnabled(false);
+                try {
+                    List<Source> sourceList = aggregator.getSourceList();
+                    if (sourceList != null) {
+                        Area totalBoundingBox = new Area();
 
-            for (Source source : sourceList) {
-                String url = source.getUrl();
-                if (url != null) {
-                    File file = new File(url);
-                    Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
-                    if (boundingBox != null) {
-                        totalBoundingBox.add(new Area(boundingBox));
+                        for (Source source : sourceList) {
+                            String url = source.getUrl();
+                            if (url != null) {
+                                File file = new File(url);
+                                Rectangle2D boundingBox = GeoUtil.getBoundingBox(file);
+                                if (boundingBox != null) {
+                                    totalBoundingBox.add(new Area(boundingBox));
+                                }
+                            }
+                        }
+                        Rectangle2D bounds = totalBoundingBox.getBounds2D();
+                        aggComponent.showArea(
+                                new DoubleRect(
+                                bounds.getX(),
+                                bounds.getY(),
+                                bounds.getWidth(),
+                                bounds.getHeight()));
                     }
+                } finally {
+                    fitToSizeButton.setEnabled(true);
                 }
             }
-            Rectangle2D bounds = totalBoundingBox.getBounds2D();
-            aggComponent.showArea(
-                    new DoubleRect(
-                    bounds.getX(),
-                    bounds.getY(),
-                    bounds.getWidth(),
-                    bounds.getHeight()));
         }
     }
 
@@ -537,7 +552,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            updateMap();
+            requestProcessor.post(new Runnable() {
+                @Override
+                public void run() {
+                    updateMap();
+                }
+            });
         }
     }
 

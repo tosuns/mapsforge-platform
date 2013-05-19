@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.plugins.tasks.eval;
 
+import de.fub.mapsforge.plugins.tasks.eval.evaluator.EvalutationItem;
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;

@@ -4,15 +4,11 @@
  */
 package de.fub.mapsforge.project.aggregator.factories.nodes;
 
-import de.fub.agg2graph.agg.IAggregationStrategy;
-import de.fub.agg2graph.agg.tiling.ICachingStrategy;
 import de.fub.mapsforge.project.aggregator.factories.AggregatorSubFolderFactory;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
-import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptorList;
 import de.fub.mapsforge.project.aggregator.xml.Properties;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.models.Aggregator;
@@ -22,13 +18,15 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -54,9 +52,9 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/filetype/aggregationBuilderIcon.png";
+    private static final Logger LOG = Logger.getLogger(AggregatorNode.class.getName());
     protected static final String TAB_NAME = "tabName";
-    private HashMap<String, Sheet.Set> setMap = new HashMap<String, Sheet.Set>();
-    private Sheet sheet;
+    private Sheet sheet = null;
     private final Aggregator aggregator;
     private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
@@ -64,7 +62,7 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         super(aggregator.getDataObject(), Children.create(new AggregatorSubFolderFactory(aggregator), true), new ProxyLookup(Lookups.fixed(aggregator), aggregator.getDataObject().getLookup()));
         this.aggregator = aggregator;
         this.aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregatorNode.this, aggregator));
-        sheet = Sheet.createDefault();
+
         modelSynchronizerClient = this.aggregator.create(AggregatorNode.this);
     }
 
@@ -85,13 +83,21 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Sheet createSheet() {
+        if (sheet == null) {
+            sheet = Sheet.createDefault();
+        }
+
+        for (PropertySet ps : sheet.toArray()) {
+            sheet.remove(ps.getName());
+        }
+
         if (aggregator != null) {
             final AggregatorDescriptor descriptor = aggregator.getAggregatorDescriptor();
 
             if (descriptor != null) {
-                Sheet.Set createProperties = createProperties(descriptor);
-                setMap.put(createProperties.getName(), createProperties);
+                Sheet.Set createProperties = createProperties();
                 sheet.put(createProperties);
 
                 Properties properties = descriptor.getProperties();
@@ -99,61 +105,42 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
                     for (PropertySection section : properties.getSections()) {
                         Sheet.Set createPropertySection = createPropertySection(section);
-                        setMap.put(createPropertySection.getName(), createProperties);
                         sheet.put(createPropertySection);
                     }
                 }
-                ProcessDescriptorList pipeline = descriptor.getPipeline();
-                if (pipeline != null) {
-                    List<ProcessDescriptor> processDescriptors = Collections.unmodifiableList(pipeline.getList());
-                    if (processDescriptors != null) {
-                        for (int index = 0; index < processDescriptors.size(); index++) {
-                            ProcessDescriptor processDescriptor = processDescriptors.get(index);
-                            if (processDescriptor != null) {
-                                properties = processDescriptor.getProperties();
-                                if (properties != null) {
-                                    for (PropertySection section : properties.getSections()) {
-                                        for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
-                                            Sheet.Set createProcessProperty = createProcessProperty(index, propertySet, processDescriptor.getDisplayName());
-                                            setMap.put(createProcessProperty.getName(), createProcessProperty);
-                                            sheet.put(createProcessProperty);
-                                        }
-                                    }
-                                }
+                Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
+                for (AbstractAggregationProcess<?, ?> process : processes) {
+                    PropertySet[] propertySets = new ProcessFilterNode(process.getNodeDelegate()).getPropertySets();
+
+                    for (PropertySet propertySet : propertySets) {
+                        Sheet.Set set = Sheet.createPropertiesSet();
+                        set.setName(propertySet.getName());
+                        set.setDisplayName(propertySet.getDisplayName());
+                        set.setShortDescription(propertySet.getShortDescription());
+                        set.setValue(TAB_NAME, process.getName());
+                        sheet.put(set);
+
+                        for (Property property : propertySet.getProperties()) {
+                            if (property != null) {
+                                set.put(property);
                             }
                         }
                     }
+
                 }
             }
-
-            sheet.put(createPipelineProperty(aggregator));
+            Sheet.Set createPipelineProperty = createPipelineProperty(aggregator);
+            sheet.put(createPipelineProperty);
         }
+
         return sheet;
-    }
-
-    private Sheet.Set createProcessProperty(int id, de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet, String tabName) {
-        Sheet.Set set = Sheet.createPropertiesSet();
-        set.setName(propertySet.getName() + id);
-        set.setDisplayName(propertySet.getName());
-        set.setShortDescription(propertySet.getDescription());
-        set.setValue(TAB_NAME, MessageFormat.format("{0}", tabName, id));
-
-        for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-            Property<?> prop = new ProcessProperty(modelSynchronizerClient, property) {
-                @Override
-                public boolean canWrite() {
-                    return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
-                }
-            };
-            set.put(prop);
-        }
-        return set;
     }
 
     private Sheet.Set createPropertySection(PropertySection section) {
         Sheet.Set set = Sheet.createPropertiesSet();
-        set.setName(section.getName());
+        set.setName(section.getId());
         set.setDisplayName(section.getName());
+        set.setShortDescription(section.getDescription());
 
         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
             for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
@@ -175,13 +162,8 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         "CLT_Property_Name_DisplayName=Name",
         "CLT_Property_Name_Description=Name of the aggregator.",
         "CLT_Property_Description_DisplayName=Description",
-        "CLT_Property_Description_Description=Description test of the aggregator",
-        "CLT_Property_Aggregator_Strategy_Class_Name=Aggregation Strategy",
-        "CLT_Property_Aggregator_Strategy_Class_Description=The aggregation strategy that wil be used during aggregation.",
-        "CLT_Property_TileCache_Strategy_Class_Name=Tilecache Strategy",
-        "CLT_Property_TileCache_Strategy_Class_Description=The TileCache strategy which will be used during the aggregation."
-    })
-    private Sheet.Set createProperties(final AggregatorDescriptor descriptor) {
+        "CLT_Property_Description_Description=Description test of the aggregator",})
+    private Sheet.Set createProperties() {
         Sheet.Set set = Sheet.createPropertiesSet();
         set.setName("general information");
         set.setDisplayName(Bundle.CLT_Common_info());
@@ -242,73 +224,6 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
             }
         };
         set.put(property);
-
-        property = new ClassProperty(
-                "aggStrategy",
-                Bundle.CLT_Property_Aggregator_Strategy_Class_Name(),
-                Bundle.CLT_Property_Aggregator_Strategy_Class_Description(),
-                IAggregationStrategy.class) {
-            private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
-                    ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
-
-            @Override
-            public boolean canWrite() {
-                return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
-            }
-
-            @Override
-            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
-                return wrapper;
-            }
-
-            @Override
-            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                    if (val == null) {
-                        throw new IllegalArgumentException(" null is not a valid argument!");
-                    }
-                    wrapper = val;
-                    aggregator.getAggregatorDescriptor().setAggregationStrategy(val.getQualifiedName());
-                    update();
-                }
-            }
-        };
-        set.put(property);
-
-        property = new ClassProperty(
-                "cacheStrategy",
-                Bundle.CLT_Property_TileCache_Strategy_Class_Name(),
-                Bundle.CLT_Property_TileCache_Strategy_Class_Description(),
-                ICachingStrategy.class) {
-            private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getTileCachingStrategy() != null
-                    ? new ClassWrapper(aggregator.getAggregatorDescriptor().getTileCachingStrategy()) : null;
-
-            @Override
-            public boolean canWrite() {
-                return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
-            }
-
-            @Override
-            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
-                return wrapper;
-            }
-
-            @Override
-            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                    if (val == null) {
-                        throw new IllegalArgumentException("null is not a valid argument!");
-                    }
-                    wrapper = val;
-                    aggregator.getAggregatorDescriptor().setTileCachingStrategy(val.getQualifiedName());
-
-                    update();
-                }
-            }
-        };
-        set.put(property);
-
-
         return set;
     }
 
@@ -398,14 +313,145 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        for (PropertySet set : sheet.toArray()) {
-            sheet.remove(set.getName());
-        }
-        setMap.clear();
         createSheet();
-        for (Sheet.Set set : setMap.values()) {
-            sheet.put(set);
-        }
         fireIconChange();
+    }
+
+    private static class ProcessPropertyWrapper extends PropertySupport.ReadWrite<Object> {
+
+        private final Property<Object> property;
+        private final ModelSynchronizer.ModelSynchronizerClient client;
+
+        public ProcessPropertyWrapper(ModelSynchronizer.ModelSynchronizerClient client, Property<Object> property) {
+            super(property.getName(), property.getValueType(), property.getDisplayName(), property.getShortDescription());
+            this.property = property;
+            this.client = client;
+        }
+
+        @Override
+        public Object getValue() throws IllegalAccessException, InvocationTargetException {
+            return property.getValue();
+        }
+
+        @Override
+        public void setValue(Object val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            if (property.getValue() != val) {
+                property.setValue(val);
+                if (client != null) {
+                    client.modelChangedFromGui();
+                }
+            }
+        }
+
+        @Override
+        public boolean canRead() {
+            return property.canRead();
+        }
+
+        @Override
+        public boolean canWrite() {
+            return property.canWrite();
+        }
+
+        @Override
+        public boolean supportsDefaultValue() {
+            return property.supportsDefaultValue();
+        }
+
+        @Override
+        public void restoreDefaultValue() throws IllegalAccessException, InvocationTargetException {
+            property.restoreDefaultValue();
+        }
+
+        @Override
+        public boolean isDefaultValue() {
+            return property.isDefaultValue();
+        }
+
+        @Override
+        public PropertyEditor getPropertyEditor() {
+            return property.getPropertyEditor();
+        }
+
+        @Override
+        public boolean isExpert() {
+            return property.isExpert();
+        }
+
+        @Override
+        public void setExpert(boolean expert) {
+            property.setExpert(expert);
+        }
+
+        @Override
+        public boolean isHidden() {
+            return property.isHidden();
+        }
+
+        @Override
+        public void setHidden(boolean hidden) {
+            property.setHidden(hidden);
+        }
+
+        @Override
+        public boolean isPreferred() {
+            return property.isPreferred();
+        }
+
+        @Override
+        public void setPreferred(boolean preferred) {
+            property.setPreferred(preferred);
+        }
+
+        @Override
+        public void setValue(String attributeName, Object value) {
+            property.setValue(attributeName, value);
+        }
+
+        @Override
+        public Object getValue(String attributeName) {
+            return property.getValue(attributeName);
+        }
+
+        @Override
+        public Enumeration<String> attributeNames() {
+            return property.attributeNames();
+        }
+
+        @Override
+        public String toString() {
+            return property.toString();
+        }
+    }
+
+    private class AggregationStrategyProperty extends ClassProperty {
+
+        public AggregationStrategyProperty(String name, String displayName, String shortDescription, Class<?> interf) {
+            super(name, displayName, shortDescription, interf);
+        }
+        private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
+                ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
+
+        @Override
+        public boolean canWrite() {
+            return aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING;
+        }
+
+        @Override
+        public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+            return wrapper;
+        }
+
+        @Override
+        public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            if (aggregator.getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                if (val == null) {
+                    throw new IllegalArgumentException(" null is not a valid argument!");
+                }
+                wrapper = val;
+                aggregator.getAggregatorDescriptor().setAggregationStrategy(val.getQualifiedName());
+                update();
+            }
+        }
     }
 }

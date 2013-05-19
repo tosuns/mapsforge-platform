@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.plugins.tasks.eval;
+package de.fub.mapsforge.plugins.tasks.eval.evaluator;
 
 import de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess;
 import de.fub.mapsforge.project.models.Aggregator;

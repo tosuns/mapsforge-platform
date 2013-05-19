@@ -34,10 +34,12 @@ public class OSMRailRoadMapProvider implements MapProvider {
 
     @Override
     public Osm getMap(double leftLon, double bottomLat, double rightLon, double topLat) {
-        return SERVICE.getOSMTrainMap(Osm.class,
+        Osm map = SERVICE.getOSMTrainMap(Osm.class,
                 String.format(Locale.ENGLISH, "%d", leftLon),
                 String.format(Locale.ENGLISH, "%d", bottomLat),
                 String.format(Locale.ENGLISH, "%d", rightLon),
                 String.format(Locale.ENGLISH, "%d", topLat));
+        SERVICE.close();
+        return map;
     }
 }

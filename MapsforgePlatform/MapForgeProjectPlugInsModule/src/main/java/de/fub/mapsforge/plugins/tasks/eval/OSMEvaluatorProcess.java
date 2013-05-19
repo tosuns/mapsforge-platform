@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.plugins.tasks.eval;
 
+import de.fub.mapsforge.plugins.mapmatcher.MapMatcher;
 import de.fub.agg2graph.osm.OsmExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.agg2graph.structs.GPSPoint;
@@ -15,12 +16,16 @@ import de.fub.agg2graphui.layers.Line;
 import de.fub.agg2graphui.layers.MapMatchingLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
+import de.fub.mapsforge.project.aggregator.pipeline.AggregationProcessNode;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
+import de.fub.mapsforgeplatform.openstreetmap.service.MapProvider;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Nd;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Node;
@@ -34,9 +39,9 @@ import java.awt.geom.Rectangle2D;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,9 +53,11 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -64,29 +71,71 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/plugins/tasks/eval/datasourceProcessIcon.png";
     private static final String PROP_NAME_MAP_MATCH_INSTANCE = "osm.Evaluator.mapmatching.instance";
+    private static final String PROP_NAME_MAP_PROVIDER_INSTANCE = "osm.evaluator.mapprovider.instance";
     private static final Logger LOG = Logger.getLogger(OSMEvaluatorProcess.class.getName());
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
-    private static final String SECTION_PROPERTIES_NAME = "Properties";
-    private static final String PROPERTY_SET_MAP_MATCHER = "Map-Matcher";
-    private RoadNetwork roadNetwork;
     private final GPSSegmentLayer aggregatorRoadLayer = new GPSSegmentLayer("Aggregator Road Network", new RenderingOptions());
     private final GPSSegmentLayer osmRoadLayer = new GPSSegmentLayer("OSM Road Network", new RenderingOptions());
     private final MapMatchingLayer matchingLayer = new MapMatchingLayer("Map Matching Layer", new RenderingOptions());
     private final OpenstreetMapService openstreetMapService = new OpenstreetMapService();
+    private RoadNetwork roadNetwork;
+    private OSMEvaluatorProcessNode node;
+    private MapMatcher mapMatcher;
+    private MapProvider mapProvider;
 
     public OSMEvaluatorProcess() {
-        super(null);
-    }
-
-    public OSMEvaluatorProcess(Aggregator aggregator) {
-        super(aggregator);
-
         osmRoadLayer.getRenderingOptions().setColor(Color.green);
         getLayers().add(osmRoadLayer);
         aggregatorRoadLayer.getRenderingOptions().setColor(Color.blue);
         getLayers().add(aggregatorRoadLayer);
         matchingLayer.getRenderingOptions().setColor(Color.red);
         getLayers().add(matchingLayer);
+    }
+
+    @Override
+    protected void setAggregator(Aggregator aggregator) {
+        super.setAggregator(aggregator);
+        reInit();
+    }
+
+    private void reInit() {
+        if (getProcessDescriptor() != null) {
+            List<PropertySection> sections = getProcessDescriptor().getProperties().getSections();
+            for (PropertySection section : sections) {
+                if (OSMEvaluatorProcess.class.getName().equals(section.getId())) {
+                    List<PropertySet> propertySets = section.getPropertySet();
+                    for (PropertySet propertySet : propertySets) {
+                        if (OSMEvaluatorProcess.class.getName().equals(propertySet.getId())) {
+                            List<Property> properties = propertySet.getProperties();
+
+                            for (Property property : properties) {
+                                if (property.getValue() != null) {
+                                    if (PROP_NAME_MAP_MATCH_INSTANCE.equals(property.getId())) {
+                                        try {
+                                            mapMatcher = MapMatcher.Factory.find(property.getValue());
+                                        } catch (MapMatcher.MapMatcherNotFoundException ex) {
+                                            Exceptions.printStackTrace(ex);
+                                        }
+                                        if (mapMatcher == null) {
+                                            mapMatcher = MapMatcher.Factory.getDefault();
+                                        }
+                                    } else if (PROP_NAME_MAP_PROVIDER_INSTANCE.equals(property.getId())) {
+                                        try {
+                                            mapProvider = MapProvider.Factory.find(property.getValue());
+                                        } catch (MapProvider.MapProviderNotFoundException ex) {
+                                            Exceptions.printStackTrace(ex);
+                                        }
+                                        if (mapProvider == null) {
+                                            mapProvider = MapProvider.Factory.getDefault();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -101,7 +150,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         if (roadNetwork != null) {
 
             ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
-            handle.start(roadNetwork.roads.size());
+            handle.start(roadNetwork.getRoads().size());
 
             try {
 
@@ -138,17 +187,15 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                     fireProcessProgressEvent(
                             new ProcessPipeline.ProcessEvent<OSMEvaluatorProcess>(
                             this,
-                            "evaluation", Math.min(100, (int) ((100d / roadNetwork.roads.size()) * (processUnit)))));
+                            "evaluation", Math.min(100, (int) ((100d / roadNetwork.getRoads().size()) * (processUnit)))));
 //                    }
 
                     openstreetMapService.close();
 
-                    MapMatcher mapMatcher = getMapMatcher();
-
-                    if (mapMatcher != null && !osmRoadNetwork.isEmpty()) {
+                    if (getMapMatcher() != null && !osmRoadNetwork.isEmpty()) {
                         double cost = -1;
                         double count = 0;
-                        List<MapMatcher.MapMatchSegment> matchedRoadNetwork = mapMatcher.findMatch(roadGPSSegmentList, osmRoadNetwork);
+                        List<MapMatcher.MapMatchSegment> matchedRoadNetwork = getMapMatcher().findMatch(roadGPSSegmentList, osmRoadNetwork);
                         if (matchedRoadNetwork != null && !matchedRoadNetwork.isEmpty()) {
                             for (MapMatcher.MapMatchSegment matchedSegment : matchedRoadNetwork) {
                                 // get the average cost of the matched segment
@@ -189,13 +236,8 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
 
         Osm osmMap = null;
 
-
         try {
-            osmMap = openstreetMapService.getOSMHighwayMap(Osm.class,
-                    String.valueOf(leftLong), //leftlong
-                    String.valueOf(bottomLat), // bottomlat
-                    String.valueOf(rightLong), //rightlon
-                    String.valueOf(topLat)); //toplat
+            osmMap = mapProvider.getMap(leftLong, bottomLat, rightLong, topLat);
         } catch (Throwable ex) {
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
@@ -216,49 +258,23 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
     }
 
     private void addGPSSegmentsToLayer(List<GPSSegment> gpsSegmentList, GPSSegmentLayer layer) {
-        for (GPSSegment segment : gpsSegmentList) {
-            layer.add(segment);
-        }
+        layer.addAll(gpsSegmentList);
     }
 
-    @SuppressWarnings("unchecked")
     private MapMatcher getMapMatcher() {
-        MapMatcher matcher = null;
-        if (getProcessDescriptor() != null) {
-            List<PropertySection> sections = getProcessDescriptor().getProperties().getSections();
-            for (PropertySection section : sections) {
-                if (SECTION_PROPERTIES_NAME.equals(section.getName())) {
-                    List<PropertySet> propertySets = section.getPropertySet();
-                    for (PropertySet propertySet : propertySets) {
-                        if (PROPERTY_SET_MAP_MATCHER.equals(propertySet.getName())) {
-                            List<Property> properties = propertySet.getProperties();
+        return mapMatcher;
+    }
 
+    protected void setMapMatcher(MapMatcher mapMatcher) {
+        this.mapMatcher = mapMatcher;
+    }
 
-                            for (Property property : properties) {
-                                if (PROP_NAME_MAP_MATCH_INSTANCE.equals(property.getId())) {
-                                    try {
-                                        Collection<? extends MapMatcher> allInstances = Lookup.getDefault().lookupResult(MapMatcher.class).allInstances();
-                                        for (MapMatcher mapMatcher : allInstances) {
-                                            String mapMatcherName = mapMatcher.getClass().getName();
-                                            String javaType = property.getValue();
-                                            if (mapMatcherName.equals(javaType)) {
-                                                matcher = mapMatcher.getClass().newInstance();
-                                                break;
-                                            }
-                                        }
-                                    } catch (InstantiationException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    } catch (IllegalAccessException ex) {
-                                        Exceptions.printStackTrace(ex);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return matcher;
+    public MapProvider getMapProvider() {
+        return mapProvider;
+    }
+
+    private void setMapProvider(MapProvider mapProvider) {
+        this.mapProvider = mapProvider;
     }
 
     private List<GPSSegment> convertOsmToGPSSegments(Osm osmRoadMap) {
@@ -273,9 +289,9 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
             GPSSegment waySegment = new GPSSegment();
             for (Nd nd : way.getNds()) {
 
-                for (Node node : nodeList) {
-                    if (nd.getRef() == node.getId()) {
-                        point = new GPSPoint(node.getLat(), node.getLon());
+                for (Node n : nodeList) {
+                    if (nd.getRef() == n.getId()) {
+                        point = new GPSPoint(n.getLat(), n.getLon());
                         waySegment.add(point);
                     }
                 }
@@ -299,9 +315,6 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
             outputStream.close();
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-
-
-
             try {
                 JAXBContext jaxbCtx = JAXBContext.newInstance(Osm.class);
                 Unmarshaller unmarshaller = jaxbCtx.createUnmarshaller();
@@ -383,36 +396,170 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         return null;
     }
 
+    @NbBundle.Messages({
+        "CLT_OSMEvaluatorProcess_Property_MapMatcher_Name=Map-Matcher Instance",
+        "CLT_OSMEvaluatorProcess_Property_MapMatcher_Description=The instance that is responsible for the matching of the points",
+        "CLT_OSMEvaluatorProcess_Property_MapProvider_Name=Map-Provider Instance",
+        "CLT_OSMEvaluatorProcess_Property_MapProvider_Description=Different types of map providers for the matching."
+    })
     @Override
     protected ProcessDescriptor createProcessDescriptor() {
         ProcessDescriptor processDescriptor = new ProcessDescriptor();
-        processDescriptor
-                .setJavaType(OSMEvaluatorProcess.class
-                .getName());
+        processDescriptor.setJavaType(OSMEvaluatorProcess.class.getName());
         processDescriptor.setDisplayName(Bundle.CLT_OSMEvaluatorProcess_Name());
         processDescriptor.setDescription(Bundle.CLT_OSMEvaluatorProcess_Description());
-        Property property = new Property("class", PointToPointMapMatcher.class.getName());
 
+        PropertySet propertySet = new PropertySet();
+        propertySet.setId(OSMEvaluatorProcess.class.getName());
+        propertySet.setName("Properties");
+        propertySet.setDescription("Properties concering the map matcher instance.");
+
+        Property property = new Property();
         property.setId(PROP_NAME_MAP_MATCH_INSTANCE);
+        property.setJavaType(String.class.getName());
+        property.setName(Bundle.CLT_OSMEvaluatorProcess_Property_MapMatcher_Name());
+        property.setDescription(Bundle.CLT_OSMEvaluatorProcess_Property_MapMatcher_Description());
+        property.setValue(MapMatcher.Factory.getDefault().getClass().getName());
+        propertySet.getProperties().add(property);
 
-        property.setJavaType(String.class
-                .getName());
-        property.setDescription(
-                "The instance which is responsible to find a match.");
+        property = new Property();
+        property.setId(PROP_NAME_MAP_PROVIDER_INSTANCE);
+        property.setJavaType(String.class.getName());
+        property.setName(Bundle.CLT_OSMEvaluatorProcess_Property_MapProvider_Name());
+        property.setDescription(Bundle.CLT_OSMEvaluatorProcess_Property_MapProvider_Description());
+        property.setValue(MapProvider.Factory.getDefault().getClass().getName());
+        propertySet.getProperties().add(property);
 
-        PropertySet propertySet = new PropertySet(PROPERTY_SET_MAP_MATCHER, "Properties concering the map matcher instance.");
-
-        propertySet.getProperties()
-                .add(property);
-
-        PropertySection propertySection = new PropertySection(SECTION_PROPERTIES_NAME, "Properties of this Evaluator process.");
-
-        propertySection.getPropertySet()
-                .add(propertySet);
+        PropertySection propertySection = new PropertySection();
+        propertySection.setId(OSMEvaluatorProcess.class.getName());
+        propertySection.setName("Properties");
+        propertySection.setDescription("Properties of this Evaluator process.");
+        propertySection.getPropertySet().add(propertySet);
         propertySection.getPropertySet();
-        List<PropertySection> sections = processDescriptor.getProperties().getSections();
+        processDescriptor.getProperties().getSections().add(propertySection);
 
-        sections.add(propertySection);
         return processDescriptor;
+    }
+
+    @Override
+    public org.openide.nodes.Node getNodeDelegate() {
+        if (node == null) {
+            node = new OSMEvaluatorProcessNode(OSMEvaluatorProcess.this);
+        }
+        return node;
+    }
+
+    private static class OSMEvaluatorProcessNode extends AggregationProcessNode {
+
+        private final OSMEvaluatorProcess process;
+
+        public OSMEvaluatorProcessNode(OSMEvaluatorProcess process) {
+            super(process);
+            this.process = process;
+        }
+
+        @Override
+        protected Sheet createSheet() {
+            Sheet sheet = Sheet.createDefault();
+            Sheet.Set set = Sheet.createPropertiesSet();
+            sheet.put(set);
+
+
+            if (process != null && process.getProcessDescriptor() != null) {
+                ProcessDescriptor processDescriptor = process.getProcessDescriptor();
+
+                for (PropertySection section : processDescriptor.getProperties().getSections()) {
+                    if (OSMEvaluatorProcess.class.getName().equals(section.getId())) {
+                        for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
+                            if (OSMEvaluatorProcess.class.getName().equals(propertySet.getId())) {
+                                for (final de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
+                                    if (PROP_NAME_MAP_MATCH_INSTANCE.equals(property.getId())) {
+                                        ClassProperty classProperty = new MapMatcherProperty(property);
+                                        set.put(classProperty);
+                                    } else if (PROP_NAME_MAP_PROVIDER_INSTANCE.equals(property.getId())) {
+                                        ClassProperty classProperty = new MapProviderProperty(property);
+                                        set.put(classProperty);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return sheet;
+        }
+
+        private class MapMatcherProperty extends ClassProperty {
+
+            private final de.fub.mapsforge.project.aggregator.xml.Property property;
+            private ClassWrapper wrapper = process.getMapMatcher() != null
+                    ? new ClassWrapper(process.getMapMatcher().getClass())
+                    : null;
+
+            public MapMatcherProperty(de.fub.mapsforge.project.aggregator.xml.Property property) {
+                super(property.getId(), property.getName(), property.getDescription(), MapMatcher.class);
+                this.property = property;
+            }
+
+            @Override
+            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                return wrapper;
+            }
+
+            @Override
+            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                if (val == null) {
+                    throw new IllegalArgumentException("Null is not a valid value");
+                } else if (wrapper == null || !val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                    wrapper = val;
+                    try {
+                        MapMatcher matcher = MapMatcher.Factory.find(val.getQualifiedName());
+                        if (matcher != null) {
+                            process.setMapMatcher(matcher);
+                            property.setValue(matcher.getClass().getName());
+                        }
+                    } catch (MapMatcher.MapMatcherNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        }
+
+        private class MapProviderProperty extends ClassProperty {
+
+            private final de.fub.mapsforge.project.aggregator.xml.Property property;
+
+            public MapProviderProperty(de.fub.mapsforge.project.aggregator.xml.Property property) {
+                super(property.getId(), property.getName(), property.getDescription(), MapProvider.class);
+                this.property = property;
+            }
+            private ClassWrapper wrapper = process.getMapProvider() != null
+                    ? new ClassWrapper(process.getMapProvider().getClass())
+                    : null;
+
+            @Override
+            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                return wrapper;
+            }
+
+            @Override
+            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                if (val == null) {
+                    throw new IllegalArgumentException("Null is not a valid Argument");
+                } else if (wrapper != null && !val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                    try {
+                        wrapper = val;
+                        MapProvider provider = MapProvider.Factory.find(val.getQualifiedName());
+                        if (provider != null) {
+                            process.setMapProvider(provider);
+                            property.setValue(provider.getClass().getName());
+                        }
+                    } catch (MapProvider.MapProviderNotFoundException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        }
     }
 }

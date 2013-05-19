@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.aggregator.pipeline.wrapper;
+package de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy;
 
 import de.fub.mapsforge.project.aggregator.pipeline.processes.AggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.MergeHandler;
@@ -11,15 +11,11 @@ import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.utilsmodule.node.property.ProcessProperty;
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import de.fub.utilsmodule.node.property.NodeProperty;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -40,7 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
     "DefaultMergeHandler_MaxLookahead_Description=No description available",
     "DefaultMergeHandler_MinContinuationAngle_Name=Min Continuation Angle",
     "DefaultMergeHandler_MinContinuationAngle_Description=No description available",
-    "DefaultMergeHandler_Setting_PropertySet_Name=Setting",
+    "DefaultMergeHandler_Setting_PropertySet_Name=Default Merge Handler Settings",
     "DefaultMergeHandler_Setting_PropertySet_Description=Parameter to configure the merge handler instance."
 })
 @ServiceProvider(service = MergeHandler.class)
@@ -58,6 +54,7 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
     }
 
     private void reInit() {
+        nodeDelegate = null;
         propertySet = null;
         propertySet = getPropertySet();
         if (propertySet != null) {
@@ -96,13 +93,13 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
             if (getAggregator() != null) {
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     // look for the AggregationProcess descriptor
-                    if (propertySet != null
+                    if (descriptor != null
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
                         List<PropertySection> sections = descriptor.getProperties().getSections();
                         for (PropertySection propertySection : sections) {
                             for (PropertySet set : propertySection.getPropertySet()) {
                                 // look for the propertySet with the same name as this class
-                                if (Bundle.DefaultMergeHandler_Name().equals(set.getName())) {
+                                if (DefaultMergeHandler.class.getName().equals(set.getId())) {
                                     propertySet = set;
                                     break;
                                 }
@@ -111,6 +108,7 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
 
                         if (propertySet == null) {
                             propertySet = createDefaultPropertySet();
+                            break;
                         }
                     }
                 }
@@ -126,6 +124,7 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
         PropertySet set = new PropertySet(
                 Bundle.DefaultMergeHandler_Setting_PropertySet_Name(),
                 Bundle.DefaultMergeHandler_Setting_PropertySet_Description());
+        set.setId(DefaultMergeHandler.class.getName());
 
         Property property = new Property();
         property.setId(PROP_NAME_MAX_LOOKAHEAD);
@@ -163,46 +162,42 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
         return nodeDelegate;
     }
 
-    private static class MergeHandlerNode extends AbstractNode implements ChangeListener {
+    private static class MergeHandlerNode extends AbstractNode {
 
         private final DefaultMergeHandler mergeHandler;
-        private ModelSynchronizer.ModelSynchronizerClient modelSynchornizerClient;
 
         public MergeHandlerNode(DefaultMergeHandler mergeHandler) {
             super(Children.LEAF);
             this.mergeHandler = mergeHandler;
-            if (this.mergeHandler != null && this.mergeHandler.getAggregator() != null) {
-                modelSynchornizerClient = this.mergeHandler.getAggregator().create(MergeHandlerNode.this);
-            }
         }
 
         @Override
         protected Sheet createSheet() {
             Sheet sheet = Sheet.createDefault();
+            PropertySet[] propertySets = sheet.toArray();
+
+            for (PropertySet set : propertySets) {
+                sheet.remove(set.getName());
+            }
 
             if (mergeHandler != null) {
                 de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet = mergeHandler.getPropertySet();
 
                 if (propertySet != null) {
                     Sheet.Set set = Sheet.createPropertiesSet();
-                    set.setName(propertySet.getName());
+                    set.setName(propertySet.getId());
                     set.setDisplayName(propertySet.getName());
                     set.setShortDescription(propertySet.getDescription());
                     sheet.put(set);
 
                     for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-                        set.put(new ProcessProperty(modelSynchornizerClient, property));
+                        set.put(new NodeProperty(property));
                     }
                 }
 
             }
 
             return sheet;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            //do nothing
         }
     }
 }

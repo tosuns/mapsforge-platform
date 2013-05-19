@@ -18,14 +18,23 @@ import de.fub.agg2graphui.layers.MatchingLayer;
 import de.fub.agg2graphui.layers.MergingLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.wrapper.DefaultAggregationStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.AggregationProcessNode;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy.DefaultAggregationStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.DefaultCachingStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.AggregationStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.CachingStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.DescriptorFactory;
+import de.fub.mapsforge.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Component;
 import java.awt.Image;
+import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +43,9 @@ import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.nodes.Node;
+import org.openide.nodes.Sheet;
+import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -43,7 +55,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSegment>, AggContainer> implements StatisticProvider {
+public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegment>, AggContainer> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -57,18 +69,60 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
     private int totalGPSPointCount = 0;
     private int totalPointGhostPointPairs = 0;
     private ProcessDescriptor processDescriptor = null;
+    private AggregationNode node;
 
     public AggregationProcess() {
-        this(null);
-    }
-
-    public AggregationProcess(Aggregator aggregator) {
-        super(aggregator);
-        init();
-    }
-
-    private void init() {
         initLayers();
+    }
+
+    @Override
+    public void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        super.setProcessDescriptor(processDescriptor);
+        reInit();
+    }
+
+    private void reInit() {
+        node = null;
+        if (getProcessDescriptor() != null) {
+            AggregatorDescriptor aggregatorDescriptor = getAggregator().getAggregatorDescriptor();
+            if (aggregatorDescriptor != null) {
+                if (aggregatorDescriptor.getAggregationStrategy() != null) {
+                    AggregationStrategy aggregationStrategy = null;
+                    try {
+                        aggregationStrategy = AggregationStrategy.Factory.find(aggregatorDescriptor.getAggregationStrategy(), getAggregator());
+
+                    } catch (DescriptorFactory.InstanceNotFountException ex) {
+                        try {
+                            aggregationStrategy = AggregationStrategy.Factory.getDefault();
+                        } catch (DescriptorFactory.InstanceNotFountException ex1) {
+                            Exceptions.printStackTrace(ex1);
+                        }
+                    }
+                    if (aggregationStrategy != null
+                            && getAggregator() != null
+                            && getAggregator().getAggContainer() != null) {
+                        getAggregator().getAggContainer().setAggregationStrategy(aggregationStrategy);
+                    }
+                }
+                if (aggregatorDescriptor.getTileCachingStrategy() != null) {
+                    CachingStrategy cachingStrategy = null;
+                    try {
+                        cachingStrategy = CachingStrategy.Factory.find(aggregatorDescriptor.getTileCachingStrategy(), getAggregator());
+                    } catch (DescriptorFactory.InstanceNotFountException ex) {
+                        try {
+                            cachingStrategy = CachingStrategy.Factory.getDefault();
+                        } catch (DescriptorFactory.InstanceNotFountException ex1) {
+                            Exceptions.printStackTrace(ex1);
+                        }
+                    }
+                    if (cachingStrategy != null
+                            && getAggregator() != null
+                            && getAggregator().getAggContainer() != null) {
+                        getAggregator().getAggContainer().setCachingStrategy(cachingStrategy);
+                    }
+                }
+            }
+        }
     }
 
     private void initLayers() {
@@ -88,15 +142,13 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
             if (aggregator != null && aggregator.getAggContainer() != null) {
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (descriptor != null
-                            && getClass().getName().equals(descriptor.getJavaType())) {
+                            && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
                         processDescriptor = descriptor;
                         break;
                     }
                 }
-                if (processDescriptor == null) {
-                    processDescriptor = createProcessDescriptor();
-                }
-            } else {
+            }
+            if (processDescriptor == null) {
                 processDescriptor = createProcessDescriptor();
             }
         }
@@ -110,17 +162,33 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
         ProcessDescriptor descriptor = new ProcessDescriptor();
         descriptor.setJavaType(AggregationProcess.class.getName());
-        descriptor.setDescription(Bundle.CLT_AggregationProcess_Name());
+        descriptor.setDescription(Bundle.CLT_AggregationProcess_Description());
         descriptor.setDisplayName(Bundle.CLT_AggregationProcess_Name());
 
         DefaultAggregationStrategy defaultAggregationStrategy = new DefaultAggregationStrategy();
+
         defaultAggregationStrategy.setAggregator(getAggregator());
         PropertySection propertySection = defaultAggregationStrategy.getPropertySection();
         if (propertySection != null) {
             descriptor.getProperties().getSections().add(propertySection);
         }
 
+        DefaultCachingStrategy defaultCachingStrategy = new DefaultCachingStrategy();
+        defaultCachingStrategy.setAggregator(getAggregator());
+        propertySection = defaultCachingStrategy.getPropertySection();
+        if (propertySection != null) {
+            descriptor.getProperties().getSections().add(propertySection);
+        }
+
         return descriptor;
+    }
+
+    @Override
+    public Node getNodeDelegate() {
+        if (node == null) {
+            node = new AggregationNode(AggregationProcess.this);
+        }
+        return node;
     }
 
     @Override
@@ -282,5 +350,217 @@ public class AggregationProcess extends AbstractXmlAggregationProcess<List<GPSSe
     @Override
     public Component getVisualRepresentation() {
         return null;
+
+
+    }
+
+    @NbBundle.Messages({
+        "CLT_Property_Aggregator_Strategy_Class_Name=Aggregation Strategy",
+        "CLT_Property_Aggregator_Strategy_Class_Description=The aggregation strategy that wil be used during aggregation.",
+        "CLT_Property_TileCache_Strategy_Class_Name=Tilecache Strategy",
+        "CLT_Property_TileCache_Strategy_Class_Description=The TileCache strategy which will be used during the aggregation."
+    })
+    private static class AggregationNode extends AggregationProcessNode {
+
+        private final AggregationProcess aggregationProcess;
+
+        public AggregationNode(AggregationProcess process) {
+            super(process);
+            this.aggregationProcess = process;
+        }
+
+        @Override
+        protected Sheet createSheet() {
+            Sheet sheet = super.createSheet();
+            final Aggregator aggregator = aggregationProcess.getAggregator();
+            if (aggregator != null
+                    && aggregator.getAggContainer() != null
+                    && aggregator.getAggContainer().getAggregationStrategy() instanceof AggregationStrategy) {
+
+                sheet = Sheet.createDefault();
+                PropertySet[] sets = sheet.toArray();
+                for (PropertySet set : sets) {
+                    sheet.remove(set.getName());
+                }
+                AggregatorDescriptor aggregatorDescriptor = aggregator.getAggregatorDescriptor();
+                if (aggregatorDescriptor != null) {
+
+                    Sheet.Set nodeSet = Sheet.createPropertiesSet();
+                    nodeSet.setName(AggregationProcess.class.getName());
+                    nodeSet.setDisplayName(Bundle.CLT_AggregationProcess_Name());
+                    nodeSet.setShortDescription(Bundle.CLT_AggregationProcess_Description());
+                    sheet.put(nodeSet);
+
+                    if (aggregatorDescriptor.getAggregationStrategy() != null) {
+                        ClassProperty classProperty = new AggregationStrategyInstanceProperty(aggregator, aggregatorDescriptor);
+                        nodeSet.put(classProperty);
+
+                    }
+                    if (aggregatorDescriptor.getTileCachingStrategy() != null) {
+                        ClassProperty classProperty = new CachingStrategyProperty(aggregator, aggregatorDescriptor);
+                        nodeSet.put(classProperty);
+                    }
+
+                }
+
+                if (aggregator.getAggContainer().getAggregationStrategy() instanceof AggregationStrategy) {
+                    AggregationStrategy aggregationStrategy = (AggregationStrategy) aggregator.getAggContainer().getAggregationStrategy();
+                    PropertySet[] propertySets = aggregationStrategy.getNodeDelegate().getPropertySets();
+                    for (PropertySet propertySet : propertySets) {
+                        Sheet.Set set = convertToSet(propertySet);
+                        sheet.put(set);
+                    }
+                }
+
+                if (aggregator.getAggContainer().getCachingStrategy() instanceof CachingStrategy) {
+                    CachingStrategy cachingStrategy = (CachingStrategy) aggregator.getAggContainer().getCachingStrategy();
+                    PropertySet[] propertySets = cachingStrategy.getNodeDelegate().getPropertySets();
+
+                    for (PropertySet propertySet : propertySets) {
+                        Sheet.Set set = convertToSet(propertySet);
+                        sheet.put(set);
+                    }
+                }
+            }
+            return sheet;
+        }
+
+        private Sheet.Set convertToSet(PropertySet propertySet) {
+            Sheet.Set set = Sheet.createPropertiesSet();
+            set.setName(propertySet.getName());
+            set.setDisplayName(propertySet.getDisplayName());
+            set.setShortDescription(propertySet.getShortDescription());
+
+            for (Property<?> property : propertySet.getProperties()) {
+                set.put(property);
+            }
+            return set;
+        }
+
+        private class AggregationStrategyInstanceProperty extends ClassProperty {
+
+            private final Aggregator aggregator;
+            private final AggregatorDescriptor property;
+            private ClassWrapper wrapper = null;
+
+            public AggregationStrategyInstanceProperty(Aggregator aggregator, AggregatorDescriptor property) {
+                super(AggregationStrategy.class.getName(),
+                        Bundle.CLT_Property_Aggregator_Strategy_Class_Name(),
+                        Bundle.CLT_Property_Aggregator_Strategy_Class_Description(),
+                        AggregationStrategy.class);
+                this.aggregator = aggregator;
+                this.property = property;
+                wrapper = aggregator.getAggContainer().getAggregationStrategy() != null
+                        ? new ClassWrapper(aggregator.getAggContainer().getAggregationStrategy().getClass())
+                        : null;
+            }
+
+            @Override
+            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                return wrapper;
+            }
+
+            @Override
+            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                ClassWrapper oldValue = getValue();
+                if (val == null) {
+                    throw new IllegalArgumentException("null is not a valid value");
+                } else if (!val.getQualifiedName().equals(wrapper.getQualifiedName())
+                        && oldValue != null) {
+                    wrapper = val;
+                    ProcessDescriptor processDescriptor = aggregationProcess.getProcessDescriptor();
+                    if (processDescriptor != null) {
+                        List<PropertySection> sections = processDescriptor.getProperties().getSections();
+                        int index = -1;
+                        for (PropertySection propertySection : new ArrayList<PropertySection>(sections)) {
+                            index++;
+                            if (oldValue.getQualifiedName().equals(propertySection.getId())) {
+                                LOG.info(MessageFormat.format("Strategy removed: {0}", sections.remove(propertySection)));
+                            }
+                        }
+
+                        AggregationStrategy aggregationStrategy;
+                        try {
+                            aggregationStrategy = AggregationStrategy.Factory.find(val.getQualifiedName(), aggregator);
+                            if (aggregationStrategy != null) {
+                                aggregator.getAggContainer().setAggregationStrategy(aggregationStrategy);
+
+                                if (index < 0 || index >= sections.size()) {
+                                    sections.add(aggregationStrategy.getPropertySection());
+                                } else {
+                                    sections.add(index, aggregationStrategy.getPropertySection());
+                                }
+                            }
+                            property.setAggregationStrategy(val.getQualifiedName());
+                        } catch (DescriptorFactory.InstanceNotFountException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        private class CachingStrategyProperty extends ClassProperty {
+
+            private final AggregatorDescriptor property;
+            private final Aggregator aggregator;
+            private ClassWrapper wrapper;
+
+            public CachingStrategyProperty(Aggregator aggregator, AggregatorDescriptor property) {
+                super(CachingStrategy.class.getName(),
+                        Bundle.CLT_Property_TileCache_Strategy_Class_Name(),
+                        Bundle.CLT_Property_TileCache_Strategy_Class_Description(),
+                        CachingStrategy.class);
+                this.aggregator = aggregator;
+                this.property = property;
+                this.wrapper = aggregator.getAggContainer().getCachingStrategy() != null
+                        ? new ClassWrapper(aggregator.getAggContainer().getCachingStrategy().getClass())
+                        : null;
+            }
+
+            @Override
+            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                return wrapper;
+            }
+
+            @Override
+            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                if (val == null) {
+                    throw new IllegalArgumentException("null not a valid value");
+                } else if (!val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                    ClassWrapper oldValue = wrapper;
+                    wrapper = val;
+                    ProcessDescriptor processDescriptor = aggregationProcess.getProcessDescriptor();
+                    if (processDescriptor != null) {
+                        List<PropertySection> sections = processDescriptor.getProperties().getSections();
+                        int index = -1;
+                        for (PropertySection propertySection : new ArrayList<PropertySection>(sections)) {
+                            index++;
+                            if (oldValue.getQualifiedName().equals(propertySection.getId())) {
+                                LOG.info(MessageFormat.format("Caching strategy removed: {0}", sections.remove(propertySection)));
+                            }
+                        }
+
+                        CachingStrategy cachingStrategy;
+                        try {
+                            cachingStrategy = CachingStrategy.Factory.find(val.getQualifiedName(), aggregator);
+                            if (cachingStrategy != null) {
+                                aggregator.getAggContainer().setCachingStrategy(cachingStrategy);
+                                if (index < 0 || index >= sections.size()) {
+                                    sections.add(cachingStrategy.getPropertySection());
+                                } else {
+                                    sections.add(index, cachingStrategy.getPropertySection());
+                                }
+                            }
+                            property.setTileCachingStrategy(val.getQualifiedName());
+                        } catch (DescriptorFactory.InstanceNotFountException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+
+                    }
+
+                }
+            }
+        }
     }
 }

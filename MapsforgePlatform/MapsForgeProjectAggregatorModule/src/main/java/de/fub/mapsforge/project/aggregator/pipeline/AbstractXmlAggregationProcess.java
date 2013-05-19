@@ -5,7 +5,6 @@
 package de.fub.mapsforge.project.aggregator.pipeline;
 
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
-import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.IOException;
 import org.openide.util.Exceptions;
@@ -19,10 +18,6 @@ import org.openide.util.Exceptions;
  * @author Serdar
  */
 public abstract class AbstractXmlAggregationProcess<I, O> extends AbstractAggregationProcess<I, O> {
-
-    public AbstractXmlAggregationProcess(Aggregator aggregator) {
-        super(aggregator);
-    }
 
     @Override
     protected ProcessDescriptor createProcessDescriptor() {

@@ -275,18 +275,20 @@ public class PersistentTileCache implements TileCache {
 
         private void dispatchJob(final Tile tile) {
             synchronized (MUTEX) {
-                String taskName = MessageFormat.format(PATH_PATTERN,
-                        tile.getSource().getName(),
-                        tile.getXtile(),
-                        tile.getYtile(),
-                        tile.getZoom());
-                if (!runningTask.containsValue(taskName)) {
-                    RequestProcessor.Task task = REQUESTPROCESSOR.create(
-                            new PersistJob(tile));
+                if (tile != null) {
+                    String taskName = MessageFormat.format(PATH_PATTERN,
+                            tile.getSource().getName(),
+                            tile.getXtile(),
+                            tile.getYtile(),
+                            tile.getZoom());
+                    if (!runningTask.containsValue(taskName)) {
+                        RequestProcessor.Task task = REQUESTPROCESSOR.create(
+                                new PersistJob(tile));
 
-                    runningTask.put(task, taskName);
-                    task.addTaskListener(JobDispatcher.this);
-                    task.schedule(0);
+                        runningTask.put(task, taskName);
+                        task.addTaskListener(JobDispatcher.this);
+                        task.schedule(0);
+                    }
                 }
             }
         }

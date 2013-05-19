@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.service;
 
+import de.fub.mapsforgeplatform.openstreetmap.map.provider.OSMMapProvider;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Osm;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,13 +55,44 @@ public interface MapProvider {
      */
     public static class Factory {
 
+        private static final Object MUTEX_CREATE_INSTANCE = new Object();
+
+        public static MapProvider getDefault() {
+            MapProvider mapProvider = null;
+            try {
+                mapProvider = find(OSMMapProvider.class.getName());
+            } catch (MapProviderNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return mapProvider;
+        }
+
+        public static MapProvider find(String qualifiedName) throws MapProviderNotFoundException {
+            synchronized (MUTEX_CREATE_INSTANCE) {
+                MapProvider provider = null;
+                if (qualifiedName != null) {
+                    Collection<MapProvider> findAll = findAll();
+                    for (MapProvider mapProvider : findAll) {
+                        if (qualifiedName.equals(mapProvider.getClass().getName())) {
+                            provider = mapProvider;
+                            break;
+                        }
+                    }
+                    if (provider == null) {
+                        throw new MapProviderNotFoundException("Couldn't find specified map provider type");
+                    }
+                }
+                return provider;
+            }
+        }
+
         /**
          * creates a Collection with newly created registered MapPRoviders.
          *
          * @return A Collection with MapProviders, empty collection if no
          * MapProvider was registered via ServiceProvider annotation.
          */
-        public synchronized static Collection<MapProvider> getAllInstances() {
+        public synchronized static Collection<MapProvider> findAll() {
             ArrayList<MapProvider> resultList = new ArrayList<MapProvider>(20);
             Set<Class<? extends MapProvider>> allClasses = Lookup.getDefault().lookupResult(MapProvider.class).allClasses();
 
@@ -76,6 +108,26 @@ public interface MapProvider {
             }
 
             return resultList;
+        }
+    }
+
+    public static class MapProviderNotFoundException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+
+        public MapProviderNotFoundException() {
+        }
+
+        public MapProviderNotFoundException(String message) {
+            super(message);
+        }
+
+        public MapProviderNotFoundException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public MapProviderNotFoundException(Throwable cause) {
+            super(cause);
         }
     }
 }

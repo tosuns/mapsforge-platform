@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces;
 
 import de.fub.agg2graph.agg.IMergeHandler;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy.DefaultMergeHandler;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.util.Collection;
@@ -23,12 +24,16 @@ public interface MergeHandler extends IMergeHandler, Descriptor {
             return DescriptorFactory.findAll(MergeHandler.class);
         }
 
-        public static MergeHandler find(String qualifiedName) {
+        public static MergeHandler find(String qualifiedName) throws DescriptorFactory.InstanceNotFountException {
             return DescriptorFactory.find(MergeHandler.class, qualifiedName);
         }
 
-        public static MergeHandler find(String qualifiedName, Aggregator aggregator) {
+        public static MergeHandler find(String qualifiedName, Aggregator aggregator) throws DescriptorFactory.InstanceNotFountException {
             return DescriptorFactory.find(MergeHandler.class, qualifiedName, aggregator);
+        }
+
+        public static MergeHandler getDefault() throws DescriptorFactory.InstanceNotFountException {
+            return find(DefaultMergeHandler.class.getName());
         }
     }
 }

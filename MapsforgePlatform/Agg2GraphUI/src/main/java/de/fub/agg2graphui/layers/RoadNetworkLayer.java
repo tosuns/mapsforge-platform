@@ -50,7 +50,7 @@ public class RoadNetworkLayer extends AbstractLayer<RoadNetwork> {
     @Override
     protected void drawDrawables(Graphics2D graphics, Rectangle rectangle) {
         for (RoadNetwork roadNetwork : getItemList()) {
-            for (Road r : roadNetwork.roads) {
+            for (Road r : roadNetwork.getRoads()) {
                 if (r.isVisible() && r.getType() == getRoadType()) {
                     List<? extends ILocation> nodes = r.getNodes();
                     for (int i = 1; i < nodes.size(); i++) {

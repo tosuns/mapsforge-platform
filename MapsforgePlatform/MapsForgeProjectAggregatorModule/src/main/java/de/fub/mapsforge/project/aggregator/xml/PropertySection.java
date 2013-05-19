@@ -74,6 +74,6 @@ public class PropertySection {
 
     @Override
     public String toString() {
-        return "PropertySection{" + "name=" + name + ", description=" + description + ", propertySet=" + propertySet + '}';
+        return "PropertySection{" + "name=" + name + ", description=" + description + ", id=" + id + '}';
     }
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.aggregator.pipeline.wrapper;
+package de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy;
 
 import de.fub.mapsforge.project.aggregator.pipeline.processes.AggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.TraceDistance;
@@ -11,14 +11,11 @@ import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforge.project.models.Aggregator;
-import de.fub.utilsmodule.node.property.ProcessProperty;
-import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
+import de.fub.utilsmodule.node.property.NodeProperty;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -33,7 +30,7 @@ import org.openide.util.lookup.ServiceProvider;
 @NbBundle.Messages({
     "GpxmergeTraceDistance_Name=Gpx Merge Trace Distance",
     "GpxmergeTraceDistance_Description=No description available",
-    "GpxmergeTraceDistance_Settings_PropertySet_Name=Settings",
+    "GpxmergeTraceDistance_Settings_PropertySet_Name=Gpxmerge Trace Distance Settings",
     "GpxmergeTraceDistance_Settings_PropertySet_Description=No description available",
     "GpxmergeTraceDistance_AngleFactor_Name=Angle Factor",
     "GpxmergeTraceDistance_AngleFactor_Description=No description available"
@@ -90,12 +87,12 @@ public class GpxmergeTraceDistance extends de.fub.agg2graph.agg.strategy.Gpxmerg
         if (propertySet == null) {
             if (getAggregator() != null) {
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
-                    if (propertySet != null
+                    if (descriptor != null
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
                         List<PropertySection> sections = descriptor.getProperties().getSections();
                         for (PropertySection section : sections) {
                             for (PropertySet set : section.getPropertySet()) {
-                                if (Bundle.GpxmergeTraceDistance_Name().equals(set.getName())) {
+                                if (GpxmergeTraceDistance.class.getName().equals(set.getId())) {
                                     propertySet = set;
                                     break;
                                 }
@@ -103,6 +100,7 @@ public class GpxmergeTraceDistance extends de.fub.agg2graph.agg.strategy.Gpxmerg
                         }
                         if (propertySet == null) {
                             propertySet = createDefaultPropertySet();
+                            break;
                         }
 
                     }
@@ -118,6 +116,7 @@ public class GpxmergeTraceDistance extends de.fub.agg2graph.agg.strategy.Gpxmerg
         PropertySet set = new PropertySet(
                 Bundle.GpxmergeTraceDistance_Name(),
                 Bundle.GpxmergeTraceDistance_Description());
+        set.setId(GpxmergeTraceDistance.class.getName());
 
         Property property = new Property();
         property.setId(PROP_NAME_ANGLE_FACTOR);
@@ -129,44 +128,39 @@ public class GpxmergeTraceDistance extends de.fub.agg2graph.agg.strategy.Gpxmerg
         return set;
     }
 
-    private static class TraceDistanceNode extends AbstractNode implements ChangeListener {
+    private static class TraceDistanceNode extends AbstractNode {
 
         private final GpxmergeTraceDistance traceDistance;
-        private ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
         public TraceDistanceNode(GpxmergeTraceDistance traceDistance) {
             super(Children.LEAF);
             this.traceDistance = traceDistance;
-            if (this.traceDistance != null && this.traceDistance.getAggregator() != null) {
-                modelSynchronizerClient = this.traceDistance.getAggregator().create(TraceDistanceNode.this);
-            }
         }
 
         @Override
         protected Sheet createSheet() {
             Sheet sheet = Sheet.createDefault();
+            PropertySet[] propertySets = sheet.toArray();
 
+            for (PropertySet set : propertySets) {
+                sheet.remove(set.getName());
+            }
             if (this.traceDistance != null) {
                 de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet = this.traceDistance.getPropertySet();
 
                 if (propertySet != null) {
                     Sheet.Set set = Sheet.createPropertiesSet();
-                    set.setName(propertySet.getName());
+                    set.setName(propertySet.getId());
                     set.setDisplayName(propertySet.getName());
                     set.setShortDescription(propertySet.getDescription());
                     sheet.put(set);
 
                     for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
-                        set.put(new ProcessProperty(modelSynchronizerClient, property));
+                        set.put(new NodeProperty(property));
                     }
                 }
             }
             return sheet;
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            // do nothing
         }
     }
 }

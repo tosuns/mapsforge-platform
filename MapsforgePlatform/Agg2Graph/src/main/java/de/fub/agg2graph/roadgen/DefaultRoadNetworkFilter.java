@@ -13,7 +13,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.roadgen;
 
@@ -26,10 +26,42 @@ package de.fub.agg2graph.roadgen;
  */
 public class DefaultRoadNetworkFilter implements IRoadNetworkFilter {
 
-    public boolean removeBorderRoads = true;
-    public double minBorderRoadLength = 150; // meters
-    public boolean removeIsolatedRoads = true;
-    public double minIsolatedRoadLength = 500; // meters
+    private boolean removeBorderRoads = true;
+    private double minBorderRoadLength = 150; // meters
+    private boolean removeIsolatedRoads = true;
+    private double minIsolatedRoadLength = 500; // meters
+
+    public boolean isRemoveBorderRoads() {
+        return removeBorderRoads;
+    }
+
+    public void setRemoveBorderRoads(boolean removeBorderRoads) {
+        this.removeBorderRoads = removeBorderRoads;
+    }
+
+    public double getMinBorderRoadLength() {
+        return minBorderRoadLength;
+    }
+
+    public void setMinBorderRoadLength(double minBorderRoadLength) {
+        this.minBorderRoadLength = minBorderRoadLength;
+    }
+
+    public boolean isRemoveIsolatedRoads() {
+        return removeIsolatedRoads;
+    }
+
+    public void setRemoveIsolatedRoads(boolean removeIsolatedRoads) {
+        this.removeIsolatedRoads = removeIsolatedRoads;
+    }
+
+    public double getMinIsolatedRoadLength() {
+        return minIsolatedRoadLength;
+    }
+
+    public void setMinIsolatedRoadLength(double minIsolatedRoadLength) {
+        this.minIsolatedRoadLength = minIsolatedRoadLength;
+    }
 
     @Override
     public void filter(RoadNetwork roadNetwork) {
@@ -37,7 +69,7 @@ public class DefaultRoadNetworkFilter implements IRoadNetworkFilter {
     }
 
     private void hideUnreliableRoads(RoadNetwork roadNetwork) {
-        for (Road r : roadNetwork.roads) {
+        for (Road r : roadNetwork.getRoads()) {
             r.setVisible(true);
             if (!removeBorderRoads && !removeIsolatedRoads) {
                 continue;

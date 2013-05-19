@@ -80,6 +80,6 @@ public class PropertySet {
 
     @Override
     public String toString() {
-        return "PropertySet{" + "properties=" + properties + ", name=" + name + ", description=" + description + '}';
+        return "PropertySet{" + "name=" + name + ", description=" + description + ", id=" + id + '}';
     }
 }

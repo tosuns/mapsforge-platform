@@ -52,13 +52,12 @@ import org.xml.sax.SAXException;
 public class TileManager {
 
     private Tile<AggNode> root;
-    public int splitFactor = 3;
-    public boolean doMerge = false;
-    public double mergeFactor = 0.7;
-    public int maxElementsPerTile = 5000;
-    public Rectangle2D.Double minimumSplitSize = new Rectangle2D.Double(0, 0,
-            10e-3, 10e-3);
-    public int nodeCounter = 0;
+    private int splitFactor = 3;
+    private boolean doMerge = false;
+    private double mergeFactor = 0.7;
+    private int maxElementsPerTile = 5000;
+    private Rectangle2D.Double minimumSplitSize = new Rectangle2D.Double(0, 0, 10e-3, 10e-3);
+    private int nodeCounter = 0;
     private int connCounter = 0;
     private AggContainer agg;
     // lon = "width", first. lat = "height", last.
@@ -76,6 +75,38 @@ public class TileManager {
         this(dcs);
         this.agg = agg;
         this.splitFactor = splitFactor;
+    }
+
+    public int getSplitFactor() {
+        return splitFactor;
+    }
+
+    public void setSplitFactor(int splitFactor) {
+        this.splitFactor = splitFactor;
+    }
+
+    public double getMergeFactor() {
+        return mergeFactor;
+    }
+
+    public void setMergeFactor(double mergeFactor) {
+        this.mergeFactor = mergeFactor;
+    }
+
+    public int getMaxElementsPerTile() {
+        return maxElementsPerTile;
+    }
+
+    public void setMaxElementsPerTile(int maxElementsPerTile) {
+        this.maxElementsPerTile = maxElementsPerTile;
+    }
+
+    public Rectangle2D.Double getMinimumSplitSize() {
+        return minimumSplitSize;
+    }
+
+    public void setMinimumSplitSize(Rectangle2D.Double minimumSplitSize) {
+        this.minimumSplitSize = minimumSplitSize;
     }
 
     public Tile<AggNode> getTile(ILocation loc) {

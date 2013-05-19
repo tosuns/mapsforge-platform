@@ -40,7 +40,7 @@ public class InterfaceInplaceEditor implements InplaceEditor {
         this.clazz = clazz;
 
         comboBox.removeAllItems();
-        Lookup.Result<?> lookupResult = Lookup.getDefault().lookupResult(clazz);
+        Lookup.Result<?> lookupResult = Lookup.getDefault().lookupResult(this.clazz);
 
         ArrayList<Class<?>> list = new ArrayList<Class<?>>();
         for (Class<?> c : lookupResult.allClasses()) {

@@ -34,10 +34,12 @@ public class OSMSubwayRailRoadMapProvider implements MapProvider {
 
     @Override
     public Osm getMap(double leftLon, double bottomLat, double rightLon, double topLat) {
-        return SERVICE.getOSMSubwayMap(Osm.class,
+        Osm map = SERVICE.getOSMSubwayMap(Osm.class,
                 String.format(Locale.ENGLISH, "%d", leftLon),
                 String.format(Locale.ENGLISH, "%d", bottomLat),
                 String.format(Locale.ENGLISH, "%d", rightLon),
                 String.format(Locale.ENGLISH, "%d", topLat));
+        SERVICE.close();
+        return map;
     }
 }

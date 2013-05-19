@@ -532,9 +532,20 @@ public class ProcessGraph extends GraphScene<AbstractAggregationProcess<?, ?>, S
                 if (transferData instanceof AbstractAggregationProcess<?, ?>) {
                     AbstractAggregationProcess<?, ?> proc = (AbstractAggregationProcess<?, ?>) transferData;
                     Class<?> inputType = getInputType(proc);
-                    if (inputType != null && inputType.isAssignableFrom(Void.class)) {
-                        // TODO message dialog why didn't get accepted!
-                        return ConnectorState.REJECT;
+                    if (inputType != null) {
+                        if (inputType.isAssignableFrom(Void.class)) {
+                            Collection<AbstractAggregationProcess<?, ?>> nodes = getNodes();
+                            for (AbstractAggregationProcess<?, ?> p : nodes) {
+                                inputType = getInputType(p);
+                                if (inputType.isAssignableFrom(Void.class)) {
+                                    return ConnectorState.REJECT;
+                                }
+                            }
+                            // TODO message dialog why didn't get accepted!
+                            return ConnectorState.ACCEPT;
+                        } else {
+                            return ConnectorState.ACCEPT;
+                        }
                     }
                     child = findWidget(transferData);
                     if (child != null) {

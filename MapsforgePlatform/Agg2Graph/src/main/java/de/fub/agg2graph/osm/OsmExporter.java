@@ -99,7 +99,7 @@ public class OsmExporter implements IExporter {
         dateString = dateFormatter.format(new Date());
 
         // generate output
-        for (Road r : roadNetwork.roads) {
+        for (Road r : roadNetwork.getRoads()) {
             if (!r.isVisible()) {
                 continue;
             }
@@ -109,7 +109,7 @@ public class OsmExporter implements IExporter {
                 locToID.put(loc.getID(), currentNodeID++);
             }
         }
-        for (Road r : roadNetwork.roads) {
+        for (Road r : roadNetwork.getRoads()) {
             if (!r.isVisible()) {
                 continue;
             }

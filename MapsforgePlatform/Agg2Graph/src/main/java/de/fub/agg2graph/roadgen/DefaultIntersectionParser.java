@@ -38,8 +38,7 @@ import java.util.logging.Logger;
  */
 public class DefaultIntersectionParser implements IIntersectionParser {
 
-    private static final Logger logger = Logger
-            .getLogger("agg2graph.roadgen.intersectionparser");
+    private static final Logger logger = Logger.getLogger("agg2graph.roadgen.intersectionparser");
     private RoadNetwork roadNetwork;
     private AggContainer agg;
 
@@ -80,13 +79,13 @@ public class DefaultIntersectionParser implements IIntersectionParser {
             logger.info(MessageFormat.format("intersection found: {0}", intersection));
             // intersection.out = candidate.getVisibleOut();
             // intersection.in = candidate.getVisibleIn();
-            roadNetwork.intersections.add(intersection);
+            roadNetwork.getIntersections().add(intersection);
         }
     }
 
     private void makeRoads() {
         // parse roads
-        Iterator<Intersection> it = roadNetwork.intersections.iterator();
+        Iterator<Intersection> it = roadNetwork.getIntersections().iterator();
         List<Intersection> newIntersections = new ArrayList<Intersection>(10);
         while (it.hasNext()) {
             Intersection startIntersection = it.next();
@@ -151,10 +150,10 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                             .getIntersection();
                     road.setTo(endIntersection);
                     endIntersection.in.add(road);
-                    roadNetwork.roads.add(road);
+                    roadNetwork.getRoads().add(road);
                 }
             }
         }
-        roadNetwork.intersections.addAll(newIntersections);
+        roadNetwork.getIntersections().addAll(newIntersections);
     }
 }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.plugins.tasks.eval;
+package de.fub.mapsforge.plugins.mapmatcher;
 
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.GPSPoint;

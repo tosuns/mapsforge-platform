@@ -78,7 +78,7 @@ public class Property implements PropertyDescriptor {
 
     @Override
     public String toString() {
-        return "Property{" + "name=" + name + ", value=" + value + '}';
+        return "Property{" + "name=" + name + ", value=" + value + ", javaType=" + javaType + ", description=" + description + ", id=" + id + '}';
     }
 
     @Override

@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -106,6 +107,14 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     public void add(T item) {
         synchronized (ITEM_LIST_MUTEX) {
             itemList.add(item);
+            drawables.clear();
+            fireRepaintEvent();
+        }
+    }
+
+    public void addAll(Collection<T> items) {
+        synchronized (ITEM_LIST_MUTEX) {
+            itemList.addAll(items);
             drawables.clear();
             fireRepaintEvent();
         }
