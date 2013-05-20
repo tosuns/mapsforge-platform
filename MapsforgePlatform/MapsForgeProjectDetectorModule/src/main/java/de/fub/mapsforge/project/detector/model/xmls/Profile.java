@@ -5,6 +5,8 @@
 package de.fub.mapsforge.project.detector.model.xmls;
 
 import de.fub.mapsforge.project.detector.DetectorMode;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.text.MessageFormat;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,12 +24,16 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Profile {
 
+    public static final String PROP_NAME_NAME = "name";
+    public static final String PROP_NAME_PREPROCESS = "preprocess";
+    public static final String PROP_NAME_POSTPROCESS = "postprocess";
     @XmlAttribute(name = "name", required = true)
     private String name;
     @XmlElement(name = "preprocess", required = true)
     private Preprocess preprocess = new Preprocess();
     @XmlElement(name = "postprocess", required = true)
     private Postprocess postprocess = new Postprocess();
+    private transient PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     public Profile() {
     }
@@ -37,7 +43,9 @@ public class Profile {
     }
 
     public void setName(String name) {
+        Object oldValue = this.name;
         this.name = name;
+        pcs.firePropertyChange(PROP_NAME_NAME, oldValue, this.name);
     }
 
     public String getName() {
@@ -45,7 +53,9 @@ public class Profile {
     }
 
     public void setPreprocess(Preprocess preprocess) {
+        Object oldValue = this.preprocess;
         this.preprocess = preprocess;
+        pcs.firePropertyChange(PROP_NAME_PREPROCESS, oldValue, this.preprocess);
     }
 
     public Preprocess getPreprocess() {
@@ -53,11 +63,29 @@ public class Profile {
     }
 
     public void setPostprocess(Postprocess postprocess) {
+        Object oldValue = this.postprocess;
         this.postprocess = postprocess;
+        pcs.firePropertyChange(PROP_NAME_POSTPROCESS, oldValue, this.postprocess);
     }
 
     public Postprocess getPostprocess() {
         return postprocess;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
     }
 
     @Override

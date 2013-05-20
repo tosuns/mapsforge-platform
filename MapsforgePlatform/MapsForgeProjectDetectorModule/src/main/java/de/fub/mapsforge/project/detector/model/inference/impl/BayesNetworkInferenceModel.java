@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.impl;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
@@ -28,10 +27,6 @@ public class BayesNetworkInferenceModel extends AbstractInferenceModel {
     private JToolBar toolbar = null;
 
     public BayesNetworkInferenceModel() {
-    }
-
-    public BayesNetworkInferenceModel(Detector detector) {
-        super(detector);
     }
 
     @Override

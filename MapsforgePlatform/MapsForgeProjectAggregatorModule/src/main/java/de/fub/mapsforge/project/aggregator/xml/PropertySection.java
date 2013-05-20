@@ -22,6 +22,7 @@ public class PropertySection {
 
     private String name;
     private String description;
+    private String id;
     private List<PropertySet> propertySet;
 
     public PropertySection() {
@@ -30,6 +31,15 @@ public class PropertySection {
     public PropertySection(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @XmlAttribute(name = "id", required = true)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @XmlAttribute(name = "name", required = true)
@@ -41,7 +51,7 @@ public class PropertySection {
         this.name = name;
     }
 
-    @XmlAttribute(name = "description")
+    @XmlElement(name = "description")
     public String getDescription() {
         return description;
     }
@@ -64,6 +74,6 @@ public class PropertySection {
 
     @Override
     public String toString() {
-        return "PropertySection{" + "name=" + name + ", description=" + description + ", propertySet=" + propertySet + '}';
+        return "PropertySection{" + "name=" + name + ", description=" + description + ", id=" + id + '}';
     }
 }

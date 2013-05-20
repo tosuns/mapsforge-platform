@@ -4,8 +4,8 @@
  */
 package de.fub.mapsforge.project.detector.wizards.detector;
 
-import de.fub.mapsforge.project.detector.model.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.utilsmodule.Collections.ObservableList;
 import java.util.Collection;
 import javax.swing.JPanel;

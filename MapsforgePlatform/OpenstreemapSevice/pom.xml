@@ -212,11 +212,11 @@
                         <configuration>
                             <schemaFiles>gpx.xsd</schemaFiles>
                             <packageName>de.fub.mapsforgeplatform.xml.gpx</packageName> The name of your generated source package
-                            <staleFile>${project.build.directory}/jaxb2/.schema1XjcStaleFlag</staleFile>
+                            <!--<staleFile>${project.build.directory}/jaxb2/.schema1XjcStaleFlag</staleFile>-->
                             <schemaDirectory>${project.basedir}/src/main/resources/de/fub/mapsforgeplatform/xsd</schemaDirectory>
                         </configuration>
                     </execution>
-                    <execution>
+<!--                    <execution>
                         <id>xjc2-osm</id>
                         <goals>
                             <goal>xjc</goal>
@@ -228,7 +228,7 @@
                             <schemaDirectory>${project.basedir}/src/main/resources/de/fub/mapsforgeplatform</schemaDirectory>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
 <!--                <configuration>
 

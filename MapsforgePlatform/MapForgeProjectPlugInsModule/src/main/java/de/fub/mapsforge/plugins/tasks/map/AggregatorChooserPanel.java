@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.plugins.tasks.map;
 
-import de.fub.mapsforge.project.MapsForgeAggregatorHelper;
 import de.fub.mapsforge.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.utilsmodule.components.CustomOutlineView;
@@ -34,12 +33,13 @@ import org.openide.util.WeakListeners;
  */
 public class AggregatorChooserPanel extends javax.swing.JPanel implements ExplorerManager.Provider, PropertyChangeListener {
 
-    public static final String PROP_NAME_ACTIVE = "active";
+    public static final String PROP_NAME_PANEL_CLOSED = "panelClosed";
     private static final long serialVersionUID = 1L;
     private final ExplorerManager explorerManager = new ExplorerManager();
     private final AggregatorDataObjectPropertyEditor propertyEditor;
     private boolean panelActive = false;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private DataObject selectedAggregatorDataObject = null;
 
     /**
      * Creates new form AggregatorChooserPanel
@@ -63,6 +63,7 @@ public class AggregatorChooserPanel extends javax.swing.JPanel implements Explor
     }
 
     private void selectAggregator(AggregatorDataObject aggregatorDataObject) {
+        selectedAggregatorDataObject = aggregatorDataObject;
         Children children = explorerManager.getRootContext().getChildren();
 
         for (Node node : children.getNodes(true)) {
@@ -81,17 +82,19 @@ public class AggregatorChooserPanel extends javax.swing.JPanel implements Explor
     @Override
     public void addNotify() {
         super.addNotify();
-        Object oldValue = panelActive;
         panelActive = true;
-        pcs.firePropertyChange(PROP_NAME_ACTIVE, oldValue, panelActive);
     }
 
     @Override
     public void removeNotify() {
         Object oldValue = this.panelActive;
         panelActive = false;
-        pcs.firePropertyChange(PROP_NAME_ACTIVE, oldValue, panelActive);
+        pcs.firePropertyChange(PROP_NAME_PANEL_CLOSED, oldValue, panelActive);
         super.removeNotify();
+    }
+
+    public DataObject getSelectedAggregatorDataObject() {
+        return selectedAggregatorDataObject;
     }
 
     @Override
@@ -146,9 +149,9 @@ public class AggregatorChooserPanel extends javax.swing.JPanel implements Explor
         if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName()) && panelActive) {
             Node[] selectedNodes = getExplorerManager().getSelectedNodes();
             if (selectedNodes.length == 1) {
-                propertyEditor.setValue(selectedNodes[0].getLookup().lookup(DataObject.class));
+                selectedAggregatorDataObject = selectedNodes[0].getLookup().lookup(DataObject.class);
             } else {
-                propertyEditor.setValue(null);
+                selectedAggregatorDataObject = null;
             }
         }
     }

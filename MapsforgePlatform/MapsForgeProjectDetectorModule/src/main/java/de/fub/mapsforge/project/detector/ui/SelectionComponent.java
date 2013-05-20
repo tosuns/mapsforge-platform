@@ -5,7 +5,7 @@
 package de.fub.mapsforge.project.detector.ui;
 
 import de.fub.mapsforge.project.detector.factories.nodes.FilterNode;
-import de.fub.mapsforge.project.detector.model.DetectorProcess;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
 import java.awt.Component;

@@ -5,7 +5,6 @@
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -28,10 +27,6 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
     private double duration = -1;
 
     public UniformDurationSegmentationFilterProcess() {
-    }
-
-    public UniformDurationSegmentationFilterProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

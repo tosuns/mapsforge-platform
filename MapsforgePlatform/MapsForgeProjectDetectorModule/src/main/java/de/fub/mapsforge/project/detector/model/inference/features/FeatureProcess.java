@@ -4,9 +4,10 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.features;
 
-import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
@@ -21,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.MessageFormat;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -28,6 +30,7 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
@@ -39,8 +42,7 @@ public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegmen
 
     private static Image defaultImage;
 
-    public FeatureProcess(Detector detector) {
-        super(detector);
+    public FeatureProcess() {
     }
 
     @Override
@@ -98,6 +100,32 @@ public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegmen
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    public static synchronized FeatureProcess find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
+        FeatureProcess featureProcess = null;
+        try {
+            Class<?> clazz = null;
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            // prefer netbeans classloader
+            if (classLoader != null) {
+                clazz = classLoader.loadClass(qualifiedInstanceName);
+            } else {
+                // fall back
+                clazz = Class.forName(qualifiedInstanceName);
+            }
+            if (FeatureProcess.class.isAssignableFrom(clazz)) {
+                @SuppressWarnings("unchecked")
+                Class<FeatureProcess> featureProcessClass = (Class<FeatureProcess>) clazz;
+                featureProcess = DetectorProcess.find(featureProcessClass, detector);
+            } else {
+                throw new DetectorProcessNotFoundException(MessageFormat.format("{0} is not type of {1}", clazz.getSimpleName(), FeatureProcess.class.getSimpleName()));
+            }
+
+        } catch (Throwable ex) {
+            throw new DetectorProcessNotFoundException(ex);
+        }
+        return featureProcess;
     }
 
     private static class FeatureNode extends CustomAbstractnode implements ChangeListener, PropertyChangeListener {

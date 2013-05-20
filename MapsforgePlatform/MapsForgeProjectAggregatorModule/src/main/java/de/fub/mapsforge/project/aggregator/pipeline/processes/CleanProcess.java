@@ -31,36 +31,42 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Serdar
  */
+@NbBundle.Messages({
+    "CLT_CleanProcess_Name=Cleaner",
+    "CLT_CleanProcess_Description=A simple GPS segment cleaner",
+    "CLT_CLeanProcess_PropertySet_Setting_Name=Cleaning Settings",
+    "CLT_CleanProcess_PropertySet_Setting_Description=No description available",
+    "CLT_CleanProcess_PropertySet_RDPSetting_Name=Raimer Douglas Peucker Filter Settings",
+    "CLT_CleanProcess_PropertySet_RDPSetting_Description=No description available"
+})
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSegment>, List<GPSSegment>> implements StatisticProvider {
+public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegment>, List<GPSSegment>> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
     private static final Image IMAGE = ImageUtilities.loadImage(ICON_PATH);
-    private static final String CLEAN_SETTINGS = "Cleaning Settings";
-    private static final String RAMER_DOUGLAS_PEUCKER_SETTINGS = "Raimer Douglas Peucker Filter Settings";
+    private static final String PROPERTY_SET_ID_CLEAN_SETTINGS = "clean.process.settings";
+    private static final String PROPERTY_SET_ID_RAMER_DOUGLAS_PEUCKER_SETTINGS = "clean.process.rdp.settings";
     private ArrayList<GPSSegment> cleanSegmentList = new ArrayList<GPSSegment>();
     private List<GPSSegment> inputList = new ArrayList<GPSSegment>();
     private GPSCleaner gpsCleaner = new GPSCleaner();
-    private final GPSSegmentLayer gPSSegmentLayer;
+    private GPSSegmentLayer gPSSegmentLayer;
     private int totalCleanSegmentCount = 0;
     private int totalCleanGPSPointCount = 0;
     private int totalSmoothedGPSPointCount = 0;
 
     public CleanProcess() {
-        this(null);
+        init();
     }
 
-    public CleanProcess(Aggregator aggregator) {
-        super(aggregator);
-
-
+    private void init() {
         RenderingOptions renderingOptions = new RenderingOptions();
         renderingOptions.setColor(new Color(39, 172, 88)); // green
         renderingOptions.setRenderingType(RenderingOptions.RenderingType.ALL);
@@ -74,7 +80,7 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
     public void setProcessDescriptor(ProcessDescriptor processDescriptor) {
         super.setProcessDescriptor(processDescriptor);
         if (processDescriptor != null) {
-            PropertySet propertySet = getPropertySet(CLEAN_SETTINGS);
+            PropertySet propertySet = getPropertySet(PROPERTY_SET_ID_CLEAN_SETTINGS);
             if (propertySet != null) {
                 createCleaningOptions(propertySet.getProperties());
             }
@@ -110,7 +116,7 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
 
     private RamerDouglasPeuckerFilter getFilterInstance() {
         RamerDouglasPeuckerFilter filter = null;
-        PropertySet propertySet = getPropertySet(RAMER_DOUGLAS_PEUCKER_SETTINGS);
+        PropertySet propertySet = getPropertySet(PROPERTY_SET_ID_RAMER_DOUGLAS_PEUCKER_SETTINGS);
         if (propertySet != null) {
             filter = AggregatorUtils.createValue(RamerDouglasPeuckerFilter.class, propertySet.getProperties());
         } else {
@@ -240,5 +246,171 @@ public final class CleanProcess extends AbstractXmlAggregationProcess<List<GPSSe
     @Override
     public Component getVisualRepresentation() {
         return null;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(CleanProcess.class.getName());
+        descriptor.setDisplayName(Bundle.CLT_CleanProcess_Name());
+        descriptor.setDescription(Bundle.CLT_CleanProcess_Description());
+
+        PropertySection propertySection = new PropertySection();
+        propertySection.setId(CleanProcess.class.getName());
+        propertySection.setName(Bundle.CLT_CleanProcess_Name());
+        propertySection.setDescription(Bundle.CLT_CleanProcess_Description());
+
+        descriptor.getProperties().getSections().add(propertySection);
+
+        PropertySet propertySet = new PropertySet();
+        propertySet.setId(PROPERTY_SET_ID_CLEAN_SETTINGS);
+        propertySet.setName(Bundle.CLT_CLeanProcess_PropertySet_Setting_Name());
+        propertySet.setDescription(Bundle.CLT_CleanProcess_PropertySet_Setting_Description());
+
+        Property property = new Property();
+        property.setId("filterBySegmentLength");
+        property.setName("minSegmentLength");
+        property.setDescription("No description available");
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.TRUE.toString());
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("minSegmentLength");
+        property.setName("minSegmentLength");
+        property.setDescription("No description available");
+        property.setJavaType(Long.class.getName());
+        property.setValue(String.valueOf(1));
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("maxSegmentLength");
+        property.setName("maxSegmentLength");
+        property.setDescription("No description available");
+        property.setJavaType(Long.class.getName());
+        property.setValue(String.valueOf(100));
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("filterByEdgeLength");
+        property.setName("filterByEdgeLength");
+        property.setDescription("No description available");
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.TRUE.toString());
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("minEdgeLength");
+        property.setName("minEdgeLength");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("" + 0.3);
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("maxEdgeLength");
+        property.setName("maxEdgeLength");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("" + 750);
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("filterByEdgeLengthIncrease");
+        property.setName("filterByEdgeLengthIncrease");
+        property.setDescription("No description available");
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.TRUE.toString());
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("minEdgeLengthIncreaseFactor");
+        property.setName("minEdgeLengthIncreaseFactor");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("10");
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("minEdgeLengthAfterIncrease");
+        property.setName("minEdgeLengthAfterIncrease");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("30");
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("filterZigzag");
+        property.setName("filterZigzag");
+        property.setDescription("No description available");
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.TRUE.toString());
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("maxZigzagAngle");
+        property.setName("maxZigzagAngle");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("30");
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("filterFakeCircle");
+        property.setName("filterFakeCircle");
+        property.setDescription("No description available");
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.TRUE.toString());
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("maxFakeCircleAngle");
+        property.setName("maxFakeCircleAngle");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("50");
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("filterOutliers");
+        property.setName("filterOutliers");
+        property.setDescription("No description available");
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.FALSE.toString());
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("maxNumOutliers");
+        property.setName("maxNumOutliers");
+        property.setDescription("No description available");
+        property.setJavaType(Integer.class.getName());
+        property.setValue("2");
+        propertySet.getProperties().add(property);
+
+        propertySection.getPropertySet().add(propertySet);
+
+        propertySet = new PropertySet();
+        propertySet.setId(PROPERTY_SET_ID_RAMER_DOUGLAS_PEUCKER_SETTINGS);
+        propertySet.setName(Bundle.CLT_CleanProcess_PropertySet_RDPSetting_Name());
+        propertySet.setDescription(Bundle.CLT_CleanProcess_PropertySet_RDPSetting_Description());
+
+        property = new Property();
+        property.setId("epsilon");
+        property.setName("epsilon");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("5");
+        propertySet.getProperties().add(property);
+
+        property = new Property();
+        property.setId("maxSegmentLength");
+        property.setName("maxSegmentLength");
+        property.setDescription("No description available");
+        property.setJavaType(Double.class.getName());
+        property.setValue("100");
+        propertySet.getProperties().add(property);
+
+        propertySection.getPropertySet().add(propertySet);
+        return descriptor;
     }
 }

@@ -4,12 +4,12 @@
  */
 package de.fub.mapsforge.project.detector.actions;
 
-import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;

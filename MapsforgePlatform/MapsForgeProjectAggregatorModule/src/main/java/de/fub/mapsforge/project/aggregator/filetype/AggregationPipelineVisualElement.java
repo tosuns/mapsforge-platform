@@ -32,6 +32,7 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
@@ -75,9 +76,11 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
         modelSynchronizerClient = aggregator.create(graphUpdater);
         updateGraph();
         toolbar.add(new JToolBar.Separator());
-        for (Action action : getActions()) {
-            toolbar.add(new JButton(action));
-        }
+        toolbar.add(new JButton(
+                new LayoutAction(
+                null,
+                ImageUtilities.loadImageIcon(LAYOUT_BUTTON_ICON_PATH, true))));
+
     }
 
     private void initLookup() {

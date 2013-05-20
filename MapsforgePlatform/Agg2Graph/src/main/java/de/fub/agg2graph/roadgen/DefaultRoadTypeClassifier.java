@@ -19,14 +19,46 @@ package de.fub.agg2graph.roadgen;
 
 public class DefaultRoadTypeClassifier implements IRoadTypeClassifier {
 
-    public double minWeightPrimary = 4;
-    public double minWeightSecondary = 2;
-    public double minWidthPrimary = 4;
-    public double minWidthSecondary = 2;
+    private double minWeightPrimary = 4;
+    private double minWeightSecondary = 2;
+    private double minWidthPrimary = 4;
+    private double minWidthSecondary = 2;
+
+    public double getMinWeightPrimary() {
+        return minWeightPrimary;
+    }
+
+    public void setMinWeightPrimary(double minWeightPrimary) {
+        this.minWeightPrimary = minWeightPrimary;
+    }
+
+    public double getMinWeightSecondary() {
+        return minWeightSecondary;
+    }
+
+    public void setMinWeightSecondary(double minWeightSecondary) {
+        this.minWeightSecondary = minWeightSecondary;
+    }
+
+    public double getMinWidthPrimary() {
+        return minWidthPrimary;
+    }
+
+    public void setMinWidthPrimary(double minWidthPrimary) {
+        this.minWidthPrimary = minWidthPrimary;
+    }
+
+    public double getMinWidthSecondary() {
+        return minWidthSecondary;
+    }
+
+    public void setMinWidthSecondary(double minWidthSecondary) {
+        this.minWidthSecondary = minWidthSecondary;
+    }
 
     @Override
     public void classify(RoadNetwork network) {
-        for (Road road : network.roads) {
+        for (Road road : network.getRoads()) {
             if (road.getType() != Road.RoadType.UNKNOWN) {
                 continue;
             }

@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.TrainingsDataProvider;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
@@ -38,10 +37,6 @@ public class DataAnalyzeTask extends Task {
     private final HashMap<String, HashSet<TrackSegment>> data = new HashMap<String, HashSet<TrackSegment>>();
 
     public DataAnalyzeTask() {
-    }
-
-    public DataAnalyzeTask(Detector detector) {
-        super(detector);
     }
 
     @Override

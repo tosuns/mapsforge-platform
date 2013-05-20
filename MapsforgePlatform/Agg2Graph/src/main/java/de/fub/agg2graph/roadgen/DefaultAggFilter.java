@@ -33,9 +33,16 @@ import java.util.logging.Logger;
  */
 public class DefaultAggFilter implements IAggFilter {
 
-    private static final Logger logger = Logger
-            .getLogger("agg2graph.roadgen.aggfilter");
-    public double minEdgeWeight = 2;
+    private static final Logger logger = Logger.getLogger("agg2graph.roadgen.aggfilter");
+    private double minEdgeWeight = 2;
+
+    public double getMinEdgeWeight() {
+        return minEdgeWeight;
+    }
+
+    public void setMinEdgeWeight(double minEdgeWeight) {
+        this.minEdgeWeight = minEdgeWeight;
+    }
 
     @Override
     public void filter(AggContainer agg) {

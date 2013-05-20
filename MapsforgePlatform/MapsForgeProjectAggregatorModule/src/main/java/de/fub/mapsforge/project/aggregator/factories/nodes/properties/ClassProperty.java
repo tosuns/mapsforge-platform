@@ -4,6 +4,8 @@
  */
 package de.fub.mapsforge.project.aggregator.factories.nodes.properties;
 
+import de.fub.mapsforge.project.aggregator.factories.nodes.properties.InterfacePropertyEditorSupport;
+import de.fub.mapsforge.project.aggregator.xml.Property;
 import java.beans.PropertyEditor;
 import org.openide.nodes.PropertySupport;
 

@@ -4,9 +4,10 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
-import de.fub.mapsforge.project.detector.model.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
+import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
@@ -21,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
@@ -30,6 +32,7 @@ import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -43,11 +46,6 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     private static Image defaultImage;
 
     public FilterProcess() {
-        super(null);
-    }
-
-    public FilterProcess(Detector detector) {
-        super(detector);
     }
 
     @Override
@@ -109,6 +107,31 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    public static synchronized FilterProcess find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
+        FilterProcess filterProcess = null;
+        try {
+            Class<?> clazz = null;
+            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+            // prefer netbeans classloader
+            if (classLoader != null) {
+                clazz = classLoader.loadClass(qualifiedInstanceName);
+            } else {
+                // fall back
+                clazz = Class.forName(qualifiedInstanceName);
+            }
+            if (FilterProcess.class.isAssignableFrom(clazz)) {
+                @SuppressWarnings("unchecked")
+                Class<FilterProcess> filterProcessClass = (Class<FilterProcess>) clazz;
+                filterProcess = DetectorProcess.find(filterProcessClass, detector);
+            } else {
+                throw new DetectorProcessNotFoundException(MessageFormat.format("{0} is not type of {1}", clazz.getSimpleName(), FilterProcess.class.getSimpleName()));
+            }
+        } catch (Throwable ex) {
+            throw new DetectorProcessNotFoundException(ex);
+        }
+        return filterProcess;
     }
 
     @NbBundle.Messages({"CLT_Filter_Parameter=Parameters"})

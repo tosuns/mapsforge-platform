@@ -56,7 +56,7 @@ import org.openide.windows.TopComponent;
         mimeType = "text/detector+xml",
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "DetectorAnalyzerVisual",
-        position = 1000)
+        position = 1200)
 @NbBundle.Messages({
     "LBL_Detector_TrainingData_Analyzer_VISUAL=Data Analyzer"
 })

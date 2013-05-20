@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.StopRateFeature;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.List;
@@ -33,16 +32,11 @@ public class StopRateFeatureProcess extends FeatureProcess {
     private Double minimumThreshold = null;
 
     public StopRateFeatureProcess() {
-        this(null);
-    }
-
-    public StopRateFeatureProcess(Detector detector) {
-        super(detector);
-        feature.setMinimumVelocityThreshold(getMinimumVelocityThreshold());
     }
 
     @Override
     protected void start() {
+        feature.setMinimumVelocityThreshold(getMinimumVelocityThreshold());
         feature.reset();
         if (trackSegement != null) {
             for (Waypoint waypoint : trackSegement.getWayPointList()) {

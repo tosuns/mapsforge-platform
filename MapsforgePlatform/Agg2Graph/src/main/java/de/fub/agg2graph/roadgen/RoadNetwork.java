@@ -34,16 +34,76 @@ import java.util.Set;
  */
 public class RoadNetwork {
 
-    public IAggFilter aggFilter = AggFilterFactory.getObject();
-    public IIntersectionParser intersectionParser = IntersectionParserFactory.getObject();
-    public Set<Intersection> intersections;
-    public Set<Road> roads;
-    public IRoadTypeClassifier roadTypeClassifier = RoadTypeClassifierFactory.getObject();
-    public IRoadNetworkFilter roadNetworkFilter = RoadNetworkFilterFactory.getObject();
-    public IRoadObjectMerger roadObjectMerger = RoadObjectMergerFactory.getObject();
+    private IAggFilter aggFilter = AggFilterFactory.getObject();
+    private IIntersectionParser intersectionParser = IntersectionParserFactory.getObject();
+    private Set<Intersection> intersections;
+    private Set<Road> roads;
+    private IRoadTypeClassifier roadTypeClassifier = RoadTypeClassifierFactory.getObject();
+    private IRoadNetworkFilter roadNetworkFilter = RoadNetworkFilterFactory.getObject();
+    private IRoadObjectMerger roadObjectMerger = RoadObjectMergerFactory.getObject();
 
     public RoadNetwork() {
+        init();
+    }
+
+    private void init() {
         clear();
+    }
+
+    public IAggFilter getAggFilter() {
+        return aggFilter;
+    }
+
+    public void setAggFilter(IAggFilter aggFilter) {
+        this.aggFilter = aggFilter;
+    }
+
+    public IIntersectionParser getIntersectionParser() {
+        return intersectionParser;
+    }
+
+    public void setIntersectionParser(IIntersectionParser intersectionParser) {
+        this.intersectionParser = intersectionParser;
+    }
+
+    public Set<Intersection> getIntersections() {
+        return intersections;
+    }
+
+    public void setIntersections(Set<Intersection> intersections) {
+        this.intersections = intersections;
+    }
+
+    public Set<Road> getRoads() {
+        return roads;
+    }
+
+    public void setRoads(Set<Road> roads) {
+        this.roads = roads;
+    }
+
+    public IRoadTypeClassifier getRoadTypeClassifier() {
+        return roadTypeClassifier;
+    }
+
+    public void setRoadTypeClassifier(IRoadTypeClassifier roadTypeClassifier) {
+        this.roadTypeClassifier = roadTypeClassifier;
+    }
+
+    public IRoadNetworkFilter getRoadNetworkFilter() {
+        return roadNetworkFilter;
+    }
+
+    public void setRoadNetworkFilter(IRoadNetworkFilter roadNetworkFilter) {
+        this.roadNetworkFilter = roadNetworkFilter;
+    }
+
+    public IRoadObjectMerger getRoadObjectMerger() {
+        return roadObjectMerger;
+    }
+
+    public void setRoadObjectMerger(IRoadObjectMerger roadObjectMerger) {
+        this.roadObjectMerger = roadObjectMerger;
     }
 
     public void parse(AggContainer agg, StepStorage stepStorage) {

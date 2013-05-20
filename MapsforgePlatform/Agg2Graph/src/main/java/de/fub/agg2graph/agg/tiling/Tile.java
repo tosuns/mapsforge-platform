@@ -51,7 +51,7 @@ public class Tile<T extends ILocation> {
         this.parent = parent;
         this.size = size;
         isLeaf = true;
-        elements = new HashSet<T>(tm.maxElementsPerTile / 10);
+        elements = new HashSet<T>(tm.getMaxElementsPerTile() / 10);
     }
 
     public int getElemCount() {
@@ -85,7 +85,7 @@ public class Tile<T extends ILocation> {
         }
         // make new leafs
         Rectangle2D.Double tileSize = getSize();
-        int splitFactor = tm.splitFactor;
+        int splitFactor = tm.getSplitFactor();
         children = new ArrayList<Tile<T>>(splitFactor * splitFactor);
         double subTileWidth = tileSize.getWidth() / splitFactor;
         double subTileHeight = tileSize.getHeight() / splitFactor;
@@ -115,10 +115,10 @@ public class Tile<T extends ILocation> {
         // recurse!
         for (Tile<T> subTile : children) {
             subTile.setLoaded(isLoaded);
-            if (subTile.getElemCount() > tm.maxElementsPerTile
-                    && subTile.size.getWidth() >= tm.minimumSplitSize
+            if (subTile.getElemCount() > tm.getMaxElementsPerTile()
+                    && subTile.size.getWidth() >= tm.getMinimumSplitSize()
                     .getWidth()
-                    && subTile.size.getHeight() >= tm.minimumSplitSize
+                    && subTile.size.getHeight() >= tm.getMinimumSplitSize()
                     .getHeight()) {
                 subTile.split();
             }
@@ -133,7 +133,7 @@ public class Tile<T extends ILocation> {
      */
     public Tile<T> getSubTile(ILocation loc) {
         Rectangle2D.Double tileSize = getSize();
-        int splitFactor = tm.splitFactor;
+        int splitFactor = tm.getSplitFactor();
         double relXPos = loc.getLat() - tileSize.getMinX();
         double relYPos = loc.getLon() - tileSize.getMinY();
         double subTileWidth = tileSize.getWidth() / splitFactor;
@@ -181,7 +181,7 @@ public class Tile<T extends ILocation> {
         if (isLeaf) {
             return elements;
         }
-        Set<T> result = new HashSet<T>(tm.maxElementsPerTile * 2);
+        Set<T> result = new HashSet<T>(tm.getMaxElementsPerTile() * 2);
         for (Tile<T> subTile : children) {
             result.addAll(subTile.getInnerNodes());
         }
@@ -209,7 +209,7 @@ public class Tile<T extends ILocation> {
                     getSize().getMinY(),
                     getSize().getMaxY(),
                     count,
-                    Math.round(count / (double) tm.maxElementsPerTile
+                    Math.round(count / (double) tm.getMaxElementsPerTile()
                     * 100.0)));
             if (debug) {
                 for (T elem : elements) {

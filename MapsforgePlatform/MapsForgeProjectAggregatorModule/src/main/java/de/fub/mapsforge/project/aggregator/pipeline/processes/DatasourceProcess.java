@@ -12,7 +12,7 @@ import de.fub.agg2graphui.layers.GPSSegmentLayer;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Color;
@@ -29,14 +29,19 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Serdar
  */
+@NbBundle.Messages({
+    "CLT_DatasourceProcess_Name=Gpx Datasource",
+    "CLT_DatasourceProcess_Description=Simple gpx data importer for the aggregation."
+})
 @ServiceProvider(service = AbstractAggregationProcess.class)
-public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<GPSSegment>> implements StatisticProvider {
+public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPSSegment>> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -49,11 +54,6 @@ public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<
     private int totalGPXFiles = 0;
 
     public DatasourceProcess() {
-        this(null);
-    }
-
-    public DatasourceProcess(Aggregator container) {
-        super(container);
         init();
     }
 
@@ -180,5 +180,15 @@ public class DatasourceProcess extends AbstractXmlAggregationProcess<Void, List<
     @Override
     public Component getVisualRepresentation() {
         return null;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(DatasourceProcess.class.getName());
+        descriptor.setDescription(Bundle.CLT_DatasourceProcess_Description());
+        descriptor.setDisplayName(Bundle.CLT_DatasourceProcess_Name());
+
+        return descriptor;
     }
 }

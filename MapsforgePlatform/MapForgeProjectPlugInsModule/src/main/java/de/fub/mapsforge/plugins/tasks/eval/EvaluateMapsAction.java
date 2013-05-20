@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.plugins.tasks.eval;
 
+import de.fub.mapsforge.plugins.tasks.eval.evaluator.SimpleMapsEvaluator;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.event.ActionEvent;

@@ -4,6 +4,8 @@
  */
 package de.fub.mapsforge.project.aggregator.factories;
 
+import de.fub.mapsforge.project.aggregator.factories.nodes.ProcessFilterNode;
+import de.fub.utilsmodule.node.property.ProcessPropertyWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
@@ -11,7 +13,9 @@ import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.ChildFactory;
+import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.nodes.Sheet;
 
 /**
  *
@@ -41,6 +45,6 @@ public class ProcessNodeFactory extends ChildFactory<AbstractAggregationProcess<
 
     @Override
     protected Node createNodeForKey(AbstractAggregationProcess<?, ?> process) {
-        return process.getNodeDelegate();
+        return new ProcessFilterNode(process.getNodeDelegate());
     }
 }

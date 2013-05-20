@@ -38,8 +38,7 @@ import java.util.logging.Logger;
  */
 public class DefaultIntersectionParser implements IIntersectionParser {
 
-    private static final Logger logger = Logger
-            .getLogger("agg2graph.roadgen.intersectionparser");
+    private static final Logger logger = Logger.getLogger("agg2graph.roadgen.intersectionparser");
     private RoadNetwork roadNetwork;
     private AggContainer agg;
 
@@ -80,13 +79,13 @@ public class DefaultIntersectionParser implements IIntersectionParser {
             logger.info(MessageFormat.format("intersection found: {0}", intersection));
             // intersection.out = candidate.getVisibleOut();
             // intersection.in = candidate.getVisibleIn();
-            roadNetwork.intersections.add(intersection);
+            roadNetwork.getIntersections().add(intersection);
         }
     }
 
     private void makeRoads() {
         // parse roads
-        Iterator<Intersection> it = roadNetwork.intersections.iterator();
+        Iterator<Intersection> it = roadNetwork.getIntersections().iterator();
         List<Intersection> newIntersections = new ArrayList<Intersection>(10);
         while (it.hasNext()) {
             Intersection startIntersection = it.next();
@@ -99,7 +98,7 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                 HashSet<AggConnection> set = new HashSet<AggConnection>();
                 // follow the road to the next intersection
                 while (currentConn.getTo().getIntersection() == null) {
-                    road.path.add(currentConn);
+                    road.getPath().add(currentConn);
                     if (currentConn.getTo().getVisibleOut() == null
                             || !currentConn.getTo().getVisibleOut().iterator().hasNext()) {
 
@@ -110,9 +109,9 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                     } else if (set.contains(currentConn)) {
                         IEdge<AggNode> node = null;
 
-                        if (!road.path.isEmpty()) {
+                        if (!road.getPath().isEmpty()) {
                             // we get the last node of the path
-                            node = road.path.get(road.path.size() - 1);
+                            node = road.getPath().get(road.getPath().size() - 1);
                         } else {
                             // current node is the first node in the path
                             node = currentConn;
@@ -146,15 +145,15 @@ public class DefaultIntersectionParser implements IIntersectionParser {
 
                 /// add road to road network only when there is valid end intersection
                 if (currentConn.getTo().getIntersection() != null) {
-                    road.path.add(currentConn);
+                    road.getPath().add(currentConn);
                     Intersection endIntersection = currentConn.getTo()
                             .getIntersection();
                     road.setTo(endIntersection);
                     endIntersection.in.add(road);
-                    roadNetwork.roads.add(road);
+                    roadNetwork.getRoads().add(road);
                 }
             }
         }
-        roadNetwork.intersections.addAll(newIntersections);
+        roadNetwork.getIntersections().addAll(newIntersections);
     }
 }

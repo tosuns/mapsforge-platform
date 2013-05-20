@@ -9,7 +9,7 @@ import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.AbstractXmlAggregationProcess;
+import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Component;
 import java.awt.Image;
@@ -36,9 +36,11 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Serdar
  */
 @ServiceProvider(service = AbstractAggregationProcess.class)
-@NbBundle.Messages({"CLT_OSM_Export_Title=OSM File Export",
-    "CLT_OSM_Export_Description=OSM Exporter process"})
-public class OSMExportProcess extends AbstractXmlAggregationProcess<RoadNetwork, FileObject> implements StatisticProvider {
+@NbBundle.Messages({
+    "CLT_OSM_Export_Title=OSM File Export",
+    "CLT_OSM_Export_Description=Exports the graph to an osm xml file"
+})
+public class OSMExportProcess extends AbstractAggregationProcess<RoadNetwork, FileObject> implements StatisticProvider {
 
     @StaticResource
     private static final String ICON_PATH = "de/fub/mapsforge/project/aggregator/pipeline/processes/datasourceProcessIcon.png";
@@ -47,11 +49,6 @@ public class OSMExportProcess extends AbstractXmlAggregationProcess<RoadNetwork,
     private FileObject fileObject;
 
     public OSMExportProcess() {
-        super(null);
-    }
-
-    public OSMExportProcess(Aggregator container) {
-        super(container);
     }
 
     @Override
@@ -150,6 +147,15 @@ public class OSMExportProcess extends AbstractXmlAggregationProcess<RoadNetwork,
     @Override
     public Component getVisualRepresentation() {
         return null;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(OSMExportProcess.class.getName());
+        descriptor.setDisplayName(Bundle.CLT_OSM_Export_Title());
+        descriptor.setDescription(Bundle.CLT_OSM_Export_Description());
+        return descriptor;
     }
 
     private static class OsmXmlFileFilter extends FileFilter {

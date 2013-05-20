@@ -23,11 +23,13 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -106,6 +108,14 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     public void add(T item) {
         synchronized (ITEM_LIST_MUTEX) {
             itemList.add(item);
+            drawables.clear();
+            fireRepaintEvent();
+        }
+    }
+
+    public void addAll(Collection<T> items) {
+        synchronized (ITEM_LIST_MUTEX) {
+            itemList.addAll(items);
             drawables.clear();
             fireRepaintEvent();
         }
@@ -357,6 +367,15 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
             int x2 = (int) line.getTo().getX();
             int y2 = (int) line.getTo().getY();
             g2d.drawLine(x1, y1, x2, y2);
+
+            // draw start end endpoint of line
+            if (line.getRenderingOptions().getRenderingType() == RenderingOptions.RenderingType.ALL) {
+                Ellipse2D.Double ellipse = new Ellipse2D.Double(x1 - 2, y1 - 2, 4, 4);
+                g2d.fill(ellipse);
+                ellipse = new Ellipse2D.Double(x2 - 2, y2 - 2, 4, 4);
+                g2d.fill(ellipse);
+            }
+
 
             // paint the line label
             paintLineLabel(line, g2d);

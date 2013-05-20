@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.MeanVelocityFeature;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -26,11 +25,6 @@ public class MeanVelocityFeatureProcess extends FeatureProcess {
     private TrackSegment track;
 
     public MeanVelocityFeatureProcess() {
-        this(null);
-    }
-
-    public MeanVelocityFeatureProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

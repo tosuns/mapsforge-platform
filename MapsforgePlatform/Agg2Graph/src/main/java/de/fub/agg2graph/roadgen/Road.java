@@ -35,7 +35,7 @@ public class Road extends AbstractEdge<Intersection> implements Hideable {
     }
     private boolean visible = true;
     private RoadType type = RoadType.UNKNOWN;
-    public Path<AggNode> path = new Path<AggNode>();
+    private Path<AggNode> path = new Path<AggNode>();
     private boolean oneWay = true;
     public Road mergedTo = null;
 
@@ -50,6 +50,10 @@ public class Road extends AbstractEdge<Intersection> implements Hideable {
         for (IEdge<AggNode> conn : path) {
             this.path.add(conn);
         }
+    }
+
+    public Path<AggNode> getPath() {
+        return path;
     }
 
     public RoadType getType() {

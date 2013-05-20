@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.plugins.tasks.eval;
 
+import de.fub.mapsforge.plugins.tasks.eval.evaluator.EvalutationItem;
 import java.util.List;
 import javax.swing.Box;
 import org.openide.util.NbBundle;

@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.features.TrackLengthFeatureProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
@@ -32,10 +31,6 @@ public class MinimumTrackLengthFilterProcess extends FilterProcess {
     private TrackLengthFeatureProcess trackLengthfeature = new TrackLengthFeatureProcess();
 
     public MinimumTrackLengthFilterProcess() {
-    }
-
-    public MinimumTrackLengthFilterProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

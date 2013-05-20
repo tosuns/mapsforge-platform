@@ -93,12 +93,16 @@ public class AggregatorDataObjectProperty extends PropertySupport.ReadWrite<Data
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (AggregatorChooserPanel.PROP_NAME_ACTIVE.equals(evt.getPropertyName())) {
-            if (evt.getNewValue() instanceof Boolean) {
-                boolean active = (Boolean) evt.getNewValue();
-                if (!active) {
-                    client.modelChangedFromGui();
-                }
+        if (chooserPanel != null && AggregatorChooserPanel.PROP_NAME_PANEL_CLOSED.equals(evt.getPropertyName())) {
+            try {
+                setValue(chooserPanel.getSelectedAggregatorDataObject());
+                client.modelChangedFromGui();
+            } catch (IllegalAccessException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (InvocationTargetException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }

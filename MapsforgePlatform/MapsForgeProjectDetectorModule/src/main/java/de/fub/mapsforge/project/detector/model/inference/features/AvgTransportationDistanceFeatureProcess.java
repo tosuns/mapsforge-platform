@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.AvgTransportationDistanceFeature;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -26,11 +25,6 @@ public class AvgTransportationDistanceFeatureProcess extends FeatureProcess {
     private final AvgTransportationDistanceFeature feature = new AvgTransportationDistanceFeature();
 
     public AvgTransportationDistanceFeatureProcess() {
-        super(null);
-    }
-
-    public AvgTransportationDistanceFeatureProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

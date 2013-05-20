@@ -29,7 +29,15 @@ import java.util.List;
 
 public class GpxmergeTraceDistance implements ITraceDistance {
 
-    public double angleFactor = 0.3;
+    private double angleFactor = 0.3;
+
+    public double getAngleFactor() {
+        return angleFactor;
+    }
+
+    public void setAngleFactor(double angleFactor) {
+        this.angleFactor = angleFactor;
+    }
 
     /**
      * Compute the difference of a path to the aggregation. This measure only

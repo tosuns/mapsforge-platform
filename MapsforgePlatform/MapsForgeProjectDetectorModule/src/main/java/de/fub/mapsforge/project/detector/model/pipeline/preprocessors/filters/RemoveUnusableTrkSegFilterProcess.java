@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.Properties;
@@ -40,10 +39,6 @@ public class RemoveUnusableTrkSegFilterProcess extends FilterProcess {
     private Boolean removeShortSegments;
 
     public RemoveUnusableTrkSegFilterProcess() {
-    }
-
-    public RemoveUnusableTrkSegFilterProcess(Detector detector) {
-        super(detector);
     }
 
     @Override

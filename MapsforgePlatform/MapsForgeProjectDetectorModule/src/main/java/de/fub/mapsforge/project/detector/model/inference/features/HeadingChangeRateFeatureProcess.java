@@ -6,7 +6,6 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.HeadingChangeRateFeature;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.List;
@@ -33,11 +32,6 @@ public class HeadingChangeRateFeatureProcess extends FeatureProcess {
     private TrackSegment trackSegment;
 
     public HeadingChangeRateFeatureProcess() {
-        this(null);
-    }
-
-    public HeadingChangeRateFeatureProcess(Detector detector) {
-        super(detector);
     }
 
     @Override
