@@ -110,20 +110,19 @@ public class OpenstreetMapService {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder = stringBuilder.append("(node({0},{1},{2},{3});rel(bn)->.x;")
+        stringBuilder = stringBuilder.append("(")
+                .append("node")
+                .append("({0},{1},{2},{3});")
                 .append("way")
-                .append("[\"highway\"=\"rail\"]")
-                .append("[\"highway\"=\"preserved\"]")
-                .append("[\"highway\"=\"narrow_gauge\"]")
-                .append("[\"highway\"=\"monorail\"]")
-                .append("[\"highway\"=\"miniature\"]")
-                .append("[\"highway\"=\"light_rail\"]")
-                .append("[\"highway\"=\"funicular\"]")
-                .append("[\"highway\"=\"abandoned\"]")
-                .append("[\"highway\"=\"disused\"]")
-                .append("[\"highway\"=\"construction\"]")
-                .append("({0},{1},{2},{3});node(w)->.x;);out meta;");
-
+                .append("[\"highway\"~\"primary|secondary|tertiary|motorway|trunk|living_street|pedestrian|residential|unclassified|service|track|raceway|path|footway\"]")
+                .append("(52.501602,13.473535,52.572323,13.640685);")
+                .append(");")
+                .append("(._;")
+                .append("way")
+                .append("[\"landuse\"=\"residential\"]")
+                .append("({0},{1},{2},{3})")
+                .append(");")
+                .append("out meta;");
         String parameter = MessageFormat.format(stringBuilder.toString(),
                 bottomLat, leftLong, topLat, rightLong);
         qParams.add("data", parameter);

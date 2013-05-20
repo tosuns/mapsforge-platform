@@ -73,22 +73,21 @@ public class DefaultCachingStrategy extends de.fub.agg2graph.agg.tiling.DefaultC
     public PropertySection getPropertySection() {
         if (propertySection == null) {
             if (getAggregator() != null) {
+                OUTERLOOP:
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (descriptor != null
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
                         for (PropertySection section : descriptor.getProperties().getSections()) {
                             if (DefaultCachingStrategy.class.getName().equals(section.getId())) {
                                 propertySection = section;
-                                break;
+                                break OUTERLOOP;
                             }
                         }
                         break;
                     }
                 }
-                if (propertySection == null) {
-                    propertySection = createDefaultDescriptor();
-                }
-            } else {
+            }
+            if (propertySection == null) {
                 propertySection = createDefaultDescriptor();
             }
 

@@ -69,7 +69,6 @@ public class DefaultTraceDistance extends de.fub.agg2graph.agg.strategy.DefaultT
     }
 
     private void reInit() {
-        nodeDelegate = null;
         propertySet = null;
         propertySet = getPropertySet();
         if (propertySet != null) {
@@ -111,6 +110,7 @@ public class DefaultTraceDistance extends de.fub.agg2graph.agg.strategy.DefaultT
     public PropertySet getPropertySet() {
         if (propertySet == null) {
             if (getAggregator() != null) {
+                OUTERLOOP:
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (descriptor != null
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
@@ -119,18 +119,14 @@ public class DefaultTraceDistance extends de.fub.agg2graph.agg.strategy.DefaultT
                             for (PropertySet set : section.getPropertySet()) {
                                 if (DefaultTraceDistance.class.getName().equals(set.getId())) {
                                     propertySet = set;
-                                    break;
+                                    break OUTERLOOP;
                                 }
                             }
                         }
-                        if (propertySet == null) {
-                            propertySet = createDefaultPropertySet();
-                            break;
-                        }
-
                     }
                 }
-            } else {
+            }
+            if (propertySet == null) {
                 propertySet = createDefaultPropertySet();
             }
         }

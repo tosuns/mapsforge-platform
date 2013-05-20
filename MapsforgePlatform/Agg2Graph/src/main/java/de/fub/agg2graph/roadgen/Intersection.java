@@ -39,7 +39,7 @@ public class Intersection extends RoadNode {
         super(baseNode);
         this.baseNode = baseNode;
         if (baseNode != null) {
-            baseNode.setIntersection(this);
+            baseNode.setIntersection(Intersection.this);
         }
     }
 
@@ -65,18 +65,18 @@ public class Intersection extends RoadNode {
         for (Road r : out) {
             sb.append("\t")
                     .append(String.format("road to %s (%d points)", r.getTo()
-                    .getID(), r.path.size())).append("\n");
+                    .getID(), r.getPath().size())).append("\n");
         }
         for (Road r : in) {
             sb.append("\t")
                     .append(String.format("road from %s (%d points)", r.getTo()
-                    .getID(), r.path.size())).append("\n");
+                    .getID(), r.getPath().size())).append("\n");
         }
         return sb.toString();
     }
 
     public boolean isPseudo() {
-        if (in.size() == 0 || out.size() == 0) {
+        if (in.isEmpty() || out.isEmpty()) {
             return true;
         }
         return false;

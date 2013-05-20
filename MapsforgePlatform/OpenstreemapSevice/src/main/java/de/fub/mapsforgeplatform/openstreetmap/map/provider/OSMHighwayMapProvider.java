@@ -35,10 +35,10 @@ public class OSMHighwayMapProvider implements MapProvider {
     @Override
     public Osm getMap(double leftLon, double bottomLat, double rightLon, double topLat) {
         Osm map = SERVICE.getOSMHighwayMap(Osm.class,
-                String.format(Locale.ENGLISH, "%d", leftLon),
-                String.format(Locale.ENGLISH, "%d", bottomLat),
-                String.format(Locale.ENGLISH, "%d", rightLon),
-                String.format(Locale.ENGLISH, "%d", topLat));
+                String.format(Locale.ENGLISH, "%f", leftLon),
+                String.format(Locale.ENGLISH, "%f", bottomLat),
+                String.format(Locale.ENGLISH, "%f", rightLon),
+                String.format(Locale.ENGLISH, "%f", topLat));
         SERVICE.close();
         return map;
     }

@@ -54,7 +54,6 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
     }
 
     private void reInit() {
-        nodeDelegate = null;
         propertySet = null;
         propertySet = getPropertySet();
         if (propertySet != null) {
@@ -106,13 +105,11 @@ public class DefaultMergeHandler extends de.fub.agg2graph.agg.strategy.DefaultMe
                             }
                         }
 
-                        if (propertySet == null) {
-                            propertySet = createDefaultPropertySet();
-                            break;
-                        }
+
                     }
                 }
-            } else {
+            }
+            if (propertySet == null) {
                 propertySet = createDefaultPropertySet();
             }
         }

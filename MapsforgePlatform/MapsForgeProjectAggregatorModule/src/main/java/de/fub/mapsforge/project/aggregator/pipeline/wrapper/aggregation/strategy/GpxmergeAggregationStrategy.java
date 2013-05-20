@@ -68,6 +68,7 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
     public PropertySection getPropertySection() {
         if (propertySection == null) {
             if (getAggregator() != null) {
+                OUTERLOOP:
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (descriptor != null
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
@@ -75,15 +76,13 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
                         for (PropertySection section : sections) {
                             if (GpxmergeAggregationStrategy.class.getName().equals(section.getId())) {
                                 propertySection = section;
-                                break;
+                                break OUTERLOOP;
                             }
                         }
                     }
                 }
-                if (propertySection == null) {
-                    propertySection = createDefaultPropertySection();
-                }
-            } else {
+            }
+            if (propertySection == null) {
                 propertySection = createDefaultPropertySection();
             }
         }
@@ -176,7 +175,6 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
     private void reInit() {
         propertySection = null;
         propertySection = getPropertySection();
-
         if (propertySection != null) {
             for (PropertySet propertySet : propertySection.getPropertySet()) {
                 for (Property property : propertySet.getProperties()) {

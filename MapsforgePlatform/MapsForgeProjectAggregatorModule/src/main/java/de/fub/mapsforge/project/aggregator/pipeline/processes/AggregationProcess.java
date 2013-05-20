@@ -68,7 +68,6 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
     private int totalAggNodeCount = 0;
     private int totalGPSPointCount = 0;
     private int totalPointGhostPointPairs = 0;
-    private ProcessDescriptor processDescriptor = null;
     private AggregationNode node;
 
     public AggregationProcess() {
@@ -133,26 +132,6 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
         getLayers().add(matchingLayer);
         getLayers().add(mergeLayer);
         getLayers().add(aggregationLayer);
-    }
-
-    @Override
-    public ProcessDescriptor getProcessDescriptor() {
-        if (processDescriptor == null) {
-            Aggregator aggregator = getAggregator();
-            if (aggregator != null && aggregator.getAggContainer() != null) {
-                for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
-                    if (descriptor != null
-                            && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
-                        processDescriptor = descriptor;
-                        break;
-                    }
-                }
-            }
-            if (processDescriptor == null) {
-                processDescriptor = createProcessDescriptor();
-            }
-        }
-        return processDescriptor;
     }
 
     @Override

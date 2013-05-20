@@ -72,10 +72,8 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
     }
 
     private void reInit() {
-        nodeDelegate = null;
         propertySection = null;
         propertySection = getPropertySection();
-
         if (propertySection != null) {
             List<PropertySet> propertySets = propertySection.getPropertySet();
             for (PropertySet propertySet : propertySets) {
@@ -160,21 +158,20 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
     public PropertySection getPropertySection() {
         if (propertySection == null) {
             if (getAggregator() != null) {
+                OUTERLOOP:
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
                     if (descriptor != null
                             && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
                         for (PropertySection section : descriptor.getProperties().getSections()) {
                             if (DefaultAggregationStrategy.class.getName().equals(section.getId())) {
                                 propertySection = section;
-                                break;
+                                break OUTERLOOP;
                             }
                         }
                     }
                 }
-                if (propertySection == null) {
-                    propertySection = createDefaultDescriptor();
-                }
-            } else {
+            }
+            if (propertySection == null) {
                 propertySection = createDefaultDescriptor();
             }
         }

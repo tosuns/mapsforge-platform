@@ -32,7 +32,6 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
-import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Component;
 import java.awt.Image;
 import java.lang.reflect.InvocationTargetException;
@@ -90,7 +89,6 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     private RoadAggregationFilter roadAggregationFilter = null;
     private RoadNetworkFilter roadNetworkFilter = null;
     private RoadTypeClassifier roadTypeClassifier = null;
-    private ProcessDescriptor processDescriptor;
     private RoadNetwortProcessNode node;
 
     public RoadNetworkProcess() {
@@ -141,6 +139,7 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
             }
         }
         if (merger != null) {
+            merger.setRoadNetworkProcess(this);
             setRoadObjectMerger(merger);
         }
     }
@@ -157,6 +156,7 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
             }
         }
         if (filter != null) {
+            filter.setRoadNetworkProcess(this);
             setRoadAggregationFilter(filter);
         }
     }
@@ -173,6 +173,7 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
             }
         }
         if (classifier != null) {
+            classifier.setRoadNetworkProcess(this);
             setRoadTypeClassifier(classifier);
         }
     }
@@ -189,6 +190,7 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
             }
         }
         if (filter != null) {
+            filter.setRoadNetworkProcess(this);
             setRoadNetworkFilter(filter);
         }
     }
@@ -231,26 +233,6 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
 
     public void setRoadTypeClassifier(RoadTypeClassifier roadTypeClassifier) {
         this.roadTypeClassifier = roadTypeClassifier;
-    }
-
-    @Override
-    public ProcessDescriptor getProcessDescriptor() {
-        if (processDescriptor == null) {
-            Aggregator aggregator = getAggregator();
-            if (aggregator != null) {
-                for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
-                    if (descriptor != null && RoadNetworkProcess.class.getName().equals(descriptor.getJavaType())) {
-                        processDescriptor = descriptor;
-                        break;
-                    }
-                }
-            }
-
-            if (processDescriptor == null) {
-                processDescriptor = createProcessDescriptor();
-            }
-        }
-        return processDescriptor;
     }
 
     @Override

@@ -98,7 +98,7 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                 HashSet<AggConnection> set = new HashSet<AggConnection>();
                 // follow the road to the next intersection
                 while (currentConn.getTo().getIntersection() == null) {
-                    road.path.add(currentConn);
+                    road.getPath().add(currentConn);
                     if (currentConn.getTo().getVisibleOut() == null
                             || !currentConn.getTo().getVisibleOut().iterator().hasNext()) {
 
@@ -109,9 +109,9 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                     } else if (set.contains(currentConn)) {
                         IEdge<AggNode> node = null;
 
-                        if (!road.path.isEmpty()) {
+                        if (!road.getPath().isEmpty()) {
                             // we get the last node of the path
-                            node = road.path.get(road.path.size() - 1);
+                            node = road.getPath().get(road.getPath().size() - 1);
                         } else {
                             // current node is the first node in the path
                             node = currentConn;
@@ -145,7 +145,7 @@ public class DefaultIntersectionParser implements IIntersectionParser {
 
                 /// add road to road network only when there is valid end intersection
                 if (currentConn.getTo().getIntersection() != null) {
-                    road.path.add(currentConn);
+                    road.getPath().add(currentConn);
                     Intersection endIntersection = currentConn.getTo()
                             .getIntersection();
                     road.setTo(endIntersection);

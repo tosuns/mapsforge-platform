@@ -178,7 +178,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
         boolean close = true;
         List<? extends ILocation> r2nodes = r2.getNodes(), r1nodes = r1
                 .getNodes();
-        for (IEdge<AggNode> edge : r1.path) {
+        for (IEdge<AggNode> edge : r1.getPath()) {
             if (!GPSCalc.isDistancePointToTraceBelowLimit(edge.getFrom(),
                     r2nodes, maxRoadMergeDistance)) {
                 close = false;
@@ -186,7 +186,7 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
             }
         }
         if (close) {
-            for (IEdge<AggNode> edge : r2.path) {
+            for (IEdge<AggNode> edge : r2.getPath()) {
                 if (!GPSCalc.isDistancePointToTraceBelowLimit(edge.getFrom(),
                         r1nodes, maxRoadMergeDistance)) {
                     close = false;

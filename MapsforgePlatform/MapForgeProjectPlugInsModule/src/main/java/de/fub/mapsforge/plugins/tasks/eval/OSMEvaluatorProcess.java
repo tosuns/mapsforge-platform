@@ -24,7 +24,6 @@ import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
-import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforgeplatform.openstreetmap.service.MapProvider;
 import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Nd;
@@ -53,8 +52,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
 import org.openide.nodes.Sheet;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -77,6 +74,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
     private final GPSSegmentLayer aggregatorRoadLayer = new GPSSegmentLayer("Aggregator Road Network", new RenderingOptions());
     private final GPSSegmentLayer osmRoadLayer = new GPSSegmentLayer("OSM Road Network", new RenderingOptions());
     private final MapMatchingLayer matchingLayer = new MapMatchingLayer("Map Matching Layer", new RenderingOptions());
+    private final GPSSegmentLayer resultLayer = new GPSSegmentLayer("OSM Matched Road Network", new RenderingOptions());
     private final OpenstreetMapService openstreetMapService = new OpenstreetMapService();
     private RoadNetwork roadNetwork;
     private OSMEvaluatorProcessNode node;
@@ -86,15 +84,18 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
     public OSMEvaluatorProcess() {
         osmRoadLayer.getRenderingOptions().setColor(Color.green);
         getLayers().add(osmRoadLayer);
+        osmRoadLayer.getRenderingOptions().setzIndex(0);
         aggregatorRoadLayer.getRenderingOptions().setColor(Color.blue);
         getLayers().add(aggregatorRoadLayer);
         matchingLayer.getRenderingOptions().setColor(Color.red);
         getLayers().add(matchingLayer);
+        resultLayer.getRenderingOptions().setColor(Color.cyan);
+        getLayers().add(resultLayer);
     }
 
     @Override
-    protected void setAggregator(Aggregator aggregator) {
-        super.setAggregator(aggregator);
+    public void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        super.setProcessDescriptor(processDescriptor);
         reInit();
     }
 
@@ -201,6 +202,8 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                                 // get the average cost of the matched segment
                                 cost += matchedSegment.getMapMatchCost();
                                 count++;
+                                GPSSegment resultSegment = new GPSSegment();
+
                                 for (MapMatcher.MapMatchResult match : matchedSegment.getSegment()) {
                                     Line line = new Line(
                                             match.getTobeMatchedPoint(),
@@ -210,7 +213,9 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                                     line.setLabel(String.valueOf(match.getDistance()));
 
                                     matchingLayer.add(line);
+                                    resultSegment.add(new GPSPoint(match.getMatchedPoint()));
                                 }
+                                resultLayer.add(resultSegment);
                             }
                         }
 
