@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="de.fub.mapsforge.jsi">
+    <module_version install_time="1369413204291" last="true" origin="installer" specification_version="1.0">
+        <file crc="3875124507" name="config/Modules/de-fub-mapsforge-jsi.xml"/>
+        <file crc="1023371104" name="modules/de-fub-mapsforge-jsi.jar"/>
+        <file crc="1592309322" name="modules/ext/com.infomatiq/jsi-1.0b8.jar"/>
+        <file crc="3650849247" name="modules/ext/trove/trove-2.0.3.jar"/>
+        <file crc="3587219472" name="update_tracking/de-fub-mapsforge-jsi.xml"/>
+    </module_version>
+</module>

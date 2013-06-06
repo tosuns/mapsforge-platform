@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><module codename="de.fub.mapsforge.log4J">
+    <module_version install_time="1369413202484" last="true" origin="installer" specification_version="1.0">
+        <file crc="3129184830" name="config/Modules/de-fub-mapsforge-log4J.xml"/>
+        <file crc="1113337371" name="modules/de-fub-mapsforge-log4J.jar"/>
+        <file crc="4066028555" name="update_tracking/de-fub-mapsforge-log4J.xml"/>
+    </module_version>
+</module>
