@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dec:processunit
-    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    javaType="de.fub.mapsforge.project.detector.model.inference.features.VelocityErrorRateFeatureProcess"
-    name="Velocity Error Rate"
-    description="Calculates the error rate concerning the velocity data that each track segment contains.">
-    <properties/>
-</dec:processunit>

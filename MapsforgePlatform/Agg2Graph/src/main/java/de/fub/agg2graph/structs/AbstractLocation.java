@@ -1,24 +1,27 @@
-/*******************************************************************************
-   Copyright 2013 Johannes Mitlmeier
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-******************************************************************************/
+/**
+ * *****************************************************************************
+ * Copyright 2013 Johannes Mitlmeier
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * ****************************************************************************
+ */
 package de.fub.agg2graph.structs;
 
 import de.fub.agg2graph.agg.tiling.TileManager;
 import de.fub.agg2graph.structs.projection.OsmProjection;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.logging.Logger;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
@@ -29,12 +32,13 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
  *
  */
 public class AbstractLocation implements ILocation, Hideable {
+
+    private static final Logger LOG = Logger.getLogger(AbstractLocation.class.getName());
     protected String ID;
     protected boolean visible = true;
-	protected double[] latlon = new double[] { Double.MAX_VALUE,
-			Double.MAX_VALUE };
+    protected double[] latlon = new double[]{Double.MAX_VALUE, Double.MAX_VALUE};
     private final double EPSILON = 10e-6;
-	protected double[] xy = new double[] { Double.MAX_VALUE, Double.MAX_VALUE };
+    protected double[] xy = new double[]{Double.MAX_VALUE, Double.MAX_VALUE};
 
     public AbstractLocation() {
         super();
@@ -125,17 +129,17 @@ public class AbstractLocation implements ILocation, Hideable {
     @Override
     public void setLatLon(double lat, double lon) {
         // test parameters
-        if (lat < TileManager.WORLD.getMinY()
-                || lat > TileManager.WORLD.getMaxY()
+        if (lat > TileManager.WORLD.getMaxY()
+                || lat < TileManager.WORLD.getMinY()
                 || lon < TileManager.WORLD.getMinX()
                 || lon > TileManager.WORLD.getMaxX()) {
-            System.out.println(lat);
-            System.out.println(TileManager.WORLD.getMinY());
-            System.out.println(TileManager.WORLD.getMaxY());
-            System.out.println(lon);
-            System.out.println(TileManager.WORLD.getMinX());
-            System.out.println(TileManager.WORLD.getMaxX());
-            System.out.println("GPSPoint outside of the world");
+            LOG.info(String.valueOf(lat));
+            LOG.info(String.valueOf(TileManager.WORLD.getMinY()));
+            LOG.info(String.valueOf(TileManager.WORLD.getMaxY()));
+            LOG.info(String.valueOf(lon));
+            LOG.info(String.valueOf(TileManager.WORLD.getMinX()));
+            LOG.info(String.valueOf(TileManager.WORLD.getMaxX()));
+            LOG.info("GPSPoint outside of the world");
             return;
         }
         if (latlon[0] != lat || latlon[1] != lon) {

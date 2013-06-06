@@ -9,7 +9,6 @@ import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.node.property.ProcessProperty;
@@ -21,8 +20,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
@@ -31,7 +30,6 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
 import org.openide.util.Cancellable;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -46,28 +44,6 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     private static Image defaultImage;
 
     public FilterProcess() {
-    }
-
-    @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor processDescriptor = null;
-        if (getDetector() != null) {
-            for (ProcessDescriptor filterProcessDescriptor : getDetector().getDetectorDescriptor().getPreprocessors().getPreprocessorList()) {
-                if (filterProcessDescriptor != null
-                        && getClass().getName().equals(filterProcessDescriptor.getJavaType())) {
-                    processDescriptor = filterProcessDescriptor;
-                    break;
-                }
-            }
-        } else {
-            try {
-                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                processDescriptor = new ProcessDescriptor();
-            }
-        }
-        return processDescriptor;
     }
 
     @Override
@@ -107,6 +83,19 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    public static synchronized Collection<FilterProcess> findAll() {
+        return findAll(FilterProcess.class);
+    }
+
+    public static synchronized FilterProcess find(ProcessDescriptor descriptor, Detector detector) throws DetectorProcessNotFoundException {
+        assert descriptor != null;
+        FilterProcess filterProcess = find(descriptor.getJavaType(), detector);
+        if (filterProcess != null) {
+            filterProcess.setProcessDescriptor(descriptor);
+        }
+        return filterProcess;
     }
 
     public static synchronized FilterProcess find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {

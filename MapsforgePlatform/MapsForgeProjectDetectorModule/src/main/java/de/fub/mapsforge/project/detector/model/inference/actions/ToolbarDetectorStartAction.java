@@ -4,12 +4,15 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.actions;
 
+import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,6 +29,7 @@ import org.openide.awt.DropDownButtonFactory;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -48,6 +52,7 @@ public class ToolbarDetectorStartAction extends AbstractAction implements Presen
 
     private static final long serialVersionUID = 1L;
     private final Detector detector;
+    private DetectorListener dl;
 
     public ToolbarDetectorStartAction(Detector context) {
         super();
@@ -72,7 +77,7 @@ public class ToolbarDetectorStartAction extends AbstractAction implements Presen
 
     @Override
     public Component getToolbarPresenter() {
-        JButton processStartButton = new JButton(this);
+        final JButton processStartButton;
         List<? extends Action> actionsForPath = Utilities.actionsForPath("Projects/org-mapsforge-project/Detector/Toolbar/Start/Popup/Actions");
         JPopupMenu popupMenu = new JPopupMenu();
 
@@ -82,7 +87,25 @@ public class ToolbarDetectorStartAction extends AbstractAction implements Presen
         }
 
         processStartButton = DropDownButtonFactory.createDropDownButton((Icon) getValue(Action.SMALL_ICON), popupMenu);
-        processStartButton.setAction(this);
+        processStartButton.setAction(ToolbarDetectorStartAction.this);
+        if (detector != null) {
+            dl = new DetectorListener(processStartButton);
+            detector.addPropertyChangeListener(WeakListeners.propertyChange(dl, detector));
+        }
         return processStartButton;
+    }
+
+    private class DetectorListener implements PropertyChangeListener {
+
+        private final JButton processStartButton;
+
+        public DetectorListener(JButton processStartButton) {
+            this.processStartButton = processStartButton;
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            processStartButton.setEnabled(detector != null && detector.getDetectorState() != ProcessState.RUNNING);
+        }
     }
 }

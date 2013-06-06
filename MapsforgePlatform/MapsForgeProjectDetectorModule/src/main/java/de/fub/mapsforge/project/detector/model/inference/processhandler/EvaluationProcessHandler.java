@@ -25,7 +25,7 @@ public abstract class EvaluationProcessHandler extends InferenceModelProcessHand
     protected abstract void updateVisualRepresentation(Evaluation evaluation);
 
     protected Instance getInstance(String className, TrackSegment dataset) {
-        Instance instance = new DenseInstance(getInferenceModel().getAttributeList().size());
+        Instance instance = new DenseInstance(getInferenceModel().getAttributes().size());
 
         for (FeatureProcess feature : getInferenceModel().getFeatureList()) {
             feature.setInput(dataset);

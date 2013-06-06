@@ -25,7 +25,9 @@ import org.openide.util.lookup.ServiceProvider;
     + "number of gps points that a gps track contains. If the number of gps "
     + "points exceeds a given threshold, then the track gets seperated into "
     + "two segments and the filter continous the filtering process with the "
-    + "second segment until it reaches the end of the track."
+    + "second segment until it reaches the end of the track.",
+    "CLT_LimitWaypointFilter_Property_Limit_Name=Limit",
+    "CLT_LimitWaypointFilter_Property_Limit_Description=Maximal number of gps points."
 })
 @ServiceProvider(service = FilterProcess.class)
 public class LimitWaypointFilterProcess extends FilterProcess {
@@ -85,5 +87,23 @@ public class LimitWaypointFilterProcess extends FilterProcess {
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(LimitWaypointFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_LimitWaypointFilter_Name());
+        descriptor.setDescription(Bundle.CLT_LimitWaypointFilter_Description());
+
+        Property property = new Property();
+        property.setId(PROPERTY_LIMIT);
+        property.setJavaType(Integer.class.getName());
+        property.setValue("2");
+        property.setName(Bundle.CLT_LimitWaypointFilter_Property_Limit_Name());
+        property.setDescription(Bundle.CLT_LimitWaypointFilter_Property_Limit_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

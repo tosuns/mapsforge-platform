@@ -21,11 +21,13 @@ import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.ui.StepStorage;
 import de.fub.agg2graph.ui.gui.UIStepStorage;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Data structure for the street graph representation.
@@ -34,6 +36,7 @@ import java.util.Set;
  */
 public class RoadNetwork {
 
+    private static final Logger LOG = Logger.getLogger(RoadNetwork.class.getName());
     private IAggFilter aggFilter = AggFilterFactory.getObject();
     private IIntersectionParser intersectionParser = IntersectionParserFactory.getObject();
     private Set<Intersection> intersections;
@@ -41,6 +44,12 @@ public class RoadNetwork {
     private IRoadTypeClassifier roadTypeClassifier = RoadTypeClassifierFactory.getObject();
     private IRoadNetworkFilter roadNetworkFilter = RoadNetworkFilterFactory.getObject();
     private IRoadObjectMerger roadObjectMerger = RoadObjectMergerFactory.getObject();
+    private double totalRoadLength;
+    private int isolatedSum;
+    private int oneWaySum;
+    private int visibleRoadCount;
+    private int visibleIntersectionCount;
+    private int pseudoSum;
 
     public RoadNetwork() {
         init();
@@ -106,6 +115,54 @@ public class RoadNetwork {
         this.roadObjectMerger = roadObjectMerger;
     }
 
+    public double getTotalRoadLength() {
+        return totalRoadLength;
+    }
+
+    public double getAverageRoadLength() {
+        return getRoadCount() == 0 ? 0 : getTotalRoadLength() / getRoadCount();
+    }
+
+    public double getRoadCount() {
+        return visibleRoadCount;
+    }
+
+    public double getIsolatedRoadCount() {
+        return isolatedSum;
+    }
+
+    public double getOneWayRoadCount() {
+        return oneWaySum;
+    }
+
+    public double getTwoWayRoadCount() {
+        return getRoadCount() - getOneWayRoadCount();
+    }
+
+    public double getOneWayTwoWayRoadRatio() {
+        return getTwoWayRoadCount() == 0 ? 0 : getOneWayRoadCount() / getTwoWayRoadCount();
+    }
+
+    public double getPseudoIntersectionCount() {
+        return pseudoSum;
+    }
+
+    public double getIntersectionCount() {
+        return visibleIntersectionCount;
+    }
+
+    public double getRealIntersectionCount() {
+        return getIntersectionCount() - getPseudoIntersectionCount();
+    }
+
+    public double getRoadIntersectionRatio() {
+        return getIntersectionCount() == 0 ? 0 : getRoadCount() / getIntersectionCount();
+    }
+
+    public double getRealToPseudoIntersectionRatio() {
+        return getPseudoIntersectionCount() == 0 ? 0 : getIntersectionCount() / getPseudoIntersectionCount();
+    }
+
     public void parse(AggContainer agg, StepStorage stepStorage) {
         // pre-filtering
         aggFilter.filter(agg);
@@ -114,6 +171,7 @@ public class RoadNetwork {
         roadObjectMerger.mergeInteresections(this);
         roadObjectMerger.mergeRoads(this);
         roadNetworkFilter.filter(this);
+        computeStatistics();
 
         if (stepStorage != null) {
             if (UIStepStorage.class.isAssignableFrom(stepStorage.getClass())) {
@@ -151,5 +209,38 @@ public class RoadNetwork {
         result.add(new ClassObjectEditor(roadTypeClassifier));
         result.add(new ClassObjectEditor(roadNetworkFilter));
         return result;
+    }
+
+    private void computeStatistics() {
+        totalRoadLength = 0d;
+        pseudoSum = 0;
+        isolatedSum = 0;
+        oneWaySum = 0;
+        visibleRoadCount = 0;
+        visibleIntersectionCount = 0;
+        for (Road road : getRoads()) {
+            if (road.isVisible()) {
+                visibleRoadCount++;
+                totalRoadLength += road.getLength();
+                if (road.isIsolated()) {
+                    isolatedSum++;
+                }
+                if (road.isOneWay()) {
+                    oneWaySum++;
+                }
+            } else {
+                LOG.fine(MessageFormat.format("invisible road {0}", road));
+            }
+        }
+        for (Intersection i : getIntersections()) {
+            if (i.isVisible()) {
+                visibleIntersectionCount++;
+                if (i.isPseudo()) {
+                    pseudoSum++;
+                }
+            } else {
+                LOG.fine(MessageFormat.format("invisible intersection {0}", i));
+            }
+        }
     }
 }

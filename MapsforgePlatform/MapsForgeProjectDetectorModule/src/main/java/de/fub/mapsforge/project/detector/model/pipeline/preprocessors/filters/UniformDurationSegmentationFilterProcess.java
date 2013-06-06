@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,11 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Serdar
  */
+@Messages({"CLT_UniformDurationFilter_Name=Uniform Duration Segmentation",
+    "CLT_UniformDurationFilter_Description=GPS tracks will be segmented into tracks whose duration time does not exceeds the specified duration (seconds) limit property.",
+    "CLT_UniformDurationFilter_Property_MaxDuration_Name=Maximum Duration",
+    "CLT_UniformDurationFilter_Property_MaxDuration_Description=Specifies the maximum duration for each gps track."
+})
 @ServiceProvider(service = FilterProcess.class)
 public class UniformDurationSegmentationFilterProcess extends FilterProcess {
 
@@ -69,7 +75,6 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
         }
     }
 
-    @Messages("CLT_UniformDurationFilter_Name=Uniform Duration Segmentation")
     @Override
     public String getName() {
         if (getProcessDescriptor() != null && getProcessDescriptor().getName() != null) {
@@ -78,7 +83,6 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
         return Bundle.CLT_UniformDurationFilter_Name();
     }
 
-    @Messages("CLT_UniformDurationFilter_Description=GPS tracks will be segmented into tracks whose duration time does not exceeds the specified duration (seconds) limit property.")
     @Override
     public String getDescription() {
         if (getProcessDescriptor() != null && getProcessDescriptor().getName() != null) {
@@ -117,5 +121,24 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
             }
         }
         return duration;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(UniformDurationSegmentationFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_UniformDurationFilter_Name());
+        descriptor.setDescription(Bundle.CLT_UniformDurationFilter_Description());
+
+        // <!-- duration value in seconds -->
+        Property property = new Property();
+        property.setId(PROP_NAME_DURATION);
+        property.setJavaType(Double.class.getName());
+        property.setValue("300");
+        property.setName(Bundle.CLT_UniformDurationFilter_Property_MaxDuration_Name());
+        property.setDescription(Bundle.CLT_UniformDurationFilter_Property_MaxDuration_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

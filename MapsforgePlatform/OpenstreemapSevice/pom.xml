@@ -21,76 +21,21 @@
             <artifactId>org-netbeans-api-annotations-common</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
-        </dependency>-->
-        <!--        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-atom</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <version>1.13</version>
-        </dependency>-->
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
             <version>1.13</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>1.13</version>
-        </dependency>-->
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
             <version>1.13</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-atom-abdera</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-apache-client</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-spring</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-multipart</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-guice</artifactId>
-            <version>1.13</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-simple-server</artifactId>
-            <version>1.13</version>
-        </dependency>-->
         <dependency>
             <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
             <artifactId>oauth-client</artifactId>
             <version>1.13</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
-            <artifactId>oauth-server</artifactId>
-            <version>1.13</version>
-        </dependency>-->
         <dependency>
             <groupId>com.sun.jersey.contribs.jersey-oauth</groupId>
             <artifactId>oauth-signature</artifactId>

@@ -30,6 +30,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -61,8 +62,7 @@ public class TileManager {
     private int connCounter = 0;
     private AggContainer agg;
     // lon = "width", first. lat = "height", last.
-    public static Rectangle2D.Double WORLD = new Rectangle2D.Double(-160, -80,
-            320, 160);
+    public static Rectangle2D.Double WORLD = new Rectangle2D.Double(-180, -90, 360, 180);
     private DefaultCachingStrategy dcs;
 
     public TileManager(DefaultCachingStrategy dcs) {
@@ -113,15 +113,12 @@ public class TileManager {
         Tile<AggNode> currentTile = getRoot();
         while (true) {
             if (currentTile.isLeaf) {
-                boolean inMemory = ((DefaultCachingStrategy) agg.getCachingStrategy())
-                        .getTc().isInMemory();
-                boolean fileExist = (new File(agg.getDataSource() + File.separator
-                        + currentTile.getID() + ".xml")).exists();
+                boolean inMemory = ((DefaultCachingStrategy) agg.getCachingStrategy()).getTc().isInMemory();
+                boolean fileExist = (new File(MessageFormat.format("{0}{1}{2}.xml", agg.getDataSource(), File.separator, currentTile.getID()))).exists();
                 if (!inMemory && !fileExist && !isEmpty()) {
                     currentTile.split();
                 } else {
-                    Point2D.Double point = new Point2D.Double(loc
-                            .getLon(), loc.getLat());
+                    Point2D.Double point = new Point2D.Double(loc.getLon(), loc.getLat());
                     return currentTile.size.contains(point) ? currentTile : getRoot();
                 }
             }

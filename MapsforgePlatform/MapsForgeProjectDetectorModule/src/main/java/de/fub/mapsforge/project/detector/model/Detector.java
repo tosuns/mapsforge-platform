@@ -123,7 +123,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
                 getPreProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : preprocessors.getPreprocessorList()) {
                     try {
-                        filter = FilterProcess.find(processDescriptor.getJavaType(), Detector.this);
+                        filter = FilterProcess.find(processDescriptor, Detector.this);
                         getPreProcessorPipeline().add(filter);
                     } catch (DetectorProcess.DetectorProcessNotFoundException ex) {
                         Exceptions.printStackTrace(ex);
@@ -144,7 +144,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
                 getPostProcessorPipeline().clear();
                 for (ProcessDescriptor processDescriptor : postprocessors.getPostprocessorList()) {
                     try {
-                        task = Task.find(processDescriptor.getJavaType(), Detector.this);
+                        task = Task.find(processDescriptor, Detector.this);
                         getPostProcessorPipeline().add(task);
                     } catch (DetectorProcess.DetectorProcessNotFoundException ex) {
                         Exceptions.printStackTrace(ex);
@@ -256,7 +256,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
      *
      * @return
      */
-    public synchronized ProcessState getDetectorState() {
+    public ProcessState getDetectorState() {
         return detectorState;
     }
 

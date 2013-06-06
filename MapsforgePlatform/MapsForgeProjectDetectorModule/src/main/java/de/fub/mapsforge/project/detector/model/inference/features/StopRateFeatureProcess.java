@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.StopRateFeature;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,7 +21,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @NbBundle.Messages({
     "CLT_StopRateFeature_Name=Stop Rate Feature",
-    "CLT_StopRateFeature_Description=Determines the stop rate that occurrs within a gps track."
+    "CLT_StopRateFeature_Description=Determines the stop rate that occurrs within a gps track.",
+    "CLT_StopRateFeature_Property_MinimumVelocityThreshold_Name=Minimum velocity Threshold",
+    "CLT_StopRateFeature_Property_MinimumVelocityThreshold_Description=Parameter which specifies the minimum velocity value."
 })
 @ServiceProvider(service = FeatureProcess.class)
 public class StopRateFeatureProcess extends FeatureProcess {
@@ -96,5 +99,23 @@ public class StopRateFeatureProcess extends FeatureProcess {
             }
         }
         return minimumThreshold;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(StopRateFeatureProcess.class.getName());
+        descriptor.setName(Bundle.CLT_StopRateFeature_Name());
+        descriptor.setDescription(Bundle.CLT_StopRateFeature_Description());
+
+        Property property = new Property();
+        property.setId(PROP_NAME_MINIMUM_VELOCITY_THRESHOLD);
+        property.setJavaType(Double.class.getName());
+        property.setValue("3.4");
+        property.setName(Bundle.CLT_StopRateFeature_Property_MinimumVelocityThreshold_Name());
+        property.setDescription(Bundle.CLT_StopRateFeature_Property_MinimumVelocityThreshold_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

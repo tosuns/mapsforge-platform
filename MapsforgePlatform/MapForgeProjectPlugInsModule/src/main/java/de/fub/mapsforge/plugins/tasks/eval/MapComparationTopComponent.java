@@ -37,6 +37,10 @@ public class MapComparationTopComponent extends TopComponent {
     public MapComparationTopComponent(List<EvalutationItem> roadNetworkStatisticList) {
         this();
 
+        OverviewChart overviewChart = new OverviewChart(roadNetworkStatisticList);
+        contentPanel.add(overviewChart);
+        contentPanel.add(Box.createVerticalStrut(8));
+
         for (EvalutationItem pair : roadNetworkStatisticList) {
             RoadNetworkStatisticComparationPanel panel = new RoadNetworkStatisticComparationPanel(pair);
             contentPanel.add(panel);

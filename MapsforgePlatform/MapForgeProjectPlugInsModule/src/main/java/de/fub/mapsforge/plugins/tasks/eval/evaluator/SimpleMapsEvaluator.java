@@ -35,8 +35,8 @@ public class SimpleMapsEvaluator {
         ArrayList<EvalutationItem> roadNetworkStatisticList = new ArrayList<EvalutationItem>(aggregatorList.size());
         try {
             for (Aggregator aggregator : aggregatorList) {
-                RoadNetworkProcess roadNetworkStatistic = getRoadNetworkStatistic(aggregator);
-                roadNetworkStatisticList.add(new EvalutationItem(aggregator, roadNetworkStatistic));
+                RoadNetworkProcess roadNetworkProcess = getRoadNetworkProcess(aggregator);
+                roadNetworkStatisticList.add(new EvalutationItem(aggregator, roadNetworkProcess));
             }
             handleEvaluation(roadNetworkStatisticList);
         } catch (IllegalStateException ex) {
@@ -52,7 +52,7 @@ public class SimpleMapsEvaluator {
         Exceptions.printStackTrace(ex);
     }
 
-    private RoadNetworkProcess getRoadNetworkStatistic(Aggregator aggregator) throws StatisticProvider.StatisticNotAvailableException {
+    private RoadNetworkProcess getRoadNetworkProcess(Aggregator aggregator) throws StatisticProvider.StatisticNotAvailableException {
         RoadNetworkProcess roadNetworkProcess = null;
         Collection<AbstractAggregationProcess<?, ?>> processes = aggregator.getPipeline().getProcesses();
         for (AbstractAggregationProcess<?, ?> process : processes) {

@@ -133,6 +133,8 @@ public class AggregatorChooserPanel extends javax.swing.JPanel implements Explor
         outlineView1 = new CustomOutlineView("Aggregators");
 
         setLayout(new java.awt.BorderLayout());
+
+        outlineView1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         add(outlineView1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables

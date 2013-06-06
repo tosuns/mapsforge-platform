@@ -447,6 +447,22 @@ public class GPSCalc {
         return result;
     }
 
+    public static ILocation getProjectedPointToEdge(ILocation point, ILocation edgeStart, ILocation edgeEnd) {
+        ILocation result = new GPSPoint(0, 0);
+
+        Float64Vector vectorA = getVector(edgeStart, point);
+        Float64Vector vectorB = getVector(edgeStart, edgeEnd);
+
+        Float64 numeriator = vectorA.times(vectorB);
+        Float64 denumerator = vectorB.times(vectorB);
+
+        Float64Vector projection = vectorB.times(numeriator.divide(denumerator));
+        if (projection.getDimension() == 2) {
+            result.setLatLon(projection.getValue(0), projection.getValue(1));
+        }
+        return result;
+    }
+
     public static ILocation getProjectionPoint(ILocation point,
             IEdge<? extends ILocation> edge) {
         return getProjectionPoint(point, edge.getFrom(), edge.getTo());

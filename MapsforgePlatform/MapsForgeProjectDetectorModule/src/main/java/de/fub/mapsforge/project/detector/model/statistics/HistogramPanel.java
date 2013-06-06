@@ -46,7 +46,6 @@ public class HistogramPanel extends javax.swing.JPanel {
         barRenderer.setBasePaint(Color.blue);
         barRenderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
         barRenderer.setBaseItemLabelsVisible(true);
-
         plot.setRenderer(barRenderer);
         plot.setBackgroundPaint(Color.white);
         histogramChart.setBackgroundPaint(Color.white);

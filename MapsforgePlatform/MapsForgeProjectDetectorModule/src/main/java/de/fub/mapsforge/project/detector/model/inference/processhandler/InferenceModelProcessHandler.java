@@ -5,15 +5,14 @@
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
-import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
-import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlers;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -21,6 +20,7 @@ import javax.swing.JPanel;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -29,12 +29,12 @@ import org.openide.util.lookup.Lookups;
  */
 public abstract class InferenceModelProcessHandler {
 
-    private final AbstractInferenceModel inferenceModel;
+    private AbstractInferenceModel inferenceMode;
     private Node nodeDelegate;
     private ProcessHandlerDescriptor descriptor = null;
 
     public InferenceModelProcessHandler(AbstractInferenceModel inferenceModel) {
-        this.inferenceModel = inferenceModel;
+        this.inferenceMode = inferenceModel;
     }
 
     /**
@@ -42,7 +42,11 @@ public abstract class InferenceModelProcessHandler {
      * @return
      */
     protected AbstractInferenceModel getInferenceModel() {
-        return inferenceModel;
+        return inferenceMode;
+    }
+
+    protected void setInferenceModel(AbstractInferenceModel inferenceModel) {
+        this.inferenceMode = inferenceModel;
     }
 
     /**
@@ -73,29 +77,70 @@ public abstract class InferenceModelProcessHandler {
 
     public ProcessHandlerDescriptor getDescriptor() {
         if (descriptor == null) {
-            AbstractInferenceModel inferenceMdl = getInferenceModel();
-            if (inferenceMdl != null) {
-                InferenceModelDescriptor inferenceModelDescriptor = inferenceMdl.getInferenceModelDescriptor();
-                ProcessHandlers inferenceModelProcessHandlers = inferenceModelDescriptor.getInferenceModelProcessHandlers();
-                List<ProcessHandlerDescriptor> processHandlerList = inferenceModelProcessHandlers.getProcessHandlerList();
-                for (ProcessHandlerDescriptor desc : processHandlerList) {
-                    if (desc.getJavaType().equals(getClass().getName())) {
-                        descriptor = desc;
-                        break;
-                    }
-                }
-            } else {
-                try {
-                    descriptor = DetectorUtils.getXmlDescriptor(ProcessHandlerDescriptor.class, getClass());
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
+            descriptor = createDefaultDescriptor();
         }
         return descriptor;
     }
 
+    protected void setDescriptor(ProcessHandlerDescriptor descriptor) {
+        this.descriptor = descriptor;
+    }
+
     protected abstract void handle();
+
+    protected abstract ProcessHandlerDescriptor createDefaultDescriptor();
+
+    public static synchronized Collection<? extends InferenceModelProcessHandler> findAll() {
+        Collection<? extends InferenceModelProcessHandler> allInstances = Lookup.getDefault().lookupResult(InferenceModelProcessHandler.class).allInstances();
+        List<InferenceModelProcessHandler> resultList = new ArrayList<InferenceModelProcessHandler>();
+
+        for (InferenceModelProcessHandler instance : allInstances) {
+            if (instance != null) {
+                try {
+                    InferenceModelProcessHandler handler = instance.getClass().newInstance();
+                    resultList.add(handler);
+                } catch (InstantiationException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalAccessException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        return resultList;
+    }
+
+    public static synchronized InferenceModelProcessHandler find(ProcessHandlerDescriptor descriptor, AbstractInferenceModel inferenceModel) throws InstantiationException {
+        assert descriptor != null && descriptor.getJavaType() != null;
+        InferenceModelProcessHandler handler = find(descriptor.getJavaType(), inferenceModel);
+        if (handler != null) {
+            handler.setDescriptor(descriptor);
+        } else {
+            throw new InstantiationException(MessageFormat.format("Couldn't instantiate class {0}. Make sure class is annotated with '@ServiceProvider'", descriptor.getJavaType()));
+        }
+        return handler;
+    }
+
+    public static synchronized InferenceModelProcessHandler find(String qualifiedName, AbstractInferenceModel inferenceModel) throws InstantiationException {
+        assert qualifiedName != null;
+        InferenceModelProcessHandler handler = null;
+        Collection<? extends InferenceModelProcessHandler> findAll = Lookup.getDefault().lookupResult(InferenceModelProcessHandler.class).allInstances();
+
+        for (InferenceModelProcessHandler instance : findAll) {
+            if (instance != null && instance.getClass().getName().equals(qualifiedName)) {
+                try {
+                    handler = instance.getClass().newInstance();
+                    handler.setInferenceModel(inferenceModel);
+                } catch (IllegalAccessException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+
+        if (handler == null) {
+            throw new InstantiationException(MessageFormat.format("Couldn't instantiate class {0}. Make sure class is annotated with '@ServiceProvider'", qualifiedName));
+        }
+        return handler;
+    }
 
     private static class ProcessHandlerNode extends CustomAbstractnode {
 

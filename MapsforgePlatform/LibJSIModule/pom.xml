@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>MapsforgePlatform-parent</artifactId>
+        <groupId>de.fub</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>de.fub.mapsforge</groupId>
+    <artifactId>jsi</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>nbm</packaging>
+
+    <name>Lib JSI Module</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <!--
+        Repository hosting NetBeans modules, especially APIs.
+        Versions are based on IDE releases, e.g.: RELEASE691
+        To create your own repository, use: nbm:populate-repository
+        -->
+        <repository>
+            <id>main-repository</id>
+            <name>Main Repository</name>
+            <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>http://bits.netbeans.org/maven2/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/LibFolder</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-annotations-common</artifactId>
+            <version>RELEASE73</version>
+        </dependency>
+        <dependency>
+            <groupId>com.infomatiq</groupId>
+            <artifactId>jsi</artifactId>
+            <version>1.0b8</version>
+        </dependency>
+        <dependency>
+            <groupId>trove</groupId>
+            <artifactId>trove</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>log4J</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>log4j</artifactId>
+            <groupId>log4j</groupId>
+            <type>jar</type>
+            <version>1.2.17</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>nbm-maven-plugin</artifactId>
+                <version>3.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>com.infomatiq.jsi</publicPackage>
+                        <publicPackage>com.infomatiq.jsi.rtree</publicPackage>
+                        <publicPackage>gnu.trove</publicPackage>
+                        <publicPackage>gnu.trove.decorator</publicPackage>
+                    </publicPackages>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <!-- NetBeans 6.9+ requires JDK 6 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <!-- to have the jar plugin pickup the nbm generated manifest -->
+                    <useDefaultManifestFile>true</useDefaultManifestFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

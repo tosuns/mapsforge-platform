@@ -5,6 +5,7 @@
 package de.fub.mapsforge.project.detector.model.xmls;
 
 import de.fub.utilsmodule.beans.PropertyDescriptor;
+import java.text.MessageFormat;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -43,16 +44,18 @@ public class Property extends Descriptor implements PropertyDescriptor {
         this.value = value;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return "Property{" + "javaType=" + getJavaType() + ", name=" + getName() + ", description=" + getDescription() + ", value=" + value + '}';
+        return MessageFormat.format("Property{javaType={0}, name={1}, description={2}, value={3}{4}", getJavaType(), getName(), getDescription(), value, '}');
     }
 }

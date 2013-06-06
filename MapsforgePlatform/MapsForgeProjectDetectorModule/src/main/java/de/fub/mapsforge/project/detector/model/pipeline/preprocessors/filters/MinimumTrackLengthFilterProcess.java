@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.features.TrackLengthFeatureProcess;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @NbBundle.Messages({
     "CLT_MinimumTrackLengthFilter_Name=Minimum Track Length Filter",
-    "CLT_MinimumTrackLengthFilter_Description=This process filters all track segments whose length is shorter then the specified min track length parameter."
+    "CLT_MinimumTrackLengthFilter_Description=This process filters all track segments whose length is shorter then the specified min track length parameter.",
+    "CLT_MinimumTrackLengthFilter_Property_TrackLength_Name=Minimum track length",
+    "CLT_MinimumTrackLengthFilter_Property_TrackLength_Description=Specifies the minimum length (in meters) that a track must have."
 })
 @ServiceProvider(service = FilterProcess.class)
 public class MinimumTrackLengthFilterProcess extends FilterProcess {
@@ -93,5 +96,24 @@ public class MinimumTrackLengthFilterProcess extends FilterProcess {
             }
         }
         return minTrackLength;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(MinimumTrackLengthFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_MinimumTrackLengthFilter_Name());
+        descriptor.setDescription(Bundle.CLT_MinimumTrackLengthFilter_Description());
+
+        Property property = new Property();
+        property.setId(PROP_NAME_PROCESS_STATE);
+        property.setJavaType(Double.class.getName());
+        property.setValue("150");
+        property.setName(Bundle.CLT_MinimumTrackLengthFilter_Property_TrackLength_Name());
+        property.setDescription(Bundle.CLT_MinimumTrackLengthFilter_Property_TrackLength_Description());
+
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

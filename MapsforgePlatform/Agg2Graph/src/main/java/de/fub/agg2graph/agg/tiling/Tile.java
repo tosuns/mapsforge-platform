@@ -140,7 +140,17 @@ public class Tile<T extends ILocation> {
         double subTileHeight = tileSize.getHeight() / splitFactor;
         int xTile = (int) Math.floor(relXPos / subTileWidth);
         int yTile = (int) Math.floor(relYPos / subTileHeight);
-        return children.get(yTile * splitFactor + xTile);
+        int index = yTile * splitFactor + xTile;
+        Tile<T> tile = null;
+        if (index < children.size()) {
+            tile = children.get(children.size() - 1);
+        } else if (index > -1 && !children.isEmpty()) {
+            tile = children.get(0);
+        } else {
+            tile = children.get(index);
+        }
+
+        return tile;
     }
 
     /**

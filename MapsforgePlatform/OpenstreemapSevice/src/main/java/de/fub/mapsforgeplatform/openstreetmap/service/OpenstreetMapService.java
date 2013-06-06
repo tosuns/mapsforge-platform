@@ -78,9 +78,31 @@ public class OpenstreetMapService {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder = stringBuilder.append("(node({0},{1},{2},{3});rel(bn)->.x;")
+        stringBuilder = stringBuilder
+                .append("(")
+                .append("node")
+                .append("({0},{1},{2},{3});")
                 .append("way")
-                .append("({0},{1},{2},{3});node(w)->.x;);out meta;");
+                .append("[\"highway\"~\"primary|secondary|tertiary|motorway|trunk|living_street|pedestrian|residential|unclassified|service|track|raceway|path|footway\"]")
+                .append("({0},{1},{2},{3});")
+                .append(");")
+                .append("(._;")
+                .append("way")
+                .append("[\"landuse\"~\"residential\"]")
+                .append("({0},{1},{2},{3});")
+                .append(");")
+                .append("(._;")
+                .append("way")
+                .append("[\"railway\"~\"rail|abandoned|construction|disused|funicular|light_rail|miniature|monorail|narrow_gauge|preserved\"]")
+                .append("({0},{1},{2},{3});")
+                .append(");")
+                .append("(._;")
+                .append("way[\"railway\"~\"tram\"]({0},{1},{2},{3});")
+                .append(");")
+                .append("(._;")
+                .append("way[\"railway\"~\"subway\"]({0},{1},{2},{3});")
+                .append(");")
+                .append("out meta;");
 
         String parameter = MessageFormat.format(stringBuilder.toString(),
                 bottomLat, leftLong, topLat, rightLong);
@@ -110,12 +132,13 @@ public class OpenstreetMapService {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder = stringBuilder.append("(")
+        stringBuilder = stringBuilder
+                .append("(")
                 .append("node")
                 .append("({0},{1},{2},{3});")
                 .append("way")
                 .append("[\"highway\"~\"primary|secondary|tertiary|motorway|trunk|living_street|pedestrian|residential|unclassified|service|track|raceway|path|footway\"]")
-                .append("(52.501602,13.473535,52.572323,13.640685);")
+                .append("({0},{1},{2},{3});")
                 .append(");")
                 .append("(._;")
                 .append("way")
@@ -149,7 +172,17 @@ public class OpenstreetMapService {
             String rightLong,
             String topLat) {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
-        String parameter = MessageFormat.format("(node({0},{1},{2},{3});rel(bn)->.x;way[\"railway\"=\"rail\"]({0},{1},{2},{3});node(w)->.x;);out meta;",
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(")
+                .append("node")
+                .append("({0},{1},{2},{3});")
+                .append("way")
+                .append("[\"railway\"~\"rail|abandoned|construction|disused|funicular|light_rail|miniature|monorail|narrow_gauge|preserved\"]")
+                .append("({0},{1},{2},{3});")
+                .append(");")
+                .append("out meta;");
+        String parameter = MessageFormat.format(stringBuilder.toString(),
                 bottomLat, leftLong, topLat, rightLong);
         qParams.add("data", parameter);
         T post = webOverpassResource.path("interpreter")
@@ -175,7 +208,13 @@ public class OpenstreetMapService {
             String rightLong,
             String topLat) {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
-        String parameter = MessageFormat.format("(node({0},{1},{2},{3});rel(bn)->.x;way[\"railway\"=\"tram\"]({0},{1},{2},{3});node(w)->.x;);out meta;",
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("(")
+                .append("node({0},{1},{2},{3});")
+                .append("way[\"railway\"=\"tram\"]({0},{1},{2},{3});")
+                .append(");").
+                append("out meta;");
+        String parameter = MessageFormat.format(stringBuilder.toString(),
                 bottomLat, leftLong, topLat, rightLong);
         qParams.add("data", parameter);
         T post = webOverpassResource.path("interpreter")
@@ -201,7 +240,35 @@ public class OpenstreetMapService {
             String rightLong,
             String topLat) {
         javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
-        String parameter = MessageFormat.format("(node({0},{1},{2},{3});rel(bn)->.x;way[\"railway\"=\"subway\"]({0},{1},{2},{3});node(w)->.x;);out meta;",
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("(")
+                .append("node({0},{1},{2},{3});")
+                .append("way[\"railway\"=\"subway\"]({0},{1},{2},{3});")
+                .append(");")
+                .append("out meta;");
+        String parameter = MessageFormat.format(stringBuilder.toString(),
+                bottomLat, leftLong, topLat, rightLong);
+        qParams.add("data", parameter);
+        T post = webOverpassResource.path("interpreter")
+                .accept(MediaType.TEXT_XML, MediaType.APPLICATION_XML, "application/osm3s+xml")
+                .post(responseType, qParams);
+        return post;
+    }
+
+    public <T> T getOSMBusMap(Class<T> responseType,
+            String leftLong,
+            String bottomLat,
+            String rightLong,
+            String topLat) {
+        javax.ws.rs.core.MultivaluedMap<String, String> qParams = new com.sun.jersey.api.representation.Form();
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("(")
+                .append("rel[\"route\"=\"bus\"](52.32442898,13.070297241,52.698441698,13.769302368);")
+                .append("way(r);")
+                .append("node(w);")
+                .append(");")
+                .append("out;");
+        String parameter = MessageFormat.format(stringBuilder.toString(),
                 bottomLat, leftLong, topLat, rightLong);
         qParams.add("data", parameter);
         T post = webOverpassResource.path("interpreter")

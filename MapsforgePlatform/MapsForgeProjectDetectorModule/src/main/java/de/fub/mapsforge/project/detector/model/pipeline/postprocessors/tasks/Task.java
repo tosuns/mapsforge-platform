@@ -13,7 +13,6 @@ import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProc
 import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.node.property.ProcessProperty;
@@ -21,14 +20,13 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -43,28 +41,6 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
     private InferenceModelResultDataSet resultDataSet;
 
     public Task() {
-    }
-
-    @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor processDescriptor = null;
-        if (getDetector() == null) {
-            try {
-                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
-
-            for (ProcessDescriptor teskProcessDescriptor : getDetector().getDetectorDescriptor().getPostprocessors().getPostprocessorList()) {
-                if (teskProcessDescriptor != null
-                        && getClass().getName().equals(teskProcessDescriptor.getJavaType())) {
-                    processDescriptor = teskProcessDescriptor;
-                    break;
-                }
-            }
-        }
-        return processDescriptor;
     }
 
     @Override
@@ -94,6 +70,19 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
     @Override
     protected Image getDefaultImage() {
         return IconRegister.findRegisteredIcon("processIconNormal.png");
+    }
+
+    public static synchronized Collection<Task> findAll() {
+        return findAll(Task.class);
+    }
+
+    public static synchronized Task find(ProcessDescriptor descriptor, Detector detector) throws DetectorProcessNotFoundException {
+        assert descriptor != null;
+        Task task = find(descriptor.getJavaType(), detector);
+        if (task != null) {
+            task.setProcessDescriptor(descriptor);
+        }
+        return task;
     }
 
     public static synchronized Task find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {

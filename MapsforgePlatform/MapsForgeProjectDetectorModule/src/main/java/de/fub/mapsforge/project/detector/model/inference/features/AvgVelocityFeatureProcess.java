@@ -40,8 +40,8 @@ public class AvgVelocityFeatureProcess extends FeatureProcess {
 
     @Override
     protected void start() {
-        init();
         feature.reset();
+        init();
         if (gpsTrack != null) {
             for (Waypoint waypoint : gpsTrack.getWayPointList()) {
                 feature.addWaypoint(waypoint);
@@ -70,5 +70,14 @@ public class AvgVelocityFeatureProcess extends FeatureProcess {
         feature.reset();
         this.gpsTrack = null;
         return result;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(AvgVelocityFeatureProcess.class.getName());
+        descriptor.setName(Bundle.CLT_AvgSpeedFeature_Name());
+        descriptor.setDescription(Bundle.CLT_AvgSpeedFeature_Description());
+        return descriptor;
     }
 }

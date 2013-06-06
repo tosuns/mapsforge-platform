@@ -9,6 +9,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.StringReader;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -35,6 +37,7 @@ import weka.gui.treevisualizer.TreeVisualizer;
  */
 class ShowGraphAction extends AbstractAction {
 
+    private static final Logger LOG = Logger.getLogger(ShowGraphAction.class.getName());
     private static final long serialVersionUID = 1L;
     private final AbstractInferenceModel inferenceModel;
     @StaticResource
@@ -66,7 +69,9 @@ class ShowGraphAction extends AbstractAction {
                 switch (graph.graphType()) {
                     case Drawable.BayesNet:
                         graphDescriptor = graph.graph();
+
                         if (graphDescriptor != null) {
+                            LOG.log(Level.INFO, "\n{0}", graphDescriptor);
                             panel = createBayesGraph(graphDescriptor);
                         }
                         break;
@@ -75,6 +80,7 @@ class ShowGraphAction extends AbstractAction {
                     case Drawable.TREE:
                         graphDescriptor = graph.graph();
                         if (graphDescriptor != null) {
+                            LOG.log(Level.INFO, "\n{0}", graphDescriptor);
                             panel = createTreeGraph(graphDescriptor);
                         }
                         break;

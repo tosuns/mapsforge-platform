@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dec:processunit
-    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgTransportationDistanceFeatureProcess"
-    name="Average Transportation DIstance"
-    description="Feature that computes the average distance of public transportation stations to an gps track">
-    <properties/>
-</dec:processunit>

@@ -19,11 +19,14 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Serdar
  */
-@NbBundle.Messages({"CLT_MinDIsFilter_Name=Minimum Distance Filter",
+@NbBundle.Messages({"CLT_MinDisFilter_Name=Minimum Distance Filter",
     "CLT_MinDisFilter_Description=This filter check a GPSTack whether each pair of gps "
     + "points exceeds the required minimum distance threshold. If a pair of gps point "
     + "can't satisfy the requirement, then the track will be can't into two segments and "
-    + "the filter process continues with the filtering on the second segment until the end of the gps track is reached."})
+    + "the filter process continues with the filtering on the second segment until the end of the gps track is reached.",
+    "CLT_MinDisFilter_Property_Distance_Name=Minimum Distance",
+    "CLT_MinDisFilter_Property_Distance_Description=Minimum distance in meters, which a track has to display."
+})
 @ServiceProvider(service = FilterProcess.class)
 public class MinDistanceWaypointFilterProcess extends FilterProcess {
 
@@ -59,7 +62,7 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess {
 
     @Override
     public String getName() {
-        return Bundle.CLT_MinDIsFilter_Name();
+        return Bundle.CLT_MinDisFilter_Name();
     }
 
     @Override
@@ -82,5 +85,24 @@ public class MinDistanceWaypointFilterProcess extends FilterProcess {
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(MinDistanceWaypointFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_MinDisFilter_Name());
+        descriptor.setDescription(Bundle.CLT_MinDisFilter_Description());
+
+        // <!-- value in meters -->
+        Property property = new Property();
+        property.setId(PROPERTY_DISTANCE);
+        property.setJavaType(Integer.class.getName());
+        property.setValue("2");
+        property.setName(Bundle.CLT_MinDisFilter_Property_Distance_Name());
+        property.setDescription(Bundle.CLT_MinDisFilter_Property_Distance_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

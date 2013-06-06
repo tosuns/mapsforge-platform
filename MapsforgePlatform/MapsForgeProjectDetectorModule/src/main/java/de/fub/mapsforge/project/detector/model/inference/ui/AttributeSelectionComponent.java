@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -353,8 +354,8 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
 
         private Instances createTrainingsSet() {
 
-            ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
-            Instances trainingSet = new Instances("Classes", attributeList, 9);
+            Collection<Attribute> attributeList = getInferenceModel().getAttributes();
+            Instances trainingSet = new Instances("Classes", new ArrayList<Attribute>(attributeList), 9);
             trainingSet.setClassIndex(0);
             Map<String, List<TrackSegment>> dataset = detector.getTrainingsSet();
 
@@ -449,14 +450,15 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
                 LOG.info(Arrays.toString(attributeSelection));
                 int[] selectedAttributes = search.search(eval, trainingSet);
                 double[][] rankedAttributes = attsel.rankedAttributes();
-
+                ArrayList<Attribute> attributeList = new ArrayList<Attribute>(getInferenceModel().getAttributes());
                 for (int i = 0; i < selectedAttributes.length; i++) {
                     AttributeWrapper selectedAttribute = new AttributeWrapper();
                     selectedAttributeList.add(selectedAttribute);
                     selectedAttribute.setIndex(i);
                     int attributeIndex = selectedAttributes[i];
-                    if (attributeIndex < getInferenceModel().getAttributeList().size()) {
-                        Attribute attribute = getInferenceModel().getAttributeList().get(attributeIndex);
+
+                    if (attributeIndex < attributeList.size()) {
+                        Attribute attribute = attributeList.get(attributeIndex);
                         LOG.info(attribute.name());
                         selectedAttribute.setName(attribute.name());
                     }
@@ -470,8 +472,8 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
                             case 0:
                                 int attributeIndex = (int) rankedAttributes[i][j];
                                 rankedAttribute.setIndex(i + 1);
-                                if (attributeIndex < getInferenceModel().getAttributeList().size()) {
-                                    Attribute attribute = getInferenceModel().getAttributeList().get(attributeIndex);
+                                if (attributeIndex < attributeList.size()) {
+                                    Attribute attribute = attributeList.get(attributeIndex);
                                     LOG.info(attribute.name());
                                     rankedAttribute.setName(attribute.name());
                                 }
@@ -491,7 +493,7 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
         }
 
         private Instance getInstance(String className, TrackSegment dataset) {
-            Instance instance = new DenseInstance(getInferenceModel().getAttributeList().size());
+            Instance instance = new DenseInstance(getInferenceModel().getAttributes().size());
 
             for (FeatureProcess feature : getInferenceModel().getFeatureList()) {
                 feature.setInput(dataset);

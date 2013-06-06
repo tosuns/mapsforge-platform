@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dec:processunit
-    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    javaType="de.fub.mapsforge.project.detector.model.inference.features.MinPrecisionFeatureProcess"
-    name="Minimum Precision"
-    description="Feature computes the minimum of precision that occures within a gps track.">
-    <properties/>
-</dec:processunit>

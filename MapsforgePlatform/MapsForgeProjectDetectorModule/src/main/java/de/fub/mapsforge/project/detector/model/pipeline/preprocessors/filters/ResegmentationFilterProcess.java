@@ -8,6 +8,7 @@ import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
@@ -99,5 +100,14 @@ public class ResegmentationFilterProcess extends FilterProcess {
         this.resultList = null;
         this.trackSegments = null;
         return arrayList;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(ResegmentationFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_ResegmentationFilter_Name());
+        descriptor.setDescription(Bundle.CLT_ResegmentationFilter_Description());
+        return descriptor;
     }
 }

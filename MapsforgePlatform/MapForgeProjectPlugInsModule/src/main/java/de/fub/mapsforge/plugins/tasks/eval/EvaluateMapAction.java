@@ -10,8 +10,11 @@ import de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess
 import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.SwingUtilities;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
@@ -31,6 +34,7 @@ import org.openide.util.RequestProcessor;
 public final class EvaluateMapAction extends AbstractAction implements ContextAwareAction {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOG = Logger.getLogger(EvaluateMapAction.class.getName());
     private Aggregator aggregator;
     private RoadNetwork roadNetwork;
     private Lookup context;
@@ -49,17 +53,24 @@ public final class EvaluateMapAction extends AbstractAction implements ContextAw
     public void actionPerformed(ActionEvent ev) {
         if (context != null) {
             if (aggregator != null) {
+                setEnabled(false);
                 RequestProcessor.getDefault().post(new Runnable() {
                     @Override
                     public void run() {
-                        setEnabled(false);
                         try {
                             if (roadNetwork != null) {
                                 OSMMapEvaluator evaluator = new OSMMapEvaluator(roadNetwork);
                                 evaluator.evaluate();
                             }
+                        } catch (Exception ex) {
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
                         } finally {
-                            setEnabled(true);
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setEnabled(true);
+                                }
+                            });
                         }
                     }
                 });

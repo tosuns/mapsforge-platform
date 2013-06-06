@@ -10,6 +10,7 @@ import de.fub.mapsforge.project.detector.model.inference.ui.EvaluationPanel;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -29,13 +30,18 @@ import weka.core.Instances;
  *
  * @author Serdar
  */
-@NbBundle.Messages("LBL_Detector_trainingsPanel_Title=Training")
+@NbBundle.Messages({
+    "LBL_Detector_trainingsPanel_Title=Training",
+    "CLT_TrainingsDataProcessHandler_Name=Trainings ProcessHandler",
+    "CLT_TrainingsDataProcessHandler_Description=No description available",
+    "CLT_TrainingsDataProcessHandler_Property_Ratio_Name=Training set size",
+    "CLT_TrainingsDataProcessHandler_Property_Ratio_Description=This property indicates the ratio (between 0.01 and 1) the trainings set will be divides for the actual training and for successive the test."
+})
 @ServiceProvider(service = InferenceModelProcessHandler.class)
 public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
 
     private static final String TRAININGS_SET_RATIO = "trainings.set.ratio";
     private EvaluationPanel evaluationPanel = null;
-    private ProcessHandlerDescriptor descriptor = null;
 
     public TrainingsDataProcessHandler() {
         super(null);
@@ -50,11 +56,12 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
         final ProgressHandle handle = ProgressHandleFactory.createHandle("Trainings");
         try {
             handle.start();
-            ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
-            Instances trainingSet = new Instances("Classes", attributeList, 0);
+            Collection<Attribute> attributeCollection = getInferenceModel().getAttributes();
+            ArrayList<Attribute> arrayList = new ArrayList<Attribute>(attributeCollection);
+            Instances trainingSet = new Instances("Classes", arrayList, 0);
             trainingSet.setClassIndex(0);
 
-            Instances testingSet = new Instances("Classes", attributeList, 0);
+            Instances testingSet = new Instances("Classes", arrayList, 0);
             testingSet.setClassIndex(0);
 
             HashMap<String, HashSet<TrackSegment>> dataset = getInferenceModel().getInput().getTrainingsSet();
@@ -136,5 +143,23 @@ public class TrainingsDataProcessHandler extends EvaluationProcessHandler {
             evaluationPanel.getTitle().setText(Bundle.LBL_Detector_trainingsPanel_Title());
         }
         return evaluationPanel;
+    }
+
+    @Override
+    protected ProcessHandlerDescriptor createDefaultDescriptor() {
+        ProcessHandlerDescriptor descriptor = new ProcessHandlerDescriptor();
+        descriptor.setJavaType(TrainingsDataProcessHandler.class.getName());
+        descriptor.setName(Bundle.CLT_TrainingsDataProcessHandler_Name());
+        descriptor.setDescription(Bundle.CLT_TrainingsDataProcessHandler_Description());
+
+        Property property = new Property();
+        property.setId(TRAININGS_SET_RATIO);
+        property.setJavaType(Double.class.getName());
+        property.setValue("0.75");
+        property.setName(Bundle.CLT_TrainingsDataProcessHandler_Property_Ratio_Name());
+        property.setDescription(Bundle.CLT_TrainingsDataProcessHandler_Property_Ratio_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

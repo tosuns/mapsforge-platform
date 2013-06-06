@@ -102,11 +102,13 @@
         <module>ApacheBatikLib</module>
         <module>MapsForgeSnapShotModule</module>
         <module>MapsforgeGpxAnalysisModule</module>
-    </modules>
+    <module>LibJSIModule</module>
+    <module>LibApacheLog4J</module>
+  </modules>
 
     <properties>
         <netbeans.version>RELEASE73</netbeans.version>
         <brandingToken>mapsforgeplatform</brandingToken>
-        <netbeans.run.params.ide></netbeans.run.params.ide>
+        <netbeans.run.params.ide/>
     </properties>
 </project>

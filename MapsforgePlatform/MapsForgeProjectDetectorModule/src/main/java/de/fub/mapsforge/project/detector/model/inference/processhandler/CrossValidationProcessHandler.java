@@ -6,9 +6,12 @@ package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.ui.EvaluationPanel;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -26,7 +29,13 @@ import weka.core.Instances;
  *
  * @author Serdar
  */
-@NbBundle.Messages("LBL_Detector_crossvalidation_Title=Crossvalidation")
+@NbBundle.Messages({
+    "LBL_Detector_crossvalidation_Title=Crossvalidation",
+    "CLT_CrossvalidationProcessHandle_Name=Crossvalidation ProcessHandler",
+    "CLT_CrossvalidationProcessHandle_Description=No description available",
+    "CLT_CrossvalidationProcessHandle_Property_CrossVaidation_Folds_Name=Crossvalidation Folds",
+    "CLT_CrossvalidationProcessHandle_Property_CrossVaidation_Folds_Description=This property indicates the amoung of folds for the crossvalidation evaluation"
+})
 @ServiceProvider(service = InferenceModelProcessHandler.class)
 public class CrossValidationProcessHandler extends EvaluationProcessHandler {
 
@@ -43,8 +52,8 @@ public class CrossValidationProcessHandler extends EvaluationProcessHandler {
 
     @Override
     protected void handle() {
-        ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
-        Instances trainingSet = new Instances("Classes", attributeList, 9);
+        Collection<Attribute> attributeList = getInferenceModel().getAttributes();
+        Instances trainingSet = new Instances("Classes", new ArrayList<Attribute>(attributeList), 9);
         trainingSet.setClassIndex(0);
 
         HashMap<String, HashSet<TrackSegment>> dataset = getInferenceModel().getInput().getTrainingsSet();
@@ -103,5 +112,24 @@ public class CrossValidationProcessHandler extends EvaluationProcessHandler {
             evaluationPanel.getTitle().setText(Bundle.LBL_Detector_crossvalidation_Title());
         }
         return evaluationPanel;
+    }
+
+    @Override
+    protected ProcessHandlerDescriptor createDefaultDescriptor() {
+        ProcessHandlerDescriptor descriptor = new ProcessHandlerDescriptor();
+        descriptor.setJavaType(CrossValidationProcessHandler.class.getName());
+        descriptor.setName(Bundle.CLT_CrossvalidationProcessHandle_Name());
+        descriptor.setDescription(Bundle.CLT_CrossvalidationProcessHandle_Description());
+        descriptor.setInferenceMode(InferenceMode.CROSS_VALIDATION_MODE);
+
+        Property property = new Property();
+        property.setId(CROSSVALIDATION_FOLDS_COUNT);
+        property.setJavaType(Integer.class.getName());
+        property.setValue("10");
+        property.setName(Bundle.CLT_CrossvalidationProcessHandle_Property_CrossVaidation_Folds_Name());
+        property.setDescription(Bundle.CLT_CrossvalidationProcessHandle_Property_CrossVaidation_Folds_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

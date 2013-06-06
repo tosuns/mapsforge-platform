@@ -14,7 +14,6 @@ import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.layers.GPSSegmentLayer;
 import de.fub.agg2graphui.layers.Line;
 import de.fub.agg2graphui.layers.MapMatchingLayer;
-import de.fub.mapforgeproject.api.process.ProcessPipeline;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
@@ -25,7 +24,6 @@ import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
 import de.fub.mapsforge.project.aggregator.xml.PropertySet;
 import de.fub.mapsforgeplatform.openstreetmap.service.MapProvider;
-import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Nd;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Node;
 import de.fub.mapsforgeplatform.openstreetmap.xml.osm.Osm;
@@ -39,9 +37,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -75,11 +73,12 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
     private final GPSSegmentLayer osmRoadLayer = new GPSSegmentLayer("OSM Road Network", new RenderingOptions());
     private final MapMatchingLayer matchingLayer = new MapMatchingLayer("Map Matching Layer", new RenderingOptions());
     private final GPSSegmentLayer resultLayer = new GPSSegmentLayer("OSM Matched Road Network", new RenderingOptions());
-    private final OpenstreetMapService openstreetMapService = new OpenstreetMapService();
     private RoadNetwork roadNetwork;
     private OSMEvaluatorProcessNode node;
     private MapMatcher mapMatcher;
     private MapProvider mapProvider;
+    private double averageDistance;
+    private double mappingCost;
 
     public OSMEvaluatorProcess() {
         osmRoadLayer.getRenderingOptions().setColor(Color.green);
@@ -139,6 +138,18 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         }
     }
 
+    public double getAvgMappingDistance() {
+        return averageDistance;
+    }
+
+    public double getMappingCost() {
+        return mappingCost;
+    }
+
+    public RoadNetwork getRoadNetwork() {
+        return roadNetwork;
+    }
+
     @Override
     protected void start() {
 
@@ -146,12 +157,12 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         aggregatorRoadLayer.clearRenderObjects();
         osmRoadLayer.clearRenderObjects();
         matchingLayer.clearRenderObjects();
-        int processUnit = 0;
+        resultLayer.clearRenderObjects();
 
         if (roadNetwork != null) {
-
+            RoadNetwork network = roadNetwork;
             ProgressHandle handle = ProgressHandleFactory.createHandle(getName());
-            handle.start(roadNetwork.getRoads().size());
+            handle.start();
 
             try {
 
@@ -168,11 +179,11 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                     addGPSSegmentsToLayer(roadGPSSegmentList, aggregatorRoadLayer);
                     List<GPSSegment> osmRoadNetwork = new ArrayList<GPSSegment>();
 
-//                    for (GPSSegment gpsSegment : roadGPSSegmentList) {
                     // fetch the osm map that is covered by the gpssegments bounding box
                     // we need this approach, because osm has a 5000 nodes limit per request
                     // we try to minimize the bounding box by using the bounding box
                     // of the segment instead of the whole road network
+                    handle.setDisplayName("Downloading map...");
                     Osm osmMap = getOSMMap(roadGPSSegmentList);
 
                     if (osmMap != null) {
@@ -182,16 +193,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                             addGPSSegmentsToLayer(osmGPSSegmentList, osmRoadLayer);
                         }
                     }
-                    processUnit++;
-                    handle.progress(Math.min(100, processUnit / 2));
 
-                    fireProcessProgressEvent(
-                            new ProcessPipeline.ProcessEvent<OSMEvaluatorProcess>(
-                            this,
-                            "evaluation", Math.min(100, (int) ((100d / roadNetwork.getRoads().size()) * (processUnit)))));
-//                    }
-
-                    openstreetMapService.close();
 
                     if (getMapMatcher() != null && !osmRoadNetwork.isEmpty()) {
                         double cost = -1;
@@ -218,12 +220,16 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                                 resultLayer.add(resultSegment);
                             }
                         }
+                        // cost of the map-matching in average distance unit
+                        averageDistance = count > 0 ? cost / count : 0;
 
-                        NotifyDescriptor.Message nd = new NotifyDescriptor.Message(MessageFormat.format("Map-Matcher cost amounts to {0} meters", count > 0 ? cost / count : 0));
+                        mappingCost = network.getTotalRoadLength() == 0 ? 0 : averageDistance / network.getTotalRoadLength();
+                        LOG.log(Level.INFO, "average distance: {0}", averageDistance);
+                        LOG.log(Level.INFO, "average distance/network length: {0}", mappingCost);
+                        NotifyDescriptor.Message nd = new NotifyDescriptor.Message(String.format(Locale.ENGLISH, "Map-Matcher cost amounts to %f\nAverage Distance (m): %f ", mappingCost, averageDistance));
                         DialogDisplayer.getDefault().notifyLater(nd);
 
                     }
-                    handle.progress(100);
                 }
             } finally {
                 handle.finish();
@@ -233,11 +239,11 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
 
     private Osm getOSMMap(List<GPSSegment> roadNetwork) {
         Rectangle2D boundingBox = getBoundingBox(roadNetwork);
-
-        double leftLong = boundingBox.getMinX();
-        double bottomLat = boundingBox.getMinY();
-        double rightLong = boundingBox.getMaxX();
-        double topLat = boundingBox.getMaxY();
+        double buffer = 0.000000025;
+        double leftLong = boundingBox.getMinX() - buffer;
+        double bottomLat = boundingBox.getMinY() - buffer;
+        double rightLong = boundingBox.getMaxX() + buffer;
+        double topLat = boundingBox.getMaxY() + buffer;
 
         Osm osmMap = null;
 
@@ -270,7 +276,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         return mapMatcher;
     }
 
-    protected void setMapMatcher(MapMatcher mapMatcher) {
+    public void setMapMatcher(MapMatcher mapMatcher) {
         this.mapMatcher = mapMatcher;
     }
 
@@ -278,7 +284,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         return mapProvider;
     }
 
-    private void setMapProvider(MapProvider mapProvider) {
+    public void setMapProvider(MapProvider mapProvider) {
         this.mapProvider = mapProvider;
     }
 

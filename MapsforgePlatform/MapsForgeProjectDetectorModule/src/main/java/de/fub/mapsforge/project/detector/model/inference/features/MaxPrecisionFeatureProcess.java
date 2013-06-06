@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.MaxPrecisionFeature;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -58,5 +59,14 @@ public class MaxPrecisionFeatureProcess extends FeatureProcess {
         feature.reset();
         gpsTrack = null;
         return result;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(MaxPrecisionFeatureProcess.class.getName());
+        descriptor.setName(Bundle.CLT_MaxPrecisionFeature_Name());
+        descriptor.setDescription(Bundle.CLT_MaxPrecisionFeature_Description());
+        return descriptor;
     }
 }

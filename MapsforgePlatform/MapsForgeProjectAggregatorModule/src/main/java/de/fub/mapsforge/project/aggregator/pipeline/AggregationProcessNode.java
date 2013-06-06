@@ -59,10 +59,10 @@ public class AggregationProcessNode extends ProcessNode implements ChangeListene
 
                         for (de.fub.mapsforge.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
                             Sheet.Set set = Sheet.createPropertiesSet();
-                            sheet.put(set);
                             set.setName(propertySet.getId());
                             set.setDisplayName(propertySet.getName());
                             set.setShortDescription(propertySet.getDescription());
+                            sheet.put(set);
                             for (de.fub.mapsforge.project.aggregator.xml.Property property : propertySet.getProperties()) {
                                 processProperty = new NodeProperty(property);
                                 set.put(processProperty);

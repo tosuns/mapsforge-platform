@@ -103,11 +103,11 @@ public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPan
             if (roadNetworkProcess != null) {
                 for (AbstractLayer<?> layer : roadNetworkProcess.getLayers()) {
                     try {
-                        AbstractLayer cloneLayer = layer.getClass().newInstance();
+                        AbstractLayer clonedLayer = layer.getClass().newInstance();
                         for (Object item : layer.getItemList()) {
-                            cloneLayer.add(item);
+                            clonedLayer.add(item);
                         }
-                        aggTopComponent1.addLayer(cloneLayer);
+                        aggTopComponent1.addLayer(clonedLayer);
                     } catch (InstantiationException ex) {
                         Exceptions.printStackTrace(ex);
                     } catch (IllegalAccessException ex) {

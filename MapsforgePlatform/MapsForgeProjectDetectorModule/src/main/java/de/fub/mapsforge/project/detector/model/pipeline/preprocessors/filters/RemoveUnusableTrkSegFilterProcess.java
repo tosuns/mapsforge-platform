@@ -8,6 +8,7 @@ import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Properties;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
@@ -26,7 +27,11 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_RemoveUnusable_Trkseg_Filter_description=This filter remove tracks, "
     + "whose content don't have sufficient data. A Segment that does not have "
     + "at least the time stamp. latitude and longitude information will be "
-    + "removed from the track."
+    + "removed from the track.",
+    "CLT_RemoveUnusable_Trkseg_Filter_Property_RemAllSegShorterThan_Name=Remove short Segment on/off",
+    "CLT_RemoveUnusable_Trkseg_Filter_Property_RemAllSegShorterThan_Description=(De) activates the option whether segments with a length shorter than specified be the property Segment length should be removed or not",
+    "CLT_RemoveUnusable_Trkseg_Filter_Property_RemoveSegementLength_Name=Segment length",
+    "CLT_RemoveUnusable_Trkseg_Filter_Property_RemoveSegementLength_Description=Segments which are shorter then the specified length will be removed if the the property Remove short segment on/off is activeated."
 })
 @ServiceProvider(service = FilterProcess.class)
 public class RemoveUnusableTrkSegFilterProcess extends FilterProcess {
@@ -134,5 +139,31 @@ public class RemoveUnusableTrkSegFilterProcess extends FilterProcess {
             }
         }
         return segmentLength;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(RemoveUnusableTrkSegFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_RemoveUnusable_Trkseg_Filter_Name());
+        descriptor.setDescription(Bundle.CLT_RemoveUnusable_Trkseg_Filter_description());
+
+        Property property = new Property();
+        property.setId(PROP_NAME_REMOVE_SHORT_SEGMENT_ACTIVE);
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.FALSE.toString());
+        property.setName(Bundle.CLT_RemoveUnusable_Trkseg_Filter_Property_RemAllSegShorterThan_Name());
+        property.setDescription(Bundle.CLT_RemoveUnusable_Trkseg_Filter_Property_RemAllSegShorterThan_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        property = new Property();
+        property.setId(PROP_NAME_SEGMENT_LENGTH);
+        property.setJavaType(Double.class.getName());
+        property.setValue("50");
+        property.setName(Bundle.CLT_RemoveUnusable_Trkseg_Filter_Property_RemoveSegementLength_Name());
+        property.setDescription(Bundle.CLT_RemoveUnusable_Trkseg_Filter_Property_RemoveSegementLength_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

@@ -11,6 +11,8 @@ import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.mapsforge.project.detector.model.xmls.Property;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
@@ -37,12 +39,17 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @NbBundle.Messages({
     "CLT_MapRenderer_Name=Map Renderer",
-    "CLT_MapRenderer_Description=Renders Gps data with the help of an Aggregator"
+    "CLT_MapRenderer_Description=Renders Gps data with the help of an Aggregator",
+    "CLT_MapRenderer_Property_AggregationFilePath_Name=Aggregator File Path",
+    "CLT_MapRenderer_Property_AggregationFilePath_Description=The file path to the aggregator file.",
+    "CLT_MapRenderer_Property_OpenAfterFinished_Name=Open after inference is finished",
+    "CLT_MapRenderer_Property_OpenAfterFinished_Description=Opens after aggregation is finished all aggregator panels."
 })
 @ServiceProvider(service = Task.class)
 public class MapRenderer extends Task {
 
     static final String PROP_NAME_AGGREGATOR_FILE_PATH = "maprenderer.aggregator.file.path";
+    private static final String PROP_NAME_OPEN_AFTER_FINISHED = "maprenderer.open.after.finished";
     private final ObservableList<Aggregator> aggregatorList = new ObservableArrayList<Aggregator>();
     private final MapRendererSupport mapRendererSupport = new MapRendererSupport(MapRenderer.this);
 
@@ -53,6 +60,11 @@ public class MapRenderer extends Task {
     @Override
     protected void setDetector(Detector detector) {
         super.setDetector(detector);
+    }
+
+    @Override
+    protected void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        super.setProcessDescriptor(processDescriptor);
         validate();
     }
 
@@ -138,6 +150,9 @@ public class MapRenderer extends Task {
                         aggregator = mapRendererSupport.createAggregator();
                     }
                 }
+
+                // TODO: display aggregators if open.after.finished property
+                // is true
             } else {
                 setProcessState(ProcessState.SETTING_ERROR);
             }
@@ -174,6 +189,31 @@ public class MapRenderer extends Task {
     @Override
     protected Node createNodeDelegate() {
         return new MapRendererNode(MapRenderer.this);
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(MapRenderer.class.getName());
+        descriptor.setName(Bundle.CLT_MapRenderer_Name());
+        descriptor.setDescription(Bundle.CLT_MapRenderer_Description());
+
+        Property property = new Property();
+        property.setId(PROP_NAME_AGGREGATOR_FILE_PATH);
+        property.setJavaType(String.class.getName());
+        property.setName(Bundle.CLT_MapRenderer_Property_AggregationFilePath_Name());
+        property.setDescription(Bundle.CLT_MapRenderer_Property_AggregationFilePath_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        property = new Property();
+        property.setId(PROP_NAME_OPEN_AFTER_FINISHED);
+        property.setJavaType(Boolean.class.getName());
+        property.setValue(Boolean.TRUE.toString());
+        property.setName(Bundle.CLT_MapRenderer_Property_OpenAfterFinished_Name());
+        property.setDescription(Bundle.CLT_MapRenderer_Property_OpenAfterFinished_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 
     /**

@@ -48,11 +48,11 @@ public class BarChartPanel extends javax.swing.JPanel {
         barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         barRenderer.setBaseItemLabelsVisible(true);
         plot.setRenderer(barRenderer);
-
+        plot.getDomainAxis().setMaximumCategoryLabelLines(3);
         plot.setBackgroundPaint(Color.white);
         barChart.setBackgroundPaint(Color.white);
         plot.setRangeGridlinesVisible(true);
-
+        plot.getDomainAxis().setMaximumCategoryLabelLines(3);
         chartPanel = new ChartPanel(barChart, false);
         chartPanel.setVerticalAxisTrace(false);
         chartPanel.setDisplayToolTips(true);

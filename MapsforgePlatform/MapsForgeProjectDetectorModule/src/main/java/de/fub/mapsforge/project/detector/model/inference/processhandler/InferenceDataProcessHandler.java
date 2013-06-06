@@ -7,9 +7,11 @@ package de.fub.mapsforge.project.detector.model.inference.processhandler;
 import de.fub.gpxmodule.xml.Gpx;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
 import de.fub.mapsforge.project.detector.model.inference.ui.InferenceResultPanel;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.mapsforge.project.detector.utils.GPSUtils;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -37,7 +39,11 @@ import weka.core.Instances;
  *
  * @author Serdar
  */
-@NbBundle.Messages("LBL_Detector_clustering_Title=Clustering")
+@NbBundle.Messages({
+    "LBL_Detector_clustering_Title=Clustering",
+    "CLT_InferenceDataProcessHandler_Name=Inference ProcessHandler",
+    "CLT_InferenceDataProcessHandler_Description=No description available"
+})
 @ServiceProvider(service = InferenceModelProcessHandler.class)
 public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
@@ -71,13 +77,13 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
         Classifier classifier = getInferenceModel().getClassifier();
         HashSet<TrackSegment> inferenceDataSet = getInferenceDataSet();
-        ArrayList<Attribute> attributeList = getInferenceModel().getAttributeList();
+        Collection<Attribute> attributeList = getInferenceModel().getAttributes();
 
         if (!attributeList.isEmpty()) {
             Set<String> keySet = getInferenceModel().getInput().getTrainingsSet().keySet();
             setClassesToView(keySet);
 
-            Instances unlabeledInstances = new Instances("Unlabeld Tracks", attributeList, 0); //NO18N
+            Instances unlabeledInstances = new Instances("Unlabeld Tracks", new ArrayList<Attribute>(attributeList), 0); //NO18N
             unlabeledInstances.setClassIndex(0);
 
             ArrayList<TrackSegment> segmentList = new ArrayList<TrackSegment>();
@@ -108,12 +114,13 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
                     // put label and instance to result map
                     put(value, instance);
 
-                    // update visw
-                    updateVisualRepresentation();
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
+
+            // update visw
+            updateVisualRepresentation();
 
             // update result set of the inferenceModel
             for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
@@ -182,7 +189,7 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
     }
 
     private Instance getInstance(TrackSegment segment) {
-        Instance instance = new DenseInstance(getInferenceModel().getAttributeList().size());
+        Instance instance = new DenseInstance(getInferenceModel().getAttributes().size());
 
         for (FeatureProcess feature : getInferenceModel().getFeatureList()) {
             feature.setInput(segment);
@@ -193,6 +200,16 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
             instance.setValue(attribute, result);
         }
         return instance;
+    }
+
+    @Override
+    protected ProcessHandlerDescriptor createDefaultDescriptor() {
+        ProcessHandlerDescriptor descriptor = new ProcessHandlerDescriptor();
+        descriptor.setJavaType(InferenceDataProcessHandler.class.getName());
+        descriptor.setInferenceMode(InferenceMode.INFERENCE_MODE);
+        descriptor.setName(Bundle.CLT_InferenceDataProcessHandler_Name());
+        descriptor.setDescription(Bundle.CLT_InferenceDataProcessHandler_Description());
+        return descriptor;
     }
 
     public static class ClassificationResult {

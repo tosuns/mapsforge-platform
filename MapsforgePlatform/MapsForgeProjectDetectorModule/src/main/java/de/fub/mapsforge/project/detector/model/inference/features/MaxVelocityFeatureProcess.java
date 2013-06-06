@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.MaxNVelocityFeature;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -58,5 +59,14 @@ public class MaxVelocityFeatureProcess extends FeatureProcess {
         feature.reset();
         gpsTrack = null;
         return result;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(MaxVelocityFeatureProcess.class.getName());
+        descriptor.setName(Bundle.CLT_MaxSpeedFeature_Name());
+        descriptor.setDescription(Bundle.CLT_MaxSpeedFeature_Description());
+        return descriptor;
     }
 }

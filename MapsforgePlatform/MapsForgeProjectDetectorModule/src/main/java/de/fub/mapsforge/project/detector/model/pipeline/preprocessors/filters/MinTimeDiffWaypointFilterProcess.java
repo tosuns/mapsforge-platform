@@ -27,7 +27,9 @@ import org.openide.util.lookup.ServiceProvider;
     + "is a pair of gps point where the time difference exceed the specified "
     + "the track get seperated into two segement and the filter continues "
     + "the filtering process with the second segment until the end of the "
-    + "gps track is reached."
+    + "gps track is reached.",
+    "CLT_MinTimeDiffWaypointFilterProcess_Property_TimeDiff_Name=Time diffenrence",
+    "CLT_MinTimeDiffWaypointFilterProcess_Property_TimeDiff_Description=Time difference in seconds"
 })
 @ServiceProvider(service = FilterProcess.class)
 public class MinTimeDiffWaypointFilterProcess extends FilterProcess {
@@ -87,5 +89,23 @@ public class MinTimeDiffWaypointFilterProcess extends FilterProcess {
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(MinTimeDiffWaypointFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_MinTimeDiffWaypointFilterProcess_Name());
+        descriptor.setDescription(Bundle.CLT_MinTimeDiffWaypointFilterProcess_Description());
+
+        Property property = new Property();
+        property.setId(PROPERTY_TIME_DIFF);
+        property.setJavaType(Integer.class.getName());
+        property.setValue("2");
+        property.setName(Bundle.CLT_MinTimeDiffWaypointFilterProcess_Property_TimeDiff_Name());
+        property.setDescription(Bundle.CLT_MinTimeDiffWaypointFilterProcess_Property_TimeDiff_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

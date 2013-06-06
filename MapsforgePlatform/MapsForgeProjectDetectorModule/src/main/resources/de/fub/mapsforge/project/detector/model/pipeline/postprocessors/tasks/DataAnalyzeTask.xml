@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dec:processunit
-    xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.DataAnalyzeTask"
-    name="Analyze Data"
-    description="A Run time trainings data analyzer task. The propose of this task is to display the statistics of the training data set after it goes through the filters.">
-    <properties/>
-</dec:processunit>

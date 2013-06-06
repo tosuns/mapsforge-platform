@@ -65,10 +65,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOpenAerialTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.MapQuestOsmTileSource;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 /**
  *
@@ -200,13 +196,9 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
         // set up tilesource combobox
         if (tileSourceComboBox == null) {
-            tileSourceComboBox = new JComboBox<TileSource>(
-                    new TileSource[]{
-                new OsmTileSource.Mapnik(),
-                new OsmTileSource.CycleMap(),
-                new BingAerialTileSource(),
-                new MapQuestOsmTileSource(),
-                new MapQuestOpenAerialTileSource()});
+            Collection<? extends TileSource> tileSources = Lookup.getDefault().lookupResult(TileSource.class).allInstances();
+
+            tileSourceComboBox = new JComboBox<TileSource>(tileSources.toArray(new TileSource[tileSources.size()]));
             tileSourceComboBox.setMaximumSize(new Dimension(100, 16));
             tileSourceComboBox.setSelectedIndex(0);
             tileSourceComboBox.addItemListener(new TileSourceComboBoxItemListenerImpl());
@@ -564,6 +556,18 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private class ProcessRunButtonActionListenerImpl implements ActionListener {
 
         public ProcessRunButtonActionListenerImpl() {
+            if (aggregator != null) {
+                aggregator.addPropertyChangeListener(new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if (Aggregator.AggregatorState.RUNNING == aggregator.getAggregatorState()) {
+                            processRunButton.setEnabled(false);
+                        } else {
+                            processRunButton.setEnabled(true);
+                        }
+                    }
+                });
+            }
         }
 
         @Override

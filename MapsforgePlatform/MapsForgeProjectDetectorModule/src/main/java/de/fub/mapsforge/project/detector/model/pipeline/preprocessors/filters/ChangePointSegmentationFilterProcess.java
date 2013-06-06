@@ -345,6 +345,82 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
         return arrayList;
     }
 
+    @NbBundle.Messages({
+        "CLT_ChangePointSegmentationFilter_Property_VelocityBound_Name=Velocity Bound",
+        "CLT_ChangePointSegmentationFilter_Property_VelocityBound_Description=GPS tracks will be segmented by change point.",
+        "CLT_ChangePointSegmentationFilter_Property_AccelerationBound_Name=Acceleration Bound",
+        "CLT_ChangePointSegmentationFilter_Property_AccelerationBound_Description=Specifies a loose upper bound for the acceleration value of a point to declare point as (non) wakling",
+        "CLT_ChangePointSegmentationFilter_Property_CertainLengthThreshold_Name=Certain Length Threshold",
+        "CLT_ChangePointSegmentationFilter_Property_CertainLengthThreshold_Description=Specifies the length that each segment must exceed to be declared certain.",
+        "CLT_ChangePointSegmentationFilter_Property_UncertainCountThreshold_Name=Unchertain Count Threshold",
+        "CLT_ChangePointSegmentationFilter_Property_UncertainCountThreshold_Description=Specifies how many successive uncertain segments needs to be to declare uncertain segments as one non-wakling segment",
+        "CLT_ChangePointSegmentationFilter_Property_ChangePointMinimalDistanceBound_Name=Minimal Distance Bound",
+        "CLT_ChangePointSegmentationFilter_Property_ChangePointMinimalDistanceBound_Description=Specifies the minimal length of an segment with consecutive (non) walking points must exceed if not it will be merged with the backward segment.",
+        "CLT_ChangePointSegmentationFilter_Property_ChangePointMinimalTimeDifference_Name=Minimal Time Difference",
+        "CLT_ChangePointSegmentationFilter_Property_ChangePointMinimalTimeDifference_Description=Specifies the duration time of an segment with consecutive (non) walking points must exceed"
+    })
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(ChangePointSegmentationFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_ChangePointSequencizerFilter_Name());
+        descriptor.setDescription(Bundle.CLT_ChangePointSequencizerFilter_Description());
+        // <!-- velocity value in meters/sec. -->
+        Property property = new Property();
+        property.setId(PROP_NAME_LOOSE_UPPER_VELOCITY_BOUND);
+        property.setJavaType(Double.class.getName());
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_VelocityBound_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_VelocityBound_Description());
+        property.setValue("1.8");
+        descriptor.getProperties().getPropertyList().add(property);
+
+        //<!-- acceleration in meters/sec^2 -->
+        property = new Property();
+        property.setId(PROP_NAME_LOOSE_UPPER_ACCELERATION_BOUND);
+        property.setJavaType(Double.class.getName());
+        property.setValue("0.6");
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_AccelerationBound_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_AccelerationBound_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        //<!-- length value in meters -->
+        property = new Property();
+        property.setId(PROP_NAME_CERTAIN_SEGMENT_LENGTH_THRESHOLD);
+        property.setJavaType(Double.class.getName());
+        property.setValue("200");
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_CertainLengthThreshold_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_CertainLengthThreshold_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        property = new Property();
+        property.setId(PROP_NAME_UNCERTAIN_SEGMENT_COUNT_THRESHOLD);
+        property.setJavaType(Integer.class.getName());
+        property.setValue("2");
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_UncertainCountThreshold_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_UncertainCountThreshold_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        // <!--  value in meters -->
+        property = new Property();
+        property.setId(PROP_NAME_MINIMAL_DISTANCE_BOUND);
+        property.setJavaType(Double.class.getName());
+        property.setValue("20");
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_ChangePointMinimalDistanceBound_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_ChangePointMinimalDistanceBound_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        // <!-- time in seconds -->
+        property = new Property();
+        property.setId(PROP_NAME_MINIMAL_TIME_DIFFERENCE);
+        property.setJavaType(Long.class.getName());
+        property.setValue("10");
+        property.setName(PROP_NAME_PROCESS_STATE);
+        property.setDescription(PROP_NAME_PROCESS_STATE);
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
+    }
+
     private static class ChangePointSegment extends TrackSegment {
 
         private SegmentType type = null;

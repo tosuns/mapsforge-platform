@@ -9,7 +9,6 @@ import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.node.CustomAbstractnode;
 import de.fub.utilsmodule.node.property.ProcessProperty;
@@ -21,15 +20,14 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collection;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.nodes.Sheet;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
@@ -43,28 +41,6 @@ public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegmen
     private static Image defaultImage;
 
     public FeatureProcess() {
-    }
-
-    @Override
-    protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor processDescriptor = null;
-        if (getDetector() == null) {
-            try {
-                processDescriptor = DetectorUtils.getXmlDescriptor(ProcessDescriptor.class, getClass());
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
-
-            for (ProcessDescriptor featureDescriptor : getDetector().getDetectorDescriptor().getInferenceModel().getFeatures().getFeatureList()) {
-                if (featureDescriptor != null
-                        && getClass().getName().equals(featureDescriptor.getJavaType())) {
-                    processDescriptor = featureDescriptor;
-                    break;
-                }
-            }
-        }
-        return processDescriptor;
     }
 
     @Override
@@ -100,6 +76,19 @@ public abstract class FeatureProcess extends AbstractDetectorProcess<TrackSegmen
     @Override
     public boolean cancel() {
         return false;
+    }
+
+    public static Collection<FeatureProcess> findAll() {
+        return findAll(FeatureProcess.class);
+    }
+
+    public static FeatureProcess find(ProcessDescriptor processDescriptor, Detector detector) throws DetectorProcessNotFoundException {
+        assert processDescriptor != null;
+        FeatureProcess featureProcess = find(processDescriptor.getJavaType(), detector);
+        if (featureProcess != null) {
+            featureProcess.setProcessDescriptor(processDescriptor);
+        }
+        return featureProcess;
     }
 
     public static synchronized FeatureProcess find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {

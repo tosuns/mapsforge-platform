@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.inference.features;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.gpseval.features.HeadingChangeRateFeature;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,7 +21,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @NbBundle.Messages({
     "CLT_HeadingChangeRateFeature_Name=Heading Change Rate Feature",
-    "CLT_HeadingChangeRateFeature_Description=Computes the heading change rate of a gps segment. The heading change rate is determined via a threashold parameter."
+    "CLT_HeadingChangeRateFeature_Description=Computes the heading change rate of a gps segment. The heading change rate is determined via a threashold parameter.",
+    "CLT_HeadingChangeRateFeature_Property_AngleThreshold_Name=Angle Threshold",
+    "CLT_HeadingChangeRateFeature_Property_AngleThreshold_Description=If the heading of a gps point exceeds this value (in degree), then the point will be used for the heading change rate of the segment."
 })
 @ServiceProvider(service = FeatureProcess.class)
 public class HeadingChangeRateFeatureProcess extends FeatureProcess {
@@ -37,6 +40,7 @@ public class HeadingChangeRateFeatureProcess extends FeatureProcess {
     @Override
     protected void start() {
         feature.reset();
+        feature.setHeadingThreshold(getAngleThreshold());
         if (trackSegment != null) {
             for (Waypoint waypoint : trackSegment.getWayPointList()) {
                 feature.addWaypoint(waypoint);
@@ -100,5 +104,23 @@ public class HeadingChangeRateFeatureProcess extends FeatureProcess {
 
         }
         return minimumAngleThreshold;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(HeadingChangeRateFeatureProcess.class.getName());
+        descriptor.setName(Bundle.CLT_HeadingChangeRateFeature_Name());
+        descriptor.setDescription(Bundle.CLT_HeadingChangeRateFeature_Description());
+
+        Property property = new Property();
+        property.setId(PROP_NAME_ANGLE_THRESHOLD);
+        property.setJavaType(Double.class.getName());
+        property.setValue("19");
+        property.setName(Bundle.CLT_HeadingChangeRateFeature_Property_AngleThreshold_Name());
+        property.setDescription(Bundle.CLT_HeadingChangeRateFeature_Property_AngleThreshold_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

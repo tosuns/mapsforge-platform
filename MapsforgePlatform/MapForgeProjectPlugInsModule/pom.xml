@@ -163,6 +163,35 @@
             <type>jar</type>
             <version>RELEASE73</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jsi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>log4J</artifactId>
+            <groupId>de.fub.mapsforge</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>JFreeChartLib</artifactId>
+            <groupId>de.fub.mapsforge</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>MapViewer</artifactId>
+            <groupId>de.fub</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>openstreetmap</artifactId>
+            <groupId>de.fub</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

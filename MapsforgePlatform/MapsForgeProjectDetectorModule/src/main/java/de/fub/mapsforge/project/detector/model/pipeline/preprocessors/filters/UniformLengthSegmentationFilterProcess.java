@@ -8,6 +8,7 @@ import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,6 +20,12 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Serdar
  */
+@Messages({
+    "CLT_UniformLengthFilter_Name=Uniform Length Segmentation",
+    "CLT_UniformLengthFilter_Description=GPS traces will be segmented into equally long tracks.",
+    "CLT_UniformLengthFilter_Property_Length_Name=Maximum Length",
+    "CLT_UniformLengthFilter_Property_Length_Description=Specifies the maximum length for each gps track."
+})
 @ServiceProvider(service = FilterProcess.class)
 public class UniformLengthSegmentationFilterProcess extends FilterProcess {
 
@@ -76,7 +83,6 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
         }
     }
 
-    @Messages("CLT_UniformLengthFilter_Name=Uniform Length Segmentation")
     @Override
     public String getName() {
         if (getProcessDescriptor() != null && getProcessDescriptor().getName() != null) {
@@ -85,7 +91,6 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
         return Bundle.CLT_UniformLengthFilter_Name();
     }
 
-    @Messages("CLT_UniformLengthFilter_Description=GPS traces will be segmented into equally long tracks.")
     @Override
     public String getDescription() {
         if (getProcessDescriptor() != null && getProcessDescriptor().getName() != null) {
@@ -124,5 +129,24 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
             }
         }
         return length;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(UniformLengthSegmentationFilterProcess.class.getName());
+        descriptor.setName(Bundle.CLT_UniformLengthFilter_Name());
+        descriptor.setDescription(Bundle.CLT_UniformLengthFilter_Description());
+
+        // <!-- length value in meters -->
+        Property property = new Property();
+        property.setId(PROP_NAME_LENGTH);
+        property.setJavaType(Double.class.getName());
+        property.setValue("10");
+        property.setName(Bundle.CLT_UniformLengthFilter_Property_Length_Name());
+        property.setDescription(Bundle.CLT_UniformLengthFilter_Property_Length_Description());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        return descriptor;
     }
 }

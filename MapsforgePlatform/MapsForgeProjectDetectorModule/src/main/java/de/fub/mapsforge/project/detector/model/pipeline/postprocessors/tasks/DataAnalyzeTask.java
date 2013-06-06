@@ -7,6 +7,7 @@ package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 import de.fub.mapsforge.project.detector.model.TrainingsDataProvider;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputDataSet;
+import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,6 +83,15 @@ public class DataAnalyzeTask extends Task {
 
     public HashMap<String, HashSet<TrackSegment>> getData() {
         return data;
+    }
+
+    @Override
+    protected ProcessDescriptor createProcessDescriptor() {
+        ProcessDescriptor descriptor = new ProcessDescriptor();
+        descriptor.setJavaType(DataAnalyzeTask.class.getName());
+        descriptor.setName(Bundle.CLT_DataAnalyzeTask_Name());
+        descriptor.setDescription(Bundle.CLT_DataAnalyzeTask_Description());
+        return descriptor;
     }
 
     private static class DataAnalyzerTaskNode extends Task.TaskProcessNode {

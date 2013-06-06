@@ -17,19 +17,26 @@
  */
 package de.fub.agg2graph.management;
 
-import de.fub.agg2graph.roadgen.Intersection;
-import de.fub.agg2graph.roadgen.Road;
 import de.fub.agg2graph.roadgen.RoadNetwork;
-import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class Statistics {
 
     private static final Logger LOG = Logger.getLogger(Statistics.class.getName());
+    public static final String PROP_NAME_TOTAL_NUMBER_OF_ROADS = "total number of roads";
+    public static final String PROP_NAME_TOTAL_NUMBER_OF_INTERSECTIONS = "total number of intersections";
+    public static final String PROP_NAME_ROAD_INTERSECTION_RATIO = "roads/intersections";
+    public static final String PROP_NAME_TOTAL_ROAD_LENGTH = "total road length";
+    public static final String PROP_NAME_AVERAGE_ROAD_LENGTH = "average road length";
+    public static final String PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS = "number of real intersections";
+    public static final String PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS = "number of pseudo intersections";
+    public static final String PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO = "real/pseudo intersections";
+    public static final String PROP_NAME_NUMBER_OF_ISOLATED_ROADS = "number of isolated roads";
+    public static final String PROP_NAME_NUMBER_OF_ONE_WAY_ROADS = "number of one way roads";
+    public static final String PROP_NAME_NUMBER_OF_TWO_WAY_ROADS = "number of two way roads";
+    public static final String PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO = "one way/two way roads";
 
     /**
      * Get statistical information about the {@link RoadNetwork} object given.
@@ -38,59 +45,26 @@ public class Statistics {
      */
     public static Map<String, Double> getData(RoadNetwork roadNetwork) {
         Map<String, Double> stats = new HashMap<String, Double>();
-
-        // extract visible items
-        Set<Road> visibleRoads = new HashSet<Road>();
-        Set<Intersection> visibleIntersections = new HashSet<Intersection>();
-        double avgSum = 0, pseudoSum = 0, isolatedSum = 0, oneWaySum = 0;
-        for (Road r : roadNetwork.getRoads()) {
-            if (r.isVisible()) {
-                visibleRoads.add(r);
-                avgSum += r.getLength();
-                if (r.isIsolated()) {
-                    isolatedSum++;
-                }
-                if (r.isOneWay()) {
-                    oneWaySum++;
-                }
-            } else {
-                LOG.fine(MessageFormat.format("invisible road {0}", r));
-            }
-        }
-        for (Intersection i : roadNetwork.getIntersections()) {
-            if (i.isVisible()) {
-                visibleIntersections.add(i);
-                if (i.isPseudo()) {
-                    pseudoSum++;
-                }
-            } else {
-                LOG.fine(MessageFormat.format("invisible intersection {0}", i));
-            }
-        }
-
-        double numRoads = new Double(visibleRoads.size());
-        double numIntersections = new Double(visibleIntersections.size());
-        stats.put("total number of roads", numRoads);
-        stats.put("total number of intersections", numIntersections);
-        stats.put("roads/intersections", numRoads / numIntersections);
+        stats.put(PROP_NAME_TOTAL_NUMBER_OF_ROADS, roadNetwork.getRoadCount());
+        stats.put(PROP_NAME_TOTAL_NUMBER_OF_INTERSECTIONS, roadNetwork.getIntersectionCount());
+        stats.put(PROP_NAME_ROAD_INTERSECTION_RATIO, roadNetwork.getRoadIntersectionRatio());
 
         // compute average road length
-        stats.put("total road length", avgSum);
-        stats.put("average road length", avgSum / numRoads);
+        stats.put(PROP_NAME_TOTAL_ROAD_LENGTH, roadNetwork.getTotalRoadLength());
+        stats.put(PROP_NAME_AVERAGE_ROAD_LENGTH, roadNetwork.getAverageRoadLength());
 
         // how many intersections are only pseudo intersections?
-        stats.put("number of real intersections", numIntersections - pseudoSum);
-        stats.put("number of pseudo intersections", pseudoSum);
-        stats.put("real/pseudo intersections", (numIntersections - pseudoSum)
-                / pseudoSum);
+        stats.put(PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS, roadNetwork.getRealIntersectionCount());
+        stats.put(PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS, roadNetwork.getPseudoIntersectionCount());
+        stats.put(PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO, roadNetwork.getRealToPseudoIntersectionRatio());
 
         // find isolated roads
-        stats.put("number of isolated roads", isolatedSum);
+        stats.put(PROP_NAME_NUMBER_OF_ISOLATED_ROADS, roadNetwork.getIsolatedRoadCount());
 
         // count one way roads
-        stats.put("number of one way roads", oneWaySum);
-        stats.put("number of two way roads", numRoads - oneWaySum);
-        stats.put("one way/two way roads", oneWaySum / (numRoads - oneWaySum));
+        stats.put(PROP_NAME_NUMBER_OF_ONE_WAY_ROADS, roadNetwork.getOneWayRoadCount());
+        stats.put(PROP_NAME_NUMBER_OF_TWO_WAY_ROADS, roadNetwork.getTwoWayRoadCount());
+        stats.put(PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO, roadNetwork.getOneWayTwoWayRoadRatio());
 
         return stats;
     }
