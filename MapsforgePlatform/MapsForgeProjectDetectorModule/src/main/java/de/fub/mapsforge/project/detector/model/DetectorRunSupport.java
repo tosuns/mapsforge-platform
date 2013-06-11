@@ -194,9 +194,12 @@ class DetectorRunSupport {
         List<TrackSegment> gpsTracks = new ArrayList<TrackSegment>();
         List<TrackSegment> tracks = dataset;
         for (FilterProcess filterProcess : detector.getPreProcessorPipeline().getProcesses()) {
-            filterProcess.setInput(tracks);
-            filterProcess.run();
-            tracks = filterProcess.getResult();
+            if (filterProcess.getScope() == InferenceMode.ALL_MODE
+                    || filterProcess.getScope() == detector.getInferenceModel().getInferenceMode()) {
+                filterProcess.setInput(tracks);
+                filterProcess.run();
+                tracks = filterProcess.getResult();
+            }
         }
 
         gpsTracks.addAll(tracks);

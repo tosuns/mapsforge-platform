@@ -6,11 +6,14 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -27,12 +30,39 @@ import org.openide.util.lookup.ServiceProvider;
 public class UniformDurationSegmentationFilterProcess extends FilterProcess {
 
     private static final String PROP_NAME_DURATION = "uniform.duration.filter.duration";
+    private static final Logger LOG = Logger.getLogger(UniformDurationSegmentationFilterProcess.class.getName());
     private List<TrackSegment> result;
     private List<TrackSegment> gpsTracks;
     // duration in seconds;
     private double duration = -1;
 
     public UniformDurationSegmentationFilterProcess() {
+    }
+
+    @Override
+    protected void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        super.setProcessDescriptor(processDescriptor);
+        init();
+    }
+
+    private void init() {
+        ProcessDescriptor descriptor = getProcessDescriptor();
+        if (descriptor != null) {
+            List<Property> propertyList = descriptor.getProperties().getPropertyList();
+            for (Property property : propertyList) {
+                if (property.getValue() != null) {
+                    try {
+                        if (PROP_NAME_DURATION.equals(property.getId())) {
+                            duration = Double.valueOf(property.getValue());
+                        } else if (PROP_NAME_FILTER_SCOPE.equals(property.getId())) {
+                            scope = InferenceMode.valueOf(property.getValue());
+                        }
+                    } catch (IllegalArgumentException ex) {
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -67,9 +97,10 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
                     lastWaypoint = waypoint;
                 }
 
-                if (!result.contains(currentSegment)) {
-                    result.add(currentSegment);
-                }
+                // keep only segment with a duration close to getDurationProperty
+//                if (!result.contains(currentSegment)) {
+//                    result.add(currentSegment);
+//                }
             }
 
         }
@@ -130,8 +161,17 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
         descriptor.setName(Bundle.CLT_UniformDurationFilter_Name());
         descriptor.setDescription(Bundle.CLT_UniformDurationFilter_Description());
 
-        // <!-- duration value in seconds -->
+
         Property property = new Property();
+        property.setId(PROP_NAME_FILTER_SCOPE);
+        property.setJavaType(InferenceMode.class.getName());
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Description());
+        property.setValue(InferenceMode.INFERENCE_MODE.toString());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        // <!-- duration value in seconds -->
+        property = new Property();
         property.setId(PROP_NAME_DURATION);
         property.setJavaType(Double.class.getName());
         property.setValue("300");

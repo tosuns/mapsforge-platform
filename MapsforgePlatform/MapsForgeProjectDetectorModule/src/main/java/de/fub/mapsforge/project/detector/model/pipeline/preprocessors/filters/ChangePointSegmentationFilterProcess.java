@@ -9,6 +9,7 @@ import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.detector.model.gpx.GpxWayPoint;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -39,6 +42,7 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
     private static final String PROP_NAME_UNCERTAIN_SEGMENT_COUNT_THRESHOLD = "change.point.uncertain.seg.count.threshold";
     private static final String PROP_NAME_MINIMAL_DISTANCE_BOUND = "change.point.minimal.distance.bound";
     private static final String PROP_NAME_MINIMAL_TIME_DIFFERENCE = "change.point.minimal.time.difference";
+    private static final Logger LOG = Logger.getLogger(ChangePointSegmentationFilterProcess.class.getName());
     private List<TrackSegment> result = new ArrayList<TrackSegment>(100);
     private List<TrackSegment> gpsTracks;
     // upper bounds for distingush walking and non-walking segment
@@ -79,6 +83,12 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
                         } else if (PROP_NAME_MINIMAL_TIME_DIFFERENCE.equals(property.getId())) {
                             minimalTimeDifference = Long.valueOf(property.getValue());
                             continue;
+                        } else if (PROP_NAME_FILTER_SCOPE.equals(property.getId())) {
+                            try {
+                                scope = InferenceMode.valueOf(property.getValue());
+                            } catch (IllegalArgumentException ex) {
+                                LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                            }
                         }
                     }
                 }
@@ -346,6 +356,8 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
     }
 
     @NbBundle.Messages({
+        "CLT_ChangePointSegmentationFilter_Property_Scope_Name=Scope",
+        "CLT_ChangePointSegmentationFilter_Property_Scope_Description=Excecution Scope in which Phase of the Detector this filter should be applied.",
         "CLT_ChangePointSegmentationFilter_Property_VelocityBound_Name=Velocity Bound",
         "CLT_ChangePointSegmentationFilter_Property_VelocityBound_Description=GPS tracks will be segmented by change point.",
         "CLT_ChangePointSegmentationFilter_Property_AccelerationBound_Name=Acceleration Bound",
@@ -365,8 +377,17 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
         descriptor.setJavaType(ChangePointSegmentationFilterProcess.class.getName());
         descriptor.setName(Bundle.CLT_ChangePointSequencizerFilter_Name());
         descriptor.setDescription(Bundle.CLT_ChangePointSequencizerFilter_Description());
-        // <!-- velocity value in meters/sec. -->
+
         Property property = new Property();
+        property.setId(PROP_NAME_FILTER_SCOPE);
+        property.setJavaType(InferenceMode.class.getName());
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Description());
+        property.setValue(InferenceMode.INFERENCE_MODE.toString());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        // <!-- velocity value in meters/sec. -->
+        property = new Property();
         property.setId(PROP_NAME_LOOSE_UPPER_VELOCITY_BOUND);
         property.setJavaType(Double.class.getName());
         property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_VelocityBound_Name());

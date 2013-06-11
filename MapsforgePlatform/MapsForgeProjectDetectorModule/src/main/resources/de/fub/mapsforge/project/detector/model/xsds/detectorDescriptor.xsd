@@ -1,184 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
-    targetNamespace="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    version="1.0"
-    xmlns:tns="http://inf.fu-berlin.de/mapsforge/detector/schema"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="detector" type="tns:detectorDescriptor"/>
-    <xs:element name="inferencemodel" type="tns:inferencemodel"/>
-    <xs:element name="processHandler" type="tns:processHandler"/>
-    <xs:element name="processunit" type="tns:processunit"/>
-    <xs:element name="profile" type="tns:profile"/>
-    <xs:complexType name="detectorDescriptor">
+  targetNamespace="http://inf.fu-berlin.de/mapsforge/detector/schema" version="1.0"
+  xmlns:tns="http://inf.fu-berlin.de/mapsforge/detector/schema"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="detector" type="tns:detectorDescriptor"/>
+  <xs:element name="inferencemodel" type="tns:inferencemodel"/>
+  <xs:element name="processHandler" type="tns:processHandler"/>
+  <xs:element name="processunit" type="tns:processunit"/>
+  <xs:element name="profile" type="tns:profile"/>
+  <xs:complexType name="detectorDescriptor">
+    <xs:sequence>
+      <xs:element name="inferencemodel" type="tns:inferencemodel"/>
+      <xs:element name="datasets" type="tns:datasets"/>
+      <xs:element name="preprocessors" type="tns:preprocessors"/>
+      <xs:element name="postprocessors" type="tns:postprocessors"/>
+      <xs:element minOccurs="0" name="propertysection" type="tns:propertysection"/>
+      <xs:element minOccurs="0" name="profiles" type="tns:profiles"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="inferencemodel">
+    <xs:complexContent>
+      <xs:extension base="tns:descriptor">
         <xs:sequence>
-            <xs:element name="inferencemodel" type="tns:inferencemodel"/>
-            <xs:element name="datasets" type="tns:datasets"/>
-            <xs:element name="preprocessors" type="tns:preprocessors"/>
-            <xs:element name="postprocessors" type="tns:postprocessors"/>
-            <xs:element minOccurs="0" name="propertysection" type="tns:propertysection"/>
-            <xs:element minOccurs="0" name="profiles" type="tns:profiles"/>
+          <xs:element minOccurs="0" name="features" type="tns:features"/>
+          <xs:element minOccurs="0" name="inferenceModelProcessHandlers" type="tns:inferenceModelProcessHandlers"/>
+          <xs:element minOccurs="0" name="propertysection" type="tns:propertysection"/>
         </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="description" type="xs:string"/>
-    </xs:complexType>
-    <xs:complexType name="inferencemodel">
-        <xs:complexContent>
-            <xs:extension base="tns:descriptor">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="features" type="tns:features"/>
-                    <xs:element minOccurs="0"
-                                name="inferenceModelProcessHandlers" type="tns:inferenceModelProcessHandlers"/>
-                    <xs:element minOccurs="0" name="propertysection" type="tns:propertysection"/>
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="descriptor">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="descriptor">
+    <xs:sequence/>
+    <xs:attribute name="javaType" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="features">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="feature" type="tns:processunit"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="processunit">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="properties" type="tns:properties"/>
+    </xs:sequence>
+    <xs:attribute name="javaType" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="properties">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="property" type="tns:property"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="property">
+    <xs:complexContent>
+      <xs:extension base="tns:descriptor">
         <xs:sequence/>
-        <xs:attribute name="javaType" type="xs:string" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="description" type="xs:string"/>
-    </xs:complexType>
-    <xs:complexType name="features">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="feature" type="tns:processunit"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="processunit">
-        <xs:sequence>
-            <xs:element minOccurs="0" name="properties" type="tns:properties"/>
-        </xs:sequence>
-        <xs:attribute name="javaType" type="xs:string" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="description" type="xs:string"/>
-    </xs:complexType>
-    <xs:complexType name="properties">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="property" type="tns:property"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="property">
-        <xs:complexContent>
-            <xs:extension base="tns:descriptor">
-                <xs:sequence/>
-                <xs:attribute name="value" type="xs:string" use="required"/>
-                <xs:attribute name="id" type="xs:string" use="required"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="inferenceModelProcessHandlers">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="processHandler" type="tns:processHandler"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="processHandler">
-        <xs:complexContent>
-            <xs:extension base="tns:descriptor">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="properties" type="tns:properties"/>
-                </xs:sequence>
-                <xs:attribute name="inferenceMode" type="tns:inferenceMode"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="propertysection">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="section" type="tns:section"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="section">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="property" type="tns:property"/>
-        </xs:sequence>
+        <xs:attribute name="value" type="xs:string" use="required"/>
         <xs:attribute name="id" type="xs:string" use="required"/>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-        <xs:attribute name="description" type="xs:string"/>
-    </xs:complexType>
-    <xs:complexType name="datasets">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="inferenceModelProcessHandlers">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="processHandler" type="tns:processHandler"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="processHandler">
+    <xs:complexContent>
+      <xs:extension base="tns:descriptor">
         <xs:sequence>
-            <xs:element name="trainingset" type="tns:trainingset"/>
-            <xs:element name="inferenceset" type="tns:inferenceset"/>
+          <xs:element minOccurs="0" name="properties" type="tns:properties"/>
         </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="trainingset">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="transportmode" type="tns:transportmode"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="transportmode">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="dataset" type="tns:dataset"/>
-        </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="dataset">
-        <xs:sequence/>
-        <xs:attribute name="url" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="inferenceset">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="dataset" type="tns:dataset"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="preprocessors">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0"
-                        name="filter" type="tns:processunit"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="postprocessors">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="task" type="tns:processunit"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="profiles">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="profile" type="tns:profile"/>
-        </xs:sequence>
-        <xs:attribute name="activeProfile" type="xs:string"/>
-    </xs:complexType>
-    <xs:complexType name="profile">
-        <xs:sequence>
-            <xs:element name="preprocess" type="tns:preprocessor"/>
-            <xs:element name="postprocess" type="tns:postprocess"/>
-        </xs:sequence>
-        <xs:attribute name="name" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="preprocessor">
-        <xs:sequence/>
-        <xs:attribute name="active" type="xs:boolean" use="required"/>
-        <xs:attribute name="mode" type="tns:detectorMode"/>
-    </xs:complexType>
-    <xs:complexType name="inference">
-        <xs:sequence/>
-        <xs:attribute name="changePointSequenceActive" type="xs:boolean" use="required"/>
-        <xs:attribute name="mode" type="tns:detectorMode"/>
-    </xs:complexType>
-    <xs:complexType name="postprocess">
-        <xs:sequence/>
-        <xs:attribute name="active" type="xs:boolean" use="required"/>
-        <xs:attribute name="mode" type="tns:detectorMode" use="required"/>
-    </xs:complexType>
-    <xs:simpleType name="inferenceMode">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="trainingsMode"/>
-            <xs:enumeration value="crossvalidationMode"/>
-            <xs:enumeration value="inferenceMode"/>
-            <!--<xs:enumeration value="ALL_MODE"/>-->
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="detectorMode">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="training"/>
-            <xs:enumeration value="inference"/>
-            <xs:enumeration value="both"/>
-        </xs:restriction>
-    </xs:simpleType>
+        <xs:attribute name="inferenceMode" type="tns:inferenceMode"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="propertysection">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="section" type="tns:section"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="section">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="property" type="tns:property"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="description" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="datasets">
+    <xs:sequence>
+      <xs:element name="trainingset" type="tns:trainingset"/>
+      <xs:element name="inferenceset" type="tns:inferenceset"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="trainingset">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="transportmode" type="tns:transportmode"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transportmode">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dataset" type="tns:dataset"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="dataset">
+    <xs:sequence/>
+    <xs:attribute name="url" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="inferenceset">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="dataset" type="tns:dataset"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="preprocessors">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="filter" type="tns:processunit"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="postprocessors">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="task" type="tns:processunit"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="profiles">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="profile" type="tns:profile"/>
+    </xs:sequence>
+    <xs:attribute name="activeProfile" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="profile">
+    <xs:sequence>
+      <xs:element name="preprocess" type="tns:preprocessor"/>
+      <xs:element name="postprocess" type="tns:postprocess"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="preprocessor">
+    <xs:sequence/>
+    <xs:attribute name="active" type="xs:boolean" use="required"/>
+    <xs:attribute name="mode" type="tns:detectorMode"/>
+  </xs:complexType>
+  <xs:complexType name="inference">
+    <xs:sequence/>
+    <xs:attribute name="changePointSequenceActive" type="xs:boolean" use="required"/>
+    <xs:attribute name="mode" type="tns:detectorMode"/>
+  </xs:complexType>
+  <xs:complexType name="postprocess">
+    <xs:sequence/>
+    <xs:attribute name="active" type="xs:boolean" use="required"/>
+    <xs:attribute name="mode" type="tns:detectorMode" use="required"/>
+  </xs:complexType>
+  <xs:simpleType name="inferenceMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="trainingsMode"/>
+      <xs:enumeration value="crossvalidationMode"/>
+      <xs:enumeration value="inferenceMode"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="detectorMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="training"/>
+      <xs:enumeration value="inference"/>
+      <xs:enumeration value="both"/>
+    </xs:restriction>
+  </xs:simpleType>
 </xs:schema>

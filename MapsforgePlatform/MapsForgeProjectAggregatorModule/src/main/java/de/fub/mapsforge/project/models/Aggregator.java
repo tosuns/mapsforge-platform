@@ -242,7 +242,7 @@ public class Aggregator extends ModelSynchronizer {
      *
      * @return Always an AggregatorState instance.
      */
-    public synchronized AggregatorState getAggregatorState() {
+    public AggregatorState getAggregatorState() {
         return aggregatorState;
     }
 

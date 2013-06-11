@@ -38,6 +38,7 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 
@@ -84,7 +85,7 @@ public final class AggregationPipelineVisualElement extends JPanel implements Mu
     }
 
     private void initLookup() {
-        lookup = new ProxyLookup(new AbstractLookup(content), graphPanel1.getLookup());
+        lookup = new ProxyLookup(new AbstractLookup(content), graphPanel1.getLookup(), Lookups.fixed(AggregationPipelineVisualElement.this));
         content.add(AggregatorUtils.getProcessPalette());
     }
 

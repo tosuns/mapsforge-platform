@@ -7,12 +7,15 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters;
 import de.fub.agg2graph.gpseval.data.Waypoint;
 import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -30,12 +33,39 @@ import org.openide.util.lookup.ServiceProvider;
 public class UniformLengthSegmentationFilterProcess extends FilterProcess {
 
     private static final String PROP_NAME_LENGTH = "uniform.length.filter.length";
+    private static final Logger LOG = Logger.getLogger(UniformLengthSegmentationFilterProcess.class.getName());
     private List<TrackSegment> gpsTracks;
     private List<TrackSegment> result = new LinkedList<TrackSegment>();
     // length  in meters
     private double length = -1;
 
     public UniformLengthSegmentationFilterProcess() {
+    }
+
+    @Override
+    protected void setProcessDescriptor(ProcessDescriptor processDescriptor) {
+        super.setProcessDescriptor(processDescriptor);
+        init();
+    }
+
+    private void init() {
+        ProcessDescriptor descriptor = getProcessDescriptor();
+        if (descriptor != null) {
+            List<Property> propertyList = descriptor.getProperties().getPropertyList();
+            for (Property property : propertyList) {
+                if (property.getValue() != null) {
+                    try {
+                        if (PROP_NAME_LENGTH.equals(property.getValue())) {
+                            length = Double.valueOf(property.getValue());
+                        } else if (PROP_NAME_FILTER_SCOPE.equals(property.getValue())) {
+                            scope = InferenceMode.valueOf(property.getValue());
+                        }
+                    } catch (IllegalArgumentException ex) {
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -76,9 +106,9 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
 
                 // check whether the current shortsegement is already in the result list
                 // if not add it to the list.
-                if (!result.contains(shortSegement)) {
-                    result.add(shortSegement);
-                }
+//                if (!result.contains(shortSegement)) {
+//                    result.add(shortSegement);
+//                }
             }
         }
     }
@@ -138,8 +168,16 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
         descriptor.setName(Bundle.CLT_UniformLengthFilter_Name());
         descriptor.setDescription(Bundle.CLT_UniformLengthFilter_Description());
 
-        // <!-- length value in meters -->
         Property property = new Property();
+        property.setId(PROP_NAME_FILTER_SCOPE);
+        property.setJavaType(InferenceMode.class.getName());
+        property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Name());
+        property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Description());
+        property.setValue(InferenceMode.INFERENCE_MODE.toString());
+        descriptor.getProperties().getPropertyList().add(property);
+
+        // <!-- length value in meters -->
+        property = new Property();
         property.setId(PROP_NAME_LENGTH);
         property.setJavaType(Double.class.getName());
         property.setValue("10");

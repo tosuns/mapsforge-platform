@@ -6,6 +6,7 @@ package de.fub.mapsforge.project.detector.model.pipeline.preprocessors;
 
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
+import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.process.AbstractDetectorProcess;
 import de.fub.mapsforge.project.detector.model.process.DetectorProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
@@ -41,7 +42,9 @@ import org.openide.util.lookup.Lookups;
  */
 public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSegment>, List<TrackSegment>> implements Cancellable {
 
+    protected static String PROP_NAME_FILTER_SCOPE = "filterprocess.scope";
     private static Image defaultImage;
+    protected InferenceMode scope = InferenceMode.ALL_MODE;
 
     public FilterProcess() {
     }
@@ -49,6 +52,10 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
     @Override
     protected Node createNodeDelegate() {
         return new FilterProcessNode(this);
+    }
+
+    public InferenceMode getScope() {
+        return scope;
     }
 
     @Override
