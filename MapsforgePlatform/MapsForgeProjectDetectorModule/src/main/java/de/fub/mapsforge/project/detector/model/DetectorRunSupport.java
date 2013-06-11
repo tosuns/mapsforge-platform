@@ -199,6 +199,9 @@ class DetectorRunSupport {
                 filterProcess.setInput(tracks);
                 filterProcess.run();
                 tracks = filterProcess.getResult();
+            } else {
+                LOG.log(Level.INFO, "Scope of filter {0} does not match to current inference mode {1}. Skiping filter!",
+                        new Object[]{filterProcess.getName(), detector.getInferenceModel().getInferenceMode().toString()});
             }
         }
 

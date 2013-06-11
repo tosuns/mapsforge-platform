@@ -13,8 +13,9 @@ import javax.xml.bind.annotation.XmlEnumValue;
  */
 @XmlEnum
 public enum DetectorMode {
+
     @XmlEnumValue(value = "training")
     TRAINING, @XmlEnumValue(value = "inference")
     INFERENCE, @XmlEnumValue(value = "both")
-    BOTH
+    BOTH;
 }
