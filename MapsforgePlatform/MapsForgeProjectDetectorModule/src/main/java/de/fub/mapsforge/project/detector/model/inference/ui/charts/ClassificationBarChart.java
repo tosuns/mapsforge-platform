@@ -83,7 +83,10 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         relRenderer.setAutoPopulateSeriesPaint(false);
         relRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
         relRenderer.setBarPainter(new StandardBarPainter());
-        relRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        relRenderer.setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator(
+                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                new CustomNumberFormat()));
         relRenderer.setBaseItemLabelsVisible(true);
 
         BarRenderer absRenderer = new BarRenderer();
@@ -91,7 +94,10 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         absRenderer.setAutoPopulateSeriesPaint(false);
         absRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
         absRenderer.setBarPainter(new StandardBarPainter());
-        absRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        absRenderer.setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator(
+                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                new CustomNumberFormat()));
         absRenderer.setBaseItemLabelsVisible(true);
 
         plot.setRenderer(0, relRenderer);

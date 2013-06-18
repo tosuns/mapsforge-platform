@@ -71,7 +71,10 @@ public class PrecisionRecallBarChartPanel extends javax.swing.JPanel {
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-        barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        barRenderer.setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator(
+                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                new CustomNumberFormat()));
         barRenderer.setBaseItemLabelsVisible(true);
         barRenderer.setSeriesPaint(0, precColor);
         barRenderer.setSeriesPaint(1, recColor);

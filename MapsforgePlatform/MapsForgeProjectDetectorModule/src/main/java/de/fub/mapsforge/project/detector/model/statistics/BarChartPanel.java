@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.statistics;
 
+import de.fub.mapsforge.project.detector.model.inference.ui.charts.CustomNumberFormat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import org.jfree.chart.ChartFactory;
@@ -45,7 +46,10 @@ public class BarChartPanel extends javax.swing.JPanel {
         barRenderer.setAutoPopulateSeriesPaint(false);
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
         barRenderer.setBarPainter(new StandardBarPainter());
-        barRenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        barRenderer.setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator(
+                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                new CustomNumberFormat()));
         barRenderer.setBaseItemLabelsVisible(true);
         plot.setRenderer(barRenderer);
         plot.getDomainAxis().setMaximumCategoryLabelLines(3);
