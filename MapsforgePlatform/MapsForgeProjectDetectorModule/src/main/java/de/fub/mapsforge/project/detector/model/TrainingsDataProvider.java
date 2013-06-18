@@ -14,5 +14,7 @@ import java.util.Map;
  */
 public interface TrainingsDataProvider {
 
+    public String getName();
+
     public Map<String, List<TrackSegment>> getData();
 }

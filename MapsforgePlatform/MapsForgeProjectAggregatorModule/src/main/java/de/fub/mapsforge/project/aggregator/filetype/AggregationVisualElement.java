@@ -63,6 +63,8 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
@@ -122,7 +124,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             aggregator = dataObject.getNodeDelegate().getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
-        lookup = ExplorerUtils.createLookup(explorerManager, getActionMap());
+        lookup = new ProxyLookup(Lookups.singleton(this), ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(Children.create(nodeFactory, true)));
         aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationVisualElement.this, aggregator));
         aggregator.create(viewUpdater);

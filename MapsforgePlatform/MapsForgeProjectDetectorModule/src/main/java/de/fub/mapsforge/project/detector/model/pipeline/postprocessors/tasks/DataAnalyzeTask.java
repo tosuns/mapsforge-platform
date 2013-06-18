@@ -33,7 +33,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_DataAnalyzeTask_Description=A Run time trainings data analyzer task. The propose of this task is to display the statistics of the training data set after it goes through the filters."
 })
 @ServiceProvider(service = Task.class)
-public class DataAnalyzeTask extends Task {
+public class DataAnalyzeTask extends Task implements TrainingsDataProvider {
 
     private final HashMap<String, HashSet<TrackSegment>> data = new HashMap<String, HashSet<TrackSegment>>();
 
@@ -81,8 +81,14 @@ public class DataAnalyzeTask extends Task {
         return new DataAnalyzerTaskNode(this);
     }
 
-    public HashMap<String, HashSet<TrackSegment>> getData() {
-        return data;
+    @Override
+    public Map<String, List<TrackSegment>> getData() {
+        HashMap<String, List<TrackSegment>> result = new HashMap<String, List<TrackSegment>>();
+
+        for (Entry<String, HashSet<TrackSegment>> entry : data.entrySet()) {
+            result.put(entry.getKey(), new ArrayList<TrackSegment>(entry.getValue()));
+        }
+        return result;
     }
 
     @Override
@@ -139,28 +145,12 @@ public class DataAnalyzeTask extends Task {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    DataAnalyzeTaskTopComponent tc = new DataAnalyzeTaskTopComponent(task, Lookups.fixed(task.getDetector().getDataObject().getNodeDelegate(), new TrainingsDataProviderImpl()));
+                    DataAnalyzeTaskTopComponent tc = new DataAnalyzeTaskTopComponent(task, Lookups.fixed(task));
                     tc.open();
                     tc.requestActive();
                     task.getData().clear();
                 }
             });
-        }
-
-        class TrainingsDataProviderImpl implements TrainingsDataProvider {
-
-            public TrainingsDataProviderImpl() {
-            }
-
-            @Override
-            public Map<String, List<TrackSegment>> getData() {
-                HashMap<String, List<TrackSegment>> result = new HashMap<String, List<TrackSegment>>();
-
-                for (Entry<String, HashSet<TrackSegment>> entry : task.getData().entrySet()) {
-                    result.put(entry.getKey(), new ArrayList<TrackSegment>(entry.getValue()));
-                }
-                return result;
-            }
         }
     }
 }

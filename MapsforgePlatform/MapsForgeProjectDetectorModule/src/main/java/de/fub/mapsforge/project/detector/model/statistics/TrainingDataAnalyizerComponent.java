@@ -4,8 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.statistics;
 
-import de.fub.mapsforge.project.detector.factories.nodes.DetectorNode;
-import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.TrainingsDataProvider;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.features.TrackLengthFeatureProcess;
@@ -69,7 +67,6 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
     private JToolBar toolbar = null;
     private MultiViewElementCallback callback;
     private Lookup lookup;
-    private Detector detector;
     private final Object UPDATE_MUTEX = new Object();
     private TrainingsDataProvider dataProvider;
     private JButton refreshButton;
@@ -94,19 +91,15 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
     public TrainingDataAnalyizerComponent(Lookup lookup) {
         this();
         this.lookup = new ProxyLookup(lookup, Lookups.singleton(contentPanel));
-        Collection<? extends DetectorNode> allInstances = lookup.lookupResult(DetectorNode.class).allInstances();
-        if (!allInstances.isEmpty()) {
-            detector = allInstances.iterator().next().getLookup().lookup(Detector.class);
-        }
     }
 
     private TrainingsDataProvider getDataProvider() {
         if (dataProvider == null) {
-            dataProvider = lookup.lookup(TrainingsDataProvider.class);
-            if (dataProvider == null) {
-                // fall back
-                dataProvider = detector.getLookup().lookup(TrainingsDataProvider.class);
+            Collection<? extends TrainingsDataProvider> allInstances = lookup.lookupResult(TrainingsDataProvider.class).allInstances();
+            if (!allInstances.isEmpty()) {
+                dataProvider = allInstances.iterator().next();
             }
+
         }
         return dataProvider;
     }
@@ -222,9 +215,9 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
     })
     @Override
     public void componentShowing() {
-        if (callback != null && detector != null) {
+        if (callback != null && getDataProvider() != null) {
             String displayNString = MessageFormat.format("{0}[{1}]",
-                    detector.getDataObject().getName(), Bundle.CLT_Analyzer_DisplayName());
+                    getDataProvider().getName(), Bundle.CLT_Analyzer_DisplayName());
             TopComponent topComponent = callback.getTopComponent();
             topComponent.setDisplayName(displayNString);
             topComponent.setHtmlDisplayName(displayNString);
@@ -277,28 +270,26 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
 
     private void updateView() {
         synchronized (UPDATE_MUTEX) {
-            if (detector != null) {
-                if (getDataProvider() != null) {
-                    Map<String, List<TrackSegment>> data = getDataProvider().getData();
-                    ArrayList<Double> histogramDatalist = new ArrayList<Double>();
-                    ArrayList<String> keys = new ArrayList<String>(data.keySet());
-                    Collections.sort(keys);
+            if (getDataProvider() != null) {
+                Map<String, List<TrackSegment>> data = getDataProvider().getData();
+                ArrayList<Double> histogramDatalist = new ArrayList<Double>();
+                ArrayList<String> keys = new ArrayList<String>(data.keySet());
+                Collections.sort(keys);
 
-                    for (String key : keys) {
-                        TrackLengthFeatureProcess feature = new TrackLengthFeatureProcess();
-                        double length = 0;
-                        for (TrackSegment trackSegment : data.get(key)) {
-                            feature.setInput(trackSegment);
-                            feature.run();
-                            Double result = feature.getResult();
-                            length += result;
-                            histogramDatalist.add(result);
-                        }
-
-                        updateBarChart(length, key, data.values().size());
+                for (String key : keys) {
+                    TrackLengthFeatureProcess feature = new TrackLengthFeatureProcess();
+                    double length = 0;
+                    for (TrackSegment trackSegment : data.get(key)) {
+                        feature.setInput(trackSegment);
+                        feature.run();
+                        Double result = feature.getResult();
+                        length += result;
+                        histogramDatalist.add(result);
                     }
-                    updateHistogramChart(histogramDatalist);
+
+                    updateBarChart(length, key, data.values().size());
                 }
+                updateHistogramChart(histogramDatalist);
             }
         }
     }

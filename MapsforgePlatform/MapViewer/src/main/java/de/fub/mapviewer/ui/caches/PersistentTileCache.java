@@ -266,6 +266,23 @@ public class PersistentTileCache implements TileCache {
             }
             return fileObject;
         }
+
+        private static File getFileOfParent(File parent, String fileName) {
+            File result = null;
+            if (fileName != null && parent != null) {
+                for (File child : parent.listFiles()) {
+                    if (fileName.equals(child.getName())) {
+                        result = child;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static File getFileFromCacheDir(String fileName) {
+            return getFileOfParent(cacheFolder, fileName);
+        }
     }
 
     private static class JobDispatcher implements TaskListener {

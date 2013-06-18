@@ -42,6 +42,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
@@ -94,6 +95,7 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
         osmEvaluatorProcess.setInput(roadNetwork);
         osmEvaluatorProcess.setMapMatcher(mapMatcher);
         osmEvaluatorProcess.setMapProvider(mapProvider);
+        associateLookup(Lookups.singleton(EvaluatorTopComponent.this));
     }
 
     private void initGui() {

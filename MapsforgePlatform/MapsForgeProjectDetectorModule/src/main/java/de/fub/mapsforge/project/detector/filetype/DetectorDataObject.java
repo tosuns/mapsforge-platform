@@ -13,6 +13,7 @@ import de.fub.utilsmodule.actions.SaveAsTemplateAction;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.MessageFormat;
+import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -40,6 +41,8 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 import org.xml.sax.InputSource;
 
@@ -136,6 +139,7 @@ public class DetectorDataObject extends MultiDataObject {
     protected Node createNodeDelegate() {
         if (delegateNode == null) {
             Detector detector = new Detector(this);
+            getCookieSet().add(detector);
             DetectorDescriptor detectorDescr = detector.getDetectorDescriptor();
             if (detectorDescr != null) {
                 delegateNode = new DetectorNode(detector);
@@ -156,7 +160,7 @@ public class DetectorDataObject extends MultiDataObject {
             position = 3000)
     @Messages("LBL_Detector_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
-        return new MultiViewEditorElement(lkp);
+        return new DetectorEditorElement(lkp);
     }
 
     public synchronized DetectorDescriptor getDetectorDescriptor() throws JAXBException, IOException {
@@ -296,6 +300,25 @@ public class DetectorDataObject extends MultiDataObject {
                     throw new IOException(ex);
                 }
             }
+        }
+    }
+
+    private static class DetectorEditorElement extends MultiViewEditorElement {
+
+        private static final long serialVersionUID = 1L;
+        private Lookup lkp = null;
+
+        public DetectorEditorElement(Lookup lookup) {
+            super(lookup);
+        }
+
+        @Override
+        public Lookup getLookup() {
+            if (lkp == null) {
+                JComponent visualRepresentation = getVisualRepresentation();
+                lkp = new ProxyLookup(Lookups.singleton(visualRepresentation), super.getLookup());
+            }
+            return lkp;
         }
     }
 }

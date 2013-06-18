@@ -110,7 +110,7 @@ public class StopTree {
      */
     public Double getNearestDistance(Point p) {
         Stop stop = getNearestStop(p);
-        return stop == null ? Double.MAX_VALUE : GPSCalc.getDistance(p.y, p.x, stop.latitude, stop.longitude);
+        return stop == null ? MAXDISTANCE : GPSCalc.getDistance(p.y, p.x, stop.latitude, stop.longitude);
     }
 
     public Stop getNearestStop(Point p) {

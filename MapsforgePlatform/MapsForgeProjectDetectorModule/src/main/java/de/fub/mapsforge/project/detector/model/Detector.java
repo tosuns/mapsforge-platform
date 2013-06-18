@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.bind.JAXBException;
+import org.openide.nodes.Node.Cookie;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -42,7 +43,7 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author Serdar
  */
-public class Detector extends ModelSynchronizer implements Lookup.Provider {
+public class Detector extends ModelSynchronizer implements Lookup.Provider, TrainingsDataProvider, Cookie {
 
     public static final String PROP_NAME_DETECTOR_STATE = "detector.state";
     private static final Logger LOG = Logger.getLogger(Detector.class.getName());
@@ -68,7 +69,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
      *
      */
     private void init() {
-        this.lookup = new ProxyLookup(Lookups.fixed(Detector.this, dataObject, new DefaultTrainingsDataProviderImpl()), dataObject.getLookup());
+        this.lookup = new ProxyLookup(Lookups.fixed(Detector.this, dataObject), dataObject.getLookup());
         this.dataObject.addChangeListener(new ChangeListenerImpl());
         reinit();
     }
@@ -188,6 +189,16 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
         synchronized (MUTEX_PROCESS_RUNNING) {
             getDetectorRunSupport().start();
         }
+    }
+
+    @Override
+    public Map<String, List<TrackSegment>> getData() {
+        return getTrainingsSet();
+    }
+
+    @Override
+    public String getName() {
+        return Detector.this.getDataObject().getName();
     }
 
     private DetectorRunSupport getDetectorRunSupport() {
@@ -362,17 +373,6 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider {
         public void stateChanged(ChangeEvent e) {
             reinit();
             modelChanged(null);
-        }
-    }
-
-    private class DefaultTrainingsDataProviderImpl implements TrainingsDataProvider {
-
-        public DefaultTrainingsDataProviderImpl() {
-        }
-
-        @Override
-        public Map<String, List<TrackSegment>> getData() {
-            return getTrainingsSet();
         }
     }
 }
