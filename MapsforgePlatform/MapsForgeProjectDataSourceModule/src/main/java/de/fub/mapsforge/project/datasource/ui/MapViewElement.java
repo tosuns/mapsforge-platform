@@ -4,17 +4,17 @@
  */
 package de.fub.mapsforge.project.datasource.ui;
 
-import de.fub.mapsforge.project.datasource.spi.factories.NodeFactory;
-import de.fub.mapsforge.project.datasource.spi.TrackSegmentBehaviour;
-import de.fub.mapsforge.project.datasource.spi.TrksegWrapper;
-import de.fub.mapsforge.project.datasource.spi.actions.TrackSemgentExportAction;
 import de.fub.gpxmodule.GPXDataObject;
 import de.fub.gpxmodule.service.GPXProvider;
 import de.fub.gpxmodule.xml.Gpx;
 import de.fub.gpxmodule.xml.Trk;
 import de.fub.gpxmodule.xml.Trkseg;
 import de.fub.gpxmodule.xml.Wpt;
+import de.fub.mapsforge.project.datasource.spi.TrackSegmentBehaviour;
+import de.fub.mapsforge.project.datasource.spi.TrksegWrapper;
 import de.fub.mapsforge.project.datasource.spi.actions.SplitpanelAction;
+import de.fub.mapsforge.project.datasource.spi.actions.TrackSemgentExportAction;
+import de.fub.mapsforge.project.datasource.spi.factories.NodeFactory;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.color.ColorUtil;
@@ -55,6 +55,8 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
@@ -69,7 +71,7 @@ import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
         persistenceType = TopComponent.PERSISTENCE_ALWAYS,
         preferredID = "GPXVisual",
         position = 500)
-@NbBundle.Messages({"LBL_GPX_VISUAL=Visual", "CLT_Fit_Map_To_Size_Tooltip=Zoom the map to the size of the viewport."})
+@NbBundle.Messages({"LBL_GPX_VISUAL=Map", "CLT_Fit_Map_To_Size_Tooltip=Zoom the map to the size of the viewport."})
 public class MapViewElement extends javax.swing.JPanel implements MultiViewElement, ChangeListener, ExplorerManager.Provider {
 
     @StaticResource
@@ -86,6 +88,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     // mouselistener to check and display only the treseg that are visible
     private MouseListener mouseListener = new MouseAdapterImpl();
     private boolean splitPanelVisble;
+    private final ProxyLookup lookup;
 
     /**
      * Creates new form MapViewElement
@@ -93,6 +96,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     public MapViewElement(Lookup lkp) {
         obj = lkp.lookup(GPXDataObject.class);
         assert obj != null;
+        lookup = new ProxyLookup(lkp, Lookups.singleton(MapViewElement.this));
         init();
         initOutlineView();
     }
@@ -278,7 +282,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
 
     @Override
     public Lookup getLookup() {
-        return obj.getLookup();
+        return lookup;
     }
 
     @Override
@@ -294,7 +298,6 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         if (modelChanged) {
             update();
         }
-        abstractMapViewer1.setDisplayToFitMapMarkers();
     }
 
     @Override

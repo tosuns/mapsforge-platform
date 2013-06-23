@@ -136,6 +136,12 @@
             <type>jar</type>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>jsi</artifactId>
+            <groupId>de.fub.mapsforge</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

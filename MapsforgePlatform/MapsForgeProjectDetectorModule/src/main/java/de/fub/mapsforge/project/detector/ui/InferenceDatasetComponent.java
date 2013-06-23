@@ -8,12 +8,10 @@ import de.fub.mapsforge.project.detector.factories.nodes.datasets.DataSetNode;
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.InferenceSet;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -26,7 +24,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
@@ -227,14 +224,7 @@ public class InferenceDatasetComponent extends javax.swing.JPanel implements Exp
                     }
                 }
             } else if (dataObject.getPrimaryFile().isData()) {
-                FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
-                if (datasourceFileObject != null) {
-                    String path = MessageFormat.format("{0}/{1}", datasourceFileObject.getName(),
-                            FileUtil.getRelativePath(
-                            datasourceFileObject,
-                            dataObject.getPrimaryFile()));
-                    result.add(new DataSet(path));
-                }
+                result.add(new DataSet(dataObject.getPrimaryFile().getPath()));
             }
             return result;
         }

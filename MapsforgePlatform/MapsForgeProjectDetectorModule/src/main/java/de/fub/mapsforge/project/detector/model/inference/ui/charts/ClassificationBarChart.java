@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.ui.charts;
 
+import de.fub.utilsmodule.text.CustomNumberFormat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;

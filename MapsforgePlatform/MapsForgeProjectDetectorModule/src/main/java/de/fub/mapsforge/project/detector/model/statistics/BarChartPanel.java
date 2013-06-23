@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.statistics;
 
-import de.fub.mapsforge.project.detector.model.inference.ui.charts.CustomNumberFormat;
+import de.fub.utilsmodule.text.CustomNumberFormat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import org.jfree.chart.ChartFactory;

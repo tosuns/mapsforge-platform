@@ -417,7 +417,7 @@ public class GpxTrackSegmentStatistic implements Statistic {
                 @Override
                 public String getValue() throws IllegalAccessException, InvocationTargetException {
                     if (value == null) {
-                        value = MessageFormat.format("{0} °", statistics.getHeadingChangeRate());
+                        value = MessageFormat.format("{0}", statistics.getHeadingChangeRate());
                     }
                     return value;
                 }

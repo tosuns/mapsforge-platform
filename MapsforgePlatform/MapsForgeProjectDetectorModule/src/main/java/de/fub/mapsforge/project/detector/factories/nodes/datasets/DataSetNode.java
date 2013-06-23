@@ -6,15 +6,14 @@ package de.fub.mapsforge.project.detector.factories.nodes.datasets;
 
 import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
+import java.io.File;
 import java.text.MessageFormat;
 import javax.swing.Action;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -59,31 +58,17 @@ public class DataSetNode extends AbstractNode {
 
     private void init() {
         if (dataSet.getUrl() != null) {
-            FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
-
-            if (datasourceFileObject != null) {
-                FileObject fileObject = null;
-                int indexOf = dataSet.getUrl().indexOf("/");
-                if (indexOf > -1) {
-                    fileObject = datasourceFileObject.getFileObject(dataSet.getUrl().substring(indexOf + 1));
-                }
-                if (fileObject == null) {
-                    fileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
-                }
-                if (fileObject == null) {
-                    fileValid = false;
-                    setShortDescription("File points to an invalid path.");
-                    fireIconChange();
-                } else {
-                    try {
-                        dataObject = DataObject.find(fileObject);
-                        fileObject.addFileChangeListener(FileUtil.weakFileChangeListener(fcl, fileObject));
-                        setShortDescription(fileObject.getPath());
-                    } catch (DataObjectNotFoundException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+            File file = new File(dataSet.getUrl());
+            if (file.exists()) {
+                try {
+                    dataObject = DataObject.find(FileUtil.toFileObject(FileUtil.normalizeFile(file)));
+                    dataObject.getPrimaryFile().addFileChangeListener(FileUtil.weakFileChangeListener(fcl, dataObject.getPrimaryFile()));
+                    setShortDescription(dataObject.getPrimaryFile().getPath());
+                } catch (DataObjectNotFoundException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
+
         }
     }
 

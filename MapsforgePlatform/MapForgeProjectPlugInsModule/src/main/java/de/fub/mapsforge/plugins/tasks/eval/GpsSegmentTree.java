@@ -14,7 +14,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -82,7 +81,7 @@ public class GpsSegmentTree {
         Area area = new Area();
         for (ILocation location : segment) {
             // the added shape must have at least a size > 0
-            area.add(new Area(new Rectangle2D.Double(location.getLat(), location.getLon(), 0.0000000001, 0.0000000001)));
+            area.add(new Area(new Rectangle2D.Double(location.getLon(), location.getLat(), 0.0000000001, 0.0000000001)));
         }
         Rectangle2D boundingBox = area.getBounds2D();
         float minLong = (float) boundingBox.getMinX();

@@ -5,7 +5,9 @@
 package de.fub.mapsforge.project.aggregator.pipeline.processes;
 
 import de.fub.agg2graph.input.GPXReader;
+import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.GPSSegment;
+import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.agg2graphui.layers.GPSSegmentLayer;
@@ -14,7 +16,6 @@ import de.fub.mapforgeproject.api.statistics.StatisticProvider;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Source;
-import de.fub.mapsforge.project.models.Aggregator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -52,6 +53,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
     private int totalSegmentCount = 0;
     private int totalGPSPoints = 0;
     private int totalGPXFiles = 0;
+    private double totallength;
 
     public DatasourceProcess() {
         init();
@@ -105,6 +107,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
         totalGPSPoints = 0;
         totalGPXFiles = 0;
         totalSegmentCount = 0;
+        totallength = 0;
         segments.clear();
         gPSSegmentLayer.clearRenderObjects();
         List<Source> sourceList = getAggregator().getSourceList();
@@ -134,6 +137,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
                         segment.addIDs("I" + (segmentId++));
                         gPSSegmentLayer.add(segment);
                         totalGPSPoints += segment.size();
+                        totallength += getSegmentLength(segment);
                     }
                 }
                 totalGPXFiles++;
@@ -144,6 +148,22 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
             handle.finish();
         }
         LOG.log(Level.FINEST, "segments: {0}", segments.toString());
+    }
+
+    private double getSegmentLength(GPSSegment segment) {
+        double length = 0;
+        ILocation lastCoordinate = null;
+        for (ILocation coordinate : segment) {
+            if (lastCoordinate != null) {
+                length += GPSCalc.getDistVincentyFast(
+                        lastCoordinate.getLat(),
+                        lastCoordinate.getLon(),
+                        coordinate.getLat(),
+                        coordinate.getLon());
+            }
+            lastCoordinate = coordinate;
+        }
+        return length;
     }
 
     @Override
@@ -167,6 +187,7 @@ public class DatasourceProcess extends AbstractAggregationProcess<Void, List<GPS
         section.getStatisticsItemList().add(new StatisticItem("Total GPS Segemtns", String.valueOf(totalSegmentCount), "Represents the total count of GPS segments that the data set contains."));
         section.getStatisticsItemList().add(new StatisticItem("GPS points/segment ratio", String.valueOf(totalGPSPoints / (double) totalSegmentCount), "Displays the ratio of gps points to segments"));
         section.getStatisticsItemList().add(new StatisticItem("Total GPX File", String.valueOf(getAggregator().getSourceList().size()), "Represents the total amount of GPX files as data set"));
+        section.getStatisticsItemList().add(new StatisticItem("Total Length", String.valueOf(totallength), "the total length of all gps segments"));
 
         return statisticSections;
     }

@@ -69,7 +69,7 @@ public class SimpleMapsEvaluator {
             @Override
             public void run() {
                 MapComparationTopComponent mapComparationTopComponent = new MapComparationTopComponent(roadNetworkStatisticList);
-                mapComparationTopComponent.setDisplayName(evaluatorName);
+//                mapComparationTopComponent.setDisplayName(evaluatorName);
                 mapComparationTopComponent.open();
                 mapComparationTopComponent.requestActive();
             }

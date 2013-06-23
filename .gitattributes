@@ -384,10 +384,16 @@ MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/pl
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/OSMMapEvaluator.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/OverviewChart.form -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/OverviewChart.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/RoadClassifcationDiagram.form -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/RoadClassifcationDiagram.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/RoadNetworkStatisticComparationPanel.form -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/RoadNetworkStatisticComparationPanel.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/evaluator/EvalutationItem.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/evaluator/SimpleMapsEvaluator.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/heading/HeadingHistogramm.form -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/heading/HeadingHistogramm.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/heading/HeadingHistogrammContainer.form -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/heading/HeadingHistogrammContainer.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/map/AggregatorChooserPanel.form -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/map/AggregatorChooserPanel.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/map/AggregatorDataObjectProperty.java -text
@@ -401,6 +407,7 @@ MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/Bundle.properties -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/tasks/eval/Bundle.properties -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/tasks/eval/datasourceProcessIcon.png -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/tasks/eval/heading/Bundle.properties -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/tasks/eval/layersIcon.png -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/tasks/eval/layerview.png -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/resources/de/fub/mapsforge/plugins/tasks/eval/zoomToMap.png -text
@@ -666,7 +673,6 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/actions/SnapShotExporterDelegateAction.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/charts/AttributeSelectionBarChart.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/charts/AttributeSelectionBarChart.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/charts/CustomNumberFormat.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/PostProcessorPipeline.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/DataAnalyzeTask.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/pipeline/postprocessors/tasks/DataAnalyzeTaskTopComponent.form -text
@@ -891,6 +897,7 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/B
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/reflection/ReflectionUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/synchronizer/ModelSynchronizer.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/synchronizer/ModelSynchronizer2.java -text
+MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/text/CustomNumberFormat.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/text/MessageFormatter.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/text/StringUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/xml/adapters/MapEntry.java -text

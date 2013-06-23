@@ -16,7 +16,7 @@ import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProc
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.Profile;
 import de.fub.mapsforge.project.detector.model.xmls.TransportMode;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -220,13 +221,17 @@ class DetectorRunSupport {
                 trainingsSet.put(transportMode.getName(), new ArrayList<TrackSegment>());
             }
             for (DataSet dataSet : transportMode.getDataset()) {
-                FileObject datasetFileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataSet.getUrl());
-                if (datasetFileObject != null && datasetFileObject.isValid()) {
-                    try {
-                        List<TrackSegment> gpsTrackList = convertFileObject(datasetFileObject);
-                        trainingsSet.get(transportMode.getName()).addAll(gpsTrackList);
-                    } catch (DataConverter.DataConverterException ex) {
-                        Exceptions.printStackTrace(ex);
+                if (dataSet.getUrl() != null) {
+                    File file = new File(dataSet.getUrl());
+                    File normalizedFile = FileUtil.normalizeFile(file);
+                    FileObject datasetFileObject = FileUtil.toFileObject(normalizedFile);
+                    if (datasetFileObject != null && datasetFileObject.isValid()) {
+                        try {
+                            List<TrackSegment> gpsTrackList = convertFileObject(datasetFileObject);
+                            trainingsSet.get(transportMode.getName()).addAll(gpsTrackList);
+                        } catch (DataConverter.DataConverterException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
                     }
                 }
             }
@@ -243,7 +248,9 @@ class DetectorRunSupport {
         List<TrackSegment> inferenceSet = new ArrayList<TrackSegment>();
 
         for (DataSet dataset : detector.getDetectorDescriptor().getDatasets().getInferenceSet().getDatasetList()) {
-            FileObject datasetFileObject = DetectorUtils.findFileObject(detector.getDataObject().getPrimaryFile(), dataset.getUrl());
+            File file = new File(dataset.getUrl());
+            File normalizeFile = FileUtil.normalizeFile(file);
+            FileObject datasetFileObject = FileUtil.toFileObject(normalizeFile);
             if (datasetFileObject != null && datasetFileObject.isValid()) {
                 try {
                     List<TrackSegment> dataList = convertFileObject(datasetFileObject);

@@ -181,45 +181,33 @@ public final class NewDetectorWizardAction implements ActionListener, WizardDesc
     }
 
     private void addTrainingsSet(DetectorDescriptor detectorDescriptor, Map<String, List<Node>> trainingsMap) {
-        FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
-        if (datasourceFileObject != null) {
-            if (trainingsMap != null) {
-                List<TransportMode> transportModeList = detectorDescriptor.getDatasets().getTrainingSet().getTransportModeList();
-                for (Entry<String, List<Node>> entry : trainingsMap.entrySet()) {
-                    TransportMode transportMode = new TransportMode(entry.getKey());
-                    transportModeList.add(transportMode);
-                    for (Node node : entry.getValue()) {
-                        DataObject dataObject = node.getLookup().lookup(DataObject.class);
-                        if (dataObject != null) {
-                            transportMode.getDataset().add(
-                                    new DataSet(
-                                    MessageFormat.format("{0}/{1}", datasourceFileObject.getName(),
-                                    FileUtil.getRelativePath(
-                                    datasourceFileObject,
-                                    dataObject.getPrimaryFile()))));
-                        }
+
+        if (trainingsMap != null) {
+            List<TransportMode> transportModeList = detectorDescriptor.getDatasets().getTrainingSet().getTransportModeList();
+            for (Entry<String, List<Node>> entry : trainingsMap.entrySet()) {
+                TransportMode transportMode = new TransportMode(entry.getKey());
+                transportModeList.add(transportMode);
+                for (Node node : entry.getValue()) {
+                    DataObject dataObject = node.getLookup().lookup(DataObject.class);
+                    if (dataObject != null) {
+                        transportMode.getDataset().add(
+                                new DataSet(dataObject.getPrimaryFile().getPath()));
                     }
                 }
             }
+
         }
     }
 
     private void addInferenceDataset(DetectorDescriptor detectorDescriptor, List<Node> inferenceDataSet) {
-        FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
-        if (datasourceFileObject != null) {
 
-
-            if (inferenceDataSet != null) {
-                List<DataSet> datasetList = detectorDescriptor.getDatasets().getInferenceSet().getDatasetList();
-                for (Node node : inferenceDataSet) {
-                    DataObject dataObject = node.getLookup().lookup(DataObject.class);
-                    if (dataObject != null) {
-                        datasetList.add(new DataSet(
-                                MessageFormat.format("{0}/{1}", datasourceFileObject.getName(),
-                                FileUtil.getRelativePath(
-                                datasourceFileObject,
-                                dataObject.getPrimaryFile()))));
-                    }
+        if (inferenceDataSet != null) {
+            List<DataSet> datasetList = detectorDescriptor.getDatasets().getInferenceSet().getDatasetList();
+            for (Node node : inferenceDataSet) {
+                DataObject dataObject = node.getLookup().lookup(DataObject.class);
+                if (dataObject != null) {
+                    datasetList.add(new DataSet(
+                            dataObject.getPrimaryFile().getPath()));
                 }
             }
         }

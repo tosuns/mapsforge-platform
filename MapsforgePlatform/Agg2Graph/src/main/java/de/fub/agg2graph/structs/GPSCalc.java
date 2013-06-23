@@ -61,10 +61,10 @@ public class GPSCalc {
         //        double x = vector1.getLat() * vector2.getLat() + vector1.getLon() * vector2.getLon();
         //        double y = StrictMath.sqrt(StrictMath.pow(vector1.getLat(), 2) + StrictMath.pow(vector1.getLon(), 2)) * StrictMath.sqrt(Math.pow(vector2.getLat(), 2) + Math.pow(vector2.getLon(), 2));
         //        double header = StrictMath.acos(x / y) * 180 / Math.PI;
-        GPSPoint previous = new GPSPoint(secondLasWaypoint.getLat(), secondLasWaypoint.getLon());
-        GPSPoint current = new GPSPoint(lastWaypoint.getLat(), lastWaypoint.getLon());
-        GPSPoint next = new GPSPoint(waypoint.getLat(), waypoint.getLon());
-        return CartesianCalc.getAngleBetweenLines(previous, current, current, next);
+        ILocation previous = new GPSPoint(secondLasWaypoint.getLat(), secondLasWaypoint.getLon());
+        ILocation current = new GPSPoint(lastWaypoint.getLat(), lastWaypoint.getLon());
+        ILocation next = new GPSPoint(waypoint.getLat(), waypoint.getLon());
+        return getAngleBetweenEdges(previous, current, current, next);
     }
 
     /**

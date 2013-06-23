@@ -43,6 +43,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
@@ -83,6 +84,7 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
      * Creates new form EvaluatorTopComponent
      */
     public EvaluatorTopComponent() {
+        super();
         initComponents();
         initGui();
     }
@@ -95,11 +97,12 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
         osmEvaluatorProcess.setInput(roadNetwork);
         osmEvaluatorProcess.setMapMatcher(mapMatcher);
         osmEvaluatorProcess.setMapProvider(mapProvider);
-        associateLookup(Lookups.singleton(EvaluatorTopComponent.this));
+        associateLookup(new ProxyLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()), Lookups.fixed(jPanel3)));
     }
 
     private void initGui() {
-        associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
+        jSplitPane1.setResizeWeight(1);
+        jSplitPane1.setDividerLocation(1);
         mappingCost.setText(String.valueOf(0));
         avgMappingDistance.setText(String.valueOf(0));
         explorerManager.setRootContext(new AbstractNode(Children.create(nodeFactory, true)));
@@ -153,7 +156,8 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
                 }
             });
             tileSourceComboBox = new JComboBox<TileSource>(tileSources.toArray(new TileSource[tileSources.size()]));
-            tileSourceComboBox.setMaximumSize(new Dimension(100, 16));
+            tileSourceComboBox.setMaximumSize(new Dimension(150, 16));
+            tileSourceComboBox.setPreferredSize(tileSourceComboBox.getMaximumSize());
             if (!tileSources.isEmpty()) {
                 tileSourceComboBox.setSelectedItem(tileSources.iterator().next());
             }
@@ -330,6 +334,7 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         toolbar = new javax.swing.JToolBar();
         jSeparator1 = new javax.swing.JToolBar.Separator();
@@ -346,6 +351,8 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
         outlineView1 = new org.openide.explorer.view.OutlineView("Layers");
 
         setLayout(new java.awt.BorderLayout());
+
+        jPanel3.setLayout(new java.awt.BorderLayout());
 
         jPanel1.setMaximumSize(new java.awt.Dimension(32767, 24));
         jPanel1.setMinimumSize(new java.awt.Dimension(10, 24));
@@ -384,7 +391,7 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
 
         jPanel1.add(toolbar, java.awt.BorderLayout.CENTER);
 
-        add(jPanel1, java.awt.BorderLayout.NORTH);
+        jPanel3.add(jPanel1, java.awt.BorderLayout.NORTH);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
@@ -393,7 +400,9 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
 
         jPanel2.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
-        add(jPanel2, java.awt.BorderLayout.CENTER);
+        jPanel3.add(jPanel2, java.awt.BorderLayout.CENTER);
+
+        add(jPanel3, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private de.fub.agg2graphui.AggTopComponent aggTopComponent1;
@@ -405,6 +414,7 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel mappingCost;

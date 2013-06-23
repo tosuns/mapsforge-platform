@@ -8,6 +8,7 @@ import de.fub.agg2graph.management.Statistics;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.mapsforge.plugins.tasks.eval.evaluator.EvalutationItem;
 import de.fub.mapsforge.project.aggregator.pipeline.processes.RoadNetworkProcess;
+import de.fub.utilsmodule.text.CustomNumberFormat;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.JLabel;
@@ -15,6 +16,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -40,33 +42,42 @@ public class OverviewChart extends javax.swing.JPanel {
         initComponents();
         barchart1.getRangeAxis().setLabel(NbBundle.getMessage(OverviewChart.class, "overview.chart1.rangeaxis1.name"));
         barchart1.getPlot().setRangeAxis(1, new NumberAxis(NbBundle.getMessage(OverviewChart.class, "overview.chart1.rangeaxis2.name")));
+        barchart1.getPlot().getRenderer(0).setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator(
+                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                new CustomNumberFormat()));
 
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());
         barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+        barRenderer.setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator(
+                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                new CustomNumberFormat()));
         barRenderer.setAutoPopulateSeriesFillPaint(true);
         barRenderer.setAutoPopulateSeriesPaint(true);
         barRenderer.setShadowVisible(false);
         barchart1.getPlot().setRenderer(1, barRenderer);
 
-        barRenderer = new BarRenderer();
-        barRenderer.setBarPainter(new StandardBarPainter());
-        barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-        barRenderer.setAutoPopulateSeriesFillPaint(true);
-        barRenderer.setAutoPopulateSeriesPaint(true);
-        barRenderer.setShadowVisible(false);
-        barchart1.getPlot().setRangeAxis(2, new NumberAxis(NbBundle.getMessage(OverviewChart.class, "overview.chart1.rangeaxis3.name")));
-        barchart1.getPlot().setRenderer(2, barRenderer);
-        barchart1.getPlot().getRangeAxis(2).setRange(0, 100);
-        barchart1.getPlot().getRangeAxis(2).setUpperBound(110);
+
+//        barRenderer = new BarRenderer();
+//        barRenderer.setBarPainter(new StandardBarPainter());
+//        barRenderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+//        barRenderer.setAutoPopulateSeriesFillPaint(true);
+//        barRenderer.setAutoPopulateSeriesPaint(true);
+//        barRenderer.setShadowVisible(false);
+//        barchart1.getPlot().setRangeAxis(2, new NumberAxis(NbBundle.getMessage(OverviewChart.class, "overview.chart1.rangeaxis3.name")));
+//        barchart1.getPlot().setRenderer(2, barRenderer);
+//        barchart1.getPlot().getRangeAxis(2).setRange(0, 100);
+//        barchart1.getPlot().getRangeAxis(2).setUpperBound(105);
         CategoryPlot plot = barchart1.getPlot();
 
         plot.setDataset(1, new DefaultCategoryDataset());
-        plot.setDataset(2, new DefaultCategoryDataset());
+//        plot.setDataset(2, new DefaultCategoryDataset());
 
         plot.mapDatasetToRangeAxis(0, 0);
         plot.mapDatasetToRangeAxis(1, 1);
-        plot.mapDatasetToRangeAxis(2, 2);
+//        plot.mapDatasetToRangeAxis(2, 2);
     }
 
     public OverviewChart(List<EvalutationItem> roadNetworkStatisticList) {
@@ -75,7 +86,18 @@ public class OverviewChart extends javax.swing.JPanel {
         init();
     }
 
+    public void setEvaluationItems(List<EvalutationItem> roadNetworkStatisticList) {
+        this.roadNetworkStatisticsList = roadNetworkStatisticList;
+        init();
+    }
+
     private void init() {
+        for (int i = 0; i < barchart1.getPlot().getDatasetCount(); i++) {
+            CategoryDataset dataset = barchart1.getPlot().getDataset(i);
+            if (dataset instanceof DefaultCategoryDataset) {
+                ((DefaultCategoryDataset) dataset).clear();
+            }
+        }
         if (roadNetworkStatisticsList != null) {
             for (EvalutationItem item : roadNetworkStatisticsList) {
                 RoadNetworkProcess roadNetworkProcess = item.getRoadNetworkProcess();
@@ -134,7 +156,6 @@ public class OverviewChart extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         titleLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         barchart1 = new de.fub.mapsforge.plugins.tasks.eval.Barchart();
 
@@ -155,24 +176,6 @@ public class OverviewChart extends javax.swing.JPanel {
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        jPanel2.setMaximumSize(new java.awt.Dimension(32767, 24));
-        jPanel2.setMinimumSize(new java.awt.Dimension(100, 24));
-        jPanel2.setOpaque(false);
-        jPanel2.setPreferredSize(new java.awt.Dimension(932, 24));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 567, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 24, Short.MAX_VALUE)
-        );
-
-        add(jPanel2, java.awt.BorderLayout.SOUTH);
-
         jPanel3.setLayout(new java.awt.GridLayout(1, 3));
 
         barchart1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 0, new java.awt.Color(204, 204, 204)));
@@ -183,7 +186,6 @@ public class OverviewChart extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private de.fub.mapsforge.plugins.tasks.eval.Barchart barchart1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
@@ -199,17 +201,17 @@ public class OverviewChart extends javax.swing.JPanel {
                 categoryDataset.addValue(roadNetwork.getAverageRoadLength(), name, Statistics.PROP_NAME_AVERAGE_ROAD_LENGTH);
                 categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_ROADS);
 
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ISOLATED_ROADS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ONE_WAY_ROADS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_TWO_WAY_ROADS);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ISOLATED_ROADS);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ONE_WAY_ROADS);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_TWO_WAY_ROADS);
 
                 categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_INTERSECTIONS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS);
-
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ROAD_INTERSECTION_RATIO);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS);
+//
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ROAD_INTERSECTION_RATIO);
             }
 
             dataSet = barchart1.getPlot().getDataset(1);
@@ -219,40 +221,39 @@ public class OverviewChart extends javax.swing.JPanel {
                 categoryDataset.addValue(null, name, Statistics.PROP_NAME_AVERAGE_ROAD_LENGTH);
                 categoryDataset.addValue(roadNetwork.getRoadCount(), name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_ROADS);
 
-                categoryDataset.addValue(roadNetwork.getIsolatedRoadCount(), name, Statistics.PROP_NAME_NUMBER_OF_ISOLATED_ROADS);
-                categoryDataset.addValue(roadNetwork.getOneWayRoadCount(), name, Statistics.PROP_NAME_NUMBER_OF_ONE_WAY_ROADS);
-                categoryDataset.addValue(roadNetwork.getTwoWayRoadCount(), name, Statistics.PROP_NAME_NUMBER_OF_TWO_WAY_ROADS);
+//                categoryDataset.addValue(roadNetwork.getIsolatedRoadCount(), name, Statistics.PROP_NAME_NUMBER_OF_ISOLATED_ROADS);
+//                categoryDataset.addValue(roadNetwork.getOneWayRoadCount(), name, Statistics.PROP_NAME_NUMBER_OF_ONE_WAY_ROADS);
+//                categoryDataset.addValue(roadNetwork.getTwoWayRoadCount(), name, Statistics.PROP_NAME_NUMBER_OF_TWO_WAY_ROADS);
 
                 categoryDataset.addValue(roadNetwork.getIntersectionCount(), name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_INTERSECTIONS);
-                categoryDataset.addValue(roadNetwork.getRealIntersectionCount(), name, Statistics.PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS);
-                categoryDataset.addValue(roadNetwork.getPseudoIntersectionCount(), name, Statistics.PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS);
+//                categoryDataset.addValue(roadNetwork.getRealIntersectionCount(), name, Statistics.PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS);
+//                categoryDataset.addValue(roadNetwork.getPseudoIntersectionCount(), name, Statistics.PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS);
 
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ROAD_INTERSECTION_RATIO);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_ROAD_INTERSECTION_RATIO);
             }
 
-            dataSet = barchart1.getPlot().getDataset(2);
-            if (dataSet instanceof DefaultCategoryDataset) {
-                DefaultCategoryDataset categoryDataset = (DefaultCategoryDataset) dataSet;
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_ROAD_LENGTH);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_AVERAGE_ROAD_LENGTH);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_ROADS);
-
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ISOLATED_ROADS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ONE_WAY_ROADS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_TWO_WAY_ROADS);
-
-
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_INTERSECTIONS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS);
-                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS);
-
-                categoryDataset.addValue(roadNetwork.getOneWayTwoWayRoadRatio(), name, Statistics.PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO);
-                categoryDataset.addValue(roadNetwork.getRealToPseudoIntersectionRatio(), name, Statistics.PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO);
-
-                categoryDataset.addValue(roadNetwork.getRoadIntersectionRatio(), name, Statistics.PROP_NAME_ROAD_INTERSECTION_RATIO);
-            }
+//            dataSet = barchart1.getPlot().getDataset(2);
+//            if (dataSet instanceof DefaultCategoryDataset) {
+//                DefaultCategoryDataset categoryDataset = (DefaultCategoryDataset) dataSet;
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_ROAD_LENGTH);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_AVERAGE_ROAD_LENGTH);
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_ROADS);
+//
+////                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ISOLATED_ROADS);
+////                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_ONE_WAY_ROADS);
+////                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_TWO_WAY_ROADS);
+//
+//
+//                categoryDataset.addValue(null, name, Statistics.PROP_NAME_TOTAL_NUMBER_OF_INTERSECTIONS);
+////                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_REAL_INTERSECTIONS);
+////                categoryDataset.addValue(null, name, Statistics.PROP_NAME_NUMBER_OF_PSEUDO_INTERSECTIONS);
+//
+////                categoryDataset.addValue(roadNetwork.getOneWayTwoWayRoadRatio(), name, Statistics.PROP_NAME_ONE_WAY_TWO_WAY_ROAD_RATIO);
+////                categoryDataset.addValue(roadNetwork.getRealToPseudoIntersectionRatio(), name, Statistics.PROP_NAME_REAL_TO_PSEUDO_INTERSECTION_RATIO);
+////                categoryDataset.addValue(roadNetwork.getRoadIntersectionRatio(), name, Statistics.PROP_NAME_ROAD_INTERSECTION_RATIO);
+//            }
 
         }
     }

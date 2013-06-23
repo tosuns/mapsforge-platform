@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.fub.mapsforge.project.detector.model.inference.ui.charts;
+package de.fub.utilsmodule.text;
 
 import java.text.FieldPosition;
 import java.text.MessageFormat;

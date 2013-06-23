@@ -8,14 +8,12 @@ import de.fub.mapsforge.project.detector.model.Detector;
 import de.fub.mapsforge.project.detector.model.xmls.DataSet;
 import de.fub.mapsforge.project.detector.model.xmls.TrainingSet;
 import de.fub.mapsforge.project.detector.model.xmls.TransportMode;
-import de.fub.mapsforge.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.icons.IconRegister;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -203,10 +201,9 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
             public AbstractNodeImpl(DataSet data) {
                 super(Children.LEAF);
                 this.data = data;
-                String path = MessageFormat.format("{0}/{1}", DetectorUtils.getDatasourceFileObject().getPath(), data.getUrl().substring(data.getUrl().indexOf("/") + 1));
-                File file = new File(path);
+                File file = new File(data.getUrl());
                 if (file.exists()) {
-                    FileObject fileObject = FileUtil.toFileObject(file);
+                    FileObject fileObject = FileUtil.toFileObject(FileUtil.normalizeFile(file));
                     try {
                         dataObject = DataObject.find(fileObject);
                         setDisplayName(dataObject.getName());
@@ -435,14 +432,7 @@ public class TrainingDatasetComponent extends javax.swing.JPanel implements Expl
                     }
                 }
             } else if (dataObject.getPrimaryFile().isData()) {
-                FileObject datasourceFileObject = DetectorUtils.getDatasourceFileObject();
-                if (datasourceFileObject != null) {
-                    String path = MessageFormat.format("{0}/{1}", datasourceFileObject.getName(),
-                            FileUtil.getRelativePath(
-                            datasourceFileObject,
-                            dataObject.getPrimaryFile()));
-                    result.add(new DataSet(path));
-                }
+                result.add(new DataSet(dataObject.getPrimaryFile().getPath()));
             }
             return result;
         }
