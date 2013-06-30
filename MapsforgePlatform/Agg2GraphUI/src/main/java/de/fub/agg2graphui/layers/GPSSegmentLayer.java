@@ -94,8 +94,7 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
         Dimension size = mapViewer.getSize();
         Coordinate position = mapViewer.getPosition(0, 0);
         Coordinate position1 = mapViewer.getPosition(size.width, size.height);
-        com.infomatiq.jsi.Rectangle rectangle1 = new com.infomatiq.jsi.Rectangle(
-                (float) position.getLat(),
+        com.infomatiq.jsi.Rectangle rectangle1 = new com.infomatiq.jsi.Rectangle((float) position.getLat(),
                 (float) position.getLon(),
                 (float) position1.getLat(),
                 (float) position1.getLon());
@@ -113,7 +112,7 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
         float maxLat = (float) boundingBox.getMinY();
         float maxLong = (float) boundingBox.getMaxX();
         float minLat = (float) boundingBox.getMaxY();
-        com.infomatiq.jsi.Rectangle rectangle = new com.infomatiq.jsi.Rectangle(minLong, maxLat, maxLong, minLat);
+        com.infomatiq.jsi.Rectangle rectangle = new com.infomatiq.jsi.Rectangle(maxLat, minLong, minLat, maxLong);
         return rectangle;
     }
 

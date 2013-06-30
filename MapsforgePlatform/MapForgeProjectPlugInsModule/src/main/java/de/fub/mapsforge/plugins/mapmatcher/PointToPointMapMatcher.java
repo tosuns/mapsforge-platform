@@ -12,7 +12,6 @@ import de.fub.mapsforge.plugins.tasks.eval.GpsSegmentTree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.lookup.ServiceProvider;
 
