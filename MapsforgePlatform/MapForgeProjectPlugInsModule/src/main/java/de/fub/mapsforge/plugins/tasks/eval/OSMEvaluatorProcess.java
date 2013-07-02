@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.plugins.tasks.eval;
 
-import de.fub.mapsforge.plugins.mapmatcher.MapMatcher;
 import de.fub.agg2graph.osm.OsmExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
 import de.fub.agg2graph.structs.GPSPoint;
@@ -15,6 +14,7 @@ import de.fub.agg2graphui.layers.GPSSegmentLayer;
 import de.fub.agg2graphui.layers.Line;
 import de.fub.agg2graphui.layers.MapMatchingLayer;
 import de.fub.mapforgeproject.api.statistics.StatisticProvider;
+import de.fub.mapsforge.plugins.mapmatcher.MapMatcher;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
@@ -198,6 +198,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                     if (getMapMatcher() != null && !osmRoadNetwork.isEmpty()) {
                         double cost = -1;
                         double count = 0;
+                        double sumDistance = 0;
                         List<MapMatcher.MapMatchSegment> matchedRoadNetwork = getMapMatcher().findMatch(roadGPSSegmentList, osmRoadNetwork);
                         if (matchedRoadNetwork != null && !matchedRoadNetwork.isEmpty()) {
                             for (MapMatcher.MapMatchSegment matchedSegment : matchedRoadNetwork) {
@@ -213,7 +214,7 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                                             matchingLayer.getRenderingOptions(),
                                             1);
                                     line.setLabel(String.valueOf(match.getDistance()));
-
+                                    sumDistance += match.getDistance();
                                     matchingLayer.add(line);
                                     resultSegment.add(new GPSPoint(match.getMatchedPoint()));
                                 }
@@ -226,7 +227,12 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                         mappingCost = network.getTotalRoadLength() == 0 ? 0 : averageDistance / network.getTotalRoadLength();
                         LOG.log(Level.INFO, "average distance: {0}", averageDistance);
                         LOG.log(Level.INFO, "average distance/network length: {0}", mappingCost);
-                        NotifyDescriptor.Message nd = new NotifyDescriptor.Message(String.format(Locale.ENGLISH, "Map-Matcher cost amounts to %f\nAverage Distance (m): %f ", mappingCost, averageDistance));
+                        NotifyDescriptor.Message nd = new NotifyDescriptor.Message(
+                                String.format(Locale.ENGLISH,
+                                "Map-Matcher cost amounts to %f\nAverage Distance (m): %f\nSum length to networklength: %f",
+                                mappingCost,
+                                averageDistance,
+                                sumDistance / roadNetwork.getTotalRoadLength()));
                         DialogDisplayer.getDefault().notifyLater(nd);
 
                     }

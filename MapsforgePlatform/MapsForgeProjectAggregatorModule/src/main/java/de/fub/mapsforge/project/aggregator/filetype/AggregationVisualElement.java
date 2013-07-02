@@ -124,7 +124,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
             aggregator = dataObject.getNodeDelegate().getLookup().lookup(Aggregator.class);
         }
         assert aggregator != null;
-        lookup = new ProxyLookup(Lookups.singleton(this), ExplorerUtils.createLookup(explorerManager, getActionMap()));
+        lookup = new ProxyLookup(Lookups.singleton(AggregationVisualElement.this), ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(Children.create(nodeFactory, true)));
         aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregationVisualElement.this, aggregator));
         aggregator.create(viewUpdater);
@@ -351,6 +351,12 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public void componentOpened() {
+        requestProcessor.post(new Runnable() {
+            @Override
+            public void run() {
+                updateMap();
+            }
+        });
     }
 
     @Override
@@ -359,12 +365,6 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     @Override
     public void componentShowing() {
-        requestProcessor.post(new Runnable() {
-            @Override
-            public void run() {
-                updateMap();
-            }
-        });
     }
 
     @Override

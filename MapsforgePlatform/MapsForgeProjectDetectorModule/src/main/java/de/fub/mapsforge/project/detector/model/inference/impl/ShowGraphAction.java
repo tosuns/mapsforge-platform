@@ -20,6 +20,7 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 import weka.classifiers.Classifier;
 import weka.core.Drawable;
@@ -136,6 +137,7 @@ class ShowGraphAction extends AbstractAction {
             super();
             setLayout(new BorderLayout());
             add(contentPanel, BorderLayout.CENTER);
+            associateLookup(Lookups.singleton(contentPanel));
         }
 
         @Override

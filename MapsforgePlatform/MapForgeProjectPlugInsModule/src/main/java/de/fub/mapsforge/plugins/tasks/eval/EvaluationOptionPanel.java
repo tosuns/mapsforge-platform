@@ -8,7 +8,10 @@ import de.fub.mapsforge.plugins.mapmatcher.MapMatcher;
 import de.fub.mapsforgeplatform.openstreetmap.service.MapProvider;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.JButton;
 import org.openide.explorer.ExplorerManager;
@@ -40,10 +43,10 @@ public class EvaluationOptionPanel extends javax.swing.JPanel implements Propert
     }
 
     private void init() {
-        mapProviderContainer.getExplorerManager().setRootContext(new AbstractNode(Children.create(new MapProviderNodeFactory(), true)));
+        mapProviderContainer.getExplorerManager().setRootContext(new AbstractNode(Children.create(new MapProviderNodeFactory(), false)));
         mapProviderContainer.getExplorerManager().addPropertyChangeListener(EvaluationOptionPanel.this);
         mapProviderContainer.getExplorerManager().setExploredContext(mapProviderContainer.getExplorerManager().getRootContext());
-        mapMatcherContainer.getExplorerManager().setRootContext(new AbstractNode(Children.create(new MapMatcherNodeFactory(), true)));
+        mapMatcherContainer.getExplorerManager().setRootContext(new AbstractNode(Children.create(new MapMatcherNodeFactory(), false)));
         mapMatcherContainer.getExplorerManager().addPropertyChangeListener(EvaluationOptionPanel.this);
         mapMatcherContainer.getExplorerManager().setExploredContext(mapMatcherContainer.getExplorerManager().getRootContext());
     }
@@ -188,7 +191,13 @@ public class EvaluationOptionPanel extends javax.swing.JPanel implements Propert
 
         @Override
         protected boolean createKeys(List<MapProvider> toPopulate) {
-            Collection<MapProvider> mapProviders = MapProvider.Factory.findAll();
+            ArrayList<MapProvider> mapProviders = new ArrayList<MapProvider>(MapProvider.Factory.findAll());
+            Collections.sort(mapProviders, new Comparator<MapProvider>() {
+                @Override
+                public int compare(MapProvider o1, MapProvider o2) {
+                    return o1.getName().compareToIgnoreCase(o2.getName());
+                }
+            });
             toPopulate.addAll(mapProviders);
             return true;
         }
