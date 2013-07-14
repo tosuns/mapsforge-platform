@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.statistics;
 
+import de.fub.utilsmodule.text.CustomNumberFormat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import org.jfree.chart.ChartFactory;
@@ -44,7 +45,11 @@ public class HistogramPanel extends javax.swing.JPanel {
         barRenderer.setBarPainter(new StandardXYBarPainter());
         barRenderer.setBarAlignmentFactor(.1);
         barRenderer.setBasePaint(Color.blue);
-        barRenderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
+//        barRenderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
+        barRenderer.setBaseItemLabelGenerator(
+                new StandardXYItemLabelGenerator(
+                StandardXYItemLabelGenerator.DEFAULT_ITEM_LABEL_FORMAT,
+                new CustomNumberFormat(), new CustomNumberFormat()));
         barRenderer.setBaseItemLabelsVisible(true);
         plot.setRenderer(barRenderer);
         plot.setBackgroundPaint(Color.white);

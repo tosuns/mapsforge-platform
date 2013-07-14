@@ -11,6 +11,7 @@ import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
 import de.fub.mapsforge.project.detector.model.pipeline.preprocessors.FilterProcess;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
                         if (PROP_NAME_LENGTH.equals(property.getValue())) {
                             length = Double.valueOf(property.getValue());
                         } else if (PROP_NAME_FILTER_SCOPE.equals(property.getValue())) {
-                            scope = InferenceMode.valueOf(property.getValue());
+                            scope = InferenceMode.fromValue(property.getValue());
                         }
                     } catch (IllegalArgumentException ex) {
                         LOG.log(Level.SEVERE, ex.getMessage(), ex);
@@ -75,40 +76,42 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
                 result = new ArrayList<TrackSegment>(gpsTracks.size());
             }
             result.clear();
-            TrackSegment shortSegement = new TrackSegment();
 
             for (TrackSegment trackSegment : gpsTracks) {
                 // reset variables
                 double currentLength = 0;
                 Waypoint lastWaypoint = null;
+                TrackSegment shortSegement = new TrackSegment();
 
                 for (Waypoint waypoint : trackSegment.getWayPointList()) {
                     if (lastWaypoint != null) {
+                        // we are still in the specified length constrain
+                        // and add the waypoint to the short segement
+                        shortSegement.add(lastWaypoint);
+
+
                         // only if there is a reference point fot the computation of the
                         // length we will compute.
-                        currentLength += GPSCalc.getDistVincentyFast(lastWaypoint.getLat(), waypoint.getLon(), waypoint.getLat(), waypoint.getLon());
+                        currentLength += GPSCalc.getDistVincentyFast(
+                                lastWaypoint.getLat(), lastWaypoint.getLon(),
+                                waypoint.getLat(), waypoint.getLon());
 
                         if (currentLength > getLengthProperty()) {
+                            shortSegement.add(waypoint);
                             // current length is longer then the specified
                             // reference value. we add the current short segemtn
                             // to the list and reset variables
                             result.add(shortSegement);
+
+                            LOG.info(MessageFormat.format("ShortTrackSegment length:{0}", currentLength));
                             currentLength = 0;
                             shortSegement = new TrackSegment();
-                        } else {
-                            // we are still in the specified length constrain
-                            // and add the waypoint to the short segement
-                            shortSegement.add(waypoint);
+                            lastWaypoint = null;
+                            continue;
                         }
                     }
                     lastWaypoint = waypoint;
                 }
-
-                // check whether the current shortsegement is already in the result list
-                // if not add it to the list.
-//                if (!result.contains(shortSegement)) {
-//                    result.add(shortSegement);
-//                }
             }
         }
     }
@@ -151,7 +154,7 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
                         if (property.getValue() != null) {
                             length = Double.valueOf(property.getValue());
                         } else {
-                            length = 30; // 5 meter default setting
+                            length = 300; // 5 meter default setting
                         }
                         break;
                     }
@@ -164,26 +167,37 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
     @Override
     protected ProcessDescriptor createProcessDescriptor() {
         ProcessDescriptor descriptor = new ProcessDescriptor();
-        descriptor.setJavaType(UniformLengthSegmentationFilterProcess.class.getName());
+        descriptor
+                .setJavaType(UniformLengthSegmentationFilterProcess.class
+                .getName());
         descriptor.setName(Bundle.CLT_UniformLengthFilter_Name());
         descriptor.setDescription(Bundle.CLT_UniformLengthFilter_Description());
 
         Property property = new Property();
+
         property.setId(PROP_NAME_FILTER_SCOPE);
-        property.setJavaType(InferenceMode.class.getName());
+
+        property.setJavaType(InferenceMode.class
+                .getName());
         property.setName(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Name());
         property.setDescription(Bundle.CLT_ChangePointSegmentationFilter_Property_Scope_Description());
         property.setValue(InferenceMode.INFERENCE_MODE.toString());
-        descriptor.getProperties().getPropertyList().add(property);
+        descriptor.getProperties()
+                .getPropertyList().add(property);
 
         // <!-- length value in meters -->
         property = new Property();
+
         property.setId(PROP_NAME_LENGTH);
-        property.setJavaType(Double.class.getName());
-        property.setValue("10");
+
+        property.setJavaType(Double.class
+                .getName());
+        property.setValue(
+                "10");
         property.setName(Bundle.CLT_UniformLengthFilter_Property_Length_Name());
         property.setDescription(Bundle.CLT_UniformLengthFilter_Property_Length_Description());
-        descriptor.getProperties().getPropertyList().add(property);
+        descriptor.getProperties()
+                .getPropertyList().add(property);
 
         return descriptor;
     }

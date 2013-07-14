@@ -4,6 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks;
 
+import de.fub.mapsforge.project.detector.model.Detector;
 import org.openide.util.Lookup;
 import org.openide.windows.TopComponent;
 
@@ -17,12 +18,13 @@ public class DataAnalyzeTaskTopComponent extends TopComponent {
     private final Lookup lookup;
     private final DataAnalyzeTask task;
 
-    public DataAnalyzeTaskTopComponent(DataAnalyzeTask task, Lookup lookup) {
+    public DataAnalyzeTaskTopComponent(DataAnalyzeTask task, Detector detector, Lookup lookup) {
         this.lookup = lookup;
         this.task = task;
-        setDisplayName(this.task.getName());
-        setToolTipText(this.task.getDescription());
         initComponents();
+        setDisplayName(detector.getName());
+        setToolTipText(this.task.getDescription());
+        associateLookup(trainingDataAnalyizerComponent1.getLookup());
     }
 
     @Override

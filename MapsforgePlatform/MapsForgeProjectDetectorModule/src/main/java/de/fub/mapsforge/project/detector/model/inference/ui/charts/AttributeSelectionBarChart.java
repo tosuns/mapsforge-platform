@@ -58,8 +58,10 @@ public class AttributeSelectionBarChart extends javax.swing.JPanel {
         barChart.getTitle().setPaint(new Color(153, 153, 153));
 
         plot.setRangeAxisLocation(0, AxisLocation.TOP_OR_LEFT);
+
         plot.setBackgroundPaint(Color.white);
         plot.getRangeAxis().setAutoRange(true);
+        plot.getRangeAxis().setUpperMargin(.1);
 
         BarRenderer barRenderer = new BarRenderer();
         barRenderer.setBarPainter(new StandardBarPainter());

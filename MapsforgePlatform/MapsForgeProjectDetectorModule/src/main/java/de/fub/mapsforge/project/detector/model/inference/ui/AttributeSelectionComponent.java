@@ -72,6 +72,7 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
     private AttributeSelectionTask attributeSelectionTask;
     private ProgressHandle handle;
     private final JToolBar toolBar = new JToolBar();
+    private static final RequestProcessor REQUESTPROCESSER = new RequestProcessor(AttributeSelectionComponent.class.getName());
 
     /**
      * Creates new form AttributeSelectionComponent
@@ -220,7 +221,7 @@ public class AttributeSelectionComponent extends TopComponent implements TaskLis
         super.componentOpened();
         handle = ProgressHandleFactory.createHandle(Bundle.CLT_AttributeSelectionComponent_handle_Name());
         handle.start();
-        RequestProcessor.Task task = RequestProcessor.getDefault().create(this.attributeSelectionTask);
+        RequestProcessor.Task task = REQUESTPROCESSER.create(this.attributeSelectionTask);
         task.addTaskListener(WeakListeners.create(TaskListener.class, AttributeSelectionComponent.this, task));
         task.schedule(0);
     }

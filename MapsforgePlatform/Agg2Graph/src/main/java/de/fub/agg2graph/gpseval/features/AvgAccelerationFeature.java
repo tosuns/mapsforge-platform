@@ -61,6 +61,13 @@ public class AvgAccelerationFeature extends Feature {
 
     @Override
     public double getResult() {
-        return pointCount == 0 ? 0 : sumAcceleration / pointCount;
+        double result = 0;
+        if (pointCount > 0) {
+            result = sumAcceleration / pointCount;
+        }
+
+        return result != 0
+                ? result
+                : result + Math.random();// only for the propose to not have duplicate nominal value labels.
     }
 }

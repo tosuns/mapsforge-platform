@@ -37,4 +37,18 @@ public enum InferenceMode {
     public String toString() {
         return getDisplayName();
     }
+
+    public static InferenceMode fromValue(String name) {
+        InferenceMode mode = null;
+        if ("crossvalidationMode".equals(name) || "Crossvalidation".equals(name)) {
+            mode = InferenceMode.CROSS_VALIDATION_MODE;
+        } else if ("trainingsMode".equals(name) || "Training".equals(name)) {
+            mode = InferenceMode.TRAININGS_MODE;
+        } else if ("inferenceMode".equals(name) || "Inference".equals(name)) {
+            mode = InferenceMode.INFERENCE_MODE;
+        } else {
+            throw new IllegalArgumentException(name);
+        }
+        return mode;
+    }
 }

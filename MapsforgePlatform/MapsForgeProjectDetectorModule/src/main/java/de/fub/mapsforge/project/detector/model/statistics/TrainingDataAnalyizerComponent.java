@@ -123,6 +123,8 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
         barChartContainer1 = new TransportModeDataLengthChart();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
         barChartContainer2 = new SegmentLengthHistogramChart();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
+        barChartContainer3 = new AvgPointBarChart();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -131,15 +133,20 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
         contentPanel.setLayout(new javax.swing.BoxLayout(contentPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         barChartContainer1.setMaximumSize(new java.awt.Dimension(2147483647, 300));
-        barChartContainer1.setMinimumSize(new java.awt.Dimension(102, 0));
+        barChartContainer1.setMinimumSize(new java.awt.Dimension(102, 250));
         barChartContainer1.setPreferredSize(new java.awt.Dimension(682, 300));
         contentPanel.add(barChartContainer1);
         contentPanel.add(filler1);
 
         barChartContainer2.setMaximumSize(new java.awt.Dimension(2147483647, 300));
-        barChartContainer2.setMinimumSize(new java.awt.Dimension(102, 0));
+        barChartContainer2.setMinimumSize(new java.awt.Dimension(102, 250));
         barChartContainer2.setPreferredSize(new java.awt.Dimension(682, 300));
         contentPanel.add(barChartContainer2);
+        contentPanel.add(filler2);
+
+        barChartContainer3.setMaximumSize(new java.awt.Dimension(2147483647, 300));
+        barChartContainer3.setMinimumSize(new java.awt.Dimension(102, 250));
+        contentPanel.add(barChartContainer3);
 
         jScrollPane1.setViewportView(contentPanel);
 
@@ -148,8 +155,10 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private de.fub.mapsforge.project.detector.model.statistics.BarChartContainer barChartContainer1;
     private de.fub.mapsforge.project.detector.model.statistics.BarChartContainer barChartContainer2;
+    private de.fub.mapsforge.project.detector.model.statistics.BarChartContainer barChartContainer3;
     private javax.swing.JPanel contentPanel;
     private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
@@ -277,17 +286,20 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
                 Collections.sort(keys);
 
                 for (String key : keys) {
+                    double pointCount = 0;
                     TrackLengthFeatureProcess feature = new TrackLengthFeatureProcess();
                     double length = 0;
                     for (TrackSegment trackSegment : data.get(key)) {
+                        pointCount += trackSegment.getWayPointList().size();
                         feature.setInput(trackSegment);
                         feature.run();
-                        Double result = feature.getResult();
+                        double result = feature.getResult();
                         length += result;
                         histogramDatalist.add(result);
                     }
 
                     updateBarChart(length, key, data.values().size());
+                    updateAvgPointBarChart(pointCount / data.get(key).size(), key);
                 }
                 updateHistogramChart(histogramDatalist);
             }
@@ -315,7 +327,7 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
                     String binKey = null;
                     int totalCount = 0;
                     for (Double value : valueList) {
-                        if (value > 0 && value < 50) {
+                        if (value > 0 && value <= 50) {
                             binKey = _0_TO_50_METER;
                         } else if (value > 51 && value <= 100) {
                             binKey = _50_TO_100_METER;
@@ -377,10 +389,14 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
             @Override
             public void run() {
                 barChartContainer1.getDataset().addValue(length / 1000, "Total Length", transportMode);
-                barChartContainer1.getDataset().addValue(length / 1999 / size, "Avg. Segment Length", transportMode);
+                barChartContainer1.getDataset().addValue(length / 1000 / size, "Avg. Segment Length", transportMode);
             }
         });
 
+    }
+
+    private void updateAvgPointBarChart(double d, String transportMode) {
+        barChartContainer3.getDataset().addValue(d, transportMode, "Average Point per");
     }
 
     private static class TransportModeDataLengthChart extends BarChartContainer {
@@ -397,6 +413,24 @@ public class TrainingDataAnalyizerComponent extends JPanel implements MultiViewE
             getPlot().getRenderer().setSeriesPaint(1, Color.red);
             getRangeAxis().setLabel(NbBundle.getMessage(TrainingDataAnalyizerComponent.class, "TransportModeDataLengthChart.value.axis.name"));
             getDomainAxis().setLabel(NbBundle.getMessage(TrainingDataAnalyizerComponent.class, "TransportModeDataLengthChart.domain.axis.name"));
+            getRangeAxis().setUpperMargin(.1);
+        }
+    }
+
+    private static class AvgPointBarChart extends BarChartContainer {
+
+        private static final long serialVersionUID = 1L;
+
+        public AvgPointBarChart() {
+            super();
+            init();
+        }
+
+        private void init() {
+            setTitle("Average Point Count per Segment");
+            getPlot().getRenderer().setSeriesPaint(1, Color.red);
+            getRangeAxis().setLabel(NbBundle.getMessage(TrainingDataAnalyizerComponent.class, "AvgPointBarChart.value.axis.name"));
+            getDomainAxis().setLabel(NbBundle.getMessage(TrainingDataAnalyizerComponent.class, "AvgPointBarChart.domain.axis.name"));
             getRangeAxis().setUpperMargin(.1);
         }
     }

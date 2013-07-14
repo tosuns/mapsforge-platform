@@ -47,6 +47,10 @@ public class ErrorRateFeature extends Feature {
     @Override
     @SuppressWarnings("empty-statement")
     public double getResult() {
-        return totalCount > 0 ? errorCount / lastVelocity : 0;
+        double result = 0;
+        if (totalCount > 0) {
+            result = errorCount / lastVelocity;
+        }
+        return result != 0 ? result : result + Math.random();// only for the propose to not have duplicate nominal value labels.
     }
 }

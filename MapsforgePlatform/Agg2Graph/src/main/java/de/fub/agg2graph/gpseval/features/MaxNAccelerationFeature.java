@@ -68,7 +68,9 @@ public class MaxNAccelerationFeature extends Feature {
     @Override
     public double getResult() {
         Double peek = priorityQueue.peek();
-        return peek != null ? peek : 0;
+        return peek != null
+                ? peek
+                : Math.random();  // only for the propose to not have duplicate nominal value labels.
     }
 
     private void setMaxN(int n) {

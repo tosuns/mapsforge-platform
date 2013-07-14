@@ -145,7 +145,7 @@ public class DataAnalyzeTask extends Task implements TrainingsDataProvider {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    DataAnalyzeTaskTopComponent tc = new DataAnalyzeTaskTopComponent(task, Lookups.fixed(task));
+                    DataAnalyzeTaskTopComponent tc = new DataAnalyzeTaskTopComponent(task, task.getDetector(), Lookups.fixed(task));
                     tc.open();
                     tc.requestActive();
                     task.getData().clear();

@@ -63,7 +63,7 @@ public class StopRateFeature extends Feature {
 
     @Override
     public double getResult() {
-        return totalSegmentLength > 0 ? waypointList.size() / totalSegmentLength : 0;
+        return totalSegmentLength > 0 ? waypointList.size() / totalSegmentLength : Math.random();  // only for the propose to not have duplicate nominal value labels.
     }
 
     public double getMinimumVelocityThreshold() {

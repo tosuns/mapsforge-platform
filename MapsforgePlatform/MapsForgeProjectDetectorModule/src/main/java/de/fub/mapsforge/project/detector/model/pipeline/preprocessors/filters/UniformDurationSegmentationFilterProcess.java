@@ -55,7 +55,7 @@ public class UniformDurationSegmentationFilterProcess extends FilterProcess {
                         if (PROP_NAME_DURATION.equals(property.getId())) {
                             duration = Double.valueOf(property.getValue());
                         } else if (PROP_NAME_FILTER_SCOPE.equals(property.getId())) {
-                            scope = InferenceMode.valueOf(property.getValue());
+                            scope = InferenceMode.fromValue(property.getValue());
                         }
                     } catch (IllegalArgumentException ex) {
                         LOG.log(Level.SEVERE, ex.getMessage(), ex);

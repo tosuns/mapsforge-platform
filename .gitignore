@@ -17,7 +17,9 @@ MapsforgePlatform/ITextLib/target
 MapsforgePlatform/JFreeChartLib/JFreeChartLib.iml
 MapsforgePlatform/JFreeChartLib/target
 MapsforgePlatform/LibApacheLog4J/log4J.iml
+MapsforgePlatform/LibApacheLog4J/target
 MapsforgePlatform/LibJSIModule/jsi.iml
+MapsforgePlatform/LibJSIModule/target
 MapsforgePlatform/MapForgeProject/mapforgeproject.iml
 MapsforgePlatform/MapForgeProject/target
 MapsforgePlatform/MapForgeProjectPlugInsModule/MapForgeProjectPlugInsModule.iml

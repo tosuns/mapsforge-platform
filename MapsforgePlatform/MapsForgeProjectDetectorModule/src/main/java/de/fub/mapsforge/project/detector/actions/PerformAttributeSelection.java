@@ -39,7 +39,7 @@ import org.openide.util.WeakListeners;
         id = "de.fub.mapsforge.project.detector.model.inference.actions.PerformAttributeSelection"),
         path = "Loaders/text/detector+xml/Actions", position = 255))
 @Messages({"CTL_PerformAttributeSelection=Perform Attribute Selection",
-    "CLT_PerformAttributeSelection_Dialog_Title=Attribute Selection Dialog"
+    "CLT_PerformAttributeSelection_Dialog_Title=Run Attribute Selection"
 })
 public final class PerformAttributeSelection extends AbstractAction implements ContextAwareAction, PropertyChangeListener, LookupListener {
 

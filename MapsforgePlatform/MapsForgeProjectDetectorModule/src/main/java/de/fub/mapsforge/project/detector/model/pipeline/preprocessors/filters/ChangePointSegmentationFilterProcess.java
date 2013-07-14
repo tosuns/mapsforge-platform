@@ -85,7 +85,7 @@ public class ChangePointSegmentationFilterProcess extends FilterProcess {
                             continue;
                         } else if (PROP_NAME_FILTER_SCOPE.equals(property.getId())) {
                             try {
-                                scope = InferenceMode.valueOf(property.getValue());
+                                scope = InferenceMode.fromValue(property.getValue());
                             } catch (IllegalArgumentException ex) {
                                 LOG.log(Level.SEVERE, ex.getMessage(), ex);
                             }

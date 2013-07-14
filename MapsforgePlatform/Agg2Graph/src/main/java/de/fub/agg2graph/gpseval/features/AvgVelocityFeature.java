@@ -34,7 +34,11 @@ public class AvgVelocityFeature extends Feature {
 
     @Override
     public double getResult() {
-        return mCount > 0 ? (mSumSpeed / mCount) : 0;
+        double result = 0;
+        if (mCount > 0) {
+            result = (mSumSpeed / mCount) + Math.random();
+        }
+        return result != 0 ? result : Math.random();
     }
 
     @Override
