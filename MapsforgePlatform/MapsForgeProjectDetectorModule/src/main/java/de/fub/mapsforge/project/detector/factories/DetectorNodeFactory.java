@@ -6,6 +6,8 @@ package de.fub.mapsforge.project.detector.factories;
 
 import de.fub.mapsforge.project.detector.filetype.DetectorDataObject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -49,6 +51,12 @@ public class DetectorNodeFactory extends ChildFactory<DetectorDataObject> implem
                 Exceptions.printStackTrace(ex);
             }
         }
+        Collections.sort(list, new Comparator<DetectorDataObject>() {
+            @Override
+            public int compare(DetectorDataObject o1, DetectorDataObject o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
         toPopulate.addAll(list);
         return true;
     }

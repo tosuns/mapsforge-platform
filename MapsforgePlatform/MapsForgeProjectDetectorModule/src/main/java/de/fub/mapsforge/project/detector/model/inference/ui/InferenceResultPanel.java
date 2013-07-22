@@ -109,10 +109,8 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 4, 8, 4));
         jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(0, 0));
-        jPanel2.setLayout(new java.awt.GridLayout(1, 2));
 
         classificationBarChart.setPreferredSize(new java.awt.Dimension(0, 420));
-        jPanel2.add(classificationBarChart);
 
         jPanel6.setOpaque(false);
         jPanel6.setPreferredSize(new java.awt.Dimension(0, 402));
@@ -123,7 +121,21 @@ public class InferenceResultPanel extends javax.swing.JPanel implements Explorer
         outlineView.setPropertyColumns(new String[] {"instancesAbs", "Instances (abs.)", "instancesRel", "Instances (rel.)"});
         jPanel6.add(outlineView, java.awt.BorderLayout.CENTER);
 
-        jPanel2.add(jPanel6);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(classificationBarChart, javax.swing.GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(classificationBarChart, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
 

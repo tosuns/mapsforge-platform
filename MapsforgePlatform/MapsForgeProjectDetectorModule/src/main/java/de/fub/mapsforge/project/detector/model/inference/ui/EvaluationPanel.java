@@ -123,21 +123,33 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
         jPanel2.setMinimumSize(new java.awt.Dimension(0, 32));
         jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(0, 429));
-        jPanel2.setLayout(new java.awt.GridLayout(1, 2));
 
         jPanel6.setMinimumSize(new java.awt.Dimension(0, 10));
         jPanel6.setPreferredSize(new java.awt.Dimension(0, 420));
-        jPanel6.setLayout(new java.awt.GridLayout(1, 0));
+        jPanel6.setLayout(new java.awt.BorderLayout());
 
         barChartPanel.setPreferredSize(new java.awt.Dimension(0, 420));
-        jPanel6.add(barChartPanel);
-
-        jPanel2.add(jPanel6);
+        jPanel6.add(barChartPanel, java.awt.BorderLayout.CENTER);
 
         outlineView.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(213, 213, 213)));
         outlineView.setPropertyColumns(new String[] {"precision", "Precision", "recall", "Recall"});
         outlineView.setWheelScrollingEnabled(false);
-        jPanel2.add(outlineView);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(outlineView, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(outlineView, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
 
@@ -227,7 +239,7 @@ public class EvaluationPanel extends javax.swing.JPanel implements ExplorerManag
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
