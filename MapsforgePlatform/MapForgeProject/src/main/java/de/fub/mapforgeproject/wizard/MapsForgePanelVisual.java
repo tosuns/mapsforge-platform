@@ -208,7 +208,7 @@ public class MapsForgePanelVisual extends JPanel implements DocumentListener {
 
         String projectName = (String) settings.getProperty("name");
         if (projectName == null) {
-            projectName = "MapsForge";
+            projectName = "MapsProject";
         }
         this.projectNameTextField.setText(projectName);
         this.projectNameTextField.selectAll();

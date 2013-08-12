@@ -341,8 +341,8 @@ MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/data
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/icons/mapsforgeIcon16.png -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/layer.xml -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/Bundle.properties -text
-MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/MapsForge.zip -text
-MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/MapsForgeDescription.html -text
+MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/Maps.zip -text
+MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/wizard/MapsDescription.html -text
 MapsforgePlatform/MapForgeProject/src/main/resources/de/fub/mapforgeproject/xml/mapsforge.xml -text
 MapsforgePlatform/MapForgeProject/src/test/java/de/fub/mapforgeproject/xml/MapsForgeXmlTest.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/pom.xml -text

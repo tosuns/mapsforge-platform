@@ -2,17 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>MapsforgePlatform-parent</artifactId>
+        <artifactId>MapsPlatform-parent</artifactId>
         <groupId>de.fub</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.fub</groupId>
-    <artifactId>Agg2GraphUI</artifactId>
+    <groupId>de.fub.maps.project</groupId>
+    <artifactId>agg2graphui</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>MapsForge Project Agg 2 Graph UI Module</name>
+    <name>Maps Project Agg 2 Graph UI Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,17 +71,12 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MapViewer</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>mapviewer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Agg2Graph</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>de.fub</groupId>
             <artifactId>openstreetmap</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -110,13 +105,13 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>gpxfileType</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>gpxfiletype</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>mapforgeproject</artifactId>
+            <groupId>de.fub.maps</groupId>
+            <artifactId>project</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -126,20 +121,25 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>de.fub</groupId>
             <artifactId>WekaLibModule</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <artifactId>UtilsModule</artifactId>
-            <groupId>de.fub</groupId>
+            <artifactId>utils</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <type>jar</type>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>jsi</artifactId>
-            <groupId>de.fub.mapsforge</groupId>
+            <groupId>de.fub</groupId>
             <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fub</groupId>
+            <artifactId>Agg2Graph</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

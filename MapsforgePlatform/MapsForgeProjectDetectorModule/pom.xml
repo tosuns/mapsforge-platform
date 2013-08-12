@@ -2,17 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>MapsforgePlatform-parent</artifactId>
+        <artifactId>MapsPlatform-parent</artifactId>
         <groupId>de.fub</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.fub.mapsforge</groupId>
-    <artifactId>MapsForgeProjectDetectorModule</artifactId>
+    <groupId>de.fub.maps.project</groupId>
+    <artifactId>detector</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>MapsForge Project Detector Module</name>
+    <name>Maps Project Detector Module</name>
 
 
     <properties>
@@ -50,11 +50,6 @@
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-projectuiapi</artifactId>
             <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.fub</groupId>
-            <artifactId>mapforgeproject</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
@@ -125,9 +120,8 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <artifactId>UtilsModule</artifactId>
-            <groupId>de.fub</groupId>
-            <type>jar</type>
+            <artifactId>utils</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -140,18 +134,11 @@
             <groupId>de.fub</groupId>
             <artifactId>Agg2Graph</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>WekaLibModule</artifactId>
             <groupId>de.fub</groupId>
-            <type>jar</type>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>JFreeChartLib</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-swing-outline</artifactId>
@@ -160,14 +147,13 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <artifactId>gpxfileType</artifactId>
-            <groupId>de.fub</groupId>
-            <type>jar</type>
+            <artifactId>gpxfiletype</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MapsForgeSnapShotModule</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>snapshot</artifactId>
             <version>${project.version}</version>
             <exclusions>
                 <exclusion>
@@ -179,6 +165,22 @@
                     <groupId>de.fub.mapsforge</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.fub</groupId>
+            <artifactId>JFreeChartLib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.fub.maps</groupId>
+            <artifactId>project</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>ApacheBatikLib</artifactId>
+            <groupId>de.fub</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

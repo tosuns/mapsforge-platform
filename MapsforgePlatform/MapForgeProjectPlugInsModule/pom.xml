@@ -2,17 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>MapsforgePlatform-parent</artifactId>
+        <artifactId>MapsPlatform-parent</artifactId>
         <groupId>de.fub</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.fub.mapsforge</groupId>
-    <artifactId>MapForgeProjectPlugInsModule</artifactId>
+    <groupId>de.fub.maps.project</groupId>
+    <artifactId>plugins</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>MapsForge Project PlugIns Module</name>
+    <name>Maps Project PlugIns Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,19 +48,18 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.fub</groupId>
-            <artifactId>MapsForgeProjectAggregatorModule</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>aggregator</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>MapsForgeProjectDetectorModule</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>detector</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <artifactId>gpxfileType</artifactId>
-            <groupId>de.fub</groupId>
-            <type>jar</type>
+            <artifactId>gpxfiletype</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -94,9 +93,8 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <artifactId>UtilsModule</artifactId>
-            <groupId>de.fub</groupId>
-            <type>jar</type>
+            <artifactId>utils</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -110,12 +108,6 @@
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
             <version>${netbeans.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>mapforgeproject</artifactId>
-            <groupId>de.fub</groupId>
-            <type>jar</type>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
@@ -143,26 +135,22 @@
         <dependency>
             <artifactId>Agg2Graph</artifactId>
             <groupId>de.fub</groupId>
-            <type>jar</type>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>Agg2GraphUI</artifactId>
-            <groupId>de.fub</groupId>
-            <type>jar</type>
+            <artifactId>agg2graphui</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>GeoFileTypeApi</artifactId>
-            <groupId>fu.berlin.mapsforge</groupId>
-            <type>jar</type>
+            <artifactId>geofiletypeapi</artifactId>
+            <groupId>de.fub.maps.project</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>de.fub</groupId>
-            <artifactId>OpenstreemapSevice</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>openstreemapsevice</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>org-netbeans-api-progress</artifactId>
@@ -171,38 +159,35 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>de.fub</groupId>
             <artifactId>jsi</artifactId>
-            <version>${project.version}</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>log4J</artifactId>
-            <groupId>de.fub.mapsforge</groupId>
-            <type>jar</type>
+            <groupId>de.fub</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>JFreeChartLib</artifactId>
-            <groupId>de.fub.mapsforge</groupId>
-            <type>jar</type>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <artifactId>MapViewer</artifactId>
             <groupId>de.fub</groupId>
-            <type>jar</type>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>openstreetmap</artifactId>
             <groupId>de.fub</groupId>
-            <type>jar</type>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-settings</artifactId>
             <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>project</artifactId>
+            <groupId>de.fub.maps</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

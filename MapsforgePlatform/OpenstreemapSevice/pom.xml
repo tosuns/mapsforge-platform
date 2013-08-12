@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>MapsforgePlatform-parent</artifactId>
+        <artifactId>MapsPlatform-parent</artifactId>
         <groupId>de.fub</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>OpenstreemapSevice</artifactId>
+    <artifactId>openstreemapsevice</artifactId>
     <packaging>nbm</packaging>
 
-    <name>MapsForge Project Openstreemap Sevice Module</name>
+    <name>Maps Project Openstreemap Sevice Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>UtilsModule</artifactId>
+            <artifactId>utils</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -119,18 +119,18 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>gpxfileType</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>gpxfiletype</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>MapViewer</artifactId>
+            <artifactId>mapviewer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mapsforge.project.datasource</artifactId>
+            <artifactId>datasource</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -203,4 +203,5 @@
             </plugin>
         </plugins>
     </build>
+    <groupId>de.fub.maps.project</groupId>
 </project>

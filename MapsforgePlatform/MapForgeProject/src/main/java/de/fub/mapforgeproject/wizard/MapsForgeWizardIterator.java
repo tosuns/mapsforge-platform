@@ -38,8 +38,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/Fu-Berlin", displayName = "#MapsForge_displayName", description = "MapsForgeDescription.html", iconBase = "de/fub/mapforgeproject/icons/mapsforgeIcon16.png", content = "MapsForge.zip")
-@Messages({"MapsForge_displayName=MapsForge", "LBL_CreateProjectStep=Name and Location"})
+@TemplateRegistration(folder = "Project/Fu-Berlin", displayName = "#MapsForge_displayName", description = "MapsDescription.html", iconBase = "de/fub/mapforgeproject/icons/mapsforgeIcon16.png", content = "Maps.zip")
+@Messages({"MapsForge_displayName=MapsProject", "LBL_CreateProjectStep=Name and Location"})
 public class MapsForgeWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 
     private int index;

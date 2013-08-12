@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.fub</groupId>
-    <artifactId>MapsforgePlatform-parent</artifactId>
+    <artifactId>MapsPlatform-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>MapsforgePlatform-parent</name>
+    <name>MapsPlatform-parent</name>
 
     <repositories>
         <!--
@@ -108,7 +108,7 @@
 
     <properties>
         <netbeans.version>RELEASE731</netbeans.version>
-        <brandingToken>mapsforgeplatform</brandingToken>
+        <brandingToken>mapsplatform</brandingToken>
         <netbeans.run.params.ide/>
     </properties>
 </project>

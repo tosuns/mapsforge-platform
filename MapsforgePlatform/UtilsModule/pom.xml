@@ -2,17 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>MapsforgePlatform-parent</artifactId>
+        <artifactId>MapsPlatform-parent</artifactId>
         <groupId>de.fub</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.fub</groupId>
-    <artifactId>UtilsModule</artifactId>
+    <groupId>de.fub.maps.project</groupId>
+    <artifactId>utils</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>MapsForge Project Utils Module</name>
+    <name>Maps Project Utils Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

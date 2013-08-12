@@ -2,17 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>MapsforgePlatform-parent</artifactId>
+        <artifactId>MapsPlatform-parent</artifactId>
         <groupId>de.fub</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>fu.berlin.mapsforge</groupId>
-    <artifactId>XmlCatalogModule</artifactId>
+    <groupId>de.fub.maps.project</groupId>
+    <artifactId>xmlcatalog</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>MapsForge Project Xml Catalog Module</name>
+    <name>Maps Project Xml Catalog Module</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,11 +41,6 @@
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
-            <groupId>de.fub</groupId>
-            <artifactId>UtilsModule</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-filesystems</artifactId>
             <version>${netbeans.version}</version>
@@ -60,6 +55,11 @@
             <artifactId>org-netbeans-modules-xml-catalog</artifactId>
             <version>${netbeans.version}</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>de.fub.maps.project</groupId>
+            <artifactId>utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
