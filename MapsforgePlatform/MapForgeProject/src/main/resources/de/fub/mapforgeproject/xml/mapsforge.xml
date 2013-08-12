@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<mapsforge version="1.0" name="Mapsforge">
+<mapsforge version="1.0" name="MapsProject">
     <folders>
         <foldermap>
             <folder name="GPX Datasource" path="GPXDatasource"/>
