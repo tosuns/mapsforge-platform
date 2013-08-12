@@ -121,7 +121,7 @@
             <artifactId>org-openide-explorer</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73</version>
+            <version>${netbeans.version}</version>
         </dependency>
     </dependencies>
 

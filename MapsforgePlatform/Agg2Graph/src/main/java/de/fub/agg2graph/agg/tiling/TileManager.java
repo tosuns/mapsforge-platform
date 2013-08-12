@@ -122,12 +122,12 @@ public class TileManager {
                     return currentTile.size.contains(point) ? currentTile : getRoot();
                 }
             }
-
             // where to go to for further checking?
-            currentTile = currentTile.getSubTile(loc);
-            if (currentTile == null) {
-                return null;
+            Tile<AggNode> subTile = currentTile.getSubTile(loc);
+            if (subTile == null) {
+                return currentTile;
             }
+            currentTile = subTile;
         }
     }
 
@@ -158,7 +158,7 @@ public class TileManager {
                 Double.parseDouble(parts[1]));
         Tile<AggNode> tile = getTile(searchPoint);
         dcs.tc.loadTile(tile);
-        for (AggNode elem : tile.elements) {
+        for (AggNode elem : tile.getElements()) {
             if (parts[2].equals(elem.getID())) {
                 return elem;
             }
@@ -180,7 +180,7 @@ public class TileManager {
         } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
-        targetTile.elements.add(elem);
+        targetTile.getElements().add(elem);
         nodeCounter++;
         // if (AggNode.class.isInstance(elem) && elem.getOut() != null) {
         // connCounter += elem.getOut().size();
@@ -198,7 +198,7 @@ public class TileManager {
 
     public void removeElement(AggNode elem) {
         Tile<AggNode> targetTile = getTile(elem);
-        targetTile.elements.remove(elem);
+        targetTile.getElements().remove(elem);
         nodeCounter--;
         // do we need to merge?
         if (doMerge
@@ -243,7 +243,7 @@ public class TileManager {
             currentTile = tileQueue.poll();
             if (!currentTile.isLeaf) {
                 Rectangle2D.Double overlap = new Rectangle2D.Double();
-                for (Tile<AggNode> subTile : currentTile.children) {
+                for (Tile<AggNode> subTile : currentTile.getChildren()) {
                     Rectangle2D.Double.intersect(gpsRect, currentTile.size,
                             overlap);
                     // full overlap?
@@ -281,11 +281,11 @@ public class TileManager {
                         .intersect(gpsRect, currentTile.size, overlap);
                 // full overlap?
                 if (overlap.equals(currentTile.size)) {
-                    result.addAll(currentTile.elements);
+                    result.addAll(currentTile.getElements());
                 } else // partial overlap?
                 if (overlap.getWidth() > 0) {
                     // check all points
-                    for (AggNode elem : currentTile.elements) {
+                    for (AggNode elem : currentTile.getElements()) {
                         if (gpsRect.contains(new Point2D.Double(elem.getLat(),
                                 elem.getLon()))) {
                             result.add(elem);
@@ -298,9 +298,10 @@ public class TileManager {
     }
 
     public void mergeTile(Tile<AggNode> tile) {
-        tile.elements = tile.getInnerNodes();
+        tile.getElements().clear();
+        tile.getElements().addAll(tile.getInnerNodes());
         tile.isLeaf = true;
-        tile.children = null;
+        tile.getChildren().clear();
     }
 
     /**
@@ -447,7 +448,7 @@ public class TileManager {
                 result.add(currentTile);
             } else {
                 Rectangle2D.Double overlap = new Rectangle2D.Double();
-                for (Tile<AggNode> subTile : currentTile.children) {
+                for (Tile<AggNode> subTile : currentTile.getChildren()) {
                     Rectangle2D.Double.intersect(clipArea, subTile.size,
                             overlap);
                     // full overlap?

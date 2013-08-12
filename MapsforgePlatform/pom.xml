@@ -107,7 +107,7 @@
   </modules>
 
     <properties>
-        <netbeans.version>RELEASE73</netbeans.version>
+        <netbeans.version>RELEASE731</netbeans.version>
         <brandingToken>mapsforgeplatform</brandingToken>
         <netbeans.run.params.ide/>
     </properties>

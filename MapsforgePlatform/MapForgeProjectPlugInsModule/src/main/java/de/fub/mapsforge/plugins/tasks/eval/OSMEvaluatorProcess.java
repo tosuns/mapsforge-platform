@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -298,19 +299,31 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
         List<GPSSegment> gpsSegmentList = new ArrayList<GPSSegment>(500);
 
         List<Node> nodeList = osmRoadMap.getNodes();
+        HashMap<Long, Node> nodeIndexMap = new HashMap<Long, Node>();
+        for (Node node : nodeList) {
+            nodeIndexMap.put(node.getId(), node);
+        }
         List<Way> wayList = osmRoadMap.getWays();
 
         GPSPoint point = null;
 
         for (Way way : wayList) {
             GPSSegment waySegment = new GPSSegment();
+
             for (Nd nd : way.getNds()) {
 
-                for (Node n : nodeList) {
-                    if (nd.getRef() == n.getId()) {
-                        point = new GPSPoint(n.getLat(), n.getLon());
-                        waySegment.add(point);
+                if (nodeIndexMap == null || nodeIndexMap.isEmpty()) {
+                    nodeIndexMap = new HashMap<Long, Node>();
+                    for (Node node : nodeList) {
+                        nodeIndexMap.put(node.getId(), node);
                     }
+                }
+
+
+                Node n = nodeIndexMap.get(nd.getRef());
+                if (n != null) {
+                    point = new GPSPoint(n.getLat(), n.getLon());
+                    waySegment.add(point);
                 }
             }
             // add non empty segments to segment list.

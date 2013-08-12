@@ -60,7 +60,7 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
 
                 handler.start(100);
                 firePipelineEvent(PipelineEvents.STARTED);
-                int i = 0;
+//                int i = 0;
                 AbstractAggregationProcess lastProcess = null;
                 long lastTime = System.currentTimeMillis();
 
@@ -183,7 +183,7 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
                 }
             } else if (outputTypeArray.length == inputTypeArray.length
                     && outputTypeArray.length == 0) {
-                // recursive anchor. Both have classes have no type parameters
+                // recursive anchor. Both classes have no type parameters
             } else {
                 // both type array lengths are not 2. Error state
                 throw new PipelineException(MessageFormat.format("output generic interfaces type {0} and input generice interfaces type {1}  length don't macth !", outputTypeArray, inputTypeArray));

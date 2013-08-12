@@ -178,10 +178,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                 for (ProcessHandlerDescriptor processHandlerDescriptor : inferenceModelProcessHandlers.getProcessHandlerList()) {
                     try {
                         processHandler = InferenceModelProcessHandler.find(processHandlerDescriptor, AbstractInferenceModel.this);
+                        processHandlerInstanceMap.put(processHandlerDescriptor.getInferenceMode(), processHandler);
                     } catch (Exception ex) {
-                        if (processHandler != null) {
-                            putInferenceProcessHandler(processHandlerDescriptor.getInferenceMode(), processHandler.getClass());
-                        }
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 }
             }

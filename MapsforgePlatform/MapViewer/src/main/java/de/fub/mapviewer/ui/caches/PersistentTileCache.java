@@ -7,6 +7,7 @@ package de.fub.mapviewer.ui.caches;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,52 +109,12 @@ public class PersistentTileCache implements TileCache {
     }
 
     @Override
-    public Tile getTile(TileSource ts, final int x, final int y, final int z) {
+    public Tile getTile(final TileSource ts, final int x, final int y, final int z) {
         Tile tile = memTileCache.getTile(ts, x, y, z);
         if (tile == null) {
-
-            InputStream inputStream = null;
-            try {
-
-                String fileName = MessageFormat.format(PATH_PATTERN, ts.getName(), x, y, z);
-                if (tiles.contains(fileName)) {
-                    File tileFolder = getFileFromCacheDir(fileName);
-
-                    if (tileFolder != null) {
-                        File tileObject = getTile(tileFolder);
-
-                        if (tileObject != null) {
-                            long lastChacked = System.currentTimeMillis() - tileObject.lastModified();
-
-                            // check whether tile is older than a week
-                            if (lastChacked <= WEEK_IN_MILLISECONDS) {
-                                inputStream = new FileInputStream(tileObject);
-                                BufferedImage read = ImageIO.read(inputStream);
-                                tile = new Tile(ts, x, y, z, read);
-                                tile.setLoaded(true);
-                                memTileCache.addTile(tile);
-                            } else {
-                                dispatchJob(tile);
-                            }
-
-                        }
-
-                    }
-
-                } else {
-                    LOG.log(Level.FINEST, "cache miss for tile: {0}", fileName);
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            } finally {
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
-            }
+            tile = new Tile(ts, x, y, z);
+            memTileCache.addTile(tile);
+            REQUESTPROCESSOR.post(new RunnableImpl(ts, x, y, z, tile));
         } else if (tile.isLoaded()
                 && !tile.hasError()
                 && !tiles.contains(MessageFormat.format(PATH_PATTERN, ts.getName(), x, y, z))) {
@@ -231,23 +192,23 @@ public class PersistentTileCache implements TileCache {
             }
         }
 
-        private synchronized File createTileFile(TileSource tileSource, int x, int y, int z) throws IOException {
+        private File createTileFile(TileSource tileSource, int x, int y, int z) throws IOException {
             File folder = getFolder(tileSource.getName(), x, y, z);
             File tileFileObject = getFileOfParent(folder, TILE_NAME);
             if (tileFileObject == null) {
                 tileFileObject = new File(folder, TILE_NAME);
-                try {
-                    if (!tileFileObject.exists()) {
-                        if (tileFileObject.createNewFile()) {
-                            //  we have to wait a little bit
-                            // to let the filesystem release the lock to the
-                            // file
-                            wait(100);
-                        }
+//                try {
+                if (!tileFileObject.exists()) {
+                    if (tileFileObject.createNewFile()) {
+                        //  we have to wait a little bit
+                        // to let the filesystem release the lock to the
+                        // file
+//                            wait(100);
                     }
-                } catch (InterruptedException ex) {
-                    Exceptions.printStackTrace(ex);
                 }
+//                } catch (InterruptedException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
             }
 
             return tileFileObject;
@@ -299,8 +260,7 @@ public class PersistentTileCache implements TileCache {
                             tile.getYtile(),
                             tile.getZoom());
                     if (!runningTask.containsValue(taskName)) {
-                        RequestProcessor.Task task = REQUESTPROCESSOR.create(
-                                new PersistJob(tile));
+                        RequestProcessor.Task task = REQUESTPROCESSOR.create(new PersistJob(tile));
 
                         runningTask.put(task, taskName);
                         task.addTaskListener(JobDispatcher.this);
@@ -313,7 +273,109 @@ public class PersistentTileCache implements TileCache {
         @Override
         public void taskFinished(Task task) {
             synchronized (MUTEX) {
+                task.removeTaskListener(JobDispatcher.this);
                 runningTask.remove(task);
+            }
+        }
+    }
+
+    private static class RunnableImpl implements Runnable {
+
+        private final TileSource ts;
+        private final int x;
+        private final int y;
+        private final int z;
+        private final Tile tile;
+
+        public RunnableImpl(TileSource ts, int x, int y, int z, Tile tile) {
+            this.ts = ts;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.tile = tile;
+        }
+
+        @Override
+        public void run() {
+            InputStream inputStream = null;
+            try {
+
+                String fileName = MessageFormat.format(PATH_PATTERN, ts.getName(), x, y, z);
+                if (tiles.contains(fileName)) {
+                    File tileFolder = getFileFromCacheDir(fileName);
+
+                    if (tileFolder != null) {
+                        final File tileObject = getTile(tileFolder);
+
+                        if (tileObject != null) {
+                            inputStream = new FileInputStream(tileObject);
+                            BufferedImage image = ImageIO.read(inputStream);
+                            tile.setImage(image);
+                            tile.setLoaded(true);
+
+                            long lastChacked = System.currentTimeMillis() - tileObject.lastModified();
+
+                            // check whether tile is older than a week
+                            if (lastChacked <= WEEK_IN_MILLISECONDS) {
+                                REQUESTPROCESSOR.post(new RunnableImpl1(tileObject, ts, x, y, z));
+                            } else {
+                                dispatchJob(tile);
+                            }
+                        }
+                    }
+                } else {
+                    LOG.log(Level.INFO, "cache miss for tile: {0}", fileName);
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+        }
+    }
+
+    private static class RunnableImpl1 implements Runnable {
+
+        private final File tileObject;
+        private final int z;
+        private final int y;
+        private final int x;
+        private final TileSource ts;
+
+        private RunnableImpl1(File tileObject, TileSource ts, int x, int y, int z) {
+            this.tileObject = tileObject;
+            this.ts = ts;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        @Override
+        public void run() {
+            InputStream inputStream = null;
+            try {
+                inputStream = new FileInputStream(tileObject);
+                BufferedImage image = ImageIO.read(inputStream);
+                Tile tile = new Tile(ts, x, y, z, image);
+                dispatchJob(tile);
+            } catch (FileNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
     }

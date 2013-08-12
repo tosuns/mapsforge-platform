@@ -22,8 +22,8 @@ import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassPrope
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregationProcessNode;
-import de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy.DefaultAggregationStrategy;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.DefaultCachingStrategy;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy.DefaultAggregationStrategy;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.AggregationStrategy;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.CachingStrategy;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.DescriptorFactory;
@@ -205,7 +205,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
 
                 int counter = 0;
 
-                LOG.log(Level.FINE, "clean segments: {0}", inputList.toString());
+                LOG.log(Level.FINE, "clean segments: {0}", inputList.size());
 
                 for (GPSSegment inputSegment : inputList) {
                     if (canceled.get()) {

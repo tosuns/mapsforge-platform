@@ -12,8 +12,8 @@ import de.fub.gpxmodule.xml.Trkseg;
 import de.fub.gpxmodule.xml.Wpt;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -41,7 +41,7 @@ public class GPSUtils {
         return 0;
     }
 
-    public static Gpx convert(List<TrackSegment> trackSegments) {
+    public static Gpx convert(Collection<TrackSegment> trackSegments) {
         Gpx gpx = new Gpx();
         gpx.setCreator("Mapsforge Detector");
         Trk trk = new Trk();

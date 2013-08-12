@@ -36,8 +36,8 @@ public class Tile<T extends ILocation> {
 
     public Rectangle2D.Double size;
     public boolean isLeaf;
-    public List<Tile<T>> children;
-    public Set<T> elements;
+    private List<Tile<T>> children;
+    private final Set<T> elements;
     public Tile<T> parent;
     private String ID = "";
     public boolean isLoaded;
@@ -54,12 +54,16 @@ public class Tile<T extends ILocation> {
         elements = new HashSet<T>(tm.getMaxElementsPerTile() / 10);
     }
 
+    public Set<T> getElements() {
+        return elements;
+    }
+
     public int getElemCount() {
         if (isLeaf) {
-            return elements.size();
+            return getElements().size();
         }
         int elemCount = 0;
-        for (Tile<T> child : children) {
+        for (Tile<T> child : getChildren()) {
             elemCount += child.getElemCount();
         }
         return elemCount;
@@ -86,7 +90,6 @@ public class Tile<T extends ILocation> {
         // make new leafs
         Rectangle2D.Double tileSize = getSize();
         int splitFactor = tm.getSplitFactor();
-        children = new ArrayList<Tile<T>>(splitFactor * splitFactor);
         double subTileWidth = tileSize.getWidth() / splitFactor;
         double subTileHeight = tileSize.getHeight() / splitFactor;
         double x, y;
@@ -98,31 +101,36 @@ public class Tile<T extends ILocation> {
                     * x, tileSize.getMinY() + subTileHeight * y,
                     subTileWidth, subTileHeight));
             childTile.setID("".equals(getID()) ? String.valueOf(i) : MessageFormat.format("{0}-{1}", getID(), i));
-            children.add(childTile);
+            getChildren().add(childTile);
         }
         // push points
-        for (T elem : elements) {
+        for (T elem : getElements()) {
             Tile<T> subTile = getSubTile(elem);
             if (subTile == null) {
                 continue;
             }
-            subTile.elements.add(elem);
+            subTile.getElements().add(elem);
         }
         // turn old leaf to node
         isLeaf = false;
-        elements.clear();
+        getElements().clear();
 
         // recurse!
-        for (Tile<T> subTile : children) {
+        for (Tile<T> subTile : getChildren()) {
             subTile.setLoaded(isLoaded);
             if (subTile.getElemCount() > tm.getMaxElementsPerTile()
-                    && subTile.size.getWidth() >= tm.getMinimumSplitSize()
-                    .getWidth()
-                    && subTile.size.getHeight() >= tm.getMinimumSplitSize()
-                    .getHeight()) {
+                    && subTile.size.getWidth() >= tm.getMinimumSplitSize().getWidth()
+                    && subTile.size.getHeight() >= tm.getMinimumSplitSize().getHeight()) {
                 subTile.split();
             }
         }
+    }
+
+    public List<Tile<T>> getChildren() {
+        if (this.children == null) {
+            this.children = new ArrayList<Tile<T>>(200);
+        }
+        return this.children;
     }
 
     /**
@@ -134,22 +142,23 @@ public class Tile<T extends ILocation> {
     public Tile<T> getSubTile(ILocation loc) {
         Rectangle2D.Double tileSize = getSize();
         int splitFactor = tm.getSplitFactor();
-        double relXPos = loc.getLat() - tileSize.getMinX();
-        double relYPos = loc.getLon() - tileSize.getMinY();
+        double relXPos = loc.getLon() - tileSize.getMinX();
+        double relYPos = loc.getLat() - tileSize.getMinY();
         double subTileWidth = tileSize.getWidth() / splitFactor;
         double subTileHeight = tileSize.getHeight() / splitFactor;
         int xTile = (int) Math.floor(relXPos / subTileWidth);
         int yTile = (int) Math.floor(relYPos / subTileHeight);
         int index = yTile * splitFactor + xTile;
         Tile<T> tile = null;
-        if (index < children.size()) {
-            tile = children.get(children.size() - 1);
-        } else if (index > -1 && !children.isEmpty()) {
-            tile = children.get(0);
-        } else {
-            tile = children.get(index);
+        if (!getChildren().isEmpty()) {
+            if (index > -1 && index < getChildren().size()) {
+                tile = getChildren().get(index);
+            } else if (index > getElements().size() - 1) {
+                tile = getChildren().get(getChildren().size() - 1);
+            } else if (index < 0) {
+                tile = getChildren().get(0);
+            }
         }
-
         return tile;
     }
 
@@ -189,10 +198,10 @@ public class Tile<T extends ILocation> {
      */
     public Set<T> getInnerNodes() {
         if (isLeaf) {
-            return elements;
+            return getElements();
         }
         Set<T> result = new HashSet<T>(tm.getMaxElementsPerTile() * 2);
-        for (Tile<T> subTile : children) {
+        for (Tile<T> subTile : getChildren()) {
             result.addAll(subTile.getInnerNodes());
         }
         return result;
@@ -222,7 +231,7 @@ public class Tile<T extends ILocation> {
                     Math.round(count / (double) tm.getMaxElementsPerTile()
                     * 100.0)));
             if (debug) {
-                for (T elem : elements) {
+                for (T elem : getElements()) {
                     sb.append("\n\t").append(elem.toDebugString());
                 }
             }
@@ -230,7 +239,7 @@ public class Tile<T extends ILocation> {
             sb.append(String.format("Tile %s [%.15f ~ %.15f ; %.15f ~ %.15f]",
                     getID(), getSize().getMinX(), getSize().getMaxX(),
                     getSize().getMinY(), getSize().getMaxY()));
-            for (Tile<T> subTile : children) {
+            for (Tile<T> subTile : getChildren()) {
                 sb.append("\n  ").append(
                         subTile.toStringHelper(debug).replace("\n", "\n  "));
             }
@@ -287,7 +296,7 @@ public class Tile<T extends ILocation> {
             resultSet.add(this);
             return resultSet;
         }
-        for (Tile<T> child : children) {
+        for (Tile<T> child : getChildren()) {
             resultSet.addAll(child.getLeafChildren());
         }
         return resultSet;
@@ -298,7 +307,7 @@ public class Tile<T extends ILocation> {
         if (isLeaf) {
             return resultSet;
         }
-        for (Tile<T> child : children) {
+        for (Tile<T> child : getChildren()) {
             resultSet.addAll(child.getLeafChildren());
         }
         return resultSet;

@@ -162,7 +162,9 @@ public class AggContentPanel extends MapViewer implements
         // sort layers
         Collections.sort(paintLayers, new LayerComparator());
         for (AbstractLayer<?> layer : paintLayers) {
-            layer.paintLayer(g2, new Rectangle(getSize()));
+            if (layer.isVisible()) {
+                layer.paintLayer(g2, new Rectangle(getSize()));
+            }
         }
     }
 

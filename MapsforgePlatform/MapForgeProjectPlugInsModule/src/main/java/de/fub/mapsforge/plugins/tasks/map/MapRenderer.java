@@ -9,10 +9,12 @@ import de.fub.mapforgeproject.api.process.ProcessState;
 import de.fub.mapsforge.project.aggregator.pipeline.AggregatorProcessPipeline;
 import de.fub.mapsforge.project.aggregator.xml.Source;
 import de.fub.mapsforge.project.detector.model.Detector;
+import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.InferenceModelResultDataSet;
 import de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.Task;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.mapsforge.project.detector.model.xmls.Property;
+import de.fub.mapsforge.project.detector.utils.GPSUtils;
 import de.fub.mapsforge.project.models.Aggregator;
 import de.fub.mapsforge.project.utils.AggregatorUtils;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
@@ -22,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.swing.JComponent;
@@ -111,7 +114,7 @@ public class MapRenderer extends Task {
             if (aggregator != null && aggregator.getAggregatorDescriptor() != null) {
 
                 InferenceModelResultDataSet resultDataSet = getResultDataSet();
-                for (Entry<String, List<Gpx>> entry : resultDataSet.entrySet()) {
+                for (Entry<String, HashSet<TrackSegment>> entry : resultDataSet.entrySet()) {
                     try {
                         if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                             // specify the name of the aggregator
@@ -130,16 +133,15 @@ public class MapRenderer extends Task {
                                     MessageFormat.format("MapRendererTransportation: {0}",
                                     aggregator.getAggregatorDescriptor().getName()),
                                     "UTF-8"));
-
-                            for (Gpx gpx : entry.getValue()) {
-                                File tmpFile = mapRendererSupport.createTmpfile(tmpFolder);
-                                try {
-                                    AggregatorUtils.saveGpxToFile(tmpFile, gpx);
-                                    sourceList.add(new Source(tmpFile.getAbsolutePath()));
-                                } catch (JAXBException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                }
+                            Gpx gpx = GPSUtils.convert(entry.getValue());
+                            File tmpFile = mapRendererSupport.createTmpfile(tmpFolder);
+                            try {
+                                AggregatorUtils.saveGpxToFile(tmpFile, gpx);
+                                sourceList.add(new Source(tmpFile.getAbsolutePath()));
+                            } catch (JAXBException ex) {
+                                Exceptions.printStackTrace(ex);
                             }
+
                             aggregator.updateSource();
                             aggregator.start();
                             aggregatorList.add(aggregator);

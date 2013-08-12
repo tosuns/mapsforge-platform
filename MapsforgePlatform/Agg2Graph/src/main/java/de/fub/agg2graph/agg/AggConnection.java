@@ -305,7 +305,7 @@ public class AggConnection extends AbstractEdge<AggNode> {
             // options loaded
             Tile<AggNode> tile = tm.getTile(to);
             if (tc.isTileLoaded(tile)) {
-                for (AggNode node : tile.elements) {
+                for (AggNode node : tile.getElements()) {
                     if (node.equals(to)) {
                         fillTo(node);
                         return;

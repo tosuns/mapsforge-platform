@@ -14,6 +14,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
@@ -26,7 +27,20 @@ import org.openide.util.RequestProcessor;
 @ActionRegistration(lazy = false,
         displayName = "#CTL_EvaluateMapsAction")
 //@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 260)
-@ActionReference(path = "Projects/Mapsforge/Detector/Tasks/MapRenderer/Actions", position = 3000)
+@ActionReferences({
+    @ActionReference(
+            id =
+            @ActionID(
+            category = "Aggregator",
+            id = "de.fub.mapsforge.plugins.tasks.eval.EvaluateMapsAction"),
+            path = "Loaders/text/aggregationbuilder+xml/Actions", position = 280),
+    @ActionReference(
+            id =
+            @ActionID(
+            category = "Aggregator",
+            id = "de.fub.mapsforge.plugins.tasks.eval.EvaluateMapsAction"),
+            path = "Projects/Mapsforge/Detector/Tasks/MapRenderer/Actions", position = 3000)
+})
 @Messages("CTL_EvaluateMapsAction=Compare Maps")
 public final class EvaluateMapsAction extends AbstractAction implements ContextAwareAction {
 

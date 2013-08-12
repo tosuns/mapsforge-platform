@@ -157,7 +157,7 @@
             <artifactId>org-netbeans-swing-outline</artifactId>
             <groupId>org.netbeans.api</groupId>
             <type>jar</type>
-            <version>RELEASE73</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <artifactId>gpxfileType</artifactId>
@@ -193,6 +193,7 @@
                     <publicPackages>
                         <publicPackage>de.fub.mapsforge.project.detector.model</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.converter</publicPackage>
+                        <publicPackage>de.fub.mapsforge.project.detector.model.gpx</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.inference</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.inference.features</publicPackage>
                         <publicPackage>de.fub.mapsforge.project.detector.model.inference.processhandler</publicPackage>

@@ -9,10 +9,10 @@ import de.fub.agg2graph.agg.ITraceDistance;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.mapsforge.project.aggregator.pipeline.processes.AggregationProcess;
-import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.MergeHandler;
-import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.TraceDistance;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.AggregationStrategy;
 import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.DescriptorFactory;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.MergeHandler;
+import de.fub.mapsforge.project.aggregator.pipeline.wrapper.interfaces.TraceDistance;
 import de.fub.mapsforge.project.aggregator.xml.ProcessDescriptor;
 import de.fub.mapsforge.project.aggregator.xml.Property;
 import de.fub.mapsforge.project.aggregator.xml.PropertySection;
@@ -312,16 +312,16 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                     }
                 }
 
-                IMergeHandler baseMergeHandler = strategy.getBaseMergeHandler();
-                if (baseMergeHandler instanceof MergeHandler) {
-                    MergeHandler mergeHandler = (MergeHandler) baseMergeHandler;
-                    Node nodeDelegate = mergeHandler.getNodeDelegate();
-                    PropertySet[] propertySets = nodeDelegate.getPropertySets();
-                    for (PropertySet propertySet : propertySets) {
-                        Sheet.Set set = convertToSet(propertySet);
-                        sheet.put(set);
-                    }
-                }
+//                IMergeHandler baseMergeHandler = strategy.getBaseMergeHandler();
+//                if (baseMergeHandler instanceof MergeHandler) {
+//                    MergeHandler mergeHandler = (MergeHandler) baseMergeHandler;
+//                    Node nodeDelegate = mergeHandler.getNodeDelegate();
+//                    PropertySet[] propertySets = nodeDelegate.getPropertySets();
+//                    for (PropertySet propertySet : propertySets) {
+//                        Sheet.Set set = convertToSet(propertySet);
+//                        sheet.put(set);
+//                    }
+//                }
                 ITraceDistance traceDist = strategy.getTraceDist();
                 if (traceDist instanceof TraceDistance) {
                     TraceDistance traceDistance = (TraceDistance) traceDist;
@@ -424,9 +424,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
 
             private final de.fub.mapsforge.project.aggregator.xml.Property property;
             private final PropertySection section;
-            private ClassWrapper wrapper = strategy.getBaseMergeHandler() != null
-                    ? new ClassWrapper(strategy.getBaseMergeHandler().getClass())
-                    : null;
+            private ClassWrapper wrapper = null; //strategy.getBaseMergeHandler() != null ? new ClassWrapper(strategy.getBaseMergeHandler().getClass()) : null;
 
             public MergeHandlerProperty(PropertySection propertySection, de.fub.mapsforge.project.aggregator.xml.Property property) {
                 super(property.getId(), property.getName(), property.getDescription(), MergeHandler.class);

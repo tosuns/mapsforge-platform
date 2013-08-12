@@ -127,15 +127,17 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
         public boolean execute(int value) {
             GPSSegment segment = META_DATA.get(value);
             GPSPoint lastPoint = null;
-            for (GPSPoint point : segment) {
-                if (getLayerManager().getMapViewer().getMapPosition(point.getLat(), point.getLon()) != null) {
-                    if (lastPoint != null) {
+            if (segment != null) {
+                for (GPSPoint point : segment) {
+                    if (getLayerManager().getMapViewer().getMapPosition(point.getLat(), point.getLon()) != null) {
+                        if (lastPoint != null) {
 
-                        drawLine(lastPoint, point, getRenderingOptions());
+                            drawLine(lastPoint, point, getRenderingOptions());
+                        }
+                        drawPoint(point, getRenderingOptions());
                     }
-                    drawPoint(point, getRenderingOptions());
+                    lastPoint = point;
                 }
-                lastPoint = point;
             }
             return true;
         }

@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.detector.model.inference.processhandler;
 
-import de.fub.gpxmodule.xml.Gpx;
 import de.fub.mapsforge.project.detector.model.gpx.TrackSegment;
 import de.fub.mapsforge.project.detector.model.inference.AbstractInferenceModel;
 import de.fub.mapsforge.project.detector.model.inference.InferenceMode;
@@ -12,10 +11,8 @@ import de.fub.mapsforge.project.detector.model.inference.InferenceModelInputData
 import de.fub.mapsforge.project.detector.model.inference.features.FeatureProcess;
 import de.fub.mapsforge.project.detector.model.inference.ui.InferenceResultPanel;
 import de.fub.mapsforge.project.detector.model.xmls.ProcessHandlerDescriptor;
-import de.fub.mapsforge.project.detector.utils.GPSUtils;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -124,7 +121,7 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
             // update result set of the inferenceModel
             for (Entry<String, List<Instance>> entry : resultMap.entrySet()) {
-                List<TrackSegment> trackSegmentList = new ArrayList<TrackSegment>();
+                HashSet<TrackSegment> trackSegmentList = new HashSet<TrackSegment>();
                 for (Instance instance : entry.getValue()) {
                     TrackSegment trackSegment = instanceToTrackSegmentMap.get(instance);
                     if (trackSegment != null) {
@@ -134,8 +131,7 @@ public class InferenceDataProcessHandler extends InferenceModelProcessHandler {
 
                 // only those classes are put into  the result data set, which are not empty
                 if (!trackSegmentList.isEmpty()) {
-                    Gpx gpx = GPSUtils.convert(trackSegmentList);
-                    getInferenceModel().getResult().put(entry.getKey(), Arrays.asList(gpx));
+                    getInferenceModel().getResult().put(entry.getKey(), trackSegmentList);
                 }
             }
         } else {

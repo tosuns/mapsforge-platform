@@ -4,7 +4,6 @@
  */
 package de.fub.mapsforge.project.aggregator.pipeline.wrapper.aggregation.strategy;
 
-import de.fub.agg2graph.agg.IMergeHandler;
 import de.fub.agg2graph.agg.ITraceDistance;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.mapsforge.project.aggregator.factories.nodes.properties.ClassWrapper;
@@ -261,9 +260,7 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
                                     set.put(new NodeProperty(property));
                                 } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
                                     ClassProperty classProperty = new ClassProperty(property.getId(), property.getName(), property.getDescription(), MergeHandler.class) {
-                                        private ClassWrapper wrapper = strategy.getBaseMergeHandler() != null
-                                                ? new ClassWrapper(strategy.getBaseMergeHandler().getClass())
-                                                : null;
+                                        private ClassWrapper wrapper = null; //strategy.getBaseMergeHandler() != null ? new ClassWrapper(strategy.getBaseMergeHandler().getClass()) : null;
 
                                         @Override
                                         public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
@@ -322,23 +319,23 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
                     }
 
 
-                    IMergeHandler baseMergeHandler = strategy.getBaseMergeHandler();
-                    if (baseMergeHandler instanceof MergeHandler) {
-                        MergeHandler mergeHandler = (MergeHandler) baseMergeHandler;
-                        PropertySet[] propertySets = mergeHandler.getNodeDelegate().getPropertySets();
-
-                        for (PropertySet propertySet : propertySets) {
-                            Sheet.Set set = Sheet.createPropertiesSet();
-                            set.setName(propertySet.getName());
-                            set.setDisplayName(propertySet.getDisplayName());
-                            set.setShortDescription(propertySet.getShortDescription());
-                            sheet.put(set);
-
-                            for (Property<?> nodeProperty : propertySet.getProperties()) {
-                                set.put(nodeProperty);
-                            }
-                        }
-                    }
+//                    IMergeHandler baseMergeHandler = strategy.getBaseMergeHandler();
+//                    if (baseMergeHandler instanceof MergeHandler) {
+//                        MergeHandler mergeHandler = (MergeHandler) baseMergeHandler;
+//                        PropertySet[] propertySets = mergeHandler.getNodeDelegate().getPropertySets();
+//
+//                        for (PropertySet propertySet : propertySets) {
+//                            Sheet.Set set = Sheet.createPropertiesSet();
+//                            set.setName(propertySet.getName());
+//                            set.setDisplayName(propertySet.getDisplayName());
+//                            set.setShortDescription(propertySet.getShortDescription());
+//                            sheet.put(set);
+//
+//                            for (Property<?> nodeProperty : propertySet.getProperties()) {
+//                                set.put(nodeProperty);
+//                            }
+//                        }
+//                    }
                     ITraceDistance traceDist = strategy.getTraceDist();
                     if (traceDist instanceof TraceDistance) {
                         TraceDistance traceDistance = (TraceDistance) traceDist;

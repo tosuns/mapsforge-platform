@@ -24,6 +24,7 @@ import de.fub.agg2graph.structs.IEdge;
 import de.fub.agg2graph.structs.ILocation;
 import java.awt.geom.Rectangle2D.Double;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,7 @@ public class DefaultCachingStrategy implements ICachingStrategy {
     protected AggContainer agg;
     protected TileManager tm;
     protected TileCache tc;
+    private final Object MUTEX = new Object();
 
     public DefaultCachingStrategy() {
         tc = new TileCache(this, null, 100);
@@ -122,8 +124,7 @@ public class DefaultCachingStrategy implements ICachingStrategy {
 
     @Override
     public String toString() {
-        return String
-                .format("DefaultCachingStrategy, %d nodes", getNodeCount());
+        return String.format("DefaultCachingStrategy, %d nodes", getNodeCount());
     }
 
     @Override
@@ -196,12 +197,16 @@ public class DefaultCachingStrategy implements ICachingStrategy {
 
     @Override
     public Set<AggNode> getLoadedNodes() {
-        Set<Tile<AggNode>> tiles = tc.getActiveTiles();
-        Set<AggNode> nodes = new HashSet<AggNode>();
-        for (Tile<AggNode> tile : tiles) {
-            nodes.addAll(tile.getInnerNodes());
+        synchronized (MUTEX) {
+            final ArrayList<Tile<AggNode>> tiles = new ArrayList<Tile<AggNode>>(tc.getActiveTiles());
+            final Set<AggNode> nodes = new HashSet<AggNode>();
+            int size = tiles.size();
+            for (int i = 0; i < size; i++) {
+                Tile<AggNode> tile = tiles.get(i);
+                nodes.addAll(tile.getInnerNodes());
+            }
+            return nodes;
         }
-        return nodes;
     }
 
     @Override

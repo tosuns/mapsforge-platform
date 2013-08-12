@@ -349,6 +349,9 @@ MapsforgePlatform/MapForgeProjectPlugInsModule/pom.xml -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/mapmatcher/CurveToCurveMapMatcher.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/mapmatcher/MapMatcher.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/mapmatcher/PointToPointMapMatcher.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/accuracy/AccuracyAnalyzer.java -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/accuracy/AccuracyResultTopComponent.form -text
+MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/accuracy/AccuracyResultTopComponent.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/Barchart.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/EvaluateMapAction.java -text
 MapsforgePlatform/MapForgeProjectPlugInsModule/src/main/java/de/fub/mapsforge/plugins/tasks/eval/EvaluateMapsAction.java -text
@@ -631,6 +634,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/EvaluationProcessHandler.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/InferenceDataProcessHandler.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/InferenceModelProcessHandler.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/SpecialInferenceDataProcessHandler.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/processhandler/TrainingsDataProcessHandler.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/AttributeSelectionComponent.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/mapsforge/project/detector/model/inference/ui/AttributeSelectionComponent.java -text

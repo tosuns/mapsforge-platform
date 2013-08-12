@@ -11,7 +11,6 @@ import de.fub.mapsforge.project.utils.AggregatorUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.prefs.Preferences;
 import javax.xml.bind.JAXBException;
 import org.netbeans.api.project.Project;
 import org.openide.explorer.ExplorerManager;
@@ -20,9 +19,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.FilterNode;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 
 /**
@@ -40,23 +37,23 @@ public class AggregatorVisualPanel3 extends javax.swing.JPanel implements Explor
      */
     public AggregatorVisualPanel3() {
         initComponents();
-        String datasourcefileObjectPath = null;
-        try {
-            // this way depends on the abailablity of the necessary data in the
-            // NbPreference module.
-            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
-            if (classLoader != null) {
-                Preferences preferences = NbPreferences.forModule(classLoader.loadClass("de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory"));
-                datasourcefileObjectPath = preferences.get("GPX Datasource", null);
-                if (datasourcefileObjectPath == null) {
-                    throw new FileNotFoundException(FILE_NOT_FOUND_MESSAGE);
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            datasourcefileObjectPath = alternativeMethod();
-        } catch (FileNotFoundException ex) {
-            datasourcefileObjectPath = alternativeMethod();
-        }
+        String datasourcefileObjectPath = alternativeMethod();
+//        try {
+//            // this way depends on the abailablity of the necessary data in the
+//            // NbPreference module.
+//            ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+//            if (classLoader != null) {
+//                Preferences preferences = NbPreferences.forModule(classLoader.loadClass("de.fub.mapsforge.project.datasource.MapsForgeDatasourceNodeFactory"));
+//                datasourcefileObjectPath = preferences.get("GPX Datasource", null);
+//                if (datasourcefileObjectPath == null) {
+//                    throw new FileNotFoundException(FILE_NOT_FOUND_MESSAGE);
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            datasourcefileObjectPath = alternativeMethod();
+//        } catch (FileNotFoundException ex) {
+//            datasourcefileObjectPath = alternativeMethod();
+//        }
         try {
             if (datasourcefileObjectPath != null) {
                 File file = new File(datasourcefileObjectPath);
@@ -92,6 +89,7 @@ public class AggregatorVisualPanel3 extends javax.swing.JPanel implements Explor
                     MapsForge projectData = mapsForgeProject.getProjectData();
                     if (projectData != null) {
                         folderPath = projectData.getProjectFolders().getFolderPath(MapsForgeDatasourceNodeFactory.DATASOURCE_FILENAME);
+                        folderPath = mapsForgeProject.getProjectDirectory().getFileObject(folderPath).getPath();
                     }
                 } catch (JAXBException ex) {
                     Exceptions.printStackTrace(ex);

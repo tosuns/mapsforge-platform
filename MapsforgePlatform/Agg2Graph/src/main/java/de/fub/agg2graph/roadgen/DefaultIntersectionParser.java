@@ -100,7 +100,8 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                 while (currentConn.getTo().getIntersection() == null) {
                     road.getPath().add(currentConn);
                     if (currentConn.getTo().getVisibleOut() == null
-                            || !currentConn.getTo().getVisibleOut().iterator().hasNext()) {
+                            || currentConn.getTo().getVisibleOut().size() > 1
+                            || currentConn.getTo().getVisibleOut().isEmpty()) {
 
                         Intersection newIntersection = new Intersection(currentConn.getTo());
                         newIntersection.in.add(road);
@@ -116,7 +117,7 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                             // current node is the first node in the path
                             node = currentConn;
                         }
-                        // create a inter section
+                        // create a intersection
                         Intersection newIntersection = new Intersection(node.getTo());
                         newIntersection.in.add(road);
                         newIntersections.add(newIntersection);
@@ -135,13 +136,15 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                         }
                         set.add(currentConn);
                         currentConn = currentConn.getTo().getVisibleOut()
-                                .iterator().next(); // there is only one,
+                                .iterator().next();
+                        // there is only one,
                         // otherwise
                         // it would
                         // have been an intersection
                         // itself
                     }
                 }
+                set.clear();
 
                 /// add road to road network only when there is valid end intersection
                 if (currentConn.getTo().getIntersection() != null) {

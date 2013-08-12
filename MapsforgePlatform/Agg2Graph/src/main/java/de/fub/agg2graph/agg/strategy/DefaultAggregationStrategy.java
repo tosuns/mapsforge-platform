@@ -21,7 +21,6 @@ import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.agg.AggregationStrategyFactory;
 import de.fub.agg2graph.agg.IMergeHandler;
-import de.fub.agg2graph.agg.ITraceDistance;
 import de.fub.agg2graph.agg.MergeHandlerFactory;
 import de.fub.agg2graph.agg.TraceDistanceFactory;
 import de.fub.agg2graph.structs.BoundedQueue;
@@ -97,6 +96,7 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
         if (aggContainer.getCachingStrategy() == null
                 || aggContainer.getCachingStrategy().getNodeCount() == 0) {
             int i = 0;
+            clear(); // we have to clear the previouse last node to avoid unwanted connection from the previouse added segment.
             while (i < segment.size()) {
                 AggNode node = new AggNode(segment.get(i), aggContainer);
                 node.setID("A-" + segment.get(i).getID());

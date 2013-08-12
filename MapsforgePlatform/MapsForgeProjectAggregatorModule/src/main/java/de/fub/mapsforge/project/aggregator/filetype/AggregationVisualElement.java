@@ -133,6 +133,7 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
     private void initGuiComponents() {
         initComponents();
+        toolbar.setFloatable(false);
         toolbar.add(new JToolBar.Separator());
         setUpToolbar();
         outlineView1.getOutline().setRowHeight(300);
