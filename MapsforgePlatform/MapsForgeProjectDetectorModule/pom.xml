@@ -193,18 +193,18 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>de.fub.mapsforge.project.detector.model</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.converter</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.gpx</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.inference</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.inference.features</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.inference.processhandler</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.inference.ui</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.model.xmls</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.ui.customizer</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.detector.utils</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.converter</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.gpx</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.inference</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.inference.features</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.inference.processhandler</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.inference.ui</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.pipeline.postprocessors.tasks</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.pipeline.preprocessors.filters</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.model.xmls</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.ui.customizer</publicPackage>
+                        <publicPackage>de.fub.maps.project.detector.utils</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

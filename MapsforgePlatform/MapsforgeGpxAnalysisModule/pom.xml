@@ -109,9 +109,9 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>de.fub.mapsforge.gpx.analysis.models</publicPackage>
-                        <publicPackage>de.fub.mapsforge.gpx.analysis.ui</publicPackage>
-                        <publicPackage>de.fub.mapsforge.gpx.analysis.ui.charts</publicPackage>
+                        <publicPackage>de.fub.maps.gpx.analysis.models</publicPackage>
+                        <publicPackage>de.fub.maps.gpx.analysis.ui</publicPackage>
+                        <publicPackage>de.fub.maps.gpx.analysis.ui.charts</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

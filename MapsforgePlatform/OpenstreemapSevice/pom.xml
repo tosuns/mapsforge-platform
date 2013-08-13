@@ -156,9 +156,9 @@
                         </goals>
                         <configuration>
                             <schemaFiles>gpx.xsd</schemaFiles>
-                            <packageName>de.fub.mapsforgeplatform.xml.gpx</packageName> The name of your generated source package
+                            <packageName>de.fub.maps.project.openstreetmap.xml.gpx</packageName> The name of your generated source package
                             <!--<staleFile>${project.build.directory}/jaxb2/.schema1XjcStaleFlag</staleFile>-->
-                            <schemaDirectory>${project.basedir}/src/main/resources/de/fub/mapsforgeplatform/xsd</schemaDirectory>
+                            <schemaDirectory>${project.basedir}/src/main/resources/de/fub/maps/project/openstreetmap/xsd</schemaDirectory>
                         </configuration>
                     </execution>
 <!--                    <execution>
@@ -187,8 +187,8 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>de.fub.mapsforgeplatform.openstreetmap.service</publicPackage>
-                        <publicPackage>de.fub.mapsforgeplatform.openstreetmap.xml.osm</publicPackage>
+                        <publicPackage>de.fub.maps.project.openstreetmap.service</publicPackage>
+                        <publicPackage>de.fub.maps.project.openstreetmap.xml.osm</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

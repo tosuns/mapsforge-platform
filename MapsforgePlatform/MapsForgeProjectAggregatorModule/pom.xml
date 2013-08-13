@@ -235,15 +235,15 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>de.fub.mapsforge.project</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.aggregator.factories.nodes.properties</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.aggregator.filetype</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.aggregator.pipeline</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.aggregator.pipeline.processes</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.aggregator.xml</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.aggregator.xml.adapter</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.models</publicPackage>
-                        <publicPackage>de.fub.mapsforge.project.utils</publicPackage>
+                        <publicPackage>de.fub.maps.project</publicPackage>
+                        <publicPackage>de.fub.maps.project.aggregator.factories.nodes.properties</publicPackage>
+                        <publicPackage>de.fub.maps.project.aggregator.filetype</publicPackage>
+                        <publicPackage>de.fub.maps.project.aggregator.pipeline</publicPackage>
+                        <publicPackage>de.fub.maps.project.aggregator.pipeline.processes</publicPackage>
+                        <publicPackage>de.fub.maps.project.aggregator.xml</publicPackage>
+                        <publicPackage>de.fub.maps.project.aggregator.xml.adapter</publicPackage>
+                        <publicPackage>de.fub.maps.project.models</publicPackage>
+                        <publicPackage>de.fub.maps.project.utils</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

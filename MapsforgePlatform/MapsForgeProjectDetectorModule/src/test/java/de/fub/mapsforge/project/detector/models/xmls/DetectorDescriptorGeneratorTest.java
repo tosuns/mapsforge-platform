@@ -4,7 +4,7 @@
  */
 package de.fub.mapsforge.project.detector.models.xmls;
 
-import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
+import de.fub.maps.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.utilsmodule.xml.generator.SchemaGenertator;
 import java.io.IOException;
 import java.util.List;

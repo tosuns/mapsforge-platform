@@ -38,7 +38,7 @@ import org.openide.util.WeakListeners;
 
 @ActionID(
         category = "GPX",
-        id = "de.fub.mapforgeproject.actions.GpxMergeAction")
+        id = "de.fub.maps.project.actions.GpxMergeAction")
 @ActionRegistration(
         //    iconBase = "de/fub/gpxmodule/icons/gpxmerge.png",
         displayName = "#CTL_GpxMergeAction", lazy = false)

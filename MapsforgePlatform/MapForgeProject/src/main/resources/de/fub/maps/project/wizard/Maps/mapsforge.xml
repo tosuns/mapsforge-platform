@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!-- was: no XML declaration present -->
+<mapsforge version="1.0" name="MapsProject">
+    <folders>
+        <folder name="GPX Datasource" path="GPXDatasource"/>
+    </folders>    
+    <properties/>
+</mapsforge>

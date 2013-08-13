@@ -306,6 +306,12 @@
             <artifactId>gpxanalysis</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <artifactId>aggregator</artifactId>
+            <groupId>de.fub.maps.project</groupId>
+            <type>jar</type>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

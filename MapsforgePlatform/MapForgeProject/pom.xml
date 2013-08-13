@@ -133,14 +133,14 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>de.fub.mapforgeproject</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.api.process</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.api.statistics</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.dataobject</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.nodes</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.utils</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.xml</publicPackage>
-                        <publicPackage>de.fub.mapforgeproject.xml.adapters</publicPackage>
+                        <publicPackage>de.fub.maps.project</publicPackage>
+                        <publicPackage>de.fub.maps.project.api.process</publicPackage>
+                        <publicPackage>de.fub.maps.project.api.statistics</publicPackage>
+                        <publicPackage>de.fub.maps.project.dataobject</publicPackage>
+                        <publicPackage>de.fub.maps.project.nodes</publicPackage>
+                        <publicPackage>de.fub.maps.project.utils</publicPackage>
+                        <publicPackage>de.fub.maps.project.xml</publicPackage>
+                        <publicPackage>de.fub.maps.project.xml.adapters</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

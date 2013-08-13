@@ -169,7 +169,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>
-                        <publicPackage>de.fub.mapsforge.project.datasource.service</publicPackage>
+                        <publicPackage>de.fub.maps.project.datasource.service</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

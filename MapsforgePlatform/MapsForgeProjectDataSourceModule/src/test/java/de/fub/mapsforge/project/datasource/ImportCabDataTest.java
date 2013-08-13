@@ -5,7 +5,6 @@
 package de.fub.mapsforge.project.datasource;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

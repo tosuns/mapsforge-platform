@@ -4,9 +4,9 @@
  */
 package de.fub.mapsforge.project.detector.models.xmls;
 
-import de.fub.mapsforge.project.detector.model.xmls.DetectorDescriptor;
-import de.fub.mapsforge.project.detector.model.xmls.InferenceModelDescriptor;
-import de.fub.mapsforge.project.detector.model.xmls.ProcessDescriptor;
+import de.fub.maps.project.detector.model.xmls.DetectorDescriptor;
+import de.fub.maps.project.detector.model.xmls.InferenceModelDescriptor;
+import de.fub.maps.project.detector.model.xmls.ProcessDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

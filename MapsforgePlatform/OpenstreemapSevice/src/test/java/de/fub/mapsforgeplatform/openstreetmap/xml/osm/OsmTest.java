@@ -4,7 +4,8 @@
  */
 package de.fub.mapsforgeplatform.openstreetmap.xml.osm;
 
-import de.fub.mapsforgeplatform.openstreetmap.service.OpenstreetMapService;
+import de.fub.maps.project.openstreetmap.xml.osm.Osm;
+import de.fub.maps.project.openstreetmap.service.OpenstreetMapService;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.xml.bind.JAXBException;
