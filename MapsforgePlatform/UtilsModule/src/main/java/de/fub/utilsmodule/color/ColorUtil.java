@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 /**
+ * Utility class to create a ColorProvider.
  *
  * @author Serdar
  */
@@ -25,11 +26,18 @@ public class ColorUtil {
         return new Color(red, green, blue);
     }
 
+    /**
+     * interface to provide colors.
+     */
     public interface ColorProvider {
 
         public Color getNextColor();
     }
 
+    /**
+     * Default implementation of a ColorProvider. This implementation generates
+     * color via the HSB color model.
+     */
     public static class ColorProviderImpl implements ColorProvider {
 
         private static final Logger LOG = Logger.getLogger(ColorUtil.class.getName());

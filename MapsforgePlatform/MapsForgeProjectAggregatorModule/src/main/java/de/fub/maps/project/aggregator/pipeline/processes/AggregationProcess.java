@@ -16,8 +16,6 @@ import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graphui.layers.AggContainerLayer;
 import de.fub.agg2graphui.layers.MatchingLayer;
 import de.fub.agg2graphui.layers.MergingLayer;
-import de.fub.maps.project.api.process.ProcessPipeline;
-import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.maps.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.maps.project.aggregator.pipeline.AbstractAggregationProcess;
@@ -30,6 +28,8 @@ import de.fub.maps.project.aggregator.pipeline.wrapper.interfaces.DescriptorFact
 import de.fub.maps.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
 import de.fub.maps.project.aggregator.xml.PropertySection;
+import de.fub.maps.project.api.process.ProcessPipeline;
+import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.models.Aggregator;
 import java.awt.Component;
 import java.awt.Image;
@@ -51,6 +51,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Process unit implementations, which handles the aggregation job of an
+ * Aggregator instance.
  *
  * @author Serdar
  */

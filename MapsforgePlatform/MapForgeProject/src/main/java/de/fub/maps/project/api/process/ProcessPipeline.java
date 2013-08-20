@@ -5,6 +5,7 @@
 package de.fub.maps.project.api.process;
 
 import de.fub.maps.project.api.process.Process;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventListener;
@@ -13,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * Abstract class of an ProcessPipeline, which holds process unit of type
+ * <code>Process</code>.
  *
  * @author Serdar
  */
@@ -177,7 +180,7 @@ public abstract class ProcessPipeline<T extends Process<?, ?>> {
 
         @Override
         public String toString() {
-            return "ProcessEvent{" + "source=" + source + ", processMessage=" + processMessage + ", percentfinished=" + percentfinished + '}';
+            return MessageFormat.format("ProcessEvent[source={0}, processMessage={1}, percentfinished={2}]", source, processMessage, percentfinished);
         }
     }
 

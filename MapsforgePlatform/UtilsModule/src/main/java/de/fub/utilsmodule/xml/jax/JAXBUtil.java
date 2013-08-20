@@ -18,10 +18,30 @@ import org.openide.loaders.DataObject;
  */
 public final class JAXBUtil {
 
+    /**
+     * Creates the java model of the underlying fileObject of the specified
+     * DataObject.
+     *
+     * @param <T>
+     * @param targetClazz The target type, null not permitted.
+     * @param dataObject DataObject instance, null not permitted.
+     * @return instance of T
+     * @throws JAXBException
+     * @throws IOException
+     */
     public static <T> T createDescriptor(Class<T> targetClazz, DataObject dataObject) throws JAXBException, IOException {
         return createDescriptor(targetClazz, dataObject.getPrimaryFile());
     }
 
+    /**
+     *
+     * @param <T>
+     * @param targetClazz
+     * @param fileObject
+     * @return
+     * @throws JAXBException
+     * @throws IOException
+     */
     @SuppressWarnings("unchecked")
     public synchronized static <T> T createDescriptor(Class<T> targetClazz, FileObject fileObject) throws JAXBException, IOException {
 

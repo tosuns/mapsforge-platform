@@ -83,7 +83,6 @@
         <module>OpenstreemapSevice</module>
         <module>UtilsModule</module>
         <module>MapViewer</module>
-        <module>CacheModule</module>
         <module>Agg2Graph</module>
         <module>Agg2GraphUI</module>
         <module>MapForgeProject</module>

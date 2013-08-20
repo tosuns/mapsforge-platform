@@ -15,6 +15,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
+ * MapMatcher interface, which will be used by the navigation graph
+ * OSMMapEvaluator.
  *
  * @author Serdar
  */
@@ -32,10 +34,20 @@ public interface MapMatcher {
      */
     public List<MapMatchSegment> findMatch(Collection<GPSSegment> roadTobeMatched, Collection<GPSSegment> roadNetwork);
 
+    /**
+     * Factory class to localize all registered MapMatcher instances.
+     */
     public static class Factory {
 
         private static final Object MUTEX = new Object();
 
+        /**
+         * Returns the default MapMatcher instance of type
+         * PointToPointMapMatcher.
+         *
+         * @return MapMatcher instance or null if the the type was not correctly
+         * registered via <code>@ServiceProvider</code>.
+         */
         public static MapMatcher getDefault() {
             MapMatcher mapMatcher = null;
             try {
@@ -46,6 +58,12 @@ public interface MapMatcher {
             return mapMatcher;
         }
 
+        /**
+         * Finds all registered MapMatcher types and creates an instance of each
+         * type and returns these via a list.
+         *
+         * @return a collection of MapMatcher instances.
+         */
         public static Collection<? extends MapMatcher> findAll() {
             Set<Class<? extends MapMatcher>> allClasses = Lookup.getDefault().lookupResult(MapMatcher.class).allClasses();
             List<MapMatcher> instances = new ArrayList<MapMatcher>(allClasses.size());
@@ -61,6 +79,15 @@ public interface MapMatcher {
             return instances;
         }
 
+        /**
+         * Creates an instance of an MapMatcher of the specified qualified name.
+         *
+         * @param qualifiedName
+         * @return returns an MapMatcher instance.
+         * @throws
+         * de.fub.maps.project.plugins.mapmatcher.MapMatcher.MapMatcherNotFoundException
+         * if the type of the qualified name could not be found of instanciated.
+         */
         public static MapMatcher find(String qualifiedName) throws MapMatcherNotFoundException {
             synchronized (MUTEX) {
                 MapMatcher mapMatcher = null;
@@ -98,6 +125,9 @@ public interface MapMatcher {
         }
     }
 
+    /**
+     * The result type of an MapMatcher instance.
+     */
     public static class MapMatchResult {
 
         private ILocation tobeMatchedPoint;
@@ -123,6 +153,9 @@ public interface MapMatcher {
         }
     }
 
+    /**
+     * A MapMatchSegment
+     */
     public static class MapMatchSegment {
 
         private List<MapMatchResult> segment = new ArrayList<MapMatchResult>();

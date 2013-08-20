@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 /**
+ * This Utility class does not work with all screen resolution. Therefore this
+ * class will not be used in its current state.
  *
  * @author Serdar
  */

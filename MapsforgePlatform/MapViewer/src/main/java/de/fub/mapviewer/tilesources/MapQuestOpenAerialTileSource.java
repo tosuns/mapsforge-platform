@@ -8,6 +8,9 @@ import org.openide.util.lookup.ServiceProvider;
 import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
+ * The propose of this class is to register the openstreetmap
+ * MapQuestOpenAerialTileSource type via
+ * <code>@ServiceProvider</code>.
  *
  * @author Serdar
  */

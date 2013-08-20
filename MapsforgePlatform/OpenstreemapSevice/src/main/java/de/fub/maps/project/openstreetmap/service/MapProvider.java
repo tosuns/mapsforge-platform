@@ -57,6 +57,13 @@ public interface MapProvider {
 
         private static final Object MUTEX_CREATE_INSTANCE = new Object();
 
+        /**
+         * Returns the default MapProvider. in this case it is the default
+         * instance of type OSMMapProvider.
+         *
+         * @return MapProvider instance or null if the type is not registered
+         * via <code>ServiceProvider</code> annotation.
+         */
         public static MapProvider getDefault() {
             MapProvider mapProvider = null;
             try {
@@ -67,6 +74,16 @@ public interface MapProvider {
             return mapProvider;
         }
 
+        /**
+         * Finds and creates an instance of the specified fully qualified name.
+         *
+         * @param qualifiedName String that provides the fully qualified class
+         * name, which should be instanciated.
+         * @return The specified MapProvider
+         * @throws
+         * de.fub.maps.project.openstreetmap.service.MapProvider.MapProviderNotFoundException
+         * if the specified instance could not be found.
+         */
         public static MapProvider find(String qualifiedName) throws MapProviderNotFoundException {
             synchronized (MUTEX_CREATE_INSTANCE) {
                 MapProvider provider = null;

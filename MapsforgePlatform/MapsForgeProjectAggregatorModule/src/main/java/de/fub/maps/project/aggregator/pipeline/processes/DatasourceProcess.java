@@ -11,11 +11,11 @@ import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.agg2graphui.layers.GPSSegmentLayer;
-import de.fub.maps.project.api.process.ProcessPipeline;
-import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
 import de.fub.maps.project.aggregator.xml.Source;
+import de.fub.maps.project.api.process.ProcessPipeline;
+import de.fub.maps.project.api.statistics.StatisticProvider;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -34,6 +34,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Process unit implementation, which handles the loading of the to be used
+ * dataset of an Aggregator instance.
  *
  * @author Serdar
  */

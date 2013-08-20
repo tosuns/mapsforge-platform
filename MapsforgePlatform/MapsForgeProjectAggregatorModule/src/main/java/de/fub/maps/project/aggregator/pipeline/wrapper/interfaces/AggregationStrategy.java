@@ -11,15 +11,33 @@ import de.fub.maps.project.models.Aggregator;
 import java.util.Collection;
 
 /**
+ * Extends the IAggregator interface of the Agg2graph and the Descriptor
+ * interface.
  *
  * @author Serdar
  */
 public interface AggregationStrategy extends IAggregationStrategy, Descriptor {
 
+    /**
+     * Returns the PropertySection instance.
+     *
+     * @return PropertySection instance or null.
+     */
     public PropertySection getPropertySection();
 
+    /**
+     * Factory to find
+     * <code>@ServiceProvider</code> annotated AggregationStrategy
+     * implementations.
+     */
     public static class Factory {
 
+        /**
+         * Finds all AggregationStrategy instances, which are annotated via
+         * <code>@ServiceProvider</code>. This method delegates the call to the
+         * {@code DescriptorFactory} class.
+         * @return A collection of all registered AggregationStrategy instances.
+         */
         public static Collection<? extends AggregationStrategy> findAll() {
             return DescriptorFactory.findAll(AggregationStrategy.class);
         }

@@ -4,6 +4,7 @@
  */
 package de.fub.maps.project.api.process;
 
+import de.fub.maps.project.api.process.Process;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -12,6 +13,8 @@ import org.openide.nodes.Children;
 import org.openide.util.lookup.Lookups;
 
 /**
+ * Default implementation of the visual representation for a
+ * <code>Process</code>.
  *
  * @author Serdar
  */

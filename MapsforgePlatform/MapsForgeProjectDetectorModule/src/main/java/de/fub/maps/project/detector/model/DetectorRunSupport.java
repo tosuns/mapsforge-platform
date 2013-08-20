@@ -29,12 +29,13 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
+ * The controller class of a Detector. This class provides the logic for the
+ * process execution of a Detector.
  *
  * @author Serdar
  */
@@ -57,11 +58,11 @@ class DetectorRunSupport {
     }
 
     /**
-     *
+     * Starts the the classification process.
      */
     void start() {
         this.currentProfile = detector.getCurrentActiveProfile();
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), ""), new CancellableImpl());
+        final ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.CLT_Running_Process(detector.getDetectorDescriptor().getName(), ""));
         try {
             detector.getInferenceModel().getResult().clear();
             handle.start();
@@ -90,6 +91,7 @@ class DetectorRunSupport {
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
             detector.setDetectorState(ProcessState.ERROR);
         } finally {
+            // clean up
             detector.getInferenceModel().getResult().clear();
             detector.getInferenceModel().getInput().clearAllInferenceData();
             detector.getInferenceModel().getInput().clearAllTrainingsData();
@@ -100,7 +102,7 @@ class DetectorRunSupport {
     }
 
     /**
-     *
+     * Starts the trainigns process.
      */
     private void startTraining() {
         Map<String, List<TrackSegment>> trainingsMap = getTrainingsSet();
@@ -139,7 +141,7 @@ class DetectorRunSupport {
     }
 
     /**
-     *
+     * Starts the inference process.
      */
     private void startInference() {
 
@@ -187,9 +189,10 @@ class DetectorRunSupport {
     }
 
     /**
+     * Applies all pre processors on the provided dataset.
      *
-     * @param dataset
-     * @return
+     * @param dataset a List of Tracksegments, null not allowed.
+     * @return a list of Tracksegments.
      */
     private List<TrackSegment> applyPreProcessors(List<TrackSegment> dataset) {
         List<TrackSegment> gpsTracks = new ArrayList<TrackSegment>();
@@ -211,8 +214,9 @@ class DetectorRunSupport {
     }
 
     /**
+     * Returns the trainingset, which is provided via the DetectorDescriptor.
      *
-     * @return
+     * @return a map with the Data for each class.
      */
     public Map<String, List<TrackSegment>> getTrainingsSet() {
         HashMap<String, List<TrackSegment>> trainingsSet = new HashMap<String, List<TrackSegment>>();
@@ -280,21 +284,5 @@ class DetectorRunSupport {
             }
         }
         return gpsTrackList;
-    }
-
-    /**
-     *
-     */
-    private static class CancellableImpl implements Cancellable {
-
-        public CancellableImpl() {
-        }
-
-        @Override
-        public boolean cancel() {
-            // TODO cancel process.
-            return false;
-
-        }
     }
 }

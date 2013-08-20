@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Interface to provide statistic.
  *
  * @author Serdar
  */
@@ -135,7 +136,7 @@ public interface StatisticProvider {
 
         @Override
         public String toString() {
-            return MessageFormat.format("StatisticItem{name={0}, value={1}, description={2}{3}", name, value, description, '}');
+            return MessageFormat.format("StatisticItem[name={0}, value={1}, description={2}]", name, value, description);
         }
     }
 

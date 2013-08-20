@@ -17,8 +17,6 @@ import de.fub.agg2graphui.layers.PrimaryRoadNetworkLayer;
 import de.fub.agg2graphui.layers.RoadNetworkLayer;
 import de.fub.agg2graphui.layers.SecondaryRoadNetworkLayer;
 import de.fub.agg2graphui.layers.TertiaryRoadNetworkLayer;
-import de.fub.maps.project.api.process.ProcessPipeline;
-import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.maps.project.aggregator.factories.nodes.properties.ClassWrapper;
 import de.fub.maps.project.aggregator.pipeline.AbstractAggregationProcess;
@@ -32,6 +30,8 @@ import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
 import de.fub.maps.project.aggregator.xml.Property;
 import de.fub.maps.project.aggregator.xml.PropertySection;
 import de.fub.maps.project.aggregator.xml.PropertySet;
+import de.fub.maps.project.api.process.ProcessPipeline;
+import de.fub.maps.project.api.statistics.StatisticProvider;
 import java.awt.Component;
 import java.awt.Image;
 import java.lang.reflect.InvocationTargetException;
@@ -53,6 +53,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Process unit implementation, which handles the creation of the RoadNetwork of
+ * an Aggregator instance.
  *
  * @author Serdar
  */

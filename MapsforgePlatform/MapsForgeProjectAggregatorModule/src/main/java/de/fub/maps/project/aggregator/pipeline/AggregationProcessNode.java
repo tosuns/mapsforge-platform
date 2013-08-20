@@ -4,9 +4,9 @@
  */
 package de.fub.maps.project.aggregator.pipeline;
 
-import de.fub.maps.project.api.process.ProcessNode;
 import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
 import de.fub.maps.project.aggregator.xml.PropertySection;
+import de.fub.maps.project.api.process.ProcessNode;
 import de.fub.utilsmodule.node.property.NodeProperty;
 import java.awt.Image;
 import java.util.List;
@@ -18,6 +18,8 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
 
 /**
+ * Default implementation of an Aggregation process node, which is the visual
+ * representation of an aggregation process unit.
  *
  * @author Serdar
  */

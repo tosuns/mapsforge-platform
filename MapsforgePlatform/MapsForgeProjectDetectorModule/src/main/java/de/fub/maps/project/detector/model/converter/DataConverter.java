@@ -9,6 +9,8 @@ import java.util.List;
 import org.openide.filesystems.FileObject;
 
 /**
+ * Interface to convert a Fileobject to a designated Type. These DataConverters
+ * will be used to convert the specified dataset in the DetectorDescriptor.
  *
  * @author Serdar
  */

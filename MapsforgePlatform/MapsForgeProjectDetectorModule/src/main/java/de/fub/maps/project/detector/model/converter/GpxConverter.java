@@ -25,6 +25,8 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Converts a list of FileObjects whose represent a gpx xml file to a list of
+ * TrackSegments.
  *
  * @author Serdar
  */

@@ -9,6 +9,8 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 /**
+ * The propose of this class is to register the openstreetmap CycleMap type via
+ * <code>@ServiceProvider</code>.
  *
  * @author Serdar
  */

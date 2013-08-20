@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import org.openide.modules.OnStart;
 
 /**
+ * This class will be called, when this module will be loaded. It registers a
+ * PropertyEditor for the type BigDecimal.
  *
  * @author Serdar
  */

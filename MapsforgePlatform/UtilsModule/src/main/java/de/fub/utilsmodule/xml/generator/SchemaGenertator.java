@@ -19,6 +19,7 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 
 /**
+ * This class handles the creation of an schema of the specified class type.
  *
  * @author Serdar
  */
@@ -31,6 +32,14 @@ public class SchemaGenertator<T> {
         this.clazz = clazz;
     }
 
+    /**
+     * Generates xml schemas for the provided class instance as a list of
+     * Strings.
+     *
+     * @return A list of xml schema Strings.
+     * @throws JAXBException
+     * @throws IOException
+     */
     public List<String> generatateSchemas() throws JAXBException, IOException {
         ArrayList<String> schemas = new ArrayList<String>();
 

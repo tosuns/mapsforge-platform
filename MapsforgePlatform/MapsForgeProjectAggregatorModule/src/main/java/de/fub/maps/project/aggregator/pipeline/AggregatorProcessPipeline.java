@@ -22,6 +22,9 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
+ * This class represents the pipeline of an aggregator. It contains the process
+ * units of the parent Aggregator and handles the chained execution of the
+ * contained process units.
  *
  * @author Serdar
  */
@@ -47,7 +50,15 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
         return aggregator;
     }
 
-    @NbBundle.Messages({"# {0} - processName", "# {1} - aggregatorName", "CLT_Proceeding_Process={1}: Running {0}..."})
+    /**
+     * Starts the chained execution of the specified process units.
+     *
+     * @param processes A list of process units, which will be exceuted.
+     */
+    @NbBundle.Messages({
+        "# {0} - processName",
+        "# {1} - aggregatorName",
+        "CLT_Proceeding_Process={1}: Running {0}..."})
     @SuppressWarnings({"unchecked"})
     public void start(final List<AbstractAggregationProcess<?, ?>> processes) {
         synchronized (MUTEX_PROCESS_RUNNING) {
@@ -114,12 +125,26 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
         }
     }
 
+    /**
+     * Adds the specified process unit to this pipeline
+     *
+     * @param proc
+     * @return
+     * @throws
+     * de.fub.maps.project.aggregator.pipeline.AggregatorProcessPipeline.PipelineException
+     */
     @Override
     public boolean add(AbstractAggregationProcess<?, ?> proc) throws PipelineException {
         checkIsValidProcess(size() - 1, proc);
         return super.add(proc);
     }
 
+    /**
+     * Adds the provided list of process units to this pipeline.
+     *
+     * @param index
+     * @param proc
+     */
     @Override
     public void add(int index, AbstractAggregationProcess<?, ?> proc) {
         checkIsValidProcess(index, proc);
@@ -145,6 +170,14 @@ public class AggregatorProcessPipeline extends ProcessPipeline<AbstractAggregati
         return result;
     }
 
+    /**
+     * Checks whether the provided process unit violates the pipeline invariant.
+     *
+     * @param prevProcessIndex
+     * @param process
+     * @throws
+     * de.fub.maps.project.aggregator.pipeline.AggregatorProcessPipeline.PipelineException
+     */
     public void checkIsValidProcess(int prevProcessIndex, AbstractAggregationProcess<?, ?> process) throws PipelineException {
         if (prevProcessIndex > -1) {
             ArrayList<AbstractAggregationProcess<?, ?>> arrayList = new ArrayList<AbstractAggregationProcess<?, ?>>(getProcesses());

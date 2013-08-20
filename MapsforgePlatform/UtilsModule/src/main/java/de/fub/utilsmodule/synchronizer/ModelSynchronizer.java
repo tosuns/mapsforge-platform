@@ -17,6 +17,8 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.WeakSet;
 
 /**
+ * Model Synchronizer to synchonizer the visual representation with the
+ * underlying fileObject.
  *
  * @author Serdar
  */
@@ -29,6 +31,11 @@ public abstract class ModelSynchronizer {
     private final Object MUTEX = new Object();
     private final HashMap<ChangeListener, ModelSynchronizerClient> listener = new HashMap<ChangeListener, ModelSynchronizerClient>();
 
+    /**
+     * Notifies all clients, except the one which caused the notification.
+     *
+     * @param client
+     */
     public final void modelChanged(ModelSynchronizerClient client) {
         final List<Entry<Integer, ModelSynchronizerClient>> clients = new ArrayList<Entry<Integer, ModelSynchronizerClient>>();
         synchronized (MUTEX) {
@@ -53,6 +60,12 @@ public abstract class ModelSynchronizer {
 
     }
 
+    /**
+     * Creates a ModelSynchonizerClient for the specified ChangeListener.
+     *
+     * @param changeListener
+     * @return ModelSynchronizerClient instance.
+     */
     public final ModelSynchronizerClient create(ChangeListener changeListener) {
         if (!listener.containsKey(changeListener)) {
             synchronized (MUTEX) {
@@ -69,6 +82,9 @@ public abstract class ModelSynchronizer {
         updateSource();
     }
 
+    /**
+     * Updated the underlying object, i.e. a fileObject.
+     */
     public abstract void updateSource();
 
     public static class ModelSynchronizerClient {

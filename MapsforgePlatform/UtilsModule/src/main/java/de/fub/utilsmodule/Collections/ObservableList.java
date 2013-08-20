@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.event.ChangeListener;
 
 /**
+ * Extends the list interface with methods to add and remove ChangeListeners.
  *
  * @author Serdar
  */

@@ -19,9 +19,17 @@ import org.openide.util.Exceptions;
  */
 public abstract class AbstractXmlAggregationProcess<I, O> extends AbstractAggregationProcess<I, O> {
 
+    /**
+     * Creates the ProcessDescriptor via an xml file, which is located in the
+     * corresponding resource package. if the ProcessDescriptor could not be
+     * created via the xml file, an empty ProcessDescriptor unit will be
+     * returned.
+     *
+     * @return ProcessDescriptor instance.
+     */
     @Override
     protected ProcessDescriptor createProcessDescriptor() {
-        ProcessDescriptor desc = null;
+        ProcessDescriptor desc = new ProcessDescriptor();
         try {
             desc = AggregatorUtils.getProcessDescriptor(getClass());
         } catch (IOException ex) {

@@ -17,6 +17,9 @@ import javax.ws.rs.core.MediaType;
  *        client.close();
  * </pre>
  *
+ * Web client instance to access OSM data via the official OSM and Overpass-Api
+ * RESTful webservice.
+ *
  * @author Serdar
  */
 public class OpenstreetMapService {

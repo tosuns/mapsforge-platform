@@ -75,7 +75,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
     }
 
     /**
-     *
+     * Initialized the this Detector the underlying Descriptor.
      */
     private void reinit() {
         setDetectorState(ProcessState.INACTIVE);
@@ -98,6 +98,9 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
         }
     }
 
+    /**
+     * Initializes the InferenceModel of this Detector.
+     */
     private void initializeInferenceModel() {
         DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
         if (detectorDescriptor != null) {
@@ -114,6 +117,10 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
         }
     }
 
+    /**
+     * initializes the pre processors, which are provided by the Descriptor, and
+     * the pipeline.
+     */
     private void initalizePreProcessors() {
         DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
         if (detectorDescriptor != null) {
@@ -134,6 +141,9 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
         }
     }
 
+    /**
+     * Initializes the post processors and the pipeline.
+     */
     private void initializePostProcessors() {
         DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
         if (detectorDescriptor != null) {
@@ -155,6 +165,9 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
         }
     }
 
+    /**
+     * Initializes the Profile.
+     */
     private void initializeProfile() {
         DetectorDescriptor detectorDescriptor = getDetectorDescriptor();
         if (detectorDescriptor != null) {
@@ -179,7 +192,7 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
     }
 
     /**
-     *
+     * Executes the Detector.
      */
     @NbBundle.Messages({
         "# {0} - detectorName",
@@ -196,11 +209,21 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
         return getTrainingsSet();
     }
 
+    /**
+     * Returns the name of this Detector
+     *
+     * @return
+     */
     @Override
     public String getName() {
         return Detector.this.getDataObject().getName();
     }
 
+    /**
+     * Convience method to access the underlying controller of the Detector.
+     *
+     * @return DetectorRunSupport.
+     */
     private DetectorRunSupport getDetectorRunSupport() {
         synchronized (MUTEX_PROCESS_RUNNING) {
             if (detectorRunSupport == null) {
@@ -210,25 +233,40 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
         }
     }
 
+    /**
+     * Returns the Training dataset of this Detector, which will be used for the
+     * AbstractInferenceModel to train the InferenceModel.
+     *
+     * @return Map
+     */
     public Map<String, List<TrackSegment>> getTrainingsSet() {
         synchronized (MUTEX_PROCESS_RUNNING) {
             return getDetectorRunSupport().getTrainingsSet();
         }
     }
 
+    /**
+     * Returns the inference set of this Detector, which will be used by the
+     * used AbstractInferenceModel to classify in transport modes.
+     *
+     * @return List
+     */
     public List<TrackSegment> getInferenceSet() {
         return getDetectorRunSupport().getInferenceSet();
     }
 
     /**
+     * Returns the current used profile
      *
-     * @return
+     * @return A profile instance or null.
      */
     public Profile getCurrentActiveProfile() {
         return currentActiveProfile;
     }
 
     /**
+     * Sets the new active profile, which will be used with the next execution
+     * of this Detector.
      *
      * @param currentActiveProfile
      */
@@ -240,58 +278,71 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
     }
 
     /**
+     * Returns the PreProcess Pipeline, which contains all registed
+     * FilterProcesses that will be used to filter the input data.
      *
-     * @return
+     * @return PreProcessorPipeline.
      */
     public PreProcessorPipeline getPreProcessorPipeline() {
         return preProcessorPipeline;
     }
 
     /**
+     * Returns the PostProcessor Pipeline, which contains all registed Task that
+     * will be used after the classification process.
      *
-     * @return
+     * @return postProcessorPipeline
      */
     public PostProcessorPipeline getPostProcessorPipeline() {
         return postProcessorPipeline;
     }
 
     /**
+     * Returns the underlying AbstractInferenceModel implementation.
      *
-     * @return
+     * @return an AbstractInferenceModel instance.
      */
     public AbstractInferenceModel getInferenceModel() {
         return inferenceModel;
     }
 
     /**
+     * Returns the current DetectorState of this Detector.
      *
-     * @return
+     * @return ProcessState
      */
     public ProcessState getDetectorState() {
         return detectorState;
     }
 
     /**
+     * Set the current DetecotState and fires a PropertyChangeEvent if the
+     * specified detectorState is not null.
      *
-     * @param detectorState
+     * @param detectorState a ProcessState instance.
      */
     synchronized void setDetectorState(ProcessState detectorState) {
-        Object oldValue = this.detectorState;
-        this.detectorState = detectorState;
-        pcs.firePropertyChange(PROP_NAME_DETECTOR_STATE, oldValue, detectorState);
+        if (detectorState != null) {
+            Object oldValue = this.detectorState;
+            this.detectorState = detectorState;
+            pcs.firePropertyChange(PROP_NAME_DETECTOR_STATE, oldValue, detectorState);
+        }
     }
 
     /**
+     * Returns the underlying DataObject, which represents the
+     * DetectorDescriptor xml file.
      *
-     * @return
+     * @return DetectorDataObject
      */
     public DetectorDataObject getDataObject() {
         return dataObject;
     }
 
     /**
+     * Convience method to access the DetectorDescriptor
      *
-     * @return
+     * @return DetectorDescriptor.
      */
     public DetectorDescriptor getDetectorDescriptor() {
         DetectorDescriptor detectorDescriptor = null;
@@ -329,8 +380,9 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
     }
 
     /**
+     * Returns a list of all StatisticProvides from both Pipelines.
      *
-     * @return
+     * @return a list of StatisticProviders
      */
     public List<StatisticProvider> getStatistics() {
         List<StatisticProvider> statisticProviders = new ArrayList<StatisticProvider>();
@@ -361,7 +413,9 @@ public class Detector extends ModelSynchronizer implements Lookup.Provider, Trai
 
     @Override
     public String toString() {
-        return MessageFormat.format("Detector{ name={0}, description={1}{2}", getDetectorDescriptor().getName(), getDetectorDescriptor().getDescription(), '}');
+        return MessageFormat.format("Detector[ name={0}, description={1}{2}]",
+                getDetectorDescriptor().getName(),
+                getDetectorDescriptor().getDescription());
     }
 
     private class ChangeListenerImpl implements ChangeListener {

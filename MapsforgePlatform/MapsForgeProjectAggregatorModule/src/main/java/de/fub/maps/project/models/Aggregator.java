@@ -6,9 +6,6 @@ package de.fub.maps.project.models;
 
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.tiling.ICachingStrategy;
-import de.fub.maps.project.api.process.Process;
-import de.fub.maps.project.api.process.ProcessPipeline.PipelineListener;
-import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.aggregator.filetype.AggregatorDataObject;
 import de.fub.maps.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.maps.project.aggregator.pipeline.AggregatorProcessPipeline;
@@ -18,6 +15,9 @@ import de.fub.maps.project.aggregator.pipeline.wrapper.interfaces.DescriptorFact
 import de.fub.maps.project.aggregator.xml.AggregatorDescriptor;
 import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
 import de.fub.maps.project.aggregator.xml.Source;
+import de.fub.maps.project.api.process.Process;
+import de.fub.maps.project.api.process.ProcessPipeline.PipelineListener;
+import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -37,7 +37,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
- * A high level implementation of an gps navigation graph map renderer.
+ * A high level implementation of an gps navigation graph renderer.
  *
  * @author Serdar
  */
@@ -61,6 +61,9 @@ public class Aggregator extends ModelSynchronizer {
         init();
     }
 
+    /**
+     * Initialized this Aggregator instance.
+     */
     private void init() {
         dataObjectModelSynchonizerClient = create(new ChangeListener() {
             @Override

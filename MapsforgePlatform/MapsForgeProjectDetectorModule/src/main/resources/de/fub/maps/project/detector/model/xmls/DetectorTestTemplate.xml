@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dec:detector name="Demo Detector" description="A empty test detector" xmlns:dec="http://inf.fu-berlin.de/mapsforge/detector/schema">
-    <inferencemodel javaType="de.fub.mapsforge.project.detector.model.inference.impl.J48InferenceModel" name="J48 Inference Model" description="Inference Model which uses a J48 classifier.">
+    <inferencemodel javaType="de.fub.maps.project.detector.model.inference.impl.J48InferenceModel" name="J48 Inference Model" description="Inference Model which uses a J48 classifier.">
         <features>
-            <feature javaType="de.fub.mapsforge.project.detector.model.inference.features.AvgAccelerationFeatureProcess" name="Average Acceleration Feature" description="Feature that computes the average acceleration which a gps track contains.">
+            <feature javaType="de.fub.maps.project.detector.model.inference.features.AvgAccelerationFeatureProcess" name="Average Acceleration Feature" description="Feature that computes the average acceleration which a gps track contains.">
                 <properties>
                     <property value="true" id="feature.id" javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
                 </properties>
             </feature>
         </features>
         <inferenceModelProcessHandlers>
-            <processHandler inferenceMode="trainingsMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.TrainingsDataProcessHandler" name="trainingsProcessHandler">
+            <processHandler inferenceMode="trainingsMode" javaType="de.fub.maps.project.detector.model.inference.processhandler.TrainingsDataProcessHandler" name="trainingsProcessHandler">
                 <properties>
                     <property value="0.75" id="trainings.set.ratio" javaType="java.lang.Double" name="Training set size" description="This property indicates the ratio the trainings set will be divides for the actual training and for successive the test."/>
                 </properties>
             </processHandler>
-            <processHandler inferenceMode="crossvalidationMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.CrossValidationProcessHandler" name="crossvalidationProcessHandler">
+            <processHandler inferenceMode="crossvalidationMode" javaType="de.fub.maps.project.detector.model.inference.processhandler.CrossValidationProcessHandler" name="crossvalidationProcessHandler">
                 <properties>
                     <property value="10" id="trainings.set.crossvalidation.fold" javaType="java.lang.Integer" name="Crossvalidation Folds" description="This property indicates the amoung of folds for the crossvalidation evaluation"/>
                 </properties>
             </processHandler>
-            <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler">
+            <processHandler inferenceMode="inferenceMode" javaType="de.fub.maps.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler">
                 <processHandler inferenceMode="inferenceMode" javaType="de.fub.mapsforge.project.detector.model.inference.processhandler.InferenceDataProcessHandler" name="inferenceModeProcessHandler">
                     <properties/>
                 </processHandler>
@@ -53,14 +53,14 @@
         </inferenceset>
     </datasets>
     <preprocessors>
-        <filter javaType="de.fub.mapsforge.project.detector.model.pipeline.preprocessors.filters.MinDistanceWaypointFilterProcess" name="Minimum Distance Filter" description="A dummy filter for the propose of unit testing.">
+        <filter javaType="de.fub.maps.project.detector.model.pipeline.preprocessors.filters.MinDistanceWaypointFilterProcess" name="Minimum Distance Filter" description="A dummy filter for the propose of unit testing.">
             <properties>
                 <property value="1" id="dummy" javaType="de.fub.dummy.path.Instance" name="Dummy Property" description="Dummy property for the propose of unit testing."/>
             </properties>
         </filter>
     </preprocessors>
     <postprocessors>
-        <task javaType="de.fub.mapsforge.project.detector.model.pipeline.postprocessors.tasks.MapRenderer" name="Map Renderer" description="Renders Gps data with the help of an Aggregator.">
+        <task javaType="de.fub.maps.project.detector.model.pipeline.postprocessors.tasks.MapRenderer" name="Map Renderer" description="Renders Gps data with the help of an Aggregator.">
             <properties>
                 <property value="C:/Users/Serdar/Documents/NetBeansProjects/Maps Forge Project/AggregationBuilders/agg2Graph.agg" id="aggregator.file.path" javaType="java.lang.String" name="Aggregator file path" description="The file path to the aggregator file."/>
             </properties>

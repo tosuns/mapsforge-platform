@@ -33,6 +33,7 @@ import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
+ * Task represent a postprocessor that will be applied by an inferenceModel.
  *
  * @author Serdar
  */
@@ -43,6 +44,12 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
     public Task() {
     }
 
+    /**
+     * Set the Result of the classification via a InferenceModel as input for
+     * this task.
+     *
+     * @param input an InferenceModelResultData instance, null not permitted.
+     */
     @Override
     public void setInput(InferenceModelResultDataSet input) {
         this.resultDataSet = input;
@@ -52,30 +59,73 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
         return resultDataSet;
     }
 
+    /**
+     * Task don't have any result.
+     *
+     * @return null
+     */
     @Override
     public Void getResult() {
         return null;
     }
 
+    /**
+     * Provides a way to cancel this task process execution. Default this method
+     * does nothing. Subclasses should overwrite this mothod, if they want to
+     * provide a way to cancel the process.
+     *
+     * @return default false;
+     */
     @Override
     public boolean cancel() {
         return false;
     }
 
+    /**
+     * Creates the visual representer of this Task.
+     *
+     * @return Node instance, null not permitted.
+     */
     @Override
     protected Node createNodeDelegate() {
         return new TaskProcessNode(Task.this);
     }
 
+    /**
+     * Returns the Icon, which the visuel representer of this task should use.
+     * Subclasses can overwrite this method to provide another image
+     * representations.
+     *
+     * @return Image instance
+     */
     @Override
     protected Image getDefaultImage() {
         return IconRegister.findRegisteredIcon("processIconNormal.png");
     }
 
+    /**
+     * Factory method to get a collection of all via
+     * <code>@ServiceProvider</code> registered Task implementations.
+     *
+     * @return a list of Task instances.
+     */
     public static synchronized Collection<Task> findAll() {
         return findAll(Task.class);
     }
 
+    /**
+     * Finds and creates the via ProcessDescriptor specified Task
+     * implementation, and configures the Task with provided ProcessDescriptor
+     * and Detector instance.
+     *
+     * @param descriptor ProcessDescriptor instance, null not permitted.
+     * @param detector Detector instance or null.
+     * @return Detector instance
+     * @throws
+     * de.fub.maps.project.detector.model.process.DetectorProcess.DetectorProcessNotFoundException
+     * if the within specified Task implementations could not be found, because
+     * it is not registered via the <code>@ServiceProvider</code> annotation.
+     */
     public static synchronized Task find(ProcessDescriptor descriptor, Detector detector) throws DetectorProcessNotFoundException {
         assert descriptor != null;
         Task task = find(descriptor.getJavaType(), detector);
@@ -85,6 +135,19 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
         return task;
     }
 
+    /**
+     * Finds or creates the via provided qualified name Task instance.
+     *
+     * @param qualifiedInstanceName The qualified name of the task, which should
+     * be instanciated. null not permitted.
+     * @param detector The Detector to which the created Task is associated.
+     * @return a Task instance.
+     * @throws
+     * de.fub.maps.project.detector.model.process.DetectorProcess.DetectorProcessNotFoundException
+     * if the specified implementation could not be found, because it's not
+     * registered via <code>@ServiceProvider</code> annotations, or
+     * instanciated.
+     */
     public static synchronized Task find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
         Task taskProcess = null;
         try {
@@ -108,6 +171,9 @@ public abstract class Task extends AbstractDetectorProcess<InferenceModelResultD
         return taskProcess;
     }
 
+    /**
+     * The Default implementation of the visual representation of a Task.
+     */
     @NbBundle.Messages({"CLT_Tesk_Parameter=Parameters"})
     protected static class TaskProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
 

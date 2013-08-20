@@ -14,6 +14,8 @@ import org.openide.explorer.view.OutlineView;
 import org.openide.nodes.Node.Property;
 
 /**
+ * A Custom OutlineView, which contains a custom cell renderer that does not
+ * display icons.
  *
  * @author Serdar
  */

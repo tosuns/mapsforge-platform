@@ -16,6 +16,7 @@ import org.openide.util.Cancellable;
 import org.openide.util.ImageUtilities;
 
 /**
+ * The Root interface for all detector processes.
  *
  * @author Serdar
  */
@@ -27,14 +28,31 @@ public abstract class DetectorProcess<I, O> extends AbstractProcess<I, O> implem
     public DetectorProcess() {
     }
 
+    /**
+     * The Dector with which this DetectorProcess is associated with.
+     *
+     * @return A Detector instance or null.
+     */
     protected Detector getDetector() {
         return detector;
     }
 
+    /**
+     * Set the Detector instance with which this Process instance will be
+     * associated with.
+     *
+     * @param detector A Detector instance.
+     */
     protected void setDetector(Detector detector) {
         this.detector = detector;
     }
 
+    /**
+     * Returns the visual representer of this DetectorProcess, which will be
+     * used by the ui.
+     *
+     * @return a Node instance.
+     */
     @Override
     public final Node getNodeDelegate() {
         if (node == null) {
@@ -43,6 +61,13 @@ public abstract class DetectorProcess<I, O> extends AbstractProcess<I, O> implem
         return node;
     }
 
+    /**
+     * The Icon which represent the this DetectorProcess. in the default
+     * implementation this method provides an icon which indicates the current
+     * state of this Process.
+     *
+     * @return an Image instance.
+     */
     @Override
     public Image getIcon() {
         Image image = null;
@@ -75,10 +100,34 @@ public abstract class DetectorProcess<I, O> extends AbstractProcess<I, O> implem
         return getDefaultImage();
     }
 
+    /**
+     * Creates the visual representer for the ui.
+     *
+     * @return a Node instance.
+     */
     protected abstract Node createNodeDelegate();
 
+    /**
+     * Provides the default icon for the visual representer.
+     *
+     * @return an Image instance.
+     */
     protected abstract Image getDefaultImage();
 
+    /**
+     * Generic Factory method to create a DetectorProcess instance from the
+     * provided class instance. The provided Detector instance will be
+     * associated with the created DetectorProcess.
+     *
+     * @param <T> extends DetectorProcess
+     * @param clazz The concrete type ot the to be created DetectorProcess.
+     * @param detector The parent Detector that will be associated with the
+     * process.
+     * @return A DetectorProcess
+     * @throws
+     * de.fub.maps.project.detector.model.process.DetectorProcess.DetectorProcessNotFoundException
+     * if the DetectorProcess couldn't be instanciated.
+     */
     protected static synchronized <T extends DetectorProcess> T find(Class<T> clazz, Detector detector) throws DetectorProcessNotFoundException {
         T detectorProcess = null;
         try {

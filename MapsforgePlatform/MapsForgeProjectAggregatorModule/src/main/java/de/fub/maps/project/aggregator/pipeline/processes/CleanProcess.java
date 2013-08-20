@@ -10,14 +10,14 @@ import de.fub.agg2graph.input.GPSCleaner;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.layers.GPSSegmentLayer;
-import de.fub.maps.project.api.process.ProcessPipeline.ProcessEvent;
-import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
 import de.fub.maps.project.aggregator.xml.Properties;
 import de.fub.maps.project.aggregator.xml.Property;
 import de.fub.maps.project.aggregator.xml.PropertySection;
 import de.fub.maps.project.aggregator.xml.PropertySet;
+import de.fub.maps.project.api.process.ProcessPipeline.ProcessEvent;
+import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.utils.AggregatorUtils;
 import java.awt.Color;
 import java.awt.Component;
@@ -33,6 +33,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Process unit implementation, which handles the cleaning process of an
+ * Aggregator.
  *
  * @author Serdar
  */

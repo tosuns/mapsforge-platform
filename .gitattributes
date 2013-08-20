@@ -216,7 +216,6 @@ MapsforgePlatform/Agg2GraphUI/src/main/resources/de/fub/agg2graphui/Bundle.prope
 MapsforgePlatform/ApacheBatikLib/pom.xml -text
 MapsforgePlatform/ApacheBatikLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/ApacheBatikLib/src/main/resources/de/fub/mapsforge/apache/batiklib/Bundle.properties -text
-MapsforgePlatform/CacheModule/pom.xml -text
 MapsforgePlatform/GeoFileTypeApi/nb-configuration.xml -text
 MapsforgePlatform/GeoFileTypeApi/pom.xml -text
 MapsforgePlatform/GeoFileTypeApi/src/main/java/geofiletypeapi/GeoDataObject.java -text
@@ -405,7 +404,6 @@ MapsforgePlatform/MapViewer/src/main/java/de/fub/mapviewer/ui/MapViewElement.jav
 MapsforgePlatform/MapViewer/src/main/java/de/fub/mapviewer/ui/MapViewer.java -text
 MapsforgePlatform/MapViewer/src/main/java/de/fub/mapviewer/ui/caches/PersistentTileCache.java -text
 MapsforgePlatform/MapViewer/src/main/java/de/fub/mapviewer/ui/caches/ProxyTileCache.java -text
-MapsforgePlatform/MapViewer/src/main/java/de/fub/mapviewer/ui/caches/TestTileCache.java -text
 MapsforgePlatform/MapViewer/src/main/nbm/manifest.mf -text
 MapsforgePlatform/MapViewer/src/main/resources/de/fub/mapviewer/Bundle.properties -text
 MapsforgePlatform/MapViewer/src/main/resources/de/fub/mapviewer/ui/Bundle.properties -text
@@ -499,6 +497,7 @@ MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/pro
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/aggregator/xml/Source.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/aggregator/xml/adapter/PropertyType.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/aggregator/xml/adapter/XmlPropertiesAdapter.java -text
+MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/aggregator/xml/package-info.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/models/Aggregator.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/models/AggregatorSource.java -text
 MapsforgePlatform/MapsForgeProjectAggregatorModule/src/main/java/de/fub/maps/project/ui/component/StatisticsPanel.form -text
@@ -584,6 +583,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/proje
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/factories/nodes/datasets/TransportModeNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/factories/nodes/inference/FeatureRootNode.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/factories/nodes/inference/InferenceModelNode.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/factories/package-info.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/filetype/DetectorDataObject.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/filetype/DetectorVisualElement.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/filetype/DetectorVisualElement.java -text
@@ -709,6 +709,7 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/proje
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/ui/customizer/PostProcessorCustomizer.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/ui/customizer/PreProcessorCustomizer.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/ui/customizer/TrainingsSetCustomizer.java -text
+MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/ui/customizer/package-info.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/utils/DetectorUtils.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/utils/GPSUtils.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/wizards/detector/DetectorTemplateVisualPanel.form -text
@@ -797,6 +798,7 @@ MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/maps/project/openstree
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/maps/project/openstreetmap/xml/osm/Relation.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/maps/project/openstreetmap/xml/osm/Tag.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/maps/project/openstreetmap/xml/osm/Way.java -text
+MapsforgePlatform/OpenstreemapSevice/src/main/java/de/fub/maps/project/openstreetmap/xml/osm/package-info.java -text
 MapsforgePlatform/OpenstreemapSevice/src/main/nbm/manifest.mf -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/Bundle.properties -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/OpenstreetMapDTD.dtd -text
@@ -818,6 +820,7 @@ MapsforgePlatform/OpenstreetMap/pom.xml -text
 MapsforgePlatform/OpenstreetMap/src/main/nbm/manifest.mf -text
 MapsforgePlatform/OpenstreetMap/src/main/resources/de/fub/openstreetmap/Bundle.properties -text
 MapsforgePlatform/SettingsModule/pom.xml -text
+MapsforgePlatform/SettingsModule/src/main/java/de/fub/maps/project/settingsmodule/package-info.java -text
 MapsforgePlatform/SettingsModule/src/main/nbm/manifest.mf -text
 MapsforgePlatform/SettingsModule/src/main/resources/de/fub/maps/project/settingsmodule/Bundle.properties -text
 MapsforgePlatform/SettingsModule/src/main/resources/de/fub/maps/project/settingsmodule/layer.xml -text
@@ -828,7 +831,6 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/WeakL
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/Collections/awt/ColorUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/NodeFactories/MutableChildFactory.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/actions/SaveAsTemplateAction.java -text
-MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/BeanUtil.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptor.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/beans/PropertyDescriptorUtil.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/components/CustomListView.java -text

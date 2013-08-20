@@ -37,6 +37,11 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Implementation of an Detector task, which handels the creation of an
+ * specified Aggregator for each transport mode defined in the result of the
+ * classification of the inferenceModel of the Detector.
+ *
+ * Each Aggregator creates a navigation graph.
  *
  * @author Serdar
  */
@@ -75,6 +80,10 @@ public class MapRenderer extends Task {
         return aggregatorList;
     }
 
+    /**
+     * Checks whether a valid aggregator template is provider for this
+     * MapRenderer instance.
+     */
     private void validate() {
         setProcessState(ProcessState.INACTIVE);
         try {
@@ -91,6 +100,9 @@ public class MapRenderer extends Task {
         }
     }
 
+    /**
+     * deletes all created Aggregator instances with there descriptor files.
+     */
     public void clear() {
         if (!aggregatorList.isEmpty()) {
             for (Aggregator aggregator : aggregatorList) {

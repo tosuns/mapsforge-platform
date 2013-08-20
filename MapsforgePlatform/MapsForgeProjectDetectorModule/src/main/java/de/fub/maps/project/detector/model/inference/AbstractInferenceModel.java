@@ -20,11 +20,9 @@ import de.fub.maps.project.detector.model.xmls.ProcessDescriptor;
 import de.fub.maps.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.maps.project.detector.model.xmls.ProcessHandlers;
 import de.fub.maps.project.detector.model.xmls.TransportMode;
-import de.fub.maps.project.detector.utils.DetectorUtils;
 import de.fub.utilsmodule.icons.IconRegister;
 import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,31 +54,33 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     private static final Logger LOG = Logger.getLogger(AbstractInferenceModel.class.getName());
     public static final String OPTIONS_PROPERTY_SECTION = "inference.model.option";
     /**
-     *
+     * constant for the classes Weka Atttribute creation.
      */
     public static final String CLASSES_ATTRIBUTE_NAME = "classes";
     /**
      *
+     * Property name for propergating feature list changes.
      */
     public static final String PROP_NAME_FEATURE_LIST = "abstractInferenceMode.featureList";
     /**
-     *
+     * Property name for propergating inference mode changes.
      */
     public static final String PROP_NAME_INFERENCE_MODE = "abstractInferenceMode.inferenceMode";
     /**
-     *
+     * The name of the icon for the ui representation, which will be access via
+     * the utility class IconRegister.
      */
     private static final String ICON_NAME = "inferenceModelIcon.png";
     /**
-     *
+     * MUTEX to synchronize.
      */
     private final Object INFERENCE_MODEL_LISTENER_MUTEX = new Object();
     /**
-     *
+     * The result value of the classification.
      */
     private final InferenceModelResultDataSet outputDataSet = new InferenceModelResultDataSet();
     /**
-     * *
+     * Holds the processhandlers for the three inference modes.
      *
      */
     private final EnumMap<InferenceMode, Class<? extends InferenceModelProcessHandler>> processHandlerMap = new EnumMap<InferenceMode, Class<? extends InferenceModelProcessHandler>>(InferenceMode.class);
@@ -143,7 +143,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
-     *
+     * initialises this inference model.
      */
     private void reinit() {
         if (getInferenceModelDescriptor() != null) {
@@ -189,22 +189,30 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     * Returns the data synchronizer client. Via this synchornizer visual
+     * components can use this client to receive change events of the inference
+     * model descriptor.
+     *
+     * @return ModuleSynchronizerClient
+     */
     public ModelSynchronizer.ModelSynchronizerClient getModelSynchronizerClient() {
         return modelSynchronizerClient;
     }
 
     /**
+     * Returns the inference model descriptor if this inference model. If this
+     * model has a parent Detector, then the inferenceModelDescriptor will be
+     * the one specified in the DetectorDescriptor, otherwise a specified
+     * default descriptor will be created via the
+     * <code>createDefaultDescriptor</code>.
      *
-     * @return
+     * @return InferenceModelDescriptor or null if the creation failed.
      */
     public InferenceModelDescriptor getInferenceModelDescriptor() {
         if (inferenceModelDescriptor == null) {
             if (getDetector() == null) {
-                try {
-                    inferenceModelDescriptor = DetectorUtils.getXmlDescriptor(InferenceModelDescriptor.class, getClass());
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                inferenceModelDescriptor = createDefaultDescriptor();
             } else {
                 inferenceModelDescriptor = getDetector().getDetectorDescriptor().getInferenceModel();
             }
@@ -213,6 +221,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Starts the process depending on the current inference mode.
      *
      */
     @Override
@@ -253,7 +262,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
-     *
+     * Initialised the attributeList and attributeMap of this inference model.
      */
     private void initAttributes() {
         if (getDetector() != null
@@ -308,9 +317,12 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      * run of the cross-validation.)
      *
      * @see {@link http://weka.wikispaces.com/Use+WEKA+in+your+Java+code}
+     *
+     * Starts the training process of this inference model. throws an
+     * IllegalStateException if this model does not contain any features.
+     *
      */
     private void startTraining() {
-//        initAttributes();
         if (!getAttributes().isEmpty()) {
             InferenceModelProcessHandler processHandler = null;
 
@@ -331,7 +343,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
-     *
+     * Starts the inference process of this inference model.
      */
     private void startInference() {
         if (getClassifier() != null) {
@@ -355,6 +367,12 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         }
     }
 
+    /**
+     * Returns a list with all InferenceModelProcessHander instances of this
+     * inference model.
+     *
+     * @return a list of InferenceModelProcessHandlers
+     */
     public List<InferenceModelProcessHandler> getProcessHandlers() {
         List<InferenceModelProcessHandler> list = new ArrayList<InferenceModelProcessHandler>(processHandlerInstanceMap.size());
         for (InferenceMode mode : InferenceMode.values()) {
@@ -367,9 +385,15 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the ProcessHandler instance for the specified InferenceMode. If
+     * there is no ProcessHandler registered for the specified InferenceMode,
+     * then a default instance for the InferenceMode will be created if
+     * possible.
      *
-     * @param infMode1
-     * @return
+     * @param infMode1 The InferenceMode for which a ProcessHandler should be
+     * returned.
+     * @return a InferenceModelProcessHander or null if there is no instance
+     * could be created for the specified InferenceMode.
      */
     public InferenceModelProcessHandler getProcessHandlerInstance(InferenceMode infMode1) {
         InferenceModelProcessHandler processHandler = processHandlerInstanceMap.get(infMode1);
@@ -462,8 +486,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the current inference mode of this model.
      *
-     * @return
+     * @return InferenceMode instance.
      */
     public InferenceMode getInferenceMode() {
         return inferenceMode;
@@ -489,8 +514,10 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the input data model, which is used to train the classifier and
+     * classify the provided instances.
      *
-     * @return
+     * @return InferenceModelInputData instance or null.
      */
     public InferenceModelInputDataSet getInput() {
         return inputDataSet;
@@ -519,8 +546,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the default icon, which represents this model.
      *
-     * @return
+     * @return an Image instance or null.
      */
     @Override
     protected Image getDefaultImage() {
@@ -528,8 +556,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the used weka classifier.
      *
-     * @return
+     * @return a weka classifier.
      */
     public final Classifier getClassifier() {
         if (classifier == null) {
@@ -575,6 +604,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Behaves like the List interface's add method except it fires a
+     * PropertyChangeEvent.
      *
      * @param e
      * @return
@@ -588,8 +619,10 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Removes the specified feature from the feature list of this model and
+     * fires a PropertyChangeEvent.
      *
-     * @param o
+     * @param o FeatureProcess
      * @return
      */
     public boolean removeFeature(FeatureProcess o) {
@@ -601,7 +634,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
-     *
+     * Clears the feature list of this model.
      */
     public void clearFeatureList() {
         featureList.clear();
@@ -609,9 +642,12 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Removes the specified features from the feature list of this model and
+     * fires a propertyChangeEvent.
      *
      * @param c
      * @return
+     *
      */
     public boolean removeAllFeatures(Collection<?> c) {
         boolean result = featureList.removeAll(c);
@@ -622,6 +658,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Adds the collection of features to the list of features of this model and
+     * fires a propertyChangeEvent.
      *
      * @param c
      * @return
@@ -635,16 +673,18 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns the list of used features.
      *
-     * @return
+     * @return a copy of the list of all features.
      */
     public Collection<FeatureProcess> getFeatureList() {
         return Collections.unmodifiableCollection(featureList);
     }
 
     /**
+     * Attempts to cance the process of this inference model.
      *
-     * @return
+     * @return default always false and has no effect on the process.
      */
     @Override
     public boolean cancel() {
@@ -652,16 +692,20 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
     }
 
     /**
+     * Returns a toolbar which contains can contain commands and other ui
+     * controllers to control this inference model.
      *
-     * @return
+     * @return JToolbar, default null.
      */
     public JToolBar getToolbarRepresenter() {
         return null;
     }
 
     /**
+     * Returns the default settings from the configure this inference model
+     * implementation, which gets used by the project settings component.
      *
-     * @return
+     * @return a JCompoent.
      */
     @Override
     public JComponent getSettingsView() {
@@ -669,10 +713,28 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
         return inferenceModelSettingForm;
     }
 
+    /**
+     * Reinitializes the used weka classifier.
+     */
     public void resetClassifier() {
         classifier = createClassifier();
     }
 
+    /**
+     * Factory method, which creates for the specified detector and qualified
+     * name that should be instanciated. This methods lookps up via
+     * <code>findAll</code> all registered AbstractInferenceModel
+     * implementations
+     *
+     * @param qualifiedInstanceName the full qualified name of the to be
+     * instanciated AbstractInferenceModel type.
+     * @param detector the parent detector of the to be instanciated
+     * AbstractInferenceMode.
+     * @return an AbstractInferenceModel implementation.
+     * @throws
+     * de.fub.maps.project.detector.model.process.DetectorProcess.DetectorProcessNotFoundException
+     * if there is no registered type with the specified full qualified name.
+     */
     public static synchronized AbstractInferenceModel find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
         AbstractInferenceModel abstractInferenceModel = null;
         try {
@@ -704,4 +766,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
      * @return Classifier - a weka classifier. null not permitted.
      */
     protected abstract Classifier createClassifier();
+
+    /**
+     * Creates the default descriptor of this inference model implementation.
+     */
+    protected abstract InferenceModelDescriptor createDefaultDescriptor();
 }

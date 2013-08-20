@@ -9,6 +9,7 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer2;
 import javax.swing.event.ChangeListener;
 
 /**
+ * Interface for GPX providers to access the gpx model.
  *
  * @author Serdar
  */

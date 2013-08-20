@@ -27,6 +27,8 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Implementation of the ComponentSnapShotExporter, which handler the
+ * exportation/printing of a Component as PDF file.
  *
  * @author Serdar
  */

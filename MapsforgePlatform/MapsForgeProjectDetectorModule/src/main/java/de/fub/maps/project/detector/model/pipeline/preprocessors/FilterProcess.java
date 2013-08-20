@@ -92,10 +92,23 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
         return false;
     }
 
+    /**
+     * This is a factory method to find and create all via
+     * <code>@ServiceProvider</code> registered FilterProcesses.
+     * @return A list of FilterProcess instances.
+     */
     public static synchronized Collection<FilterProcess> findAll() {
         return findAll(FilterProcess.class);
     }
 
+    /**
+     *
+     * @param descriptor
+     * @param detector
+     * @return
+     * @throws
+     * de.fub.maps.project.detector.model.process.DetectorProcess.DetectorProcessNotFoundException
+     */
     public static synchronized FilterProcess find(ProcessDescriptor descriptor, Detector detector) throws DetectorProcessNotFoundException {
         assert descriptor != null;
         FilterProcess filterProcess = find(descriptor.getJavaType(), detector);
@@ -105,6 +118,14 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
         return filterProcess;
     }
 
+    /**
+     *
+     * @param qualifiedInstanceName
+     * @param detector
+     * @return
+     * @throws
+     * de.fub.maps.project.detector.model.process.DetectorProcess.DetectorProcessNotFoundException
+     */
     public static synchronized FilterProcess find(String qualifiedInstanceName, Detector detector) throws DetectorProcessNotFoundException {
         FilterProcess filterProcess = null;
         try {
@@ -130,6 +151,9 @@ public abstract class FilterProcess extends AbstractDetectorProcess<List<TrackSe
         return filterProcess;
     }
 
+    /**
+     * Default visual representer implementation of Filterprocess instances.
+     */
     @NbBundle.Messages({"CLT_Filter_Parameter=Parameters"})
     private static class FilterProcessNode extends CustomAbstractnode implements PropertyChangeListener, ChangeListener {
 

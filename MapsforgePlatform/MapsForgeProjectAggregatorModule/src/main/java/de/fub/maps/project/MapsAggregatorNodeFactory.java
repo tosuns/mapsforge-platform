@@ -23,6 +23,7 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 
 /**
+ * Node factory, which provides aggregator nodes for the MapsProject.
  *
  * @author Serdar
  */

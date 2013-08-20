@@ -18,6 +18,9 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
+ * A abstract class, which implements the ComponentSnapShotExporter interface an
+ * provides some utility methods for sub classes, like the creates of a
+ * fileChooser and implementing the Comparable interface.
  *
  * @author Serdar
  */

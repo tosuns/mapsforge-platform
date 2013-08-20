@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This package contains the java model, which represent the Detector descriptor xml file.
  */
 @XmlSchema(
         namespace = "http://inf.fu-berlin.de/mapsforge/detector/schema",

@@ -24,6 +24,7 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 
 /**
+ * Node Factory to provide detector nodes for the MapProject.
  *
  * @author Serdar
  */

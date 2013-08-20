@@ -6,10 +6,10 @@ package de.fub.maps.project.aggregator.pipeline.processes;
 
 import de.fub.agg2graph.osm.OsmExporter;
 import de.fub.agg2graph.roadgen.RoadNetwork;
-import de.fub.maps.project.api.process.ProcessPipeline;
-import de.fub.maps.project.api.statistics.StatisticProvider;
 import de.fub.maps.project.aggregator.pipeline.AbstractAggregationProcess;
 import de.fub.maps.project.aggregator.xml.ProcessDescriptor;
+import de.fub.maps.project.api.process.ProcessPipeline;
+import de.fub.maps.project.api.statistics.StatisticProvider;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
@@ -31,6 +31,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Process unit implementation of the osm export funktion of the generated
+ * RoadNetwork of an Aggregator instance.
  *
  * @author Serdar
  */

@@ -10,9 +10,9 @@ import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.loaders.DataObject;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.Node.Cookie;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -21,6 +21,13 @@ import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
+/**
+ * Action implementation, which handles creation of a templates of a selected
+ * DataObject. The DataObject must have a SaveAsTemplateHandler implementation
+ * within its lookup.
+ *
+ * @author Serdar
+ */
 @ActionID(
         category = "System",
         id = "de.fub.utilsmodule.actions.SaveAsTemplateAction")

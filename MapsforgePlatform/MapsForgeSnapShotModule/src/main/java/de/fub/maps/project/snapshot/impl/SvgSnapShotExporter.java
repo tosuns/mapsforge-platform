@@ -27,6 +27,12 @@ import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
+/**
+ * Implementation of the ComponentSnapShotExporter, which handles the
+ * exportation/printing of a specified Component as SVG file.
+ *
+ * @author Serdar
+ */
 @NbBundle.Messages({
     "CLT_SvgSnapShotExporter_Description=Exports a swing component as svg file.",
     "CLT_SvgSnapShotExporter_Name=Svg"

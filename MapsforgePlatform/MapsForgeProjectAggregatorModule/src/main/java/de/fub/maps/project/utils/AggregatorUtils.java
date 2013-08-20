@@ -49,6 +49,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.datatransfer.ExTransferable;
 
 /**
+ * Helper class, which provides common methods/functions.
  *
  * @author Serdar
  */
@@ -62,8 +63,14 @@ public class AggregatorUtils {
     public static final String ICON_PATH_ERROR = "de/fub/maps/project/aggregator/aggregatorIconError.png";
     private static PaletteController palette;
     private static FileSystem inMemoryFileSystem;
-    private static Object MUTEX_CREATE_INSTANCE = new Object();
+    private static final Object MUTEX_CREATE_INSTANCE = new Object();
 
+    /**
+     * Convienence method, which creates a PaletteController to display
+     * instances of the AbstractAggregationProcess interface.
+     *
+     * @return PaletteController instance
+     */
     public static PaletteController getProcessPalette() {
         if (palette == null) {
             palette = PaletteFactory.createPalette(
@@ -73,6 +80,13 @@ public class AggregatorUtils {
         return palette;
     }
 
+    /**
+     * Creates an Aggregator instance via the provided fileObject, which
+     * represents a Aggregator descriptor.
+     *
+     * @param fileObject
+     * @return Aggregator instance or null.
+     */
     public static Aggregator createAggregator(FileObject fileObject) {
         try {
             DataObject dataObject = DataObject.find(fileObject);
@@ -86,33 +100,50 @@ public class AggregatorUtils {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T createInstance(Class<T> clazz, String className) {
-        synchronized (MUTEX_CREATE_INSTANCE) {
-            T instance = null;
-            try {
-                Class<?> classInstance = null;
-                ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
-                if (classLoader != null) {
-                    classInstance = classLoader.loadClass(className);
-                } else {
-                    classInstance = Class.forName(className);
-                }
-                if (clazz.isAssignableFrom(classInstance)) {
-                    Class<T> cl = (Class<T>) classInstance;
-                    instance = cl.newInstance();
-                }
-            } catch (InstantiationException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (ClassNotFoundException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            return instance;
-        }
-    }
-
+    /**
+     *
+     * @param <T>
+     * @param clazz
+     * @param className
+     * @return
+     */
+//    @SuppressWarnings("unchecked")
+//    public static <T> T createInstance(Class<T> clazz, String className) {
+//        synchronized (MUTEX_CREATE_INSTANCE) {
+//            T instance = null;
+//            try {
+//                Class<?> classInstance = null;
+//                ClassLoader classLoader = Lookup.getDefault().lookup(ClassLoader.class);
+//                if (classLoader != null) {
+//                    classInstance = classLoader.loadClass(className);
+//                } else {
+//                    // fall back
+//                    classInstance = Class.forName(className);
+//                }
+//                if (clazz.isAssignableFrom(classInstance)) {
+//                    Class<T> cl = (Class<T>) classInstance;
+//                    instance = cl.newInstance();
+//                }
+//            } catch (InstantiationException ex) {
+//                Exceptions.printStackTrace(ex);
+//            } catch (IllegalAccessException ex) {
+//                Exceptions.printStackTrace(ex);
+//            } catch (ClassNotFoundException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//            return instance;
+//        }
+//    }
+    /**
+     * initializes the instance of
+     * <code>clazz</code> and sets up the fields with the provided
+     * <code>properties</code>.
+     *
+     * @param <T>
+     * @param clazz
+     * @param properties
+     * @return an instance of T
+     */
     public static <T> T createValue(Class<T> clazz, List<Property> properties) {
         T returnInstance = null;
         try {
@@ -151,6 +182,13 @@ public class AggregatorUtils {
         return returnInstance;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param clazz
+     * @param property
+     * @return
+     */
     @SuppressWarnings({"unchecked"})
     public static <T> T getValue(Class<T> clazz, Property property) {
         T instance = null;
@@ -172,10 +210,23 @@ public class AggregatorUtils {
         return instance;
     }
 
+    /**
+     * Finds the Project, which contains the specified fileObject.
+     *
+     * @param fileObject A FileObject instance, null not permitted.
+     * @return A Project instance or null if a Project instance could not be
+     * found.
+     */
     public static Project findProject(FileObject fileObject) {
         return MapsProjectUtils.findProject(fileObject);
     }
 
+    /**
+     *
+     * @param processClass
+     * @return
+     * @throws IOException
+     */
     @NbBundle.Messages({
         "# {0} - filepath",
         "CLT_File_not_found=Couldn't find associated xml process descriptor file at path: {0}"
@@ -201,6 +252,12 @@ public class AggregatorUtils {
         return descriptor;
     }
 
+    /**
+     *
+     * @param destFile
+     * @param content
+     * @throws JAXBException
+     */
     public static void saveGpxToFile(File destFile, Gpx content) throws JAXBException {
         javax.xml.bind.JAXBContext jaxbCtx = javax.xml.bind.JAXBContext.newInstance(ObjectFactory.class);
         javax.xml.bind.Marshaller marshaller = jaxbCtx.createMarshaller();
@@ -209,10 +266,24 @@ public class AggregatorUtils {
         marshaller.marshal(new ObjectFactory().createGpx(content), destFile);
     }
 
+    /**
+     *
+     * @param dataObject
+     * @return
+     * @throws JAXBException
+     * @throws IOException
+     */
     public static AggregatorDescriptor getAggregatorDescritpor(DataObject dataObject) throws JAXBException, IOException {
         return getAggregatorDescriptor(dataObject.getPrimaryFile());
     }
 
+    /**
+     *
+     * @param fileObject
+     * @return
+     * @throws JAXBException
+     * @throws IOException
+     */
     public static AggregatorDescriptor getAggregatorDescriptor(FileObject fileObject) throws JAXBException, IOException {
         return JAXBUtil.createDescriptor(AggregatorDescriptor.class, fileObject);
     }

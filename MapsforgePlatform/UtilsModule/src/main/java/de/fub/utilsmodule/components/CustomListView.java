@@ -12,6 +12,7 @@ import org.openide.explorer.view.ListView;
 import org.openide.explorer.view.NodeRenderer;
 
 /**
+ * Custom List View with it's own NodeRenderer, which does not display an icon.
  *
  * @author Serdar
  */

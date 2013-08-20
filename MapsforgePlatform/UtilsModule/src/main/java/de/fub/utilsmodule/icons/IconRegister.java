@@ -24,6 +24,8 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
+ * Helper class to get system Icons for filetype or localize icons, which are
+ * registered by layer.xml file entries.
  *
  * @author Serdar
  */

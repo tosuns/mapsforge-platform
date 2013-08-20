@@ -5,8 +5,12 @@
 package de.fub.maps.project.detector.model.inference.impl;
 
 import de.fub.maps.project.detector.model.inference.AbstractInferenceModel;
+import de.fub.maps.project.detector.model.xmls.InferenceModelDescriptor;
+import de.fub.maps.project.detector.utils.DetectorUtils;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import weka.classifiers.Classifier;
@@ -63,5 +67,16 @@ public class RandomForestInferenceModel extends AbstractInferenceModel {
             return getInferenceModelDescriptor().getName();
         }
         return Bundle.CLT_RandomForestInferenceModel_Description();
+    }
+
+    @Override
+    protected InferenceModelDescriptor createDefaultDescriptor() {
+        InferenceModelDescriptor xmlDescriptor = null;
+        try {
+            xmlDescriptor = DetectorUtils.getXmlDescriptor(InferenceModelDescriptor.class, getClass());
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return xmlDescriptor;
     }
 }
