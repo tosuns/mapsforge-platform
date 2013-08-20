@@ -217,10 +217,6 @@ MapsforgePlatform/ApacheBatikLib/pom.xml -text
 MapsforgePlatform/ApacheBatikLib/src/main/nbm/manifest.mf -text
 MapsforgePlatform/ApacheBatikLib/src/main/resources/de/fub/mapsforge/apache/batiklib/Bundle.properties -text
 MapsforgePlatform/CacheModule/pom.xml -text
-MapsforgePlatform/CacheModule/src/main/java/de/fub/cachemodule/CacheManager.java -text
-MapsforgePlatform/CacheModule/src/main/java/de/fub/cachemodule/cache/Cache.java -text
-MapsforgePlatform/CacheModule/src/main/nbm/manifest.mf -text
-MapsforgePlatform/CacheModule/src/main/resources/de/fub/cachemodule/Bundle.properties -text
 MapsforgePlatform/GeoFileTypeApi/nb-configuration.xml -text
 MapsforgePlatform/GeoFileTypeApi/pom.xml -text
 MapsforgePlatform/GeoFileTypeApi/src/main/java/geofiletypeapi/GeoDataObject.java -text
@@ -845,10 +841,8 @@ MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/Nod
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/ProcessProperty.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/ProcessPropertyWrapper.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/node/property/editors/BigDecimalPropertyEditor.java -text
-MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/profiling/ProfilungUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/BigDecimalEditor.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/propertyeditors/BigDecimalInplace.java -text
-MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/reflection/ReflectionUtils.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/synchronizer/ModelSynchronizer.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/synchronizer/ModelSynchronizer2.java -text
 MapsforgePlatform/UtilsModule/src/main/java/de/fub/utilsmodule/text/CustomNumberFormat.java -text
