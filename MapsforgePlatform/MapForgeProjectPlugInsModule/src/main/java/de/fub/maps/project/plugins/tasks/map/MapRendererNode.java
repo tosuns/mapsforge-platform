@@ -50,7 +50,7 @@ public class MapRendererNode extends MapRenderer.MapRendererProcessNode implemen
 
     @Override
     public Action[] getActions(boolean context) {
-        List<? extends Action> actionsForPath = Utilities.actionsForPath("Project/Mapsforge/Plugin/Maprenderer/Actions");
+        List<? extends Action> actionsForPath = Utilities.actionsForPath("Project/Maps/Plugin/Maprenderer/Actions");
         return actionsForPath.toArray(new Action[actionsForPath.size()]);
     }
 

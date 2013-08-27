@@ -52,7 +52,7 @@ public final class DetectorStartAction extends AbstractAction implements Present
         final Detector detector = Utilities.actionsGlobalContext().lookup(Detector.class);
         if (detector != null) {
 
-            List<? extends Action> actionsForPath = Utilities.actionsForPath("Projects/org-mapsforge-project/Detector/Start/Actions");
+            List<? extends Action> actionsForPath = Utilities.actionsForPath("Projects/org-maps-project/Detector/Start/Actions");
             JMenuItem item = null;
             for (Action action : actionsForPath) {
                 item = new JMenuItem(action);
