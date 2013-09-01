@@ -24,7 +24,6 @@ import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.agg.IMergeHandler;
 import de.fub.agg2graph.agg.PointGhostPointPair;
 import de.fub.agg2graph.graph.RamerDouglasPeuckerFilter;
-import de.fub.agg2graph.input.Globals;
 import de.fub.agg2graph.structs.CartesianCalc;
 import de.fub.agg2graph.structs.ClassObjectEditor;
 import de.fub.agg2graph.structs.GPSCalc;
@@ -32,8 +31,6 @@ import de.fub.agg2graph.structs.GPSEdge;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.ILocation;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
-import de.fub.agg2graph.ui.gui.jmv.Layer;
-import de.fub.agg2graph.ui.gui.jmv.TestUI;
 import java.awt.Color;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -162,7 +159,7 @@ public class DefaultMergeHandler implements IMergeHandler {
         while (aggNodes.size() > i
                 && this.aggNodes.size() > 0
                 && this.aggNodes.get(this.aggNodes.size() - 1).equals(
-                aggNodes.get(i))) {
+                        aggNodes.get(i))) {
             this.aggNodes.remove(this.aggNodes.size() - 1);
             i++;
         }
@@ -180,7 +177,7 @@ public class DefaultMergeHandler implements IMergeHandler {
         while (gpsPoints.size() > i
                 && this.gpsPoints.size() > 0
                 && this.gpsPoints.get(this.gpsPoints.size() - 1).equals(
-                gpsPoints.get(i))) {
+                        gpsPoints.get(i))) {
             this.gpsPoints.remove(this.gpsPoints.size() - 1);
             i++;
         }
@@ -191,7 +188,7 @@ public class DefaultMergeHandler implements IMergeHandler {
     public void addGPSPoint(GPSPoint gpsPoint) {
         if (this.gpsPoints.size() > 0
                 && this.gpsPoints.get(this.gpsPoints.size() - 1).equals(
-                gpsPoint)) {
+                        gpsPoint)) {
             return;
         }
         this.gpsPoints.add(gpsPoint);
@@ -347,7 +344,7 @@ public class DefaultMergeHandler implements IMergeHandler {
                 }
                 PointGhostPointPair pair = PointGhostPointPair
                         .createAggToTrace(addNode, newNode, pointIndex,
-                        afterHit);
+                                afterHit);
                 pointGhostPointPairs.add(pair);
                 if (afterHit && pointIndex < getAggNodes().size() - 1) {
                     AggConnection conn = getAggNodes().get(pointIndex)
@@ -396,32 +393,31 @@ public class DefaultMergeHandler implements IMergeHandler {
         return newPoint;
     }
 
-    private void showDebugInfo() {
-        // debug
-        TestUI ui = (TestUI) Globals.get("ui");
-        if (ui == null) {
-            return;
-        }
-        Layer matchingLayer = ui.getLayerManager().getLayer("matching");
-        Layer mergingLayer = ui.getLayerManager().getLayer("merging");
-        // clone the lists
-        List<ILocation> aggNodesClone = new ArrayList<ILocation>(
-                aggNodes.size());
-        for (ILocation loc : aggNodes) {
-            aggNodesClone.add(new GPSPoint(loc));
-        }
-        matchingLayer.addObject(aggNodesClone);
-        matchingLayer.addObject(gpsPoints); // , roMatchGPS);
-
-        // for debugging highlight trace to agg with an arrow
-        for (PointGhostPointPair pgpp : pointGhostPointPairs) {
-            List<ILocation> line = new ArrayList<ILocation>(2);
-            line.add(new GPSPoint(pgpp.point));
-            line.add(new GPSPoint(pgpp.ghostPoint));
-            mergingLayer.addObject(line);
-        }
-    }
-
+//    private void showDebugInfo() {
+//        // debug
+//        TestUI ui = (TestUI) Globals.get("ui");
+//        if (ui == null) {
+//            return;
+//        }
+//        Layer matchingLayer = ui.getLayerManager().getLayer("matching");
+//        Layer mergingLayer = ui.getLayerManager().getLayer("merging");
+//        // clone the lists
+//        List<ILocation> aggNodesClone = new ArrayList<ILocation>(
+//                aggNodes.size());
+//        for (ILocation loc : aggNodes) {
+//            aggNodesClone.add(new GPSPoint(loc));
+//        }
+//        matchingLayer.addObject(aggNodesClone);
+//        matchingLayer.addObject(gpsPoints); // , roMatchGPS);
+//
+//        // for debugging highlight trace to agg with an arrow
+//        for (PointGhostPointPair pgpp : pointGhostPointPairs) {
+//            List<ILocation> line = new ArrayList<ILocation>(2);
+//            line.add(new GPSPoint(pgpp.point));
+//            line.add(new GPSPoint(pgpp.ghostPoint));
+//            mergingLayer.addObject(line);
+//        }
+//    }
     @Override
     public double getDistance() {
         return distance;
@@ -434,7 +430,7 @@ public class DefaultMergeHandler implements IMergeHandler {
 
     @Override
     public void mergePoints() {
-        showDebugInfo();
+//        showDebugInfo();
 
         List<AggConnection> changedAggConnections = new ArrayList<AggConnection>(
                 10);
@@ -523,13 +519,13 @@ public class DefaultMergeHandler implements IMergeHandler {
                 GPSCalc.getVector(aggNode, gpsPoint).times(factor));
         logger.log(Level.FINER, "moving {0} {1}, {2} and {3}, {4} to {5}, {6}",
                 new Object[]{
-            aggNode,
-            aggNode.getLat(),
-            aggNode.getLon(),
-            gpsPoint.getLat(),
-            gpsPoint.getLon(),
-            newPos.getValue(0),
-            newPos.getValue(1)});
+                    aggNode,
+                    aggNode.getLat(),
+                    aggNode.getLon(),
+                    gpsPoint.getLat(),
+                    gpsPoint.getLon(),
+                    newPos.getValue(0),
+                    newPos.getValue(1)});
         ILocation newPosCopy = new GPSPoint(newPos.getValue(0),
                 newPos.getValue(1));
         aggContainer.moveNodeTo(aggNode, newPosCopy);

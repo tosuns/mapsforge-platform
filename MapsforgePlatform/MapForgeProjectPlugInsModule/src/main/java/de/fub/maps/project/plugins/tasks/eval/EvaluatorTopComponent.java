@@ -12,6 +12,7 @@ import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.maps.project.openstreetmap.service.MapProvider;
 import de.fub.maps.project.plugins.mapmatcher.MapMatcher;
 import de.fub.maps.project.utils.LayerTableCellRender;
+import de.fub.mapviewer.ui.MapViewerTileFactory;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +23,6 @@ import java.awt.geom.Rectangle2D;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Locale;
 import java.util.Set;
 import javax.swing.JButton;
@@ -32,6 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.MenuElement;
+import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.DropDownButtonFactory;
 import org.openide.explorer.ExplorerManager;
@@ -45,7 +46,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  *
@@ -70,7 +70,7 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
 //    private static final String STATUS_BAR_VISIBLE_ICON_PATH = "de/fub/mapsforge/plugins/tasks/eval/statusbarIcon.png";
     private final OSMEvaluatorProcess osmEvaluatorProcess = new OSMEvaluatorProcess();
     private final ExplorerManager explorerManager = new ExplorerManager();
-    private JComboBox<TileSource> tileSourceComboBox;
+    private JComboBox<TileFactory> tileSourceComboBox;
     private JPopupMenu layersMenu;
     private JButton layersButton;
     private JToggleButton layerViewButton;
@@ -148,14 +148,9 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
 
         // set up tilesource combobox
         if (tileSourceComboBox == null) {
-            ArrayList<? extends TileSource> tileSources = new ArrayList<TileSource>(Lookup.getDefault().lookupResult(TileSource.class).allInstances());
-            Collections.sort(tileSources, new Comparator<TileSource>() {
-                @Override
-                public int compare(TileSource o1, TileSource o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
-            tileSourceComboBox = new JComboBox<TileSource>(tileSources.toArray(new TileSource[tileSources.size()]));
+            ArrayList<? extends MapViewerTileFactory> tileSources = new ArrayList<MapViewerTileFactory>(Lookup.getDefault().lookupResult(MapViewerTileFactory.class).allInstances());
+            Collections.sort(tileSources);
+            tileSourceComboBox = new JComboBox<TileFactory>(tileSources.toArray(new TileFactory[tileSources.size()]));
             tileSourceComboBox.setMaximumSize(new Dimension(150, 16));
             tileSourceComboBox.setPreferredSize(tileSourceComboBox.getMaximumSize());
             if (!tileSources.isEmpty()) {
@@ -219,10 +214,10 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
                     Rectangle2D bounds = totalBoundingBox.getBounds2D();
                     aggTopComponent1.showArea(
                             new DoubleRect(
-                            bounds.getX(),
-                            bounds.getY(),
-                            bounds.getWidth(),
-                            bounds.getHeight()));
+                                    bounds.getX(),
+                                    bounds.getY(),
+                                    bounds.getWidth(),
+                                    bounds.getHeight()));
                 } finally {
                     fitToSizeButton.setEnabled(true);
                 }
@@ -284,8 +279,8 @@ public class EvaluatorTopComponent extends TopComponent implements ExplorerManag
 
         @Override
         public void itemStateChanged(ItemEvent e) {
-            if (tileSourceComboBox.getSelectedItem() instanceof TileSource) {
-                aggTopComponent1.setTileSource((TileSource) tileSourceComboBox.getSelectedItem());
+            if (tileSourceComboBox.getSelectedItem() instanceof TileFactory) {
+                aggTopComponent1.setTileFactory((TileFactory) tileSourceComboBox.getSelectedItem());
             }
         }
     }

@@ -5,31 +5,26 @@
 package de.fub.maps.project.openstreetmap.ui;
 
 import de.fub.maps.project.openstreetmap.service.LocationBoundingBoxService;
-import de.fub.mapviewer.shapes.OsmRectangle;
+import de.fub.mapviewer.shapes.WaypointMarker;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Point;
+import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Point2D;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeListener;
+import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.painter.Painter;
 import org.openide.util.ChangeSupport;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  *
@@ -40,7 +35,7 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
     private static final long serialVersionUID = 1L;
     private transient final ChangeSupport csp = new ChangeSupport(this);
     private transient final MouseAdapter mouseAdapter = new MouseAdapterImpl();
-    private transient ComponentListener componentListener = new ComponentAdapterImpl();
+    private final transient ComponentListener componentListener = new ComponentAdapterImpl();
 
     /**
      * Creates new form MapViewer
@@ -52,6 +47,7 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
         mapViewer.addMouseMotionListener(mouseAdapter);
         mapViewer.addMouseWheelListener(mouseAdapter);
         mapViewer.addComponentListener(componentListener);
+
     }
 
     @Override
@@ -59,175 +55,80 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
         return mapViewer.getToolTipText(event);
     }
 
-    public void setDisplayPositionByLatLon(double lat, double lon, int zoom) {
-        mapViewer.setDisplayPositionByLatLon(lat, lon, zoom);
-    }
-
-    public void setDisplayPositionByLatLon(Point mapPoint, double lat, double lon, int zoom) {
-        mapViewer.setDisplayPositionByLatLon(mapPoint, lat, lon, zoom);
-    }
-
-    public void setDisplayPosition(int x, int y, int zoom) {
-        mapViewer.setDisplayPosition(x, y, zoom);
-    }
-
-    public void setDisplayPosition(Point mapPoint, int x, int y, int zoom) {
-        mapViewer.setDisplayPosition(mapPoint, x, y, zoom);
-    }
-
     public void setDisplayToFitMapMarkers() {
         mapViewer.setDisplayToFitMapMarkers();
     }
 
     public void setDisplayToFitMapRectangle() {
-        mapViewer.setDisplayToFitMapRectangles();
+        setDisplayToFitMapMarkers();
     }
 
-    public Coordinate getPosition() {
-        return mapViewer.getPosition();
+    public synchronized void addMapMarker(WaypointMarker marker) {
+        mapViewer.addWaypoint(marker);
     }
 
-    public Coordinate getPosition(Point mapPoint) {
-        return mapViewer.getPosition(mapPoint);
+    public synchronized void removeMapMarker(WaypointMarker marker) {
+        mapViewer.removeWaypoint(marker);
     }
 
-    public Coordinate getPosition(int mapPointX, int mapPointY) {
-        return mapViewer.getPosition(mapPointX, mapPointY);
+    public synchronized void removeAllMarkers() {
+        mapViewer.clearWaypoints();
     }
 
-    public Point getMapPosition(double lat, double lon, boolean checkOutside) {
-        return mapViewer.getMapPosition(lat, lon, checkOutside);
+    public void setDisplayPositionByLatLon(double lat, double lon) {
+        mapViewer.setCenterPosition(new GeoPosition(lat, lon));
     }
 
-    public Point getMapPosition(double lat, double lon) {
-        return mapViewer.getMapPosition(lat, lon);
+    public GeoPosition getCenterPosition() {
+        return mapViewer.getCenterPosition();
     }
 
-    public Point getMapPosition(Coordinate coord) {
-        return mapViewer.getMapPosition(coord);
+    public void setOverlayPainter(Painter<? super JXMapViewer> overlay) {
+        mapViewer.setOverlayPainter(overlay);
     }
 
-    public Point getMapPosition(Coordinate coord, boolean checkOutside) {
-        return mapViewer.getMapPosition(coord, checkOutside);
+    public GeoPosition getAddressLocation() {
+        return mapViewer.getAddressLocation();
     }
 
-    public void moveMap(int x, int y) {
-        mapViewer.moveMap(x, y);
+    public void setAddressLocation(GeoPosition addressLocation) {
+        mapViewer.setAddressLocation(addressLocation);
+    }
+
+    public void recenterToAddressLocation() {
+        mapViewer.recenterToAddressLocation();
+    }
+
+    public void setLoadingImage(Image loadingImage) {
+        mapViewer.setLoadingImage(loadingImage);
+    }
+
+    public void calculateZoomFrom(Set<GeoPosition> positions) {
+        mapViewer.calculateZoomFrom(positions);
+    }
+
+    public void setRestrictOutsidePanning(boolean restrictOutsidePanning) {
+        mapViewer.setRestrictOutsidePanning(restrictOutsidePanning);
+    }
+
+    public void setHorizontalWrapped(boolean horizontalWrapped) {
+        mapViewer.setHorizontalWrapped(horizontalWrapped);
+    }
+
+    public Point2D convertGeoPositionToPoint(GeoPosition pos) {
+        return mapViewer.convertGeoPositionToPoint(pos);
+    }
+
+    public GeoPosition convertPointToGeoPosition(Point2D pt) {
+        return mapViewer.convertPointToGeoPosition(pt);
     }
 
     public int getZoom() {
         return mapViewer.getZoom();
     }
 
-    public void zoomIn() {
-        mapViewer.zoomIn();
-    }
-
-    public void zoomIn(Point mapPoint) {
-        mapViewer.zoomIn(mapPoint);
-    }
-
-    public void zoomOut() {
-        mapViewer.zoomOut();
-    }
-
-    public void zoomOut(Point mapPoint) {
-        mapViewer.zoomOut(mapPoint);
-    }
-
-    public void setZoom(int zoom, Point mapPoint) {
-        mapViewer.setZoom(zoom, mapPoint);
-    }
-
     public void setZoom(int zoom) {
         mapViewer.setZoom(zoom);
-    }
-
-    public boolean isTileGridVisible() {
-        return mapViewer.isTileGridVisible();
-    }
-
-    public void setTileGridVisible(boolean tileGridVisible) {
-        mapViewer.setTileGridVisible(tileGridVisible);
-    }
-
-    public boolean getMapMarkersVisible() {
-        return mapViewer.getMapMarkersVisible();
-    }
-
-    public void setMapMarkerVisible(boolean mapMarkersVisible) {
-        mapViewer.setMapMarkerVisible(mapMarkersVisible);
-    }
-
-    public void setMapMarkerList(List<MapMarker> mapMarkerList) {
-        mapViewer.setMapMarkerList(mapMarkerList);
-    }
-
-    public List<MapMarker> getMapMarkerList() {
-        return mapViewer.getMapMarkerList();
-    }
-
-    public void setMapRectangleList(List<MapRectangle> mapRectangleList) {
-        mapViewer.setMapRectangleList(mapRectangleList);
-    }
-
-    public List<MapRectangle> getMapRectangleList() {
-        return mapViewer.getMapRectangleList();
-    }
-
-    public void addMapMarker(MapMarker marker) {
-        mapViewer.addMapMarker(marker);
-    }
-
-    public void removeMapMarker(MapMarker marker) {
-        mapViewer.removeMapMarker(marker);
-    }
-
-    public void addMapRectangle(MapRectangle rectangle) {
-        mapViewer.addMapRectangle(rectangle);
-    }
-
-    public void removeMapRectangle(MapRectangle rectangle) {
-        mapViewer.removeMapRectangle(rectangle);
-    }
-
-    public void setZoomContolsVisible(boolean visible) {
-        mapViewer.setZoomContolsVisible(visible);
-    }
-
-    public boolean getZoomContolsVisible() {
-        return mapViewer.getZoomContolsVisible();
-    }
-
-    public void setTileSource(TileSource tileSource) {
-        mapViewer.setTileSource(tileSource);
-    }
-
-    public void tileLoadingFinished(Tile tile, boolean success) {
-        mapViewer.tileLoadingFinished(tile, success);
-    }
-
-    public boolean isMapRectanglesVisible() {
-        return mapViewer.isMapRectanglesVisible();
-    }
-
-    public void setMapRectanglesVisible(boolean mapRectanglesVisible) {
-        mapViewer.setMapRectanglesVisible(mapRectanglesVisible);
-    }
-
-    public TileCache getTileCache() {
-        return mapViewer.getTileCache();
-    }
-
-    public void setTileLoader(TileLoader loader) {
-        mapViewer.setTileLoader(loader);
-    }
-
-    public void removeAllMapMarkers() {
-        ArrayList<MapMarker> list = new ArrayList<MapMarker>(mapViewer.getMapMarkerList());
-        for (MapMarker marker : list) {
-            removeMapMarker(marker);
-        }
     }
 
     /**
@@ -425,10 +326,11 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
 
     @Override
     public BoundingBox getViewBoundingBox() {
-        Coordinate topLect = mapViewer.getPosition(getLocation().y, getLocation().x);
-        Coordinate bottomRight = mapViewer.getPosition(getLocation().y + getHeight(),
-                getLocation().x + getWidth());
-        return new BoundingBox(topLect.getLat(), topLect.getLon(), bottomRight.getLat(), bottomRight.getLon());
+        GeoPosition topLect = mapViewer.convertPointToGeoPosition(new Point2D.Double(getLocation().y, getLocation().x));
+        GeoPosition bottomRight = mapViewer.convertPointToGeoPosition(
+                new Point2D.Double(getLocation().y + getHeight(),
+                        getLocation().x + getWidth()));
+        return new BoundingBox(topLect.getLatitude(), topLect.getLongitude(), bottomRight.getLatitude(), bottomRight.getLongitude());
     }
 
     public JButton getDownloadButton() {
@@ -480,8 +382,8 @@ public class MapViewerBoundingBoxProvider extends javax.swing.JPanel implements 
         double right = Double.parseDouble(rightLong.getText().replaceAll("°", ""));
         double bottom = Double.parseDouble(bottomLat.getText().replaceAll("°", ""));
 
-        mapViewer.setMapRectangleList(new ArrayList<MapRectangle>(Arrays.asList(new OsmRectangle(left, top, right, bottom))));
-        mapViewer.setDisplayToFitMapRectangles();
+        setDisplayToFitMapRectangle();
+        removeAllMarkers();
         fireChangeEvent();
     }
 

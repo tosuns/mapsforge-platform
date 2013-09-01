@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.api.statistics;
 
@@ -36,10 +47,10 @@ public interface StatisticProvider {
      * @return SortedMap where the key ist the name of the value and the value
      * is itself.
      * @throws
-     * de.fub.maps.project.api.StatisticProvider.StatisticNotAvailableException
-     * - StatisticNotAvailableException. If currently there are no data
-     * available. The message of the exception should contain the reason why no
-     * data is available and should provide a hint how to solve the problem.
+     * de.fub.maps.project.api.statistics.StatisticProvider.StatisticNotAvailableException
+     * If currently there are no data available. The message of the exception
+     * should contain the reason why no data is available and should provide a
+     * hint how to solve the problem.
      */
     public List<StatisticSection> getStatisticData() throws StatisticNotAvailableException;
 

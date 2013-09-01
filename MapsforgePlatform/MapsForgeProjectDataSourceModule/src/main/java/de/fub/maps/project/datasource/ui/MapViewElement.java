@@ -15,13 +15,12 @@ import de.fub.maps.project.datasource.spi.TrksegWrapper;
 import de.fub.maps.project.datasource.spi.actions.SplitpanelAction;
 import de.fub.maps.project.datasource.spi.actions.TrackSemgentExportAction;
 import de.fub.maps.project.datasource.spi.factories.NodeFactory;
+import de.fub.mapviewer.shapes.WaypointMarker;
 import de.fub.utilsmodule.Collections.ObservableArrayList;
 import de.fub.utilsmodule.Collections.ObservableList;
 import de.fub.utilsmodule.color.ColorUtil;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -36,7 +35,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumn;
@@ -58,7 +56,6 @@ import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
-import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
 /**
  *
@@ -79,14 +76,14 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     private static final long serialVersionUID = 1L;
     private final JToolBar toolbar = new JToolBar();
     private final ObservableList<TrksegWrapper> trackSegmentList = new ObservableArrayList<TrksegWrapper>();
-    private final HashMap<TrksegWrapper, List<CustomMapMarker>> markerMap = new HashMap<TrksegWrapper, List<CustomMapMarker>>();
+    private final HashMap<TrksegWrapper, List<WaypointMarker>> markerMap = new HashMap<TrksegWrapper, List<WaypointMarker>>();
     private final ExplorerManager explorerManager = new ExplorerManager();
-    private GPXDataObject obj;
+    private final GPXDataObject obj;
     private transient MultiViewElementCallback callback;
     private transient GPXProvider gpxProvide;
     private boolean modelChanged = true;
     // mouselistener to check and display only the treseg that are visible
-    private MouseListener mouseListener = new MouseAdapterImpl();
+    private final MouseListener mouseListener = new MouseAdapterImpl();
     private boolean splitPanelVisble;
     private final ProxyLookup lookup;
 
@@ -148,7 +145,6 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         toolbar.add(new JToggleButton(new SplitpanelAction(MapViewElement.this)));
 
         // set up fit map to size button
-
         JButton fitToSizeButton = new JButton(ImageUtilities.loadImageIcon(FIT_MAP_TO_SIZE_BUTTON_ICON_PATH, true));
         fitToSizeButton.setToolTipText(Bundle.CLT_Fit_Map_To_Size_Tooltip());
         fitToSizeButton.addActionListener(new ActionListener() {
@@ -161,7 +157,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     }
 
     private void update() {
-        abstractMapViewer1.removeAllMapMarkers();
+        abstractMapViewer1.removeAllMarkers();
         trackSegmentList.clear();
         if (gpxProvide != null) {
             Gpx gpx = gpxProvide.getGpx();
@@ -174,7 +170,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
                         trackSegmentList.add(trksegWrapper);
 
                         for (Wpt trkpt : trkseg.getTrkpt()) {
-                            CustomMapMarker mapMarkerDot = new CustomMapMarker(
+                            WaypointMarker mapMarkerDot = new WaypointMarker(
                                     color,
                                     trkpt.getLat().doubleValue(),
                                     trkpt.getLon().doubleValue());
@@ -197,7 +193,6 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
     @Override
     public void addNotify() {
         super.addNotify();
-        abstractMapViewer1.setDisplayToFitMapMarkers();
     }
 
     /**
@@ -346,68 +341,11 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
         return explorerManager;
     }
 
-    private void putMarkerToMap(TrksegWrapper trkseg, CustomMapMarker mapMarkerDot) {
+    private void putMarkerToMap(TrksegWrapper trkseg, WaypointMarker mapMarkerDot) {
         if (!markerMap.containsKey(trkseg)) {
-            markerMap.put(trkseg, new ArrayList<CustomMapMarker>());
+            markerMap.put(trkseg, new ArrayList<WaypointMarker>());
         }
         markerMap.get(trkseg).add(mapMarkerDot);
-    }
-
-    private static class CustomMapMarker extends MapMarkerDot {
-
-        protected Color color = Color.white;
-        private Color selectedColor = null;
-        private boolean selected = false;
-        private boolean visible = true;
-
-        public CustomMapMarker(double lat, double lon) {
-            super(lat, lon);
-        }
-
-        public CustomMapMarker(Color color, double lat, double lon) {
-            super(color, lat, lon);
-            Color selColor = UIManager.getDefaults().getColor("Table.selectionBackground");
-            if (selColor != null) {
-                selectedColor = selColor;
-            }
-            this.color = color;
-        }
-
-        public Color getColor() {
-            return color;
-        }
-
-        public void setColor(Color color) {
-            this.color = color;
-        }
-
-        public boolean isSelected() {
-            return selected;
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected = selected;
-        }
-
-        public boolean isVisible() {
-            return visible;
-        }
-
-        public void setVisible(boolean visible) {
-            this.visible = visible;
-        }
-
-        @Override
-        public void paint(Graphics g, Point position) {
-            if (visible) {
-                int circleRadius = 5;
-                int circleDiameter = circleRadius * 2;
-                g.setColor(selected ? selectedColor : color);
-                g.fillOval(position.x - circleDiameter, position.y - circleDiameter, circleDiameter, circleDiameter);
-                g.setColor(Color.black);
-                g.drawOval(position.x - circleDiameter, position.y - circleDiameter, circleDiameter, circleDiameter);
-            }
-        }
     }
 
     private class MouseAdapterImpl extends MouseAdapter {
@@ -423,7 +361,7 @@ public class MapViewElement extends javax.swing.JPanel implements MultiViewEleme
                     TrackSegmentBehaviour trksegNode = (TrackSegmentBehaviour) node;
                     TrksegWrapper trkseg = node.getLookup().lookup(TrksegWrapper.class);
                     if (trkseg != null && markerMap.containsKey(trkseg)) {
-                        for (CustomMapMarker marker : markerMap.get(trkseg)) {
+                        for (WaypointMarker marker : markerMap.get(trkseg)) {
                             marker.setSelected(trksegNode.isSelected());
                             marker.setVisible(trksegNode.isVisible());
                         }

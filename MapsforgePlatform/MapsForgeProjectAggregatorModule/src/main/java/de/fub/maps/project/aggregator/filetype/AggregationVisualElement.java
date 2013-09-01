@@ -12,6 +12,7 @@ import de.fub.maps.project.aggregator.xml.Source;
 import de.fub.maps.project.models.Aggregator;
 import de.fub.maps.project.ui.component.StatisticsPanel;
 import de.fub.maps.project.utils.LayerTableCellRender;
+import de.fub.mapviewer.ui.MapViewerTileFactory;
 import de.fub.utilsmodule.icons.IconRegister;
 import geofiletypeapi.GeoUtil;
 import java.awt.Dimension;
@@ -44,6 +45,7 @@ import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -66,7 +68,6 @@ import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.TopComponent;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  *
@@ -110,12 +111,14 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
     private JButton fitToSizeButton;
     private JPopupMenu layersMenu;
     private JPopupMenu processMenu;
-    private JComboBox<TileSource> tileSourceComboBox;
+    private JComboBox<MapViewerTileFactory> tileSourceComboBox;
     private JToggleButton statusBarButton;
     private transient final Object MUTEX_UPDATE = new Object();
 
     /**
      * Creates new form AggregationVisualElement
+     *
+     * @param lkp
      */
     public AggregationVisualElement(Lookup lkp) {
 
@@ -199,11 +202,25 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
         // set up tilesource combobox
         if (tileSourceComboBox == null) {
-            Collection<? extends TileSource> tileSources = Lookup.getDefault().lookupResult(TileSource.class).allInstances();
+            Collection<? extends MapViewerTileFactory> tileSources = Lookup.getDefault().lookupResult(MapViewerTileFactory.class).allInstances();
 
-            tileSourceComboBox = new JComboBox<TileSource>(tileSources.toArray(new TileSource[tileSources.size()]));
-            tileSourceComboBox.setMaximumSize(new Dimension(100, 16));
+            tileSourceComboBox = new JComboBox<MapViewerTileFactory>(tileSources.toArray(new MapViewerTileFactory[tileSources.size()]));
+            tileSourceComboBox.setMaximumSize(new Dimension(150, 16));
             tileSourceComboBox.setSelectedIndex(0);
+            TileFactory tileFactory = aggComponent.getTileFactory();
+            if (!tileSources.isEmpty()) {
+                if (tileFactory != null) {
+                    for (TileFactory tilef : tileSources) {
+                        if (tileFactory.getInfo().getName().equals(tilef.getInfo().getName())) {
+                            tileSourceComboBox.setSelectedItem(tilef);
+                            break;
+                        }
+                    }
+                } else {
+                    aggComponent.setTileFactory(tileSources.iterator().next());
+                }
+            }
+
             tileSourceComboBox.addItemListener(new TileSourceComboBoxItemListenerImpl());
             toolbar.add(tileSourceComboBox);
             toolbar.add(new JToolBar.Separator());
@@ -440,10 +457,10 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
                         Rectangle2D bounds = totalBoundingBox.getBounds2D();
                         aggComponent.showArea(
                                 new DoubleRect(
-                                bounds.getX(),
-                                bounds.getY(),
-                                bounds.getWidth(),
-                                bounds.getHeight()));
+                                        bounds.getX(),
+                                        bounds.getY(),
+                                        bounds.getWidth(),
+                                        bounds.getHeight()));
                     }
                 } finally {
                     fitToSizeButton.setEnabled(true);
@@ -488,8 +505,8 @@ public class AggregationVisualElement extends javax.swing.JPanel implements Mult
 
         @Override
         public void itemStateChanged(ItemEvent e) {
-            if (tileSourceComboBox.getSelectedItem() instanceof TileSource) {
-                aggComponent.setTileSource((TileSource) tileSourceComboBox.getSelectedItem());
+            if (tileSourceComboBox.getSelectedItem() instanceof TileFactory) {
+                aggComponent.setTileFactory((TileFactory) tileSourceComboBox.getSelectedItem());
             }
         }
     }

@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.openide.explorer.ExplorerManager;
 import org.openide.util.Exceptions;
 
 /**
@@ -29,7 +28,6 @@ import org.openide.util.Exceptions;
 public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
-    private final ExplorerManager explorerManager = new ExplorerManager();
     private Aggregator aggregator;
 
     /**
@@ -73,10 +71,10 @@ public final class RoadNetworkStatisticComparationPanel extends javax.swing.JPan
                 Rectangle2D bounds = totalBoundingBox.getBounds2D();
                 aggTopComponent1.showArea(
                         new DoubleRect(
-                        bounds.getX(),
-                        bounds.getY(),
-                        bounds.getWidth(),
-                        bounds.getHeight()));
+                                bounds.getX(),
+                                bounds.getY(),
+                                bounds.getWidth(),
+                                bounds.getHeight()));
             }
         }
     }

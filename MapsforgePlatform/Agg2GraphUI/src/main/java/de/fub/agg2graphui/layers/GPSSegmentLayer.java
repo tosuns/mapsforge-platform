@@ -16,12 +16,13 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 /**
  *
@@ -63,13 +64,8 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
 
     @Override
     public void addAll(Collection<GPSSegment> items) {
-        super.addAll(items);
         for (GPSSegment item : items) {
-            if (!META_DATA.containsKey(item.hashCode())) {
-                com.infomatiq.jsi.Rectangle boundingBox = getBoundingBox(item);
-                rtree.add(boundingBox, item.hashCode());
-                META_DATA.put(item.hashCode(), item);
-            }
+            add(item);
         }
     }
 
@@ -92,12 +88,12 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
     protected void drawDrawables(Graphics2D graphics, Rectangle rectangle) {
         MapViewer mapViewer = getLayerManager().getMapViewer();
         Dimension size = mapViewer.getSize();
-        Coordinate position = mapViewer.getPosition(0, 0);
-        Coordinate position1 = mapViewer.getPosition(size.width, size.height);
-        com.infomatiq.jsi.Rectangle rectangle1 = new com.infomatiq.jsi.Rectangle((float) position.getLat(),
-                (float) position.getLon(),
-                (float) position1.getLat(),
-                (float) position1.getLon());
+        GeoPosition position = mapViewer.convertPointToGeoPosition(new Point2D.Double(0, 0));
+        GeoPosition position1 = mapViewer.convertPointToGeoPosition(new Point2D.Double(size.width, size.height));
+        com.infomatiq.jsi.Rectangle rectangle1 = new com.infomatiq.jsi.Rectangle((float) position.getLongitude(),
+                (float) position.getLatitude(),
+                (float) position1.getLongitude(),
+                (float) position1.getLatitude());
         rtree.intersects(rectangle1, new GPSSegmentSeachProcedure());
     }
 
@@ -112,13 +108,13 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
         float maxLat = (float) boundingBox.getMinY();
         float maxLong = (float) boundingBox.getMaxX();
         float minLat = (float) boundingBox.getMaxY();
-        com.infomatiq.jsi.Rectangle rectangle = new com.infomatiq.jsi.Rectangle(maxLat, minLong, minLat, maxLong);
+        com.infomatiq.jsi.Rectangle rectangle = new com.infomatiq.jsi.Rectangle(minLong, maxLat, maxLong, minLat);
         return rectangle;
     }
 
     private class GPSSegmentSeachProcedure implements TIntProcedure {
 
-        private HashSet<GPSSegment> segments = new HashSet<GPSSegment>(100);
+        private final HashSet<GPSSegment> segments = new HashSet<GPSSegment>(100);
 
         public GPSSegmentSeachProcedure() {
         }
@@ -129,7 +125,7 @@ public class GPSSegmentLayer extends AbstractLayer<GPSSegment> {
             GPSPoint lastPoint = null;
             if (segment != null) {
                 for (GPSPoint point : segment) {
-                    if (getLayerManager().getMapViewer().getMapPosition(point.getLat(), point.getLon()) != null) {
+                    if (getLayerManager().getMapViewer().convertGeoPositionToPoint(new GeoPosition(point.getLat(), point.getLon())) != null) {
                         if (lastPoint != null) {
 
                             drawLine(lastPoint, point, getRenderingOptions());

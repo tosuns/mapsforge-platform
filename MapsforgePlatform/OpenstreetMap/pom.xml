@@ -38,7 +38,7 @@
             <name>matsim</name>
             <url>http://matsim.org/m2repo/</url>
         </repository>
-<!--        <repository>
+        <!--        <repository>
             <id>Yakumo</id>
             <name>Yakumo-releases</name>
             <url>http://localhost:8080/artifactory/libs-release-local/</url>
@@ -55,10 +55,15 @@
             <artifactId>org-netbeans-api-annotations-common</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.openstreetmap</groupId>
             <artifactId>jmapviewer</artifactId>
             <version>0.1-20130210</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.jdesktop.swingx</groupId>
+            <artifactId>jxmapviewer2</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 
@@ -75,6 +80,21 @@
                         <publicPackage>org.openstreetmap.gui.jmapviewer.images</publicPackage>
                         <publicPackage>org.openstreetmap.gui.jmapviewer.interfaces</publicPackage>
                         <publicPackage>org.openstreetmap.gui.jmapviewer.tilesources</publicPackage>
+                        
+                        <publicPackage>org.jdesktop.beans</publicPackage>
+                        <publicPackage>org.jdesktop.swingx</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.input</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.mapviewer</publicPackage>
+                        
+                        <publicPackage>org.jdesktop.swingx.mapviewer.bmng</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.mapviewer.empty</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.mapviewer.esri</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.mapviewer.resources</publicPackage>
+                        
+                        <publicPackage>org.jdesktop.swingx.mapviewer.util</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.mapviewer.wms</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.painter</publicPackage>
+                        <publicPackage>org.jdesktop.swingx.util</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

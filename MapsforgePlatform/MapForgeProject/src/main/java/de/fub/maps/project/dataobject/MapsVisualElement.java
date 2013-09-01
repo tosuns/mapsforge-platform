@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.dataobject;
 
@@ -14,15 +25,14 @@ import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
-import org.openide.windows.TopComponent;
 
-@MultiViewElement.Registration(
-        displayName = "#LBL_MapsForge_VISUAL",
-        iconBase = "de/fub/maps/project/icons/mapsforgeIcon16.png",
-        mimeType = "text/mapsforgeproject+xml",
-        persistenceType = TopComponent.PERSISTENCE_NEVER,
-        preferredID = "MapsForgeVisual",
-        position = 2000)
+//@MultiViewElement.Registration(
+//        displayName = "#LBL_MapsForge_VISUAL",
+//        iconBase = "de/fub/maps/project/icons/mapsforgeIcon16.png",
+//        mimeType = "text/mapsforgeproject+xml",
+//        persistenceType = TopComponent.PERSISTENCE_NEVER,
+//        preferredID = "MapsForgeVisual",
+//        position = 2000)
 @Messages("LBL_MapsForge_VISUAL=Visual")
 public final class MapsVisualElement extends JPanel implements MultiViewElement {
 

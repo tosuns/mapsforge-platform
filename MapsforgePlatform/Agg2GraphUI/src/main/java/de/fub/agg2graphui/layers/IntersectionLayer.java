@@ -10,7 +10,6 @@ import de.fub.agg2graphui.controller.AbstractLayer;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.util.List;
 
 /**
  *
@@ -34,7 +33,7 @@ public class IntersectionLayer extends AbstractLayer<Intersection> {
 
         // compute a factor depending on the current zoom level to make the stroke width
         // more adaptive.
-        float maxZoom = getLayerManager().getMapViewer().getTileController().getTileSource().getMaxZoom();
+        float maxZoom = getLayerManager().getMapViewer().getTileFactory().getInfo().getMaximumZoomLevel();
         float zoom = getLayerManager().getMapViewer().getZoom();
         // make sure divisor maxZoom != 0
         maxZoom = maxZoom == 0 ? 1 : maxZoom;

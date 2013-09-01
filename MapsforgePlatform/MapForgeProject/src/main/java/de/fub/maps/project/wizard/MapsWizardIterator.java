@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.wizard;
 
@@ -37,8 +48,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-// TODO define position attribute
-@TemplateRegistration(folder = "Project/Fu-Berlin", displayName = "#Maps_displayName", description = "MapsDescription.html", iconBase = "de/fub/maps/project/icons/mapsforgeIcon16.png", content = "Maps.zip")
+@TemplateRegistration(
+        folder = "Project/Fu-Berlin",
+        displayName = "#Maps_displayName",
+        description = "MapsDescription.html",
+        iconBase = "de/fub/maps/project/icons/mapsforgeIcon16.png",
+        content = "Maps.zip",
+        position = 0)
 @Messages({"Maps_displayName=MapsProject", "LBL_CreateProjectStep=Name and Location"})
 public class MapsWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 

@@ -4,45 +4,111 @@
  */
 package de.fub.mapviewer.ui;
 
-import de.fub.mapviewer.ui.caches.PersistentTileCache;
-import de.fub.mapviewer.ui.caches.ProxyTileCache;
-import java.awt.event.MouseEvent;
-import org.openstreetmap.gui.jmapviewer.DefaultMapController;
-import org.openstreetmap.gui.jmapviewer.JMapViewer;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
+import de.fub.mapviewer.shapes.WaypointMarker;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.event.MouseInputListener;
+import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.OSMTileFactoryInfo;
+import org.jdesktop.swingx.input.PanMouseInputListener;
+import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
+import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.mapviewer.Waypoint;
+import org.jdesktop.swingx.mapviewer.WaypointPainter;
+import org.jdesktop.swingx.mapviewer.WaypointRenderer;
+import org.jdesktop.swingx.painter.AbstractPainter;
+import org.jdesktop.swingx.painter.CompoundPainter;
+import org.jdesktop.swingx.painter.Painter;
 
 /**
  *
  * @author Serdar
  */
-public class MapViewer extends JMapViewer {
+public class MapViewer extends JXMapViewer {
 
     private static final long serialVersionUID = 1L;
-    private transient ProxyTileCache proxTileCache;
+    private final Set<WaypointMarker> waypoints = new HashSet<WaypointMarker>(200);
+    private final CompoundPainter<JXMapViewer> painters;
+    private WaypointPainter<WaypointMarker> waypointPainter;
 
     public MapViewer() {
-        this(new ProxyTileCache(new PersistentTileCache()), Runtime.getRuntime().availableProcessors() * 4);
-    }
+        super();
+        this.painters = new CompoundPainter<JXMapViewer>();
 
-    public MapViewer(TileCache tileCache, int downloadThreadCount) {
-        this(new ProxyTileCache(tileCache), downloadThreadCount);
-    }
-
-    private MapViewer(ProxyTileCache proxTileCache, int downloadThreadCount) {
-        super(proxTileCache, downloadThreadCount);
-        this.proxTileCache = proxTileCache;
         init();
     }
 
     private void init() {
-        DefaultMapController controller = new DefaultMapController(MapViewer.this);
-        controller.setMovementMouseButton(MouseEvent.BUTTON1);
-        setZoomContolsVisible(false);
+        DefaultTileFactory defaultTileFactory = new DefaultTileFactory(new OSMTileFactoryInfo());
+        setTileFactory(defaultTileFactory);
+        // Add interactions
+        MouseInputListener mia = new PanMouseInputListener(MapViewer.this);
+        addMouseListener(mia);
+        addMouseMotionListener(mia);
+        addMouseWheelListener(new ZoomMouseWheelListenerCursor(MapViewer.this));
+        waypointPainter = new WaypointPainter<WaypointMarker>();
+        waypointPainter.setRenderer(new WaypointRenderer<WaypointMarker>() {
+
+            @Override
+            public void paintWaypoint(Graphics2D g, JXMapViewer map, WaypointMarker waypoint) {
+                Point2D point = map.getTileFactory().geoToPixel(waypoint.getPosition(), map.getZoom());
+                if (waypoint.isVisible()) {
+                    int circleRadius = 5;
+                    int circleDiameter = circleRadius * 2;
+                    g.setColor(waypoint.isSelected() ? waypoint.getSelectedColor() : waypoint.getColor());
+                    g.fillOval((int) point.getX() - circleDiameter, (int) point.getY() - circleDiameter, circleDiameter, circleDiameter);
+                    g.setColor(Color.black);
+                    g.drawOval((int) point.getX() - circleDiameter, (int) point.getY() - circleDiameter, circleDiameter, circleDiameter);
+                }
+            }
+        });
+        painters.addPainter(waypointPainter);
+        super.setOverlayPainter(painters);
     }
 
-    protected void setTileCache(TileCache cache) {
-        if (this.proxTileCache != null) {
-            this.proxTileCache.setTileCache(cache);
+    public void setDisplayToFitMapMarkers() {
+        HashSet<GeoPosition> points = new HashSet<GeoPosition>();
+        for (Waypoint waypoint : waypoints) {
+            points.add(waypoint.getPosition());
         }
+        calculateZoomFrom(points);
     }
+
+    @Override
+    public void setOverlayPainter(Painter<? super JXMapViewer> overlay) {
+    }
+
+    public void addWaypoint(WaypointMarker waypoint) {
+        waypoints.add(waypoint);
+        waypointPainter.setWaypoints(waypoints);
+        repaint();
+    }
+
+    public void removeWaypoint(WaypointMarker waypoint) {
+        waypoints.remove(waypoint);
+        waypointPainter.setWaypoints(waypoints);
+        repaint();
+    }
+
+    public void clearWaypoints() {
+        waypoints.clear();
+        waypointPainter.setWaypoints(waypoints);
+        repaint();
+    }
+
+    public void addPainter(AbstractPainter<JXMapViewer> painter) {
+        assert painter != null;
+        painters.addPainter(painter);
+        repaint();
+    }
+
+    public void removePainter(AbstractPainter<JXMapViewer> painter) {
+        painters.removePainter(painter);
+        repaint();
+    }
+
 }

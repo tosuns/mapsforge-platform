@@ -8,23 +8,29 @@ import de.fub.agg2graphui.layers.LayerEvent;
 import de.fub.agg2graphui.layers.LayerListener;
 import de.fub.mapviewer.ui.MapViewer;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.event.ChangeListener;
+import org.jdesktop.swingx.JXMapViewer;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.painter.AbstractPainter;
 import org.openide.util.ChangeSupport;
 
 /**
  *
  * @author Serdar
  */
-public class LayerManager implements LayerListener {
+public class LayerManager extends AbstractPainter<JXMapViewer> implements LayerListener {
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
-    private final List<AbstractLayer<?>> layers = Collections.synchronizedList(new ArrayList<AbstractLayer<?>>());
+    private final Set<AbstractLayer<?>> layers = Collections.synchronizedSortedSet(new TreeSet<AbstractLayer<?>>());
     private final Set<LayerListener> layerListenerSet = Collections.synchronizedSet(new HashSet<LayerListener>());
     private Rectangle2D.Double projectionArea; // visible rect in projection
     private Rectangle2D.Double gpsArea; // visible rect in gps coordinates
@@ -35,6 +41,7 @@ public class LayerManager implements LayerListener {
     public LayerManager(MapViewer mapViewer) {
         assert mapViewer != null;
         this.mapViewer = mapViewer;
+        this.mapViewer.addPainter(LayerManager.this);
     }
 
     public void requestUpdate() {
@@ -70,11 +77,18 @@ public class LayerManager implements LayerListener {
     }
 
     public Rectangle2D.Double getGpsArea() {
-        return gpsArea;
+        Dimension size = getMapViewer().getSize();
+        GeoPosition leftTopPoint = getMapViewer().convertPointToGeoPosition(new Point2D.Double(0, 0));
+        GeoPosition rightBottomPoint = getMapViewer().convertPointToGeoPosition(new Point2D.Double(size.getWidth(), size.getHeight()));
+        return new Rectangle2D.Double(
+                leftTopPoint.getLongitude(),
+                leftTopPoint.getLatitude(),
+                rightBottomPoint.getLongitude(),
+                rightBottomPoint.getLatitude());
     }
 
-    public List<AbstractLayer<?>> getLayers() {
-        return Collections.unmodifiableList(layers);
+    public Collection<AbstractLayer<?>> getLayers() {
+        return Collections.unmodifiableCollection(layers);
     }
 
     public synchronized void addLayer(AbstractLayer<?> layer) {
@@ -153,6 +167,15 @@ public class LayerManager implements LayerListener {
     public synchronized void requestRender(LayerEvent layerEvent) {
         for (LayerListener layerListener : layerListenerSet) {
             layerListener.requestRender(layerEvent);
+        }
+    }
+
+    @Override
+    protected void doPaint(Graphics2D g, JXMapViewer object, int width, int height) {
+        for (AbstractLayer<?> layer : getLayers()) {
+            if (layer.isVisible()) {
+                layer.paintLayer(g, new Rectangle(getSize()));
+            }
         }
     }
 

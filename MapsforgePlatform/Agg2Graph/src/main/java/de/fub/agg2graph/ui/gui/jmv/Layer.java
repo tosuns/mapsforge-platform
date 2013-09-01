@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
@@ -54,7 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JComponent;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 public class Layer implements Hideable {
 
@@ -168,12 +169,10 @@ public class Layer implements Hideable {
         }
 
         // make sure we only render what's visible
-        java.awt.Point p1 = getLayerManager().getMainPanel().getMapPosition(
-                location1.getLat(), location1.getLon(), false);
-        java.awt.Point p2 = getLayerManager().getMainPanel().getMapPosition(
-                location2.getLat(), location2.getLon(), false);
-        drawObjects.add(new Line(new XYPoint(location1.getID(), p1.x, p1.y),
-                new XYPoint(location2.getID(), p2.x, p2.y), ro, weightFactor,
+        Point2D p1 = getLayerManager().getMainPanel().convertGeoPositionToPoint(new GeoPosition(location1.getLat(), location1.getLon()));
+        Point2D p2 = getLayerManager().getMainPanel().convertGeoPositionToPoint(new GeoPosition(location2.getLat(), location2.getLon()));
+        drawObjects.add(new Line(new XYPoint(location1.getID(), p1.getX(), p1.getY()),
+                new XYPoint(location2.getID(), p2.getX(), p2.getY()), ro, weightFactor,
                 directed));
     }
 
@@ -184,15 +183,11 @@ public class Layer implements Hideable {
         }
 
         // make sure we only render what's visible
-        java.awt.Point mapPosition = getLayerManager().getMainPanel()
-                .getMapPosition(
-                new Coordinate(location.getLat(), location.getLon()),
-                true);
+        Point2D mapPosition = getLayerManager().getMainPanel().convertGeoPositionToPoint(new GeoPosition(location.getLat(), location.getLon()));
         if (mapPosition == null) {
             return;
         }
-        drawObjects.add(new Point(new XYPoint(location.getID(), mapPosition.x,
-                mapPosition.y), ro));
+        drawObjects.add(new Point(new XYPoint(location.getID(), mapPosition.getX(), mapPosition.getY()), ro));
         drawnPointsCounter++;
     }
 
@@ -246,7 +241,7 @@ public class Layer implements Hideable {
                     // draw background (tile sizes)
                     List<Tile<AggNode>> tiles = ((DefaultCachingStrategy) container
                             .getCachingStrategy()).getTm().clipTiles(
-                            visibleArea);
+                                    visibleArea);
                     if (tiles != null) {
                         // draw them
                         g2.setColor(Color.WHITE);
@@ -263,7 +258,7 @@ public class Layer implements Hideable {
                                 // fill
                                 g2.setColor(tile.isLoaded ? new Color(1f, 0f,
                                         0f, 0.05f) : new Color(0f, 0f, 1f,
-                                        0.05f));
+                                                0.05f));
                                 g2.fillRect((int) projected.x,
                                         (int) projected.y,
                                         (int) projected.width,

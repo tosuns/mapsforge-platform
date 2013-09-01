@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.plugins.tasks.eval;
 
@@ -29,16 +40,16 @@ import org.openide.util.RequestProcessor;
 //@ActionReference(path = "Loaders/text/aggregationbuilder+xml/Actions", position = 260)
 @ActionReferences({
     @ActionReference(
-            id =
-            @ActionID(
-            category = "Aggregator",
-            id = "de.fub.maps.project.plugins.tasks.eval.EvaluateMapsAction"),
+            id
+            = @ActionID(
+                    category = "Aggregator",
+                    id = "de.fub.maps.project.plugins.tasks.eval.EvaluateMapsAction"),
             path = "Loaders/text/aggregationbuilder+xml/Actions", position = 280),
     @ActionReference(
-            id =
-            @ActionID(
-            category = "Aggregator",
-            id = "de.fub.maps.project.plugins.tasks.eval.EvaluateMapsAction"),
+            id
+            = @ActionID(
+                    category = "Aggregator",
+                    id = "de.fub.maps.project.plugins.tasks.eval.EvaluateMapsAction"),
             path = "Projects/Maps/Detector/Tasks/MapRenderer/Actions", position = 3000)
 })
 @Messages("CTL_EvaluateMapsAction=Compare Maps")
@@ -73,8 +84,8 @@ public final class EvaluateMapsAction extends AbstractAction implements ContextA
 
                 final SimpleMapsEvaluator evaluator = new SimpleMapsEvaluator(
                         MessageFormat.format("{0} [{1}]",
-                        detectorList.iterator().next().getDetectorDescriptor().getName(),
-                        Bundle.CLT_MapComparationTopComponent_Name()), aggregatorList);
+                                detectorList.iterator().next().getDetectorDescriptor().getName(),
+                                Bundle.CLT_MapComparationTopComponent_Name()), aggregatorList);
                 RequestProcessor.getDefault().post(new Runnable() {
                     @Override
                     public void run() {

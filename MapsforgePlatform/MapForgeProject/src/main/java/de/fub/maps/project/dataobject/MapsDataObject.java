@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.dataobject;
 
@@ -41,24 +52,24 @@ import org.openide.windows.TopComponent;
     //            separatorAfter = 200),
     @ActionReference(
             path = "Loaders/text/mapsproject+xml/Actions",
-            id =
-            @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            id
+            = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
             position = 300),
     @ActionReference(
             path = "Loaders/text/mapsproject+xml/Actions",
-            id =
-            @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            id
+            = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400,
             separatorAfter = 500),
     @ActionReference(
             path = "Loaders/text/mapsproject+xml/Actions",
-            id =
-            @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            id
+            = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 600),
     @ActionReference(
             path = "Loaders/text/mapsproject+xml/Actions",
-            id =
-            @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            id
+            = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
             position = 700,
             separatorAfter = 800),
 //    @ActionReference(
@@ -80,8 +91,8 @@ import org.openide.windows.TopComponent;
 //    position = 1300),
     @ActionReference(
             path = "Loaders/text/mapsproject+xml/Actions",
-            id =
-            @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            id
+            = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400)
 })
 public class MapsDataObject extends MultiDataObject {

@@ -7,19 +7,19 @@ package de.fub.agg2graphui;
 import de.fub.agg2graph.structs.DoubleRect;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.agg2graphui.controller.LayerManager;
+import de.fub.mapviewer.shapes.WaypointMarker;
 import de.fub.utilsmodule.text.MessageFormatter;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.geom.Point2D;
+import java.util.HashSet;
 import java.util.Locale;
 import javax.swing.JPanel;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.mapviewer.TileFactory;
+import org.jdesktop.swingx.mapviewer.Waypoint;
+import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  * Top component which displays something.
@@ -32,7 +32,8 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 public final class AggTopComponent extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private transient MapViewListener mouseListener = new MapViewListener(this);
+    private final transient MapViewListener mouseListener = new MapViewListener(this);
+    private final HashSet<Waypoint> hashSet = new HashSet<Waypoint>();
 
     public AggTopComponent() {
         initComponents();
@@ -46,57 +47,52 @@ public final class AggTopComponent extends JPanel {
         mapViewer.addMouseMotionListener(mouseListener);
         mapViewer.addMouseWheelListener(mouseListener);
         mapViewer.addComponentListener(mouseListener);
+        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<Waypoint>();
+        waypointPainter.setWaypoints(hashSet);
+        mapViewer.setOverlayPainter(waypointPainter);
     }
 
     public void showArea(DoubleRect area) {
-//        OSMMapRect mapRect = new OSMMapRect(area);
-//        mapViewer.addMapRectangle(mapRect);
-//        setDisplayToFitMapRectangle();
-//        mapViewer.removeMapRectangle(mapRect);
-        mapViewer.addMapMarker(new MapMarkerDot(area.getMinX(), area.getMinY()));
-        mapViewer.addMapMarker(new MapMarkerDot(area.getWidth(), area.getHeight()));
-        setDisplayToFitMapMarkers();
-        removeAllMarkers();
+        HashSet<GeoPosition> set = new HashSet<GeoPosition>();
+        set.add(new GeoPosition(area.getMinX(), area.getMinY()));
+        set.add(new GeoPosition(area.getWidth(), area.getHeight()));
+
+        mapViewer.calculateZoomFrom(set);
+
         updateZoomLevel();
         updateBoundingBox();
     }
 
     public void setDisplayToFitMapMarkers() {
         mapViewer.setDisplayToFitMapMarkers();
+        updateZoomLevel();
+        updateBoundingBox();
+        mapViewer.repaint();
     }
 
     public void setDisplayToFitMapRectangle() {
-        mapViewer.setDisplayToFitMapRectangles();
+        setDisplayToFitMapMarkers();
     }
 
-    public synchronized void addMapMarker(MapMarker marker) {
-        mapViewer.addMapMarker(marker);
+    public synchronized void addMapMarker(WaypointMarker marker) {
+        mapViewer.addWaypoint(marker);
+        setDisplayToFitMapMarkers();
     }
 
-    public synchronized void removeMapMarker(MapMarker marker) {
-        mapViewer.removeMapMarker(marker);
-    }
-
-    public synchronized void addMapRectangle(MapRectangle rectangle) {
-        mapViewer.addMapRectangle(rectangle);
-    }
-
-    public synchronized void removeMapRectangle(MapRectangle rectangle) {
-        mapViewer.removeMapRectangle(rectangle);
+    public synchronized void removeMapMarker(WaypointMarker marker) {
+        mapViewer.removeWaypoint(marker);
+        setDisplayToFitMapMarkers();
     }
 
     public synchronized void removeAllMarkers() {
-        mapViewer.getMapMarkerList().clear();
-        List<MapMarker> mapMarkerList = new ArrayList<MapMarker>(mapViewer.getMapMarkerList());
-        for (MapMarker marker : mapMarkerList) {
-            mapViewer.removeMapMarker(marker);
-        }
+        hashSet.clear();
+        setDisplayToFitMapMarkers();
     }
 
     public void updateLonLat(Point point) {
-        Coordinate position = mapViewer.getPosition(point);
-        setLatitude(position.getLat());
-        setLongitude(position.getLon());
+        GeoPosition position = mapViewer.convertPointToGeoPosition(point);
+        setLatitude(position.getLatitude());
+        setLongitude(position.getLongitude());
     }
 
     public void updateZoomLevel() {
@@ -104,14 +100,14 @@ public final class AggTopComponent extends JPanel {
     }
 
     public void updateBoundingBox() {
-        Coordinate leftLongBottomLat = mapViewer.getPosition(getLocation().x, getLocation().y + getHeight());
-        Coordinate rigtLongTopLat = mapViewer.getPosition(getLocation().x + getWidth(), getLocation().y);
+        GeoPosition leftLongBottomLat = mapViewer.convertPointToGeoPosition(new Point2D.Double(getLocation().x, getLocation().y + getHeight()));
+        GeoPosition rigtLongTopLat = mapViewer.convertPointToGeoPosition(new Point2D.Double(getLocation().x + getWidth(), getLocation().y));
         boundingBox.setText(MessageFormatter.format(Locale.ENGLISH,
                 NbBundle.getMessage(this.getClass(), "AggTopComponent.boundingBox.text"),
-                leftLongBottomLat.getLon(),
-                rigtLongTopLat.getLat(),
-                rigtLongTopLat.getLon(),
-                leftLongBottomLat.getLat()));
+                leftLongBottomLat.getLongitude(),
+                rigtLongTopLat.getLatitude(),
+                rigtLongTopLat.getLongitude(),
+                leftLongBottomLat.getLatitude()));
     }
 
     public void setLatitude(double lat) {
@@ -149,11 +145,15 @@ public final class AggTopComponent extends JPanel {
         mapViewer.removeAllLayers();
     }
 
-    public void setTileSource(TileSource tileSource) {
-        if (tileSource.getMaxZoom() < mapViewer.getZoom()) {
-            mapViewer.setZoom(tileSource.getMaxZoom());
+    public void setTileFactory(TileFactory tileFactory) {
+        if (tileFactory.getInfo().getMaximumZoomLevel() < mapViewer.getZoom()) {
+            mapViewer.setZoom(tileFactory.getInfo().getMaximumZoomLevel());
         }
-        mapViewer.setTileSource(tileSource);
+        mapViewer.setTileFactory(tileFactory);
+    }
+
+    public TileFactory getTileFactory() {
+        return mapViewer.getTileFactory();
     }
 
     public void setStatusBarVisible(boolean visible) {

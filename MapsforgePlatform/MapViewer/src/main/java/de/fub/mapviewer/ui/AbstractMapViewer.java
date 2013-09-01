@@ -4,23 +4,20 @@
  */
 package de.fub.mapviewer.ui;
 
-import de.fub.mapviewer.ui.caches.PersistentTileCache;
+import de.fub.mapviewer.shapes.WaypointMarker;
+import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.geom.Point2D;
 import java.text.MessageFormat;
-import java.util.List;
+import java.util.Set;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.NbBundle;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.Tile;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
-import org.openstreetmap.gui.jmapviewer.interfaces.MapRectangle;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 
 /**
  *
@@ -29,7 +26,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 public class AbstractMapViewer extends javax.swing.JPanel {
 
     private static final long serialVersionUID = 1L;
-    private transient MapViewListener mouseListener = new MapViewListener();
+    private final transient MapViewListener mouseListener = new MapViewListener();
 
     /**
      * Creates new form AbstractMapViewer
@@ -40,20 +37,10 @@ public class AbstractMapViewer extends javax.swing.JPanel {
         mapViewer.addMouseMotionListener(mouseListener);
         mapViewer.addMouseWheelListener(mouseListener);
         mapViewer.addComponentListener(mouseListener);
-        mapViewer.setZoomContolsVisible(false);
-//        mapViewer.setTileCache(new PersistentTileCache());
     }
 
     public MapViewer getMapViewer() {
         return mapViewer;
-    }
-
-    public AbstractMapViewer(TileCache cache) {
-        this();
-    }
-
-    protected void setTileCache(TileCache cache) {
-        mapViewer.setTileCache(cache);
     }
 
     @Override
@@ -61,173 +48,76 @@ public class AbstractMapViewer extends javax.swing.JPanel {
         return mapViewer.getToolTipText(event);
     }
 
-    public void setDisplayPositionByLatLon(double lat, double lon, int zoom) {
-        mapViewer.setDisplayPositionByLatLon(lat, lon, zoom);
-    }
-
-    public void setDisplayPositionByLatLon(Point mapPoint, double lat, double lon, int zoom) {
-        mapViewer.setDisplayPositionByLatLon(mapPoint, lat, lon, zoom);
-    }
-
-    public void setDisplayPosition(int x, int y, int zoom) {
-        mapViewer.setDisplayPosition(x, y, zoom);
-    }
-
-    public void setDisplayPosition(Point mapPoint, int x, int y, int zoom) {
-        mapViewer.setDisplayPosition(mapPoint, x, y, zoom);
-    }
-
     public void setDisplayToFitMapMarkers() {
         mapViewer.setDisplayToFitMapMarkers();
     }
 
     public void setDisplayToFitMapRectangle() {
-        mapViewer.setDisplayToFitMapRectangles();
+        setDisplayToFitMapMarkers();
     }
 
-    public Coordinate getPosition() {
-        return mapViewer.getPosition();
+    public synchronized void addMapMarker(WaypointMarker marker) {
+        mapViewer.addWaypoint(marker);
     }
 
-    public Coordinate getPosition(Point mapPoint) {
-        return mapViewer.getPosition(mapPoint);
+    public synchronized void removeMapMarker(WaypointMarker marker) {
+        mapViewer.removeWaypoint(marker);
     }
 
-    public Coordinate getPosition(int mapPointX, int mapPointY) {
-        return mapViewer.getPosition(mapPointX, mapPointY);
+    public synchronized void removeAllMarkers() {
+        mapViewer.clearWaypoints();
     }
 
-    public Point getMapPosition(double lat, double lon, boolean checkOutside) {
-        return mapViewer.getMapPosition(lat, lon, checkOutside);
+    public void setDisplayPositionByLatLon(double lat, double lon) {
+        mapViewer.setCenterPosition(new GeoPosition(lat, lon));
     }
 
-    public Point getMapPosition(double lat, double lon) {
-        return mapViewer.getMapPosition(lat, lon);
+    public GeoPosition getCenterPosition() {
+        return mapViewer.getCenterPosition();
     }
 
-    public Point getMapPosition(Coordinate coord) {
-        return mapViewer.getMapPosition(coord);
+    public GeoPosition getAddressLocation() {
+        return mapViewer.getAddressLocation();
     }
 
-    public Point getMapPosition(Coordinate coord, boolean checkOutside) {
-        return mapViewer.getMapPosition(coord, checkOutside);
+    public void setAddressLocation(GeoPosition addressLocation) {
+        mapViewer.setAddressLocation(addressLocation);
     }
 
-    public void moveMap(int x, int y) {
-        mapViewer.moveMap(x, y);
+    public void recenterToAddressLocation() {
+        mapViewer.recenterToAddressLocation();
+    }
+
+    public void setLoadingImage(Image loadingImage) {
+        mapViewer.setLoadingImage(loadingImage);
+    }
+
+    public void calculateZoomFrom(Set<GeoPosition> positions) {
+        mapViewer.calculateZoomFrom(positions);
+    }
+
+    public void setRestrictOutsidePanning(boolean restrictOutsidePanning) {
+        mapViewer.setRestrictOutsidePanning(restrictOutsidePanning);
+    }
+
+    public void setHorizontalWrapped(boolean horizontalWrapped) {
+        mapViewer.setHorizontalWrapped(horizontalWrapped);
+    }
+
+    public Point2D convertGeoPositionToPoint(GeoPosition pos) {
+        return mapViewer.convertGeoPositionToPoint(pos);
+    }
+
+    public GeoPosition convertPointToGeoPosition(Point2D pt) {
+        return mapViewer.convertPointToGeoPosition(pt);
     }
 
     public int getZoom() {
         return mapViewer.getZoom();
     }
 
-    public void zoomIn() {
-        mapViewer.zoomIn();
-    }
-
-    public void zoomIn(Point mapPoint) {
-        mapViewer.zoomIn(mapPoint);
-    }
-
-    public void zoomOut() {
-        mapViewer.zoomOut();
-    }
-
-    public void zoomOut(Point mapPoint) {
-        mapViewer.zoomOut(mapPoint);
-    }
-
-    public void setZoom(int zoom, Point mapPoint) {
-        mapViewer.setZoom(zoom, mapPoint);
-    }
-
     public void setZoom(int zoom) {
         mapViewer.setZoom(zoom);
-    }
-
-    public boolean isTileGridVisible() {
-        return mapViewer.isTileGridVisible();
-    }
-
-    public void setTileGridVisible(boolean tileGridVisible) {
-        mapViewer.setTileGridVisible(tileGridVisible);
-    }
-
-    public boolean getMapMarkersVisible() {
-        return mapViewer.getMapMarkersVisible();
-    }
-
-    public void setMapMarkerVisible(boolean mapMarkersVisible) {
-        mapViewer.setMapMarkerVisible(mapMarkersVisible);
-    }
-
-    public void setMapMarkerList(List<MapMarker> mapMarkerList) {
-        mapViewer.setMapMarkerList(mapMarkerList);
-    }
-
-    public List<MapMarker> getMapMarkerList() {
-        return mapViewer.getMapMarkerList();
-    }
-
-    public void setMapRectangleList(List<MapRectangle> mapRectangleList) {
-        mapViewer.setMapRectangleList(mapRectangleList);
-    }
-
-    public List<MapRectangle> getMapRectangleList() {
-        return mapViewer.getMapRectangleList();
-    }
-
-    public void addMapMarker(MapMarker marker) {
-        mapViewer.addMapMarker(marker);
-    }
-
-    public void removeMapMarker(MapMarker marker) {
-        mapViewer.removeMapMarker(marker);
-    }
-
-    public void addMapRectangle(MapRectangle rectangle) {
-        mapViewer.addMapRectangle(rectangle);
-    }
-
-    public void removeMapRectangle(MapRectangle rectangle) {
-        mapViewer.removeMapRectangle(rectangle);
-    }
-
-    public void setZoomContolsVisible(boolean visible) {
-        mapViewer.setZoomContolsVisible(visible);
-    }
-
-    public boolean getZoomContolsVisible() {
-        return mapViewer.getZoomContolsVisible();
-    }
-
-    public void setTileSource(TileSource tileSource) {
-        mapViewer.setTileSource(tileSource);
-    }
-
-    public void tileLoadingFinished(Tile tile, boolean success) {
-        mapViewer.tileLoadingFinished(tile, success);
-    }
-
-    public boolean isMapRectanglesVisible() {
-        return mapViewer.isMapRectanglesVisible();
-    }
-
-    public void setMapRectanglesVisible(boolean mapRectanglesVisible) {
-        mapViewer.setMapRectanglesVisible(mapRectanglesVisible);
-    }
-
-    public TileCache getTileCache() {
-        return mapViewer.getTileCache();
-    }
-
-    public void setTileLoader(TileLoader loader) {
-        mapViewer.setTileLoader(loader);
-    }
-
-    public void removeAllMapMarkers() {
-        getMapMarkerList().clear();
-        repaint();
     }
 
     /**
@@ -316,15 +206,21 @@ public class AbstractMapViewer extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void updateLonLat(Point point) {
-        Coordinate position = mapViewer.getPosition(point);
-        setLatitude(position.getLat());
-        setLongitude(position.getLon());
+        if (point != null) {
+            GeoPosition position = convertPointToGeoPosition(point);
+            setLatitude(position.getLatitude());
+            setLongitude(position.getLongitude());
+        }
     }
 
     private void updateBoundingBox() {
-        Coordinate leftLongBottomLat = mapViewer.getPosition(getLocation().x, getLocation().y + getHeight());
-        Coordinate rigtLongTopLat = mapViewer.getPosition(getLocation().x + getWidth(), getLocation().y);
-        boundingBox.setText(MessageFormat.format(NbBundle.getMessage(this.getClass(), "AbstractMapViewer.boundingBox.text"), leftLongBottomLat.getLon(), rigtLongTopLat.getLat(), rigtLongTopLat.getLon(), leftLongBottomLat.getLat()));
+        GeoPosition leftLongBottomLat = convertPointToGeoPosition(new Point2D.Double(getLocation().x, getLocation().y + getHeight()));
+        GeoPosition rigtLongTopLat = convertPointToGeoPosition(new Point2D.Double(getLocation().x + getWidth(), getLocation().y));
+        boundingBox.setText(MessageFormat.format(NbBundle.getMessage(this.getClass(), "AbstractMapViewer.boundingBox.text"),
+                leftLongBottomLat.getLongitude(),
+                rigtLongTopLat.getLatitude(),
+                rigtLongTopLat.getLongitude(),
+                leftLongBottomLat.getLatitude()));
     }
 
     private void setLatitude(double lat) {
@@ -371,7 +267,7 @@ public class AbstractMapViewer extends javax.swing.JPanel {
             updateBoundingBox();
             try {
                 updateLonLat(mapViewer.getMousePosition());
-            } catch (Exception ex) {
+            } catch (HeadlessException ex) {
                 updateLonLat(lastPoint);
             }
         }

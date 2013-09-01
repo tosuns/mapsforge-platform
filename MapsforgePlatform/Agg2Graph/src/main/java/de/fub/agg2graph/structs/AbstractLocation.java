@@ -22,7 +22,7 @@ import de.fub.agg2graph.structs.projection.OsmProjection;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Logger;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 /**
  * Base class with common methods and attributes for all classes modelling
@@ -62,8 +62,8 @@ public class AbstractLocation implements ILocation, Hideable {
         }
     }
 
-    public AbstractLocation(Coordinate position) {
-        this.setLatLon(position.getLat(), position.getLon());
+    public AbstractLocation(GeoPosition position) {
+        this.setLatLon(position.getLatitude(), position.getLongitude());
     }
 
     @Override
@@ -103,11 +103,8 @@ public class AbstractLocation implements ILocation, Hideable {
             return false;
         }
         AbstractLocation other = (AbstractLocation) obj;
-        if (Math.abs(this.getLat() - other.getLat()) > EPSILON
-                || Math.abs(this.getLon() - other.getLon()) > EPSILON) {
-            return false;
-        }
-        return true;
+        return Math.abs(this.getLat() - other.getLat()) <= EPSILON
+                && Math.abs(this.getLon() - other.getLon()) <= EPSILON;
     }
 
     @Override

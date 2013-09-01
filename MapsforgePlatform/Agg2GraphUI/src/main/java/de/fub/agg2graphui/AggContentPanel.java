@@ -4,30 +4,21 @@
  */
 package de.fub.agg2graphui;
 
-import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.ui.gui.RenderingOptions;
 import de.fub.agg2graphui.controller.AbstractLayer;
 import de.fub.agg2graphui.controller.LayerManager;
 import de.fub.agg2graphui.layers.LayerEvent;
 import de.fub.agg2graphui.layers.LayerListener;
 import de.fub.mapviewer.ui.MapViewer;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.Rectangle2D;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.explorer.ExplorerManager;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -53,7 +44,8 @@ public class AggContentPanel extends MapViewer implements
      */
     public AggContentPanel() {
         initComponents();
-        setScrollWrapEnabled(true);
+        setHorizontalWrapped(true);
+        setRestrictOutsidePanning(true);
         layerManager.addChangeListener(AggContentPanel.this);
         layerManager.addLayerListener(AggContentPanel.this);
 
@@ -114,58 +106,22 @@ public class AggContentPanel extends MapViewer implements
     }
 
     private void highlightLayer(int wheelRotation) {
+        ArrayList<AbstractLayer<?>> layers = new ArrayList<AbstractLayer<?>>(getLayerManager().getLayers());
         if (savedZIndex != Integer.MAX_VALUE) {
-            getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().setzIndex(savedZIndex);
+            layers.get(highlightIndex).getRenderingOptions().setzIndex(savedZIndex);
         }
         highlightIndex = (highlightIndex + wheelRotation + getLayerManager().getLayers().size())
                 % getLayerManager().getLayers().size();
-        savedZIndex = getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().getzIndex();
-        getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().setzIndex(999);
+        savedZIndex = layers.get(highlightIndex).getRenderingOptions().getzIndex();
+        layers.get(highlightIndex).getRenderingOptions().setzIndex(999);
 
         if (transparentHighlighting) {
             for (AbstractLayer<?> layer : getLayerManager().getLayers()) {
                 layer.getRenderingOptions().setOpacity(0.3);
             }
-            getLayerManager().getLayers().get(highlightIndex).getRenderingOptions().setOpacity(1);
+            layers.get(highlightIndex).getRenderingOptions().setOpacity(1);
         }
         repaint();
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        synchronized (getTreeLock()) {
-            Graphics2D g2d = (Graphics2D) g.create();
-            try {
-                Coordinate position = getPosition(0, getHeight());
-                GPSPoint leftTop = new GPSPoint(position.getLat(), position.getLon());
-                position = getPosition(getWidth(), 0);
-                GPSPoint bottomRight = new GPSPoint(position.getLat(), position.getLon());
-                Rectangle2D.Double gpsArea = new Rectangle2D.Double(leftTop.getLat(), leftTop.getLon(), bottomRight.getLat() - leftTop.getLat(), bottomRight.getLon() - leftTop.getLon());
-                Rectangle2D.Double projectionArea = new Rectangle2D.Double(leftTop.getX(), leftTop.getY(), bottomRight.getX() - leftTop.getX(), bottomRight.getY() - leftTop.getY());
-                getLayerManager().setArea(gpsArea, projectionArea);
-                paintLayers(g2d);
-            } finally {
-                g2d.dispose();
-            }
-        }
-    }
-
-    private void paintLayers(Graphics2D g2) {
-
-        if (getLayerManager().getLayers().isEmpty() || getLayerManager().getGpsArea() == null) {
-            return;
-        }
-        // paint the layers
-        ArrayList<AbstractLayer<?>> paintLayers = new ArrayList<AbstractLayer<?>>();
-        paintLayers.addAll(getLayerManager().getLayers());
-        // sort layers
-        Collections.sort(paintLayers, new LayerComparator());
-        for (AbstractLayer<?> layer : paintLayers) {
-            if (layer.isVisible()) {
-                layer.paintLayer(g2, new Rectangle(getSize()));
-            }
-        }
     }
 
     @Override
@@ -200,19 +156,6 @@ public class AggContentPanel extends MapViewer implements
         layerManager.removeAllLayers();
     }
 
-    private static class LayerComparator implements Comparator<AbstractLayer<?>>, Serializable {
-
-        private static final long serialVersionUID = 1L;
-
-        public LayerComparator() {
-        }
-
-        @Override
-        public int compare(AbstractLayer<?> o1, AbstractLayer<?> o2) {
-            return o1.getRenderingOptions().getzIndex() - o2.getRenderingOptions().getzIndex();
-        }
-    }
-
     private class MouseWheelListenerImpl implements MouseWheelListener {
 
         public MouseWheelListenerImpl() {
@@ -225,11 +168,11 @@ public class AggContentPanel extends MapViewer implements
                 e.consume();
             } else {
                 // push down
-                if (getZoom() <= getTileController().getTileSource().getMaxZoom()
+                if (getZoom() <= getTileFactory().getInfo().getMaximumZoomLevel()
                         || e.getWheelRotation() > 0) {
-                    setZoom(getZoom() - e.getWheelRotation(), e.getPoint());
+                    setZoom(getZoom() - e.getWheelRotation());
                     LOG.log(Level.FINEST, "zoom level: {0}, Maxzoom: {1}",
-                            new Object[]{getZoom(), getTileController().getTileSource().getMaxZoom()});
+                            new Object[]{getZoom(), getTileFactory().getInfo().getMaximumZoomLevel()});
                 }
             }
             layerManager.requestUpdate();

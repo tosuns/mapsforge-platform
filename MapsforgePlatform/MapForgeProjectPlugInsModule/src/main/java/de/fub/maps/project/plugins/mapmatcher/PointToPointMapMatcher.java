@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.plugins.mapmatcher;
 
@@ -65,10 +76,10 @@ public class PointToPointMapMatcher implements MapMatcher {
                 if (lastLocation == null) {
                     distance = GPSCalc
                             .getDistVincentyFast(
-                            point.getLat(),
-                            point.getLon(),
-                            roadPoint.getLat(),
-                            roadPoint.getLon());
+                                    point.getLat(),
+                                    point.getLon(),
+                                    roadPoint.getLat(),
+                                    roadPoint.getLon());
                 } else {
                     // project point to edge lastpoint - roadPoint
                     ILocation projectionPoint = GPSCalc.getProjectionPoint(point, lastLocation, roadPoint);
@@ -80,10 +91,10 @@ public class PointToPointMapMatcher implements MapMatcher {
 //                        LOG.log(Level.SEVERE, "Point {0} has no projection to segment {1} - {2}", new Object[]{point, lastLocation, roadPoint});
                         distance = GPSCalc
                                 .getDistVincentyFast(
-                                point.getLat(),
-                                point.getLon(),
-                                roadPoint.getLat(),
-                                roadPoint.getLon());
+                                        point.getLat(),
+                                        point.getLon(),
+                                        roadPoint.getLat(),
+                                        roadPoint.getLon());
                     }
                 }
                 if (distance < minDistance) {

@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.plugins.tasks.eval;
 
@@ -167,7 +178,6 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
 
             try {
 
-
                 // convert specified roadnetwork to osm format
                 // its necessary because through the export of the road network to
                 // osm format the roadnetwork gets simplified
@@ -194,7 +204,6 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                             addGPSSegmentsToLayer(osmGPSSegmentList, osmRoadLayer);
                         }
                     }
-
 
                     if (getMapMatcher() != null && !osmRoadNetwork.isEmpty()) {
                         double cost = -1;
@@ -230,10 +239,10 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                         LOG.log(Level.INFO, "average distance/network length: {0}", mappingCost);
                         NotifyDescriptor.Message nd = new NotifyDescriptor.Message(
                                 String.format(Locale.ENGLISH,
-                                "Map-Matcher cost amounts to %f\nAverage Distance (m): %f\nSum length to networklength: %f",
-                                mappingCost,
-                                averageDistance,
-                                sumDistance / roadNetwork.getTotalRoadLength()));
+                                        "Map-Matcher cost amounts to %f\nAverage Distance (m): %f\nSum length to networklength: %f",
+                                        mappingCost,
+                                        averageDistance,
+                                        sumDistance / roadNetwork.getTotalRoadLength()));
                         DialogDisplayer.getDefault().notifyLater(nd);
 
                     }
@@ -318,7 +327,6 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
                         nodeIndexMap.put(node.getId(), node);
                     }
                 }
-
 
                 Node n = nodeIndexMap.get(nd.getRef());
                 if (n != null) {
@@ -493,7 +501,6 @@ public class OSMEvaluatorProcess extends AbstractAggregationProcess<RoadNetwork,
             Sheet sheet = Sheet.createDefault();
             Sheet.Set set = Sheet.createPropertiesSet();
             sheet.put(set);
-
 
             if (process != null && process.getProcessDescriptor() != null) {
                 ProcessDescriptor processDescriptor = process.getProcessDescriptor();

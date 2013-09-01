@@ -24,6 +24,7 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -34,15 +35,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.nodes.Node;
 import org.openide.util.WeakListeners;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
  * @author Serdar
+ * @param <T>
  */
-public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListener {
+public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListener, Comparable<AbstractLayer<?>> {
 
     protected static final Logger LOG = Logger.getLogger(AbstractLayer.class.getName());
     protected final Object MUTEX = new Object();
@@ -273,9 +275,9 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         }
 
         // make sure we only render what's visible
-        java.awt.Point p1 = getLayerManager().getMapViewer().getMapPosition(location1.getLat(), location1.getLon(), false);
-        java.awt.Point p2 = getLayerManager().getMapViewer().getMapPosition(location2.getLat(), location2.getLon(), false);
-        Line line = new Line(new XYPoint(location1.getID(), p1.x, p1.y), new XYPoint(location2.getID(), p2.x, p2.y), ro, weightFactor, flag);
+        Point2D p1 = getLayerManager().getMapViewer().convertGeoPositionToPoint(new GeoPosition(location1.getLat(), location1.getLon()));
+        Point2D p2 = getLayerManager().getMapViewer().convertGeoPositionToPoint(new GeoPosition(location2.getLat(), location2.getLon()));
+        Line line = new Line(new XYPoint(location1.getID(), p1.getX(), p1.getY()), new XYPoint(location2.getID(), p2.getX(), p2.getY()), ro, weightFactor, flag);
         line.setLabel(label);
         drawables.add(line);
     }
@@ -285,18 +287,17 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
             return;
         }
         // make sure we only render what's visible
-        java.awt.Point mapPosition = getLayerManager().getMapViewer().getMapPosition(new Coordinate(location.getLat(), location.getLon()), true);
+        Point2D mapPosition = getLayerManager().getMapViewer().convertGeoPositionToPoint(new GeoPosition(location.getLat(), location.getLon()));
         if (mapPosition == null) {
             return;
         }
-        drawables.add(new Point(new XYPoint(location.getID(), mapPosition.x, mapPosition.y), ro));
+        drawables.add(new Point(new XYPoint(location.getID(), mapPosition.getX(), mapPosition.getY()), ro));
         setDrawnPointsCounter(getDrawnPointsCounter() + 1);
     }
 
     public void paintLayer(Graphics g, Rectangle rectangle) {
         Graphics2D g2d = (Graphics2D) g.create();
         try {
-//            Font labelFont = new Font(Font.SERIF, Font.PLAIN, 24);
             // queue draw operations
             setDrawnPointsCounter(0);
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -305,8 +306,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
                 drawables.clear();
                 if (isVisible()) {
                     drawDrawables(g2d, rectangle);
-//                    labelFont = labelFont.deriveFont((float) (12 - 2 * Math.log(getDrawnPointsCounter())));
-//                    Polygon arrowHead = createArrow();
+
                     for (Drawable drawObject : getDrawables()) {
                         // set color
                         if (drawObject != null) {
@@ -376,7 +376,6 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
                 g2d.fill(ellipse);
             }
 
-
             // paint the line label
             paintLineLabel(line, g2d);
 
@@ -410,6 +409,7 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     }
 
     private void paintArrows(Line line, Graphics2D g2d) {
+        int zoom = getLayerManager().getMapViewer().getZoom();
         float width = line.getWeightFactor() * getLayerManager().getThicknessFactor();
         double angle = Math.atan2(line.getTo().getY() - line.getFrom().getY(), line.getTo().getX() - line.getFrom().getX());
         AffineTransform oldTx = g2d.getTransform();// rotate to vertical axis and draw string
@@ -419,8 +419,8 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
         g2d.setTransform(tx);
         g2d.setStroke(line.getRenderingOptions().getStroke(getLayerManager().getThicknessFactor()));
         // the diraction arrows of the line
-        g2d.drawLine(0, 0, (int) (6 + width * 2), (int) (-8 - width * 2));
-        g2d.drawLine(0, 0, (int) (-6 - width * 2), (int) (-8 - width * 2));
+        g2d.drawLine(0, 0, (int) (10 * 1.0 / zoom), (int) (-15 * 1.0 / zoom));
+        g2d.drawLine(0, 0, (int) (-10 * 1.0 / zoom), (int) (-15 * 1.0 / zoom));
 
         g2d.setTransform(oldTx);
     }
@@ -452,4 +452,9 @@ public abstract class AbstractLayer<T> implements Hideable, PropertyChangeListen
     }
 
     protected abstract void drawDrawables(Graphics2D graphics, Rectangle rectangle);
+
+    @Override
+    public int compareTo(AbstractLayer<?> layer) {
+        return ((Integer) getRenderingOptions().getzIndex()).compareTo(layer.getRenderingOptions().getzIndex());
+    }
 }

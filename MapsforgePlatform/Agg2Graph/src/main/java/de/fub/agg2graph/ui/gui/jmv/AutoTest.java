@@ -50,7 +50,7 @@ public class AutoTest extends CLI {
 
     private TestUI testUI;
     private CalcThread ct;
-    private static Logger logger = Logger.getLogger("agg2graph.autotest");
+    private static final Logger logger = Logger.getLogger("agg2graph.autotest");
 
     public static void main(String[] args) throws FileNotFoundException,
             IOException, InterruptedException {
@@ -83,7 +83,7 @@ public class AutoTest extends CLI {
         p.load(new FileInputStream(new File("test/autotest/settings")));
         Dimension size = new Dimension(Integer.parseInt(p.getProperty(
                 "savelayer-width", "100")), Integer.parseInt(p.getProperty(
-                "savelayer-height", "75")));
+                                "savelayer-height", "75")));
         outputFolder = FileHandler.getWritableFolder("test/autotest/output/");
 
         for (File currentFile : targetFiles) {
@@ -95,7 +95,7 @@ public class AutoTest extends CLI {
             BufferedReader bufferedReader = null;
             try {
                 bufferedReader = new BufferedReader(new FileReader(file));
-            } catch (IOException ex) {
+            } catch (FileNotFoundException ex) {
                 logger.severe(MessageFormat.format("File not found. Search path: {0}", file));
                 continue;
             }
@@ -205,20 +205,20 @@ public class AutoTest extends CLI {
                     DoubleRect area = new DoubleRect();
                     area.fromMinMax(
                             Math.min(Double.parseDouble(tokens.get(1).name
-                            .split(",")[0]), Double.parseDouble(tokens
-                            .get(2).name.split(",")[0])), Math.min(
-                            Double.parseDouble(tokens.get(1).name
-                            .split(",")[1]), Double
-                            .parseDouble(tokens.get(2).name
-                            .split(",")[1])), Math.max(
-                            Double.parseDouble(tokens.get(1).name
-                            .split(",")[0]), Double
-                            .parseDouble(tokens.get(2).name
-                            .split(",")[0])), Math.max(
-                            Double.parseDouble(tokens.get(1).name
-                            .split(",")[1]), Double
-                            .parseDouble(tokens.get(2).name
-                            .split(",")[1])));
+                                            .split(",")[0]), Double.parseDouble(tokens
+                                            .get(2).name.split(",")[0])), Math.min(
+                                    Double.parseDouble(tokens.get(1).name
+                                            .split(",")[1]), Double
+                                    .parseDouble(tokens.get(2).name
+                                            .split(",")[1])), Math.max(
+                                    Double.parseDouble(tokens.get(1).name
+                                            .split(",")[0]), Double
+                                    .parseDouble(tokens.get(2).name
+                                            .split(",")[0])), Math.max(
+                                    Double.parseDouble(tokens.get(1).name
+                                            .split(",")[1]), Double
+                                    .parseDouble(tokens.get(2).name
+                                            .split(",")[1])));
                     testUI.getMainPanel().showArea(area);
                 } else if ("loadagg".equals(t.name)) {
                     // TODO implement
