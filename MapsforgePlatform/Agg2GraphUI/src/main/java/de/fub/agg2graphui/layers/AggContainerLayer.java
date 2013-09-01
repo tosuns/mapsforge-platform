@@ -72,10 +72,10 @@ public class AggContainerLayer extends AbstractLayer<AggContainer> {
                                     (int) projected.width,
                                     (int) projected.height);
                             // name
-                            g2.setColor(Color.BLACK);
-                            g2.drawString(tile.getID(),
-                                    (int) projected.x + 40,
-                                    (int) projected.y + 40);
+//                            g2.setColor(Color.BLACK);
+//                            g2.drawString(tile.getID(),
+//                                    (int) projected.x + 40,
+//                                    (int) projected.y + 40);
                         } else {
                             // // size.x = -89;
                             // // size.y = -179;

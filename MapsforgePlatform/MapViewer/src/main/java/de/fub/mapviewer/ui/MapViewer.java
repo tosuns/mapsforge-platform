@@ -5,6 +5,7 @@
 package de.fub.mapviewer.ui;
 
 import de.fub.mapviewer.shapes.WaypointMarker;
+import de.fub.mapviewer.tilesources.OSMTileFactory;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -12,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.MouseInputListener;
 import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.OSMTileFactoryInfo;
 import org.jdesktop.swingx.input.PanMouseInputListener;
 import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
 import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
@@ -43,7 +43,7 @@ public class MapViewer extends JXMapViewer {
     }
 
     private void init() {
-        DefaultTileFactory defaultTileFactory = new DefaultTileFactory(new OSMTileFactoryInfo());
+        DefaultTileFactory defaultTileFactory = new OSMTileFactory();
         setTileFactory(defaultTileFactory);
         // Add interactions
         MouseInputListener mia = new PanMouseInputListener(MapViewer.this);
