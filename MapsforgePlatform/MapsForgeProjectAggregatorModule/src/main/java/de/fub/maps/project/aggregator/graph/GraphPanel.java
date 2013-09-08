@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.aggregator.graph;
 
@@ -219,13 +230,11 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener, Lo
                 }
             }
 
-
             ArrayList<ArrayList<AbstractAggregationProcess<?, ?>>> chainLists = new ArrayList<ArrayList<AbstractAggregationProcess<?, ?>>>();
 
             for (AbstractAggregationProcess<?, ?> rootNode : rootNodeList) {
 
                 ArrayList<AbstractAggregationProcess<?, ?>> chainList = new ArrayList<AbstractAggregationProcess<?, ?>>();
-
 
                 while (rootNode != null) {
                     chainList.add(rootNode);
@@ -243,12 +252,10 @@ public class GraphPanel extends javax.swing.JPanel implements ChangeListener, Lo
                 chainLists.add(chainList);
             }
 
-
             if (viewRect != null) {
                 for (ArrayList<AbstractAggregationProcess<?, ?>> chainList : chainLists) {
                     for (AbstractAggregationProcess<?, ?> node : chainList) {
                         Widget widget = graph.getScene().findWidget(node);
-
 
                         if (widget != null && widget.getBounds() != null) {
                             Rectangle bounds = widget.getBounds();

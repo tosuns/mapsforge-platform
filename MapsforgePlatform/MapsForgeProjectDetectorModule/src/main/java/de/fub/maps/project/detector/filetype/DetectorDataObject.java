@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.filetype;
 
@@ -67,37 +79,37 @@ import org.xml.sax.InputSource;
 @ActionReferences({
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+            id
+            = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
             position = 100,
             separatorAfter = 200),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+            id
+            = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
             position = 300),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+            id
+            = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400,
             separatorAfter = 500),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
+            id
+            = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 600),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(
-            category = "System",
-            id = "de.fub.utilsmodule.actions.SaveAsTemplateAction"),
+            id
+            = @ActionID(
+                    category = "System",
+                    id = "de.fub.utilsmodule.actions.SaveAsTemplateAction"),
             position = 900),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
+            id
+            = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
             position = 1100,
             separatorAfter = 1200),
 //    @ActionReference(
@@ -107,8 +119,8 @@ import org.xml.sax.InputSource;
 //            position = 1300),
     @ActionReference(
             path = "Loaders/text/detector+xml/Actions",
-            id =
-            @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
+            id
+            = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400)
 })
 public class DetectorDataObject extends MultiDataObject {

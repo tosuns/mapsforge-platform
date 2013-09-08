@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.model.inference.processhandler;
 
@@ -86,10 +98,6 @@ public abstract class InferenceModelProcessHandler {
         this.descriptor = descriptor;
     }
 
-    protected abstract void handle();
-
-    protected abstract ProcessHandlerDescriptor createDefaultDescriptor();
-
     public static synchronized Collection<? extends InferenceModelProcessHandler> findAll() {
         Collection<? extends InferenceModelProcessHandler> allInstances = Lookup.getDefault().lookupResult(InferenceModelProcessHandler.class).allInstances();
         List<InferenceModelProcessHandler> resultList = new ArrayList<InferenceModelProcessHandler>();
@@ -141,6 +149,19 @@ public abstract class InferenceModelProcessHandler {
         }
         return handler;
     }
+
+    /**
+     * This method handles the actual process.
+     */
+    protected abstract void handle();
+
+    /**
+     * Creates the default ProcessHanlderDescriptor of this instance with all
+     * default configureation settings of this implementation.
+     *
+     * @return ProcessHandlerDescriptor (null not permitted).
+     */
+    protected abstract ProcessHandlerDescriptor createDefaultDescriptor();
 
     private static class ProcessHandlerNode extends CustomAbstractnode {
 

@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.filetype;
 
@@ -26,8 +38,8 @@ import org.openide.util.NbBundle.Messages;
 public final class DetectorVisualElement extends JPanel implements MultiViewElement {
 
     private static final long serialVersionUID = 1L;
-    private DetectorDataObject obj;
-    private JToolBar toolbar = new JToolBar();
+    private final DetectorDataObject obj;
+    private final JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;
 
     public DetectorVisualElement(Lookup lkp) {
@@ -57,7 +69,7 @@ public final class DetectorVisualElement extends JPanel implements MultiViewElem
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 148, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

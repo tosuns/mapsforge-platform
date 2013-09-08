@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.aggregator.pipeline.processes;
 
@@ -145,7 +156,6 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
                         break;
                     }
 
-
                     List<GPSSegment> clean = gpsCleaner.clean(segment);
                     totalCleanSegmentCount += clean.size();
                     for (GPSSegment cleanSegment : clean) {
@@ -220,19 +230,19 @@ public final class CleanProcess extends AbstractAggregationProcess<List<GPSSegme
 
         section.getStatisticsItemList().add(
                 new StatisticItem("Clean GPS Point Count",
-                String.valueOf(totalCleanGPSPointCount), "Total count of GPS points after cleaning.")); //NO18N
+                        String.valueOf(totalCleanGPSPointCount), "Total count of GPS points after cleaning.")); //NO18N
 
         section.getStatisticsItemList().add(
                 new StatisticItem("Clean Segment Count",
-                String.valueOf(totalCleanSegmentCount), "Total count of GPS segments after cleaning.")); //NO18N
+                        String.valueOf(totalCleanSegmentCount), "Total count of GPS segments after cleaning.")); //NO18N
 
         section.getStatisticsItemList().add(
                 new StatisticItem("Clean GPS Point/Segment Ratio",
-                String.valueOf(totalCleanGPSPointCount / (double) totalCleanSegmentCount), "The ratio of cleaned points to cleaned segements.")); //NO18N
+                        String.valueOf(totalCleanGPSPointCount / (double) totalCleanSegmentCount), "The ratio of cleaned points to cleaned segements.")); //NO18N
 
         section.getStatisticsItemList().add(
                 new StatisticItem("Smoothed GPS Points",
-                String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter.")); //NO18N
+                        String.valueOf(totalSmoothedGPSPointCount), "Total count of GPS points that filter by the RDP-Filter.")); //NO18N
 
         return statisticSections;
     }

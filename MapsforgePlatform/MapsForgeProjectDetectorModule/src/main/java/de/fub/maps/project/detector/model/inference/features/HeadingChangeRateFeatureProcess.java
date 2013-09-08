@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.model.inference.features;
 
@@ -31,7 +43,7 @@ public class HeadingChangeRateFeatureProcess extends FeatureProcess {
     private static final Logger LOG = Logger.getLogger(HeadingChangeRateFeatureProcess.class.getName());
     private static final String PROP_NAME_ANGLE_THRESHOLD = "minimum.angle.threshold";
     private Double minimumAngleThreshold = null;
-    private HeadingChangeRateFeature feature = new HeadingChangeRateFeature();
+    private final HeadingChangeRateFeature feature = new HeadingChangeRateFeature();
     private TrackSegment trackSegment;
 
     public HeadingChangeRateFeatureProcess() {

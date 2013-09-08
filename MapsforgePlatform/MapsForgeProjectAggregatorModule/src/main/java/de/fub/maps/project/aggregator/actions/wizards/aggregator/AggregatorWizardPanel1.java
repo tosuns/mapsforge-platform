@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.aggregator.actions.wizards.aggregator;
 
@@ -54,8 +65,8 @@ public class AggregatorWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
                         DataObject dataObject = (DataObject) property;
                         component.getAggregatorLocation().setText(
                                 MessageFormat.format("{0}/{1}.agg",
-                                dataObject.getPrimaryFile().getPath(),
-                                component.getAggregatorName().getText().replaceAll(".agg", "")));
+                                        dataObject.getPrimaryFile().getPath(),
+                                        component.getAggregatorName().getText().replaceAll(".agg", "")));
                     }
                     changeSupport.fireChange();
                 }
@@ -98,16 +109,16 @@ public class AggregatorWizardPanel1 implements WizardDescriptor.Panel<WizardDesc
             if (getComponent().getAggregatorName().getText() == null) {
                 getComponent().getAggregatorLocation().setText(
                         MessageFormat.format("{0}/",
-                        dataObject.getPrimaryFile().getPath()));
+                                dataObject.getPrimaryFile().getPath()));
             } else if (getComponent().getAggregatorName().getText() != null && getComponent().getAggregatorName().getText().length() > 0) {
                 getComponent().getAggregatorLocation().setText(
                         MessageFormat.format("{0}/{1}.agg",
-                        dataObject.getPrimaryFile().getPath(),
-                        getComponent().getAggregatorName().getText()));
+                                dataObject.getPrimaryFile().getPath(),
+                                getComponent().getAggregatorName().getText()));
             } else {
                 getComponent().getAggregatorLocation().setText(
                         MessageFormat.format("{0}/",
-                        dataObject.getPrimaryFile().getPath()));
+                                dataObject.getPrimaryFile().getPath()));
             }
         }
     }

@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.model.inference;
 
@@ -179,7 +191,7 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
                     try {
                         processHandler = InferenceModelProcessHandler.find(processHandlerDescriptor, AbstractInferenceModel.this);
                         processHandlerInstanceMap.put(processHandlerDescriptor.getInferenceMode(), processHandler);
-                    } catch (Exception ex) {
+                    } catch (InstantiationException ex) {
                         LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 }
@@ -754,7 +766,9 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
             } else {
                 throw new DetectorProcessNotFoundException(MessageFormat.format("{0} is not type of {1}", clazz.getSimpleName(), AbstractInferenceModel.class.getSimpleName()));
             }
-        } catch (Throwable ex) {
+        } catch (ClassNotFoundException ex) {
+            throw new DetectorProcessNotFoundException(ex);
+        } catch (DetectorProcessNotFoundException ex) {
             throw new DetectorProcessNotFoundException(ex);
         }
         return abstractInferenceModel;
@@ -769,6 +783,8 @@ public abstract class AbstractInferenceModel extends DetectorProcess<InferenceMo
 
     /**
      * Creates the default descriptor of this inference model implementation.
+     *
+     * @return
      */
     protected abstract InferenceModelDescriptor createDefaultDescriptor();
 }

@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.plugins.tasks.map;
 
@@ -26,7 +38,7 @@ import org.openide.util.lookup.Lookups;
 public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implements ChangeListener, ProcessPipeline.ProcessListener {
 
     private final MapRenderer mapRenderer;
-    private ArrayList<Aggregator> aggregatorList = new ArrayList<Aggregator>();
+    private final ArrayList<Aggregator> aggregatorList = new ArrayList<Aggregator>();
 
     public MapRendererChildNodeFactory(MapRenderer mapRenderer) {
         assert mapRenderer != null;
@@ -39,14 +51,14 @@ public class MapRendererChildNodeFactory extends ChildFactory<Aggregator> implem
         // add change listener to aggregator list of mapRenderer process
         this.mapRenderer.getAggregatorList().addChangeListener(
                 WeakListeners.change(
-                MapRendererChildNodeFactory.this,
-                this.mapRenderer.getAggregatorList()));
+                        MapRendererChildNodeFactory.this,
+                        this.mapRenderer.getAggregatorList()));
         // add process listener to mapRenderer process
         this.mapRenderer.addProcessListener(
                 WeakListeners.create(
-                ProcessPipeline.ProcessListener.class,
-                MapRendererChildNodeFactory.this,
-                this.mapRenderer));
+                        ProcessPipeline.ProcessListener.class,
+                        MapRendererChildNodeFactory.this,
+                        this.mapRenderer));
         // if the list contains aggregators than add them to the aggregatorList
         if (!this.mapRenderer.getAggregatorList().isEmpty()) {
             aggregatorList.addAll(mapRenderer.getAggregatorList());

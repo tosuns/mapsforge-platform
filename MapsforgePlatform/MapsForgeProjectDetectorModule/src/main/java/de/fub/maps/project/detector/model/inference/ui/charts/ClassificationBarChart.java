@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.detector.model.inference.ui.charts;
 
@@ -42,8 +53,8 @@ public class ClassificationBarChart extends javax.swing.JPanel {
     private final DefaultCategoryDataset absDataset = new DefaultCategoryDataset();
     private final JFreeChart barChart;
     private final CategoryPlot plot;
-    private Color relColor = new Color(0x00, 0x7a, 0xe0);
-    private Color absColor = new Color(0xe0, 0x00, 0x00);
+    private final Color relColor = new Color(0x00, 0x7a, 0xe0);
+    private final Color absColor = new Color(0xe0, 0x00, 0x00);
 
     /**
      * Creates new form ClassificationBarChart
@@ -86,8 +97,8 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         relRenderer.setBarPainter(new StandardBarPainter());
         relRenderer.setBaseItemLabelGenerator(
                 new StandardCategoryItemLabelGenerator(
-                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
-                new CustomNumberFormat()));
+                        StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                        new CustomNumberFormat()));
         relRenderer.setBaseItemLabelsVisible(true);
 
         BarRenderer absRenderer = new BarRenderer();
@@ -97,8 +108,8 @@ public class ClassificationBarChart extends javax.swing.JPanel {
         absRenderer.setBarPainter(new StandardBarPainter());
         absRenderer.setBaseItemLabelGenerator(
                 new StandardCategoryItemLabelGenerator(
-                StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
-                new CustomNumberFormat()));
+                        StandardCategoryItemLabelGenerator.DEFAULT_LABEL_FORMAT_STRING,
+                        new CustomNumberFormat()));
         absRenderer.setBaseItemLabelsVisible(true);
 
         plot.setRenderer(0, relRenderer);

@@ -112,7 +112,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="&lt;ProfileComponent.jPanel3.border.title&gt;">
+                    <TitledBorder title="Postprocess">
                       <ResourceString PropertyName="titleX" bundle="de/fub/maps/project/detector/ui/Bundle.properties" key="ProfileComponent.jPanel3.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </TitledBorder>
                   </Border>
@@ -194,7 +194,7 @@
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="&lt;ProfileComponent.jPanel1.border.title&gt;">
+                    <TitledBorder title="Preprocess">
                       <ResourceString PropertyName="titleX" bundle="de/fub/maps/project/detector/ui/Bundle.properties" key="ProfileComponent.jPanel1.border.title" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </TitledBorder>
                   </Border>

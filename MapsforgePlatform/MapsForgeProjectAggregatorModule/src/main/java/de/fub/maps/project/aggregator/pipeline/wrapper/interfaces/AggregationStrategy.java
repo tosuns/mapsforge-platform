@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.aggregator.pipeline.wrapper.interfaces;
 
@@ -26,9 +37,8 @@ public interface AggregationStrategy extends IAggregationStrategy, Descriptor {
     public PropertySection getPropertySection();
 
     /**
-     * Factory to find
-     * <code>@ServiceProvider</code> annotated AggregationStrategy
-     * implementations.
+     * Factory to find <code>@ServiceProvider</code> annotated
+     * AggregationStrategy implementations.
      */
     public static class Factory {
 
@@ -36,6 +46,7 @@ public interface AggregationStrategy extends IAggregationStrategy, Descriptor {
          * Finds all AggregationStrategy instances, which are annotated via
          * <code>@ServiceProvider</code>. This method delegates the call to the
          * {@code DescriptorFactory} class.
+         *
          * @return A collection of all registered AggregationStrategy instances.
          */
         public static Collection<? extends AggregationStrategy> findAll() {

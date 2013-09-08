@@ -684,7 +684,6 @@ MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/proje
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/statistics/HistogramPanel.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/statistics/TrainingDataAnalyizerComponent.form -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/statistics/TrainingDataAnalyizerComponent.java -text
-MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/statistics/TrainingDatasetStatistic.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/xmls/DataSet.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/xmls/DataSets.java -text
 MapsforgePlatform/MapsForgeProjectDetectorModule/src/main/java/de/fub/maps/project/detector/model/xmls/Descriptor.java -text

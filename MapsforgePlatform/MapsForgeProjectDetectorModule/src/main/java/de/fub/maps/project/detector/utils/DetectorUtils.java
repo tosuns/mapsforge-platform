@@ -1,10 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.utils;
 
-import de.fub.maps.project.utils.MapsProjectUtils;
 import de.fub.maps.project.detector.filetype.DetectorDataObject;
 import de.fub.maps.project.detector.model.Detector;
 import de.fub.maps.project.detector.model.inference.AbstractInferenceModel;
@@ -13,6 +24,7 @@ import de.fub.maps.project.detector.model.xmls.DetectorDescriptor;
 import de.fub.maps.project.detector.model.xmls.InferenceModelDescriptor;
 import de.fub.maps.project.detector.model.xmls.ProcessHandlerDescriptor;
 import de.fub.maps.project.detector.model.xmls.Property;
+import de.fub.maps.project.utils.MapsProjectUtils;
 import de.fub.utilsmodule.xml.jax.JAXBUtil;
 import java.awt.Color;
 import java.io.File;

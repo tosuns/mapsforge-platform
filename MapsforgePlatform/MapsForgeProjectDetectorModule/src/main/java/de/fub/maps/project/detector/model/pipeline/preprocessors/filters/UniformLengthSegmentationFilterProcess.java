@@ -1,6 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2013 Serdar
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.fub.maps.project.detector.model.pipeline.preprocessors.filters;
 
@@ -61,7 +73,7 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
                         } else if (PROP_NAME_FILTER_SCOPE.equals(property.getValue())) {
                             scope = InferenceMode.fromValue(property.getValue());
                         }
-                    } catch (IllegalArgumentException ex) {
+                    } catch (NumberFormatException ex) {
                         LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 }
@@ -88,7 +100,6 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
                         // we are still in the specified length constrain
                         // and add the waypoint to the short segement
                         shortSegement.add(lastWaypoint);
-
 
                         // only if there is a reference point fot the computation of the
                         // length we will compute.
@@ -169,7 +180,7 @@ public class UniformLengthSegmentationFilterProcess extends FilterProcess {
         ProcessDescriptor descriptor = new ProcessDescriptor();
         descriptor
                 .setJavaType(UniformLengthSegmentationFilterProcess.class
-                .getName());
+                        .getName());
         descriptor.setName(Bundle.CLT_UniformLengthFilter_Name());
         descriptor.setDescription(Bundle.CLT_UniformLengthFilter_Description());
 

@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.utils;
 
@@ -135,9 +146,8 @@ public class AggregatorUtils {
 //        }
 //    }
     /**
-     * initializes the instance of
-     * <code>clazz</code> and sets up the fields with the provided
-     * <code>properties</code>.
+     * initializes the instance of <code>clazz</code> and sets up the fields
+     * with the provided <code>properties</code>.
      *
      * @param <T>
      * @param clazz
@@ -205,7 +215,6 @@ public class AggregatorUtils {
         } else if (clazz.getName().equals(Long.class.getName())) {
             instance = (T) Long.valueOf(property.getValue());
         }
-
 
         return instance;
     }

@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.aggregator.pipeline.wrapper.interfaces;
 
@@ -14,16 +25,14 @@ import org.openide.util.Lookup;
 
 /**
  * A Generic Factory, which finds and instanciates all types which implements
- * the
- * <code>Descriptor</code> interface.
+ * the <code>Descriptor</code> interface.
  *
  * @author Serdar
  */
 public class DescriptorFactory {
 
     /**
-     * finds all instances of the provided
-     * <code>Class<T></code> argument.
+     * finds all instances of the provided <code>Class<T></code> argument.
      *
      * @param <T> extends <code>Descriptor</code>
      * @param clazz finds implemenations which extend this class.
@@ -50,8 +59,8 @@ public class DescriptorFactory {
     }
 
     /**
-     * Creates an instance of
-     * <code>clazz</code> of the type specified with the qualified name.
+     * Creates an instance of <code>clazz</code> of the type specified with the
+     * qualified name.
      *
      * @param <T>
      * @param clazz
@@ -65,9 +74,9 @@ public class DescriptorFactory {
     }
 
     /**
-     * Creates an instance of
-     * <code>clazz</code> of type specified via the qualified name. The provided
-     * Aggregator instance will be associated with the created instance.
+     * Creates an instance of <code>clazz</code> of type specified via the
+     * qualified name. The provided Aggregator instance will be associated with
+     * the created instance.
      *
      * @param <T>
      * @param clazz

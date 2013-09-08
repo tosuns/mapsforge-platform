@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2013 Serdar.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package de.fub.maps.project.aggregator.graph;
 
@@ -57,11 +68,11 @@ public class ProcessWidget extends Widget {
         setBackground(new LinearGradientPaint(0, 0, 0, 180,
                 new float[]{0, 0.03f, 0.44f, 0.85f, 0.88f, 1},
                 new Color[]{Color.decode("0xffffff"),
-            Color.decode("0xe8e8e8"),
-            Color.decode("0xb9b9b9"),
-            Color.decode("0x9e9e9e"),
-            Color.decode("0x9e9e9e"),
-            Color.decode("0x696969")}));
+                    Color.decode("0xe8e8e8"),
+                    Color.decode("0xb9b9b9"),
+                    Color.decode("0x9e9e9e"),
+                    Color.decode("0x9e9e9e"),
+                    Color.decode("0x696969")}));
 
         initSettingsButton();
         initLabel();
