@@ -29,11 +29,9 @@ import de.fub.utilsmodule.synchronizer.ModelSynchronizer;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -72,7 +70,9 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
     private final ModelSynchronizer.ModelSynchronizerClient modelSynchronizerClient;
 
     public AggregatorNode(Aggregator aggregator) {
-        super(aggregator.getDataObject(), Children.create(new AggregatorSubFolderFactory(aggregator), true), new ProxyLookup(Lookups.fixed(aggregator), aggregator.getDataObject().getLookup()));
+        super(aggregator.getDataObject(),
+                Children.create(new AggregatorSubFolderFactory(aggregator), true),
+                new ProxyLookup(Lookups.fixed(aggregator), aggregator.getDataObject().getLookup()));
         this.aggregator = aggregator;
         this.aggregator.addPropertyChangeListener(WeakListeners.propertyChange(AggregatorNode.this, aggregator));
 
@@ -330,120 +330,14 @@ public class AggregatorNode extends DataNode implements PropertyChangeListener, 
         fireIconChange();
     }
 
-    private static class ProcessPropertyWrapper extends PropertySupport.ReadWrite<Object> {
-
-        private final Property<Object> property;
-        private final ModelSynchronizer.ModelSynchronizerClient client;
-
-        public ProcessPropertyWrapper(ModelSynchronizer.ModelSynchronizerClient client, Property<Object> property) {
-            super(property.getName(), property.getValueType(), property.getDisplayName(), property.getShortDescription());
-            this.property = property;
-            this.client = client;
-        }
-
-        @Override
-        public Object getValue() throws IllegalAccessException, InvocationTargetException {
-            return property.getValue();
-        }
-
-        @Override
-        public void setValue(Object val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            if (property.getValue() != val) {
-                property.setValue(val);
-                if (client != null) {
-                    client.modelChangedFromGui();
-                }
-            }
-        }
-
-        @Override
-        public boolean canRead() {
-            return property.canRead();
-        }
-
-        @Override
-        public boolean canWrite() {
-            return property.canWrite();
-        }
-
-        @Override
-        public boolean supportsDefaultValue() {
-            return property.supportsDefaultValue();
-        }
-
-        @Override
-        public void restoreDefaultValue() throws IllegalAccessException, InvocationTargetException {
-            property.restoreDefaultValue();
-        }
-
-        @Override
-        public boolean isDefaultValue() {
-            return property.isDefaultValue();
-        }
-
-        @Override
-        public PropertyEditor getPropertyEditor() {
-            return property.getPropertyEditor();
-        }
-
-        @Override
-        public boolean isExpert() {
-            return property.isExpert();
-        }
-
-        @Override
-        public void setExpert(boolean expert) {
-            property.setExpert(expert);
-        }
-
-        @Override
-        public boolean isHidden() {
-            return property.isHidden();
-        }
-
-        @Override
-        public void setHidden(boolean hidden) {
-            property.setHidden(hidden);
-        }
-
-        @Override
-        public boolean isPreferred() {
-            return property.isPreferred();
-        }
-
-        @Override
-        public void setPreferred(boolean preferred) {
-            property.setPreferred(preferred);
-        }
-
-        @Override
-        public void setValue(String attributeName, Object value) {
-            property.setValue(attributeName, value);
-        }
-
-        @Override
-        public Object getValue(String attributeName) {
-            return property.getValue(attributeName);
-        }
-
-        @Override
-        public Enumeration<String> attributeNames() {
-            return property.attributeNames();
-        }
-
-        @Override
-        public String toString() {
-            return property.toString();
-        }
-    }
-
     private class AggregationStrategyProperty extends ClassProperty {
+
+        private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
+                ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
 
         public AggregationStrategyProperty(String name, String displayName, String shortDescription, Class<?> interf) {
             super(name, displayName, shortDescription, interf);
         }
-        private ClassWrapper wrapper = aggregator.getAggregatorDescriptor().getAggregationStrategy() != null
-                ? new ClassWrapper(aggregator.getAggregatorDescriptor().getAggregationStrategy()) : null;
 
         @Override
         public boolean canWrite() {

@@ -65,7 +65,7 @@ public class GpxmergeAggregationStrategy extends AbstractAggregationStrategy {
     }
 
     @Override
-    public void aggregate(GPSSegment segment) {
+    public void aggregate(GPSSegment segment, boolean isAgg) {
         LOG.setLevel(Level.ALL);
 
         matches = new ArrayList<IMergeHandler>();

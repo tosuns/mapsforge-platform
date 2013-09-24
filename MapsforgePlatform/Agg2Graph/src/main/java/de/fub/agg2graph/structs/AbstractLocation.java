@@ -31,7 +31,7 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
  * @author Johannes Mitlmeier
  *
  */
-public class AbstractLocation implements ILocation, Hideable {
+public class AbstractLocation implements ILocation, Hideable, Comparable<AbstractLocation> {
 
     private static final Logger LOG = Logger.getLogger(AbstractLocation.class.getName());
     protected String ID;
@@ -39,6 +39,9 @@ public class AbstractLocation implements ILocation, Hideable {
     protected double[] latlon = new double[]{Double.MAX_VALUE, Double.MAX_VALUE};
     private final double EPSILON = 10e-6;
     protected double[] xy = new double[]{Double.MAX_VALUE, Double.MAX_VALUE};
+    protected double elevation;				// point's elevation
+    protected int k = 1;
+    protected boolean isRelevant = true;
 
     public AbstractLocation() {
         super();
@@ -262,5 +265,70 @@ public class AbstractLocation implements ILocation, Hideable {
     @Override
     public boolean isVisible() {
         return visible;
+    }
+
+    public void setElevation(double d) {
+        this.elevation = d;
+    }
+
+    public double getElevation() {
+        return elevation;
+    }
+
+    public int getK() {
+        return k;
+    }
+
+    public void setK(int k) {
+        this.k = k;
+    }
+
+    @Override
+    public void setRelevant(boolean relevant) {
+        isRelevant = relevant;
+        if (isRelevant) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean isRelevant() {
+        return isRelevant;
+    }
+
+    public int compareLL(AbstractLocation o) {
+        if (this.getCluster() > o.getCluster()) {
+            return 1;
+        } else if (this.getCluster() < o.getCluster()) {
+            return -1;
+        } else if (this.getLat() > o.getLat()) {
+            return 1;
+        } else if (this.getLat() < o.getLat()) {
+            return -1;
+        } else if (this.getLon() > o.getLon()) {
+            return 1;
+        } else if (this.getLon() < o.getLon()) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public int getCluster() {
+
+        Integer cluster = (int) (Math.ceil(this.getLat()) * 361 + Math.ceil(this.getLon()) + 180);
+
+        return cluster;
+
+    }
+
+    @Override
+    public int compareTo(AbstractLocation o) {
+        if (compareLL(o) != 0) {
+            return compareLL(o);
+        }
+
+        return 0;
     }
 }

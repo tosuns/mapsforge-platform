@@ -227,7 +227,7 @@ public class AggregationProcess extends AbstractAggregationProcess<List<GPSSegme
                     }
 
                     counter++;
-                    aggContainer.addSegment(inputSegment);
+                    aggContainer.addSegment(inputSegment, true);
 
                     // update debug layers: matching, merging
                     IAggregationStrategy aggregationStrategy = aggContainer.getAggregationStrategy();

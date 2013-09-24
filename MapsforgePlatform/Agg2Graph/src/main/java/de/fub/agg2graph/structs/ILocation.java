@@ -1,62 +1,74 @@
-/*******************************************************************************
-   Copyright 2013 Johannes Mitlmeier
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-******************************************************************************/
+/**
+ * *****************************************************************************
+ * Copyright 2013 Johannes Mitlmeier
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+*****************************************************************************
+ */
 package de.fub.agg2graph.structs;
-
 
 /**
  * Common interface for all locations, support for latitude and longitude values
  * as well as a projected location.
- * 
+ *
  * @author Johannes Mitlmeier
- * 
+ *
  */
 public interface ILocation {
-	public void setLat(double lat);
 
-	public void setLon(double lon);
+    public void setLat(double lat);
 
-	public void setLatLon(double lat, double lon);
+    public void setLon(double lon);
 
-	public void setLatLon(double[] latlon);
+    public void setLatLon(double lat, double lon);
 
-	public void setX(double x);
+    public void setLatLon(double[] latlon);
 
-	public void setY(double y);
+    public void setX(double x);
 
-	public void setXY(double x, double y);
+    public void setY(double y);
 
-	public void setXY(double[] xy);
+    public void setK(int k);
 
-	public void setID(String ID);
+    public void setRelevant(boolean relevant);
 
-	public double getLat();
+    public void setXY(double x, double y);
 
-	public double getLon();
+    public void setXY(double[] xy);
 
-	public double[] getLatLon();
+    public void setID(String ID);
 
-	public double getX();
+    public double getLat();
 
-	public double getY();
+    public double getLon();
 
-	public double[] getXY();
+    public double[] getLatLon();
 
-	public String getID();
+    public double getX();
 
-	public double getWeight();
+    public double getY();
 
-	public String toDebugString();
+    public double[] getXY();
+
+    public int getK();
+
+    public boolean isRelevant();
+
+    public String getID();
+
+    public double getWeight();
+
+    public String toDebugString();
+
+    public int getCluster();
 }

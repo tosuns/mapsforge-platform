@@ -63,6 +63,9 @@ public class InterfaceInplaceEditor implements InplaceEditor {
         for (Class<?> c : list) {
             comboBox.addItem(new ClassWrapper(c));
         }
+        if (comboBox.getItemCount() > - 1) {
+            comboBox.setSelectedIndex(0);
+        }
 
         comboBox.setForeground(Color.BLACK);
         comboBox.addActionListener(new ActionListener() {

@@ -22,6 +22,7 @@ import de.fub.agg2graph.agg.tiling.Tile;
 import de.fub.agg2graph.agg.tiling.TileCache;
 import de.fub.agg2graph.agg.tiling.TileManager;
 import de.fub.agg2graph.structs.AbstractEdge;
+import de.fub.agg2graph.structs.ILocation;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,18 +34,32 @@ import java.util.List;
  * @author Johannes Mitlmeier
  *
  */
-public class AggConnection extends AbstractEdge<AggNode> {
+public class AggConnection extends AbstractEdge<AggNode> implements Comparable<AggConnection> {
 
     // properties
     public double trackCounter = 0;
     private AggContainer aggContainer;
     private float weight = 1;
     private double avgDist = 0;
+
     /**
      * Invisible {@link AggConnection}s might be used to hide them before
      * generating a road network.
      */
     private boolean visible = true;
+
+    /**
+     * Constructor with given {@link AbstractLocation} and distance
+     *
+     * @param from
+     * @param to
+     * @param distance
+     */
+    public AggConnection(AggNode from, AggNode to, float distance) {
+        this.from = from;
+        this.to = to;
+        this.distance = distance;
+    }
 
     /**
      * Copy constructor.
@@ -74,12 +89,32 @@ public class AggConnection extends AbstractEdge<AggNode> {
 
         if (!virtual) {
             if (from.getOut() != null) {
-                from.addOut(this);
+                from.addOut(AggConnection.this);
             }
             if (to.getIn() != null) {
-                to.addIn(this);
+                to.addIn(AggConnection.this);
             }
         }
+    }
+
+    public AggConnection(ILocation from, ILocation to, AggContainer aggContainer) {
+        init(from.getLat(), from.getLon(), to.getLat(), to.getLon(), aggContainer);
+        this.from.setRelevant(from.isRelevant());
+    }
+
+    /**
+     * Initialize AggConnection. Sets lat, lon and {@link AggContainer}.
+     *
+     * @param ID
+     * @param lat
+     * @param lon
+     * @param aggContainer
+     */
+    private void init(double fromLat, double fromLon, double toLat, double toLon, AggContainer aggContainer) {
+        this.aggContainer = aggContainer;
+        this.from = new AggNode(fromLat, fromLon, this.aggContainer);
+        this.to = new AggNode(toLat, toLon, this.aggContainer);
+        setID(ID);
     }
 
     @Override
@@ -319,6 +354,34 @@ public class AggConnection extends AbstractEdge<AggNode> {
     }
 
     public void unloadTo() {
+    }
+
+    public AggConnection[] divide(AggNode middle) {
+        AggConnection[] ret = new AggConnection[2];
+        //TODO check whether middle is in line
+        setTo(middle);
+        ret[0] = this;
+        ret[1] = new AggConnection(middle, to, this.aggContainer);
+        return ret;
+    }
+
+    public AggNode at(double t) {
+        return new AggNode((1 - t) * from.getLat() + t * to.getLat(), (1 - t)
+                * from.getLon() + t * to.getLon(), aggContainer);
+    }
+
+    @Override
+    public int compareTo(AggConnection o) {
+        if (o == null) {
+            throw new NullPointerException();
+        }
+
+        int r = getFrom().compareTo(o.getFrom());
+        if (r == 0) {
+            return getTo().compareTo(o.getTo());
+        } else {
+            return r;
+        }
     }
 
     public static List<AggNode> listToPoints(AggConnection conn) {

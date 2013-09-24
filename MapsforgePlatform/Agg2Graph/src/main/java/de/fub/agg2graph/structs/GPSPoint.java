@@ -17,6 +17,7 @@
  */
 package de.fub.agg2graph.structs;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -52,5 +53,107 @@ public class GPSPoint extends AbstractLocation {
 
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * TODO MARTINUS
+     *
+     *
+     * @param o
+     * @return
+     */
+    public int compareLL(GPSPoint o) {
+        if (this.getCluster() > o.getCluster()) {
+            return 1;
+        } else if (this.getCluster() < o.getCluster()) {
+            return -1;
+        } else if (getLat() > o.getLat()) {
+            return 1;
+        } else if (getLat() < o.getLat()) {
+            return -1;
+        } else if (getLon() > o.getLon()) {
+            return 1;
+        } else if (getLon() < o.getLon()) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public int compareTo(GPSPoint o) {
+        if (compareLL(o) != 0) {
+            return compareLL(o);
+        } else if (this.elevation > o.getElevation()) {
+            return 1;
+        } else if (this.elevation < o.getElevation()) {
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCluster() {
+        Integer cluster = (int) (Math.ceil(getLat()) * 361
+                + Math.ceil(getLon()) + 180);
+        return cluster;
+    }
+
+    public ArrayList<Integer> getNearClusters() {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        int cluster = this.getCluster();
+
+        list.add(cluster);
+
+        double modLat = getLat() % 1;
+        double modLong = getLon() % 1;
+
+        if (modLat < (0.1)) {
+
+            list.add(cluster - 361);
+
+            if (modLong < (0.1)) {
+                list.add(cluster - 362);
+            } else if (modLong > (0.9)) {
+                list.add(cluster - 360);
+            }
+
+        } else if (modLat > (0.9)) {
+            list.add(cluster + 361);
+
+            if (modLong < (0.1)) {
+                list.add(cluster + 360);
+            } else if (modLong > (0.9)) {
+                list.add(cluster + 362);
+            }
+        }
+        if (modLong < (0.1)) {
+            list.add(cluster - 1);
+        } else if (modLong > (0.9)) {
+            list.add(cluster + 1);
+        }
+
+        return list;
+    }
+
+    public double getDistanceTo(GPSPoint to) {
+        return Math.sqrt(this.getSquaredDistanceTo(to));
+    }
+
+    public double getSquaredDistanceTo(GPSPoint to) {
+        double deltaLat = getLat() - to.getLat();
+        double deltaLong = getLon() - to.getLon();
+        return deltaLat * deltaLat + deltaLong * deltaLong;
+    }
+
+    @Override
+    public String toString() {
+        return this.getLat() + "|" + this.getLon();
+    }
+
+    public static GPSPoint min(GPSPoint a, GPSPoint b) {
+        return (a.compareTo(b) <= 0) ? a : b;
+    }
+
+    public static GPSPoint max(GPSPoint a, GPSPoint b) {
+        return (a.compareTo(b) >= 0) ? a : b;
     }
 }

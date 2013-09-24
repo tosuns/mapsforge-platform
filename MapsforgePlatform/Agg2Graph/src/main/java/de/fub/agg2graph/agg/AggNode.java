@@ -418,4 +418,20 @@ public class AggNode extends GPSPoint {
         this.intersection = intersection;
     }
 
+    // TODO Martinus
+    public boolean isSource() {
+        return in.size() == 0 && out.size() > 0;
+    }
+
+    public boolean isSink() {
+        return in.size() > 0 && out.size() == 0;
+    }
+
+    public boolean isRegular() {
+        return in.size() == 1 && out.size() == 1;
+    }
+
+    public boolean isEmpty() {
+        return in.size() == 0 && out.size() == 0;
+    }
 }

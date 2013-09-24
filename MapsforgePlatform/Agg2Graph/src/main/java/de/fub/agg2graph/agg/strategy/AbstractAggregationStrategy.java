@@ -41,6 +41,8 @@ public abstract class AbstractAggregationStrategy implements
     protected IMergeHandler mergeHandler;
     protected AggNode lastNode = null;
 
+    protected boolean addAllowed = true;
+
     @Override
     public ITraceDistance getTraceDist() {
         return traceDistance;
@@ -113,5 +115,20 @@ public abstract class AbstractAggregationStrategy implements
         result.add(new ClassObjectEditor(this.baseMergeHandler, Arrays
                 .asList(new String[]{"distance", "rdpf", "aggContainer"})));
         return result;
+    }
+
+    @Override
+    public AggNode getLastNode() {
+        return lastNode;
+    }
+
+    @Override
+    public void setAddAllowed(boolean allowed) {
+        this.addAllowed = allowed;
+    }
+
+    @Override
+    public boolean getAddAllowed() {
+        return this.addAllowed;
     }
 }

@@ -17,10 +17,14 @@
  */
 package de.fub.agg2graph.structs;
 
+import de.fub.agg2graph.agg.AggContainer;
+import de.fub.agg2graph.agg.AggNode;
 import de.fub.agg2graph.gpseval.data.Waypoint;
+import de.fub.agg2graph.structs.frechet.Interval;
 import de.fub.agg2graph.utils.MathUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.List;
 import org.jscience.mathematics.number.Float64;
 import org.jscience.mathematics.vector.Float64Vector;
@@ -34,14 +38,18 @@ import org.jscience.mathematics.vector.Float64Vector;
 public class GPSCalc {
 
     /**
-     * computes the heading / angle of the gps point
-     * <code>lastWaypoint</code> with the help of its predecessor and successor
-     * point.
+     * ****************
+     * TODO: MARTINUS * *****************
+     */
+    private static Double precision = 100000000.0;
+
+    /**
+     * computes the heading / angle of the gps point <code>lastWaypoint</code>
+     * with the help of its predecessor and successor point.
      *
-     * The method shifts the
-     * <code>lastWaypoint</code> and
-     * <code>waypoint</code> to the zero vector and measures the angle between
-     * both of those vectors, according to
+     * The method shifts the <code>lastWaypoint</code> and <code>waypoint</code>
+     * to the zero vector and measures the angle between both of those vectors,
+     * according to
      * {@link http://www.mathe-online.at/materialien/Andreas.Pester/files/Vectors/winkel_zwischen_vektoren.htm}
      *
      * @param secondLasWaypoint
@@ -70,12 +78,13 @@ public class GPSCalc {
     /**
      * in meters
      *
-     * @param a
-     * @param b
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
      * @return
      */
-    public static double getDistance(double lat1, double lon1, double lat2,
-            double lon2) {
+    public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
         return getSimpleDistance(lat1, lon1, lat2, lon2);
         //  former use of jcoord library removed because of licensing incompatibilities
         //	return new LatLng(lat1, lon1).distance(new LatLng(lat2, lon2)) * 1000;
@@ -124,6 +133,7 @@ public class GPSCalc {
      * @param lon1 first point longitude in decimal degrees
      * @param lat2 second point latitude in decimal degrees
      * @param lon2 second point longitude in decimal degrees
+     * @return
      * @returns distance in meters between points with 5.10<sup>-4</sup>
      * precision
      * @see <a
@@ -466,5 +476,527 @@ public class GPSCalc {
     public static ILocation getProjectionPoint(ILocation point,
             IEdge<? extends ILocation> edge) {
         return getProjectionPoint(point, edge.getFrom(), edge.getTo());
+    }
+
+    /**
+     * Measure the distance between two points in meter
+     *
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @return
+     */
+    public static double getDistanceTwoPointsMeter(double lat1, double lon1,
+            double lat2, double lon2) {
+        double er = 6366.707;
+
+        double latFrom = Math.toRadians(lat1);
+        double latTo = Math.toRadians(lat2);
+        double lngFrom = Math.toRadians(lon1);
+        double lngTo = Math.toRadians(lon2);
+
+        double d = Math.acos(Math.sin(latFrom) * Math.sin(latTo) + Math.cos(latFrom)
+                * Math.cos(latTo) * Math.cos(lngTo - lngFrom)) * er;
+        d = d * 1000;
+        return d;
+    }
+
+    /**
+     * Measure the distance between two points in meter
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static double getDistanceTwoPointsMeter(ILocation a, ILocation b) {
+        return getDistanceTwoPointsMeter(a.getLat(), a.getLon(), b.getLat(), b.getLon());
+    }
+
+    /**
+     * Measure the (simple) distance between two points
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static double getDistanceTwoPoints(ILocation a, ILocation b) {
+        return getDistanceTwoPoints(a.getLat(), a.getLon(), b.getLat(),
+                b.getLon());
+    }
+
+    /**
+     * Measure the (simple) distance between two points
+     *
+     * @param lat1
+     * @param lon1
+     * @param lat2
+     * @param lon2
+     * @return
+     */
+    public static double getDistanceTwoPoints(double lat1, double lon1,
+            double lat2, double lon2) {
+        double lat = (lat1 + lat2) / 2 * 0.01745;
+        double dx = 111.3 * Math.cos(lat) * (lon1 - lon2);
+        double dy = 111.3 * (lat1 - lat2);
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        return distance * 1000;
+    }
+
+    /**
+     * Measure the distance between a point and (0,0) in Float 64 bit
+     *
+     * @param a
+     * @return
+     */
+    public static Float64Vector getDistanceTwoPointsFloat64(ILocation a) {
+        GPSPoint zero = new GPSPoint(0, 0);
+        return getDistanceTwoPointsFloat64(zero, a);
+    }
+
+    /**
+     * Measure the distance between two points in Float 64 bit
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static Float64Vector getDistanceTwoPointsFloat64(ILocation a,
+            ILocation b) {
+        return Float64Vector.valueOf(b.getLat() - a.getLat(),
+                b.getLon() - a.getLon());
+    }
+
+    /**
+     * Distance between two Points (WARNING: Fischer's Works) SquaredEuclidian
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    public static double getDistanceTwoPointsDouble(ILocation from, ILocation to) {
+        double deltaLat = from.getLat() - to.getLat();
+        double deltaLong = from.getLon() - to.getLon();
+        return Math.sqrt(deltaLat * deltaLat + deltaLong * deltaLong);
+    }
+
+    /**
+     * Measure the distance between a point and edge in Double
+     *
+     * @param q
+     * @param s1
+     * @param s2
+     * @return
+     */
+    public static double getDistancePointToEdgeDouble(GPSPoint q, GPSPoint s1,
+            GPSPoint s2) {
+        double vx = -(s2.getLat() - s1.getLat());
+        double vy = s2.getLon() - s1.getLon();
+
+        double rx = s1.getLon() - q.getLon();
+        double ry = s1.getLat() - q.getLat();
+
+        // Calculate |v dot r|
+        double f1 = Math.abs(vx * rx + vy * ry);
+        double f2 = Math.sqrt(vx * vx + vy * vy);
+        if (f2 == 0) {
+            return Math.sqrt(rx * rx + ry * ry);
+        }
+        return (f1 / f2);
+    }
+
+    /**
+     * Measure the distance between point and edge in Meter
+     *
+     * @param point
+     * @param start
+     * @param end
+     * @return
+     */
+    public static double getDistancePointToEdgeMeter(ILocation point,
+            ILocation start, ILocation end) {
+        // project to edge and get distance to projection
+        // if(!point.isRelevant() || !start.isRelevant() || !end.isRelevant())
+        // return Double.MAX_VALUE;
+        ILocation projection = getProjectionPoint(point, start, end);
+        if (projection != null) {
+            return getDistanceTwoPointsMeter(point, projection);
+        }
+
+        // double angleWithStart = getAngleBetweenEdges(start, point, start,
+        // end);
+        // double angleWithEnd = getAngleBetweenEdges(point, end, start,
+        // end);
+        // if ((angleWithStart > 90 && angleWithEnd < 90)
+        // || (angleWithStart < 90 && angleWithEnd > 90)) {
+        double pointToA = getDistanceTwoPointsMeter(start, point);
+        double pointToB = getDistanceTwoPointsMeter(end, point);
+        return Math.min(pointToA, pointToB);
+        // }
+    }
+
+    /**
+     * Measure the distance between point and edge
+     *
+     * @param point
+     * @param edge
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    public static double getDistancePointToEdgeMeter(ILocation point, IEdge edge) {
+        return getDistancePointToEdgeMeter(point, edge.getFrom(), edge.getTo());
+    }
+
+    /**
+     * Measure the distance between point and traces (or List of edge)
+     *
+     * @param point
+     * @param list
+     * @return the distance and the position
+     */
+    public static double[] getDistancePointToTraceMeter(ILocation point,
+            List<? extends ILocation> list) {
+        int minPos = 0;
+        double distHere = 0;
+        double minDist = Double.MAX_VALUE;
+        if (list.size() == 1) {
+            return new double[]{
+                getDistanceTwoPointsMeter(point, list.get(0)), 0};
+        }
+        for (int j = minPos; j < list.size() - 1; j++) {
+
+            distHere = GPSCalc.getDistancePointToEdgeMeter(point, list.get(j),
+                    list.get(j + 1));
+
+            if (distHere < minDist) {
+                minDist = distHere;
+                minPos = j;
+            }
+            if (Double.isNaN(minDist)) {
+                minDist = Double.MAX_VALUE;
+            }
+        }
+        return new double[]{minDist, minPos};
+    }
+
+    public static double traceLengthMeter(List<? extends ILocation> trace) {
+        double sum = 0;
+        for (int i = 0; i < trace.size() - 1; i++) {
+            sum += getDistanceTwoPointsMeter(trace.get(i), trace.get(i + 1));
+        }
+        return sum;
+    }
+
+    public static double traceLengthMeter(GPSSegment segment) {
+        double sum = 0;
+        for (int i = 0; i < segment.size() - 1; i++) {
+            sum += getDistanceTwoPointsMeter(segment.get(i), segment.get(i + 1));
+
+        }
+        return sum;
+    }
+
+    /**
+     * Get Point between Edge with given proportional (WARNING: Fischer's Works)
+     *
+     * @param t
+     * @param from
+     * @param to
+     * @return
+     */
+    public static ILocation getPointAt(double t, ILocation from, ILocation to) {
+        return new GPSPoint((1 - t) * from.getLat() + t * to.getLat(), (1 - t)
+                * from.getLon() + t * to.getLon());
+    }
+
+    /**
+     * Comparing two double
+     *
+     * @param d1
+     * @param d2
+     * @return
+     */
+    public static int compareDouble(double d1, double d2) {
+        Double r1 = Math.round(d1 * precision) / precision;
+        Double r2 = Math.round(d2 * precision) / precision;
+        return (Double.compare(r1, r2));
+    }
+
+    /**
+     * TODO in meter? Circle-Segment intersection
+     *
+     * @http://mathworld.wolfram.com/Circle-LineIntersection.html
+     * @param ax
+     * @param ay
+     * @param bx
+     * @param by
+     * @param cx
+     * @param cy
+     * @param radius
+     * @return
+     */
+    public static Interval getSegmentCircleIntersection2(double ax, double ay,
+            double bx, double by, // Segment
+            double cx, double cy, // Circle center
+            double radius) {
+        final double vx = bx - ax;
+        final double vy = by - ay;
+        final double sx = ax - cx;
+        final double sy = ay - cy;
+
+        // polygon
+        final double a = vx * vx + vy * vy; // V^2
+        final double b = 2 * (sx * vx + sy * vy); // 2(S dot V)
+        final double c = (sx * sx + sy * sy) - radius * radius; // S^2 - r^2
+
+        Interval result = new Interval();
+
+        if (a == 0.) { // Input is a line degraded to a point
+            final double incircle = Math.sqrt(sx * sx + sy * sy);
+            if (incircle <= radius) {
+                result.start = 0.;
+                result.end = 1.;
+            }
+        } else {
+
+            // Discriminant
+            final double D = b * b - 4 * a * c;
+
+            if (D >= 0) {
+                final double Dsq = Math.sqrt(D);
+
+                final double r1 = (-b - Dsq) / (2 * a);
+
+                final double r2 = (D == 0) ? r1 : (-b + Dsq) / (2 * a);
+
+                if (r1 < r2 && r1 < 1. && r2 > 0.) {
+                    result.start = (r1 < 0.) ? 0. : r1;
+                    result.end = (r2 > 1.) ? 1. : r2;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Intersection (WARNING: Fischer's Works)
+     *
+     * @param p1
+     * @param p2
+     * @param q
+     * @param r1
+     * @param r2
+     * @return
+     */
+    public static ILocation IntersectionOfPerpendicularWithLine(ILocation p1,
+            ILocation p2, ILocation q, ILocation r1, ILocation r2) {
+        final double p1x = p1.getLon();
+        final double p1y = p1.getLat();
+        final double p2x = p2.getLon();
+        final double p2y = p2.getLat();
+
+        final double qx = q.getLon();
+        final double qy = q.getLat();
+
+        final double a = p1y - p2y;
+        final double b = p2x - p1x;
+
+        final double pa = -b;
+        final double pb = a;
+        final double pc = pa * qx + pb * qy;
+
+        final double r1x = r1.getLon();
+        final double r1y = r1.getLat();
+        final double r2x = r2.getLon();
+        final double r2y = r2.getLat();
+
+        final double ra = r1y - r2y;
+        final double rb = r2x - r1x;
+        final double rc = r2x * r1y - r2y * r1x;
+
+        final double D = (ra * pb) - (pa * rb);
+
+        if (D != 0.) {
+            return new GPSPoint((ra * pc - pa * rc) / D, (pb * rc - rb * pc)
+                    / D);
+        } else {
+            return null;
+        }
+    }
+
+    public static ILocation intersectionWithPerpendicularThrough(
+            GPSPoint p1, GPSPoint p2, GPSPoint q) {
+        final double p1x = p1.getLon();
+        final double p1y = p1.getLat();
+        final double p2x = p2.getLon();
+        final double p2y = p2.getLat();
+
+        final double qx = q.getLon();
+        final double qy = q.getLat();
+
+        final double a = p1y - p2y;
+        final double b = p2x - p1x;
+        final double c = p2x * p1y - p2y * p1x;
+
+        final double pa = -b;
+        final double pb = a;
+        final double pc = pa * qx + pb * qy;
+
+        final double D = (a * pb) - (pa * b);
+
+        if (D != 0.) {
+            return new AbstractLocation((a * pc - pa * c) / D, (pb * c - b * pc) / D);
+        } else {
+            return null;
+        }
+    }
+
+    public static ILocation intersection(ILocation p1, ILocation p2, ILocation q1, ILocation q2) {
+        final double p1x = p1.getLon();
+        final double p1y = p1.getLat();
+        final double p2x = p2.getLon();
+        final double p2y = p2.getLat();
+
+        final double q1x = q1.getLon();
+        final double q1y = q1.getLat();
+        final double q2x = q2.getLon();
+        final double q2y = q2.getLat();
+
+        final double a1 = p1y - p2y;
+        final double b1 = p2x - p1x;
+        final double c1 = p2x * p1y - p2y * p1x;
+
+        final double a2 = q1y - q2y;
+        final double b2 = q2x - q1x;
+        final double c2 = q2x * q1y - q2y * q1x;
+
+        final double D = (a1 * b2) - (a2 * b1);
+
+        if (D != 0.) {
+            return new AbstractLocation((a1 * c2 - a2 * c1) / D, (b2 * c1 - b1 * c2) / D);
+        } else {
+            return null;
+        }
+    }
+
+//	public static void main(String[] args) {
+//		ILocation p1 = new GPSPoint(3, 1);
+//		ILocation p2 = new GPSPoint(5, 1);
+//		ILocation q1 = new GPSPoint(2, 6);
+//		ILocation q2 = new GPSPoint(2, 7);
+//		System.out.println(Intersection(p1, p2, q1, q2));
+//	}
+    public static boolean PntOnLine(ILocation p, ILocation q, ILocation t) {
+        /*
+         * given a line through P:(px,py) Q:(qx,qy) and T:(tx,ty)
+         * return 0 if T is not on the line through      <--P--Q-->
+         *        1 if T is on the open ray ending at P: <--P
+         *        2 if T is on the closed interior along:   P--Q
+         *        3 if T is on the open ray beginning at Q:    Q-->
+         */
+        final double px = p.getLon();
+        final double py = p.getLat();
+        final double qx = q.getLon();
+        final double qy = q.getLat();
+        final double tx = t.getLon();
+        final double ty = t.getLat();
+
+        if ((px == qx) && (py == qy)) {
+            if ((tx == px) && (ty == py)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        if (Math.abs((qy - py) * (tx - px) - (ty - py) * (qx - px))
+                >= (Math.max(Math.abs(qx - px), Math.abs(qy - py)))) {
+            return false;
+        }
+        if (((qx < px) && (px < tx)) || ((qy < py) && (py < ty))) {
+            return false;
+        }
+        if (((tx < px) && (px < qx)) || ((ty < py) && (py < qy))) {
+            return false;
+        }
+        if (((px < qx) && (qx < tx)) || ((py < qy) && (qy < ty))) {
+            return false;
+        }
+        if (((tx < qx) && (qx < px)) || ((ty < qy) && (qy < py))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static AggNode calculateMean(AggNode locationToMove, Collection<GPSPoint> affectedTraceLocations,
+            double epsilon, AggContainer aggContainer, boolean dampFactor) {
+        final double alon = locationToMove.getLon();
+        final double alat = locationToMove.getLat();
+
+        double slon = 0;
+        double slat = 0;
+
+        int div = 0;
+
+        for (ILocation ti : affectedTraceLocations) {
+            double dist = ((GPSPoint) locationToMove).getDistanceTo((GPSPoint) ti);
+//			System.out.println("dist = " + dist);
+            if (dist > epsilon) {
+                continue;
+            }
+
+//			double damp = damp(dist, epsilon);
+            double damp;
+            if (dampFactor) {
+                if (locationToMove.getK() >= 4) {
+                    damp = damp(dist, epsilon) / (Math.log10(locationToMove.getK()) / Math.log10(2));
+                } else {
+                    damp = damp(dist, epsilon);
+                }
+            } else {
+                damp = damp(dist, epsilon);
+            }
+
+            slon += damp * (ti.getLon() - alon);
+            slat += damp * (ti.getLat() - alat);
+            ++div;
+        }
+
+        if (div == 0) {
+            return locationToMove;
+        }
+
+        slon /= div;
+        slat /= div;
+
+//		return null;
+        return new AggNode(slat + alat, slon + alon, aggContainer);
+    }
+
+    public static AggNode moveLocation(AggNode fix, AggNode toMove, AggContainer aggContainer) {
+        // along To Perpendicular from Trace
+        final double alon = toMove.getLon();
+        final double alat = toMove.getLat();
+        final double elon = fix.getLon();
+        final double elat = fix.getLat();
+
+        final double n = 0.5;
+
+        return new AggNode((alat * n + elat) / (n + 1.), (alon * n + elon) / (n + 1.), aggContainer);
+    }
+
+    private static double damp(double distance, double epsilon) {
+        final double d = distance / (4 * epsilon);
+        final double fval = Math.exp(-(5 * d * d)); // clamp into [0..1] approx.
+
+        if (fval <= 0) {
+            return 0.;
+        } else if (fval >= 1) {
+            return 1.;
+        } else {
+            return fval;
+        }
     }
 }

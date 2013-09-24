@@ -15,6 +15,7 @@
  */
 package de.fub.maps.project.aggregator.pipeline.wrapper.aggregation.strategy;
 
+import de.fub.agg2graph.agg.IMergeHandler;
 import de.fub.agg2graph.agg.ITraceDistance;
 import de.fub.maps.project.aggregator.factories.nodes.properties.ClassProperty;
 import de.fub.maps.project.aggregator.factories.nodes.properties.ClassWrapper;
@@ -31,6 +32,7 @@ import de.fub.maps.project.models.Aggregator;
 import de.fub.utilsmodule.node.property.NodeProperty;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,9 +72,44 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
     private static final String PROP_NAME_MAX_INIT_DISTANCE = "gpxmerge.aggregation.strategy.max.init.distance";
     private static final String PROP_NAME_BASE_MERGEHANDLER_TYPE = "gpxmerge.aggregation.strategy.base.mergehandler.type";
     private static final String PROP_NAME_TRACE_DISTANCE_TYPE = "gpx.merge.aggregation.strategy.trace.distance.type";
-    private Aggregator aggregator;
-    private PropertySection propertySection;
-    private GpxAggregationStrategyNode nodeDelegate;
+    protected PropertySection propertySection = null;
+    protected Aggregator aggregator;
+    protected Node nodeDelegate = null;
+
+    public GpxmergeAggregationStrategy() {
+    }
+
+    @Override
+    public void setTraceDistance(ITraceDistance traceDistance) {
+        this.traceDistance = traceDistance;
+    }
+
+    @Override
+    public void setBaseMergeHandler(IMergeHandler baseMergeHandler) {
+        this.baseMergeHandler = baseMergeHandler;
+    }
+
+    @Override
+    public void setAggregator(Aggregator aggregator) {
+        this.aggregator = aggregator;
+        if (aggregator != null) {
+            setAggContainer(aggregator.getAggContainer());
+        }
+        reInit();
+    }
+
+    @Override
+    public Aggregator getAggregator() {
+        return this.aggregator;
+    }
+
+    @Override
+    public Node getNodeDelegate() {
+        if (nodeDelegate == null) {
+            nodeDelegate = new StrategyNode(GpxmergeAggregationStrategy.this);
+        }
+        return nodeDelegate;
+    }
 
     @Override
     public PropertySection getPropertySection() {
@@ -80,10 +117,8 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
             if (getAggregator() != null) {
                 OUTERLOOP:
                 for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
-                    if (descriptor != null
-                            && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
-                        List<PropertySection> sections = descriptor.getProperties().getSections();
-                        for (PropertySection section : sections) {
+                    if (descriptor != null && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
+                        for (PropertySection section : descriptor.getProperties().getSections()) {
                             if (GpxmergeAggregationStrategy.class.getName().equals(section.getId())) {
                                 propertySection = section;
                                 break OUTERLOOP;
@@ -93,13 +128,13 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
                 }
             }
             if (propertySection == null) {
-                propertySection = createDefaultPropertySection();
+                propertySection = createDefaultDescriptor();
             }
         }
         return propertySection;
     }
 
-    private PropertySection createDefaultPropertySection() {
+    protected PropertySection createDefaultDescriptor() {
 
         PropertySet propertySet = new PropertySet(
                 Bundle.GpxmergeAggregationStrategy_Settings_Name(),
@@ -173,73 +208,57 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
         return section;
     }
 
-    @Override
-    public void setAggregator(Aggregator aggregator) {
-        this.aggregator = aggregator;
-        if (aggregator != null) {
-            setAggContainer(aggregator.getAggContainer());
-        }
-        reInit();
-    }
-
-    private void reInit() {
+    protected void reInit() {
+        nodeDelegate = null;
         propertySection = null;
-        propertySection = getPropertySection();
-        if (propertySection != null) {
-            for (PropertySet propertySet : propertySection.getPropertySet()) {
-                for (Property property : propertySet.getProperties()) {
-                    try {
-                        if (property.getValue() != null) {
-                            if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
-                                setMaxInitDistance(Double.parseDouble(property.getValue()));
-                                LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_MAX_INIT_DISTANCE, getMaxInitDistance()));
-                            } else if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
-                                setMaxPathDifference(Double.parseDouble(property.getValue()));
-                                LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_MAX_PATH_DIFFERENCE, getMaxPathDifference()));
-                            } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
-                                MergeHandler handler = MergeHandler.Factory.find(property.getValue(), getAggregator());
-                                if (handler == null) {
-                                    handler = new DefaultMergeHandler();
-                                    handler.setAggregator(getAggregator());
+        if (getPropertySection() != null) {
+            for (PropertySet propertySet : getPropertySection().getPropertySet()) {
+                if (Bundle.GpxmergeAggregationStrategy_Settings_Name().equals(propertySet.getName())) {
+                    for (Property property : propertySet.getProperties()) {
+                        try {
+                            if (property.getValue() != null) {
+                                if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
+                                    setMaxInitDistance(Double.parseDouble(property.getValue()));
+                                    LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_MAX_INIT_DISTANCE, getMaxInitDistance()));
+                                } else if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
+                                    setMaxPathDifference(Double.parseDouble(property.getValue()));
+                                    LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_MAX_PATH_DIFFERENCE, getMaxPathDifference()));
+                                } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
+                                    MergeHandler handler = MergeHandler.Factory.find(property.getValue(), getAggregator());
+                                    if (handler == null) {
+                                        handler = new DefaultMergeHandler();
+                                        handler.setAggregator(getAggregator());
+                                    }
+                                    setBaseMergeHandler(handler);
+                                    LOG.log(Level.FINE, PROP_NAME_BASE_MERGEHANDLER_TYPE + " {0}", baseMergeHandler.getClass());
+                                } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
+                                    TraceDistance traceDistanceHandler = TraceDistance.Factory.find(property.getValue(), getAggregator());
+                                    if (traceDistanceHandler == null) {
+                                        traceDistanceHandler = new GpxmergeTraceDistance();
+                                        traceDistanceHandler.setAggregator(getAggregator());
+                                    }
+                                    setTraceDistance(traceDistanceHandler);
+                                    LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_TRACE_DISTANCE_TYPE, traceDistance.getClass()));
                                 }
-                                baseMergeHandler = handler;
-                                LOG.log(Level.FINE, PROP_NAME_BASE_MERGEHANDLER_TYPE + " {0}", baseMergeHandler.getClass());
-                            } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
-                                TraceDistance traceDistanceHandler = TraceDistance.Factory.find(property.getValue(), getAggregator());
-                                if (traceDistanceHandler == null) {
-                                    traceDistanceHandler = new GpxmergeTraceDistance();
-                                    traceDistanceHandler.setAggregator(aggregator);
-                                }
-                                traceDistance = traceDistanceHandler;
-                                LOG.fine(MessageFormat.format("{0} {1}", PROP_NAME_TRACE_DISTANCE_TYPE, traceDistance.getClass()));
                             }
+                        } catch (DescriptorFactory.InstanceNotFountException ex) {
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                        } catch (NumberFormatException ex) {
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
                         }
-                    } catch (Exception ex) {
-                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 }
             }
         }
     }
 
-    @Override
-    public Aggregator getAggregator() {
-        return this.aggregator;
-    }
+    private static class StrategyNode extends AbstractNode {
 
-    @Override
-    public Node getNodeDelegate() {
-        if (nodeDelegate == null) {
-            nodeDelegate = new GpxAggregationStrategyNode(GpxmergeAggregationStrategy.this);
-        }
-        return nodeDelegate;
-    }
-
-    private static class GpxAggregationStrategyNode extends AbstractNode {
+        private static final Logger LOG = Logger.getLogger(StrategyNode.class.getName());
 
         private final GpxmergeAggregationStrategy strategy;
 
-        public GpxAggregationStrategyNode(GpxmergeAggregationStrategy strategy) {
+        public StrategyNode(GpxmergeAggregationStrategy strategy) {
             super(Children.LEAF);
             this.strategy = strategy;
         }
@@ -247,125 +266,190 @@ public class GpxmergeAggregationStrategy extends de.fub.agg2graph.agg.strategy.G
         @Override
         protected Sheet createSheet() {
             Sheet sheet = Sheet.createDefault();
-            PropertySet[] sets = sheet.toArray();
-            for (PropertySet set : sets) {
-                sheet.remove(set.getName());
-            }
 
-            if (this.strategy != null) {
-                final PropertySection propertySection = this.strategy.getPropertySection();
+            if (strategy != null) {
+                final PropertySection propertySection = strategy.getPropertySection();
                 if (propertySection != null) {
-
-                    for (de.fub.maps.project.aggregator.xml.PropertySet propertySet : propertySection.getPropertySet()) {
-                        if (propertySet.getId().equals(GpxmergeAggregationStrategy.class.getName())) {
+                    for (final de.fub.maps.project.aggregator.xml.PropertySet propertySet : propertySection.getPropertySet()) {
+                        if (GpxmergeAggregationStrategy.class.getName().equals(propertySet.getId())) {
                             Sheet.Set set = Sheet.createPropertiesSet();
-                            set.setName(propertySet.getName());
+                            sheet.put(set);
+                            set.setName(propertySet.getId());
                             set.setDisplayName(propertySet.getName());
                             set.setShortDescription(propertySet.getDescription());
-                            sheet.put(set);
-
-                            for (final de.fub.maps.project.aggregator.xml.Property property : propertySet.getProperties()) {
-                                if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
+                            List<de.fub.maps.project.aggregator.xml.Property> properties = propertySet.getProperties();
+                            for (final de.fub.maps.project.aggregator.xml.Property property : properties) {
+                                if (GpxmergeAggregationStrategy.PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
                                     set.put(new NodeProperty(property));
-                                } else if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
+                                } else if (GpxmergeAggregationStrategy.PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
                                     set.put(new NodeProperty(property));
-                                } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
-                                    ClassProperty classProperty = new ClassProperty(property.getId(), property.getName(), property.getDescription(), MergeHandler.class) {
-                                        private ClassWrapper wrapper = null; //strategy.getBaseMergeHandler() != null ? new ClassWrapper(strategy.getBaseMergeHandler().getClass()) : null;
-
-                                        @Override
-                                        public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
-                                            return wrapper;
-                                        }
-
-                                        @Override
-                                        public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                                            if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                                                if (val == null) {
-                                                    throw new IllegalArgumentException("null is not a valid argument.");
-                                                } else if (!val.getQualifiedName().equals(wrapper.getQualifiedName())) {
-                                                    wrapper = val;
-                                                    property.setValue(val.getQualifiedName());
-                                                }
-                                            }
-                                        }
-                                    };
+                                } else if (GpxmergeAggregationStrategy.PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
+                                    ClassProperty classProperty = new MergeHandlerProperty(propertySection, property);
                                     set.put(classProperty);
-                                } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
-                                    ClassProperty classProperty = new ClassProperty(property.getId(), property.getName(), property.getDescription(), TraceDistance.class) {
-                                        private ClassWrapper wrapper = strategy.getTraceDist() != null
-                                                ? new ClassWrapper(strategy.getTraceDist().getClass())
-                                                : null;
-
-                                        @Override
-                                        public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
-                                            return wrapper;
-                                        }
-
-                                        @Override
-                                        public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-                                            if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
-                                                if (val == null) {
-                                                    throw new IllegalArgumentException("null is not a valid argument.");
-                                                } else if (!val.getQualifiedName().equals(wrapper.getQualifiedName())) {
-                                                    List<de.fub.maps.project.aggregator.xml.PropertySet> propertySets = propertySection.getPropertySet();
-                                                    for (de.fub.maps.project.aggregator.xml.PropertySet p : propertySets) {
-                                                        if (p.getId().equals(val.getQualifiedName())) {
-                                                            propertySets.remove(p);
-                                                            break;
-                                                        }
-                                                    }
-
-                                                    wrapper = val;
-                                                    property.setValue(val.getQualifiedName());
-                                                }
-                                            }
-                                        }
-                                    };
+                                } else if (GpxmergeAggregationStrategy.PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
+                                    ClassProperty classProperty = new TractDistanceProperty(propertySection, property);
                                     set.put(classProperty);
                                 }
                             }
                         }
                     }
+                    IMergeHandler baseMergeHandler1 = strategy.getBaseMergeHandler();
+                    if (baseMergeHandler1 instanceof MergeHandler) {
+                        MergeHandler mergeHandler = (MergeHandler) baseMergeHandler1;
+                        PropertySet[] propertySets = mergeHandler.getNodeDelegate().getPropertySets();
+                        for (Node.PropertySet propertySet : propertySets) {
+                            Sheet.Set set = convertToSet(propertySet);
+                            sheet.put(set);
+                        }
+                    }
 
-//                    IMergeHandler baseMergeHandler = strategy.getBaseMergeHandler();
-//                    if (baseMergeHandler instanceof MergeHandler) {
-//                        MergeHandler mergeHandler = (MergeHandler) baseMergeHandler;
-//                        PropertySet[] propertySets = mergeHandler.getNodeDelegate().getPropertySets();
-//
-//                        for (PropertySet propertySet : propertySets) {
-//                            Sheet.Set set = Sheet.createPropertiesSet();
-//                            set.setName(propertySet.getName());
-//                            set.setDisplayName(propertySet.getDisplayName());
-//                            set.setShortDescription(propertySet.getShortDescription());
-//                            sheet.put(set);
-//
-//                            for (Property<?> nodeProperty : propertySet.getProperties()) {
-//                                set.put(nodeProperty);
-//                            }
-//                        }
-//                    }
                     ITraceDistance traceDist = strategy.getTraceDist();
                     if (traceDist instanceof TraceDistance) {
                         TraceDistance traceDistance = (TraceDistance) traceDist;
-                        PropertySet[] propertySets = traceDistance.getNodeDelegate().getPropertySets();
-
-                        for (PropertySet propertySet : propertySets) {
-                            Sheet.Set set = Sheet.createPropertiesSet();
-                            set.setName(propertySet.getName());
-                            set.setDisplayName(propertySet.getDisplayName());
-                            set.setShortDescription(propertySet.getShortDescription());
+                        Node.PropertySet[] propertySets = traceDistance.getNodeDelegate().getPropertySets();
+                        for (Node.PropertySet propertySet : propertySets) {
+                            Sheet.Set set = convertToSet(propertySet);
                             sheet.put(set);
-
-                            for (Property<?> property : propertySet.getProperties()) {
-                                set.put(property);
-                            }
                         }
                     }
                 }
             }
-
             return sheet;
         }
+
+        private Sheet.Set convertToSet(Node.PropertySet propertySet) {
+            Sheet.Set set = Sheet.createPropertiesSet();
+            set.setName(propertySet.getName());
+            set.setDisplayName(propertySet.getDisplayName());
+            set.setShortDescription(propertySet.getShortDescription());
+            for (Node.Property<?> property : propertySet.getProperties()) {
+                set.put(property);
+            }
+            return set;
+        }
+
+        private class TractDistanceProperty extends ClassProperty {
+
+            private final PropertySection propertySection;
+            private final de.fub.maps.project.aggregator.xml.Property property;
+            private ClassWrapper wrapper;
+
+            public TractDistanceProperty(PropertySection propertySection, de.fub.maps.project.aggregator.xml.Property property) {
+                super(property.getId(), property.getName(), property.getDescription(), TraceDistance.class);
+                this.propertySection = propertySection;
+                this.property = property;
+                wrapper = strategy.getTraceDist() != null
+                        ? new ClassWrapper(strategy.getTraceDist().getClass())
+                        : new ClassWrapper(TraceDistance.class);
+            }
+
+            @Override
+            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                return wrapper;
+            }
+
+            @Override
+            @SuppressWarnings(value = "unchecked")
+            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                    if (val == null) {
+                        throw new IllegalArgumentException("null is not a valid argument.");
+                    } else if (wrapper == null || !val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                        // only if there is a change proceed.
+                        List<de.fub.maps.project.aggregator.xml.PropertySet> propertySets = propertySection.getPropertySet();
+                        ClassWrapper oldValue = getValue();
+                        wrapper = val;
+                        int index = -1;
+                        if (oldValue != null) {
+                            ArrayList<de.fub.maps.project.aggregator.xml.PropertySet> copyList = new ArrayList<de.fub.maps.project.aggregator.xml.PropertySet>(propertySets);
+                            // look for the associated propertySet for the old value
+                            for (de.fub.maps.project.aggregator.xml.PropertySet propertySet : copyList) {
+                                index++;
+                                if (propertySet.getId().equals(oldValue.getQualifiedName())) {
+                                    // remove the associated propertySet
+                                    LOG.info(MessageFormat.format("{0} removed: {1}", propertySet.getId(), propertySets.remove(propertySet))); //
+                                    break;
+                                }
+                            }
+                        }
+                        // create the respective TraceInstance and update the PropertySet
+                        // in the property Set list
+                        try {
+                            TraceDistance traceDistance = TraceDistance.Factory.find(val.getQualifiedName());
+                            if (traceDistance != null) {
+                                // set the ne TraceDistance instance name.
+                                property.setValue(val.getQualifiedName());
+                                strategy.setTraceDistance(traceDistance);
+                                if (index < 0 || index >= propertySets.size()) {
+                                    propertySets.add(traceDistance.getPropertySet());
+                                } else {
+                                    propertySets.add(traceDistance.getPropertySet());
+                                }
+                            }
+                        } catch (DescriptorFactory.InstanceNotFountException ex) {
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        private class MergeHandlerProperty extends ClassProperty {
+
+            private final de.fub.maps.project.aggregator.xml.Property property;
+            private final PropertySection section;
+            private ClassWrapper wrapper;
+
+            public MergeHandlerProperty(PropertySection propertySection, de.fub.maps.project.aggregator.xml.Property property) {
+                super(property.getId(), property.getName(), property.getDescription(), MergeHandler.class);
+                this.property = property;
+                this.section = propertySection;
+                wrapper = strategy.getBaseMergeHandler() != null
+                        ? new ClassWrapper(strategy.getBaseMergeHandler().getClass())
+                        : new ClassWrapper(MergeHandler.class);
+            }
+
+            @Override
+            public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
+                return wrapper;
+            }
+
+            @Override
+            public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
+                    if (val == null) {
+                        throw new IllegalArgumentException("null is not a valid argument.");
+                    } else if (wrapper == null || !val.getQualifiedName().equals(wrapper.getQualifiedName())) {
+                        ClassWrapper oldValue = this.wrapper;
+                        wrapper = val;
+                        int index = -1;
+                        if (oldValue != null) {
+                            for (de.fub.maps.project.aggregator.xml.PropertySet propertySet : section.getPropertySet()) {
+                                index++;
+                                if (oldValue.getQualifiedName().equals(propertySet.getId())) {
+                                    LOG.info(MessageFormat.format("PropertySet: {0} removed: {1}", propertySet.getId(), section.getPropertySet().remove(propertySet)));
+                                    break;
+                                }
+                            }
+                        }
+                        try {
+                            MergeHandler mergeHandler = MergeHandler.Factory.find(val.getQualifiedName());
+                            if (mergeHandler != null) {
+                                strategy.setBaseMergeHandler(mergeHandler);
+                                property.setValue(val.getQualifiedName());
+                                if (index < 0 || index >= section.getPropertySet().size()) {
+                                    section.getPropertySet().add(mergeHandler.getPropertySet());
+                                } else {
+                                    section.getPropertySet().add(index, mergeHandler.getPropertySet());
+                                }
+                            }
+                        } catch (DescriptorFactory.InstanceNotFountException ex) {
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

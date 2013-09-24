@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -75,18 +75,73 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
     private static final String PROP_NAME_MAX_INIT_DISTANCE = "default.aggregation.strategy.max.init.distance";
     private static final String PROP_NAME_BASE_MERGEHANDLER_TYPE = "default.aggregation.strategy.base.mergehandler.type";
     private static final String PROP_NAME_TRACE_DISTANCE_TYPE = "default.aggregation.strategy.trace.distance.type";
-    private PropertySection propertySection = null;
-    private Aggregator aggregator;
-    private Node nodeDelegate = null;
+    protected PropertySection propertySection = null;
+    protected Aggregator aggregator;
+    protected Node nodeDelegate = null;
 
     public DefaultAggregationStrategy() {
     }
 
-    private void reInit() {
+    @Override
+    public void setTraceDistance(ITraceDistance traceDistance) {
+        this.traceDistance = traceDistance;
+    }
+
+    @Override
+    public void setBaseMergeHandler(IMergeHandler baseMergeHandler) {
+        this.baseMergeHandler = baseMergeHandler;
+    }
+
+    @Override
+    public void setAggregator(Aggregator aggregator) {
+        this.aggregator = aggregator;
+        if (aggregator != null) {
+            setAggContainer(aggregator.getAggContainer());
+        }
+        reInit();
+    }
+
+    @Override
+    public Aggregator getAggregator() {
+        return this.aggregator;
+    }
+
+    @Override
+    public Node getNodeDelegate() {
+        if (nodeDelegate == null) {
+            nodeDelegate = new StrategyNode(DefaultAggregationStrategy.this);
+        }
+        return nodeDelegate;
+    }
+
+    @Override
+    public PropertySection getPropertySection() {
+        if (propertySection == null) {
+            if (getAggregator() != null) {
+                OUTERLOOP:
+                for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
+                    if (descriptor != null && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
+                        for (PropertySection section : descriptor.getProperties().getSections()) {
+                            if (DefaultAggregationStrategy.class.getName().equals(section.getId())) {
+                                propertySection = section;
+                                break OUTERLOOP;
+                            }
+                        }
+                    }
+                }
+            }
+            if (propertySection == null) {
+                propertySection = createDefaultDescriptor();
+            }
+        }
+        return propertySection;
+    }
+
+    protected void reInit() {
+        nodeDelegate = null;
         propertySection = null;
-        propertySection = getPropertySection();
-        if (propertySection != null) {
-            List<PropertySet> propertySets = propertySection.getPropertySet();
+        if (getPropertySection() != null) {
+            List<PropertySet> propertySets = getPropertySection().getPropertySet();
             for (PropertySet propertySet : propertySets) {
                 if (Bundle.DefaultAggregationStrategy_Settings_Name().equals(propertySet.getName())) {
                     for (Property property : propertySet.getProperties()) {
@@ -110,7 +165,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                                         Exceptions.printStackTrace(ex1);
                                     }
                                 }
-                                baseMergeHandler = mHandler;
+                                setBaseMergeHandler(mHandler);
                             } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
                                 // create the specified base TraceDistance instance
                                 TraceDistance tDistance = null;
@@ -124,72 +179,18 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                                         Exceptions.printStackTrace(ex1);
                                     }
                                 }
-                                traceDistance = tDistance;
+                                setTraceDistance(tDistance);
                             }
+                            LOG.log(Level.INFO, "property: {0}, hash: {1}", new Object[]{property.getName(), property.hashCode()});
                         }
                     }
+                    return;
                 }
             }
         }
     }
 
-    public void setTraceDistance(ITraceDistance traceDistance) {
-        this.traceDistance = traceDistance;
-        reInit();
-    }
-
-    public void setBaseMergeHandler(IMergeHandler baseMergeHandler) {
-        this.baseMergeHandler = baseMergeHandler;
-        reInit();
-    }
-
-    @Override
-    public void setAggregator(Aggregator aggregator) {
-        this.aggregator = aggregator;
-        if (aggregator != null) {
-            setAggContainer(aggregator.getAggContainer());
-        }
-        reInit();
-    }
-
-    @Override
-    public Aggregator getAggregator() {
-        return this.aggregator;
-    }
-
-    @Override
-    public Node getNodeDelegate() {
-        if (nodeDelegate == null) {
-            nodeDelegate = new AggregationStrategyNode(DefaultAggregationStrategy.this);
-        }
-        return nodeDelegate;
-    }
-
-    @Override
-    public PropertySection getPropertySection() {
-        if (propertySection == null) {
-            if (getAggregator() != null) {
-                OUTERLOOP:
-                for (ProcessDescriptor descriptor : getAggregator().getAggregatorDescriptor().getPipeline().getList()) {
-                    if (descriptor != null
-                            && AggregationProcess.class.getName().equals(descriptor.getJavaType())) {
-                        for (PropertySection section : descriptor.getProperties().getSections()) {
-                            if (DefaultAggregationStrategy.class.getName().equals(section.getId())) {
-                                propertySection = section;
-                                break OUTERLOOP;
-                            }
-                        }
-                    }
-                }
-            }
-            if (propertySection == null) {
-                propertySection = createDefaultDescriptor();
-            }
-        }
-        return propertySection;
-    }
-
-    private PropertySection createDefaultDescriptor() {
+    protected PropertySection createDefaultDescriptor() {
 
         PropertySet propertySet = new PropertySet(
                 Bundle.DefaultAggregationStrategy_Settings_Name(),
@@ -201,7 +202,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
         property.setDescription(Bundle.DefaultAggregationStrategy_MaxLookahead_Description());
         property.setId(PROP_NAME_MAX_LOOKAHEAD);
         property.setJavaType(Integer.class.getName());
-        property.setValue(String.valueOf(getMaxLookahead()));
+        property.setValue(MessageFormat.format("{0}", getMaxLookahead()).replaceAll("[^0-9]", ""));
         propertySet.getProperties().add(property);
 
         property = new Property();
@@ -209,7 +210,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
         property.setDescription(Bundle.DefaultAggregationStrategy_MaxPathDifference_Description());
         property.setId(PROP_NAME_MAX_PATH_DIFFERENCE);
         property.setJavaType(Double.class.getName());
-        property.setValue(String.format(Locale.ENGLISH, "%f", getMaxPathDifference()));
+        property.setValue(MessageFormat.format("{0}", getMaxPathDifference()).replaceAll("[^0-9]", "."));
         propertySet.getProperties().add(property);
 
         property = new Property();
@@ -217,7 +218,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
         property.setDescription(Bundle.DefaultAggregationStrategy_MaxInitDistance_Description());
         property.setId(PROP_NAME_MAX_INIT_DISTANCE);
         property.setJavaType(Double.class.getName());
-        property.setValue(String.format(Locale.ENGLISH, "%f", getMaxInitDistance()));
+        property.setValue(MessageFormat.format("{0}", getMaxInitDistance()).replaceAll("[^0-9]", "."));
         propertySet.getProperties().add(property);
 
         property = new Property();
@@ -253,7 +254,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                 }
             }
         } catch (DescriptorFactory.InstanceNotFountException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
 
         TraceDistance traceHandler;
@@ -266,17 +267,18 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                 }
             }
         } catch (DescriptorFactory.InstanceNotFountException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
 
         return section;
     }
 
-    private static class AggregationStrategyNode extends AbstractNode {
+    private static class StrategyNode extends AbstractNode {
 
+        private static final Logger LOG = Logger.getLogger(StrategyNode.class.getName());
         private final DefaultAggregationStrategy strategy;
 
-        public AggregationStrategyNode(DefaultAggregationStrategy strategy) {
+        public StrategyNode(DefaultAggregationStrategy strategy) {
             super(Children.LEAF);
             this.strategy = strategy;
         }
@@ -284,75 +286,66 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
         @Override
         protected Sheet createSheet() {
             Sheet sheet = Sheet.createDefault();
-            PropertySet[] sets = sheet.toArray();
-            for (PropertySet set : sets) {
-                sheet.remove(set.getName());
-            }
+
             if (strategy != null) {
                 final PropertySection propertySection = strategy.getPropertySection();
-
                 if (propertySection != null) {
-
                     for (final de.fub.maps.project.aggregator.xml.PropertySet propertySet : propertySection.getPropertySet()) {
-                        if (propertySet.getId().equals(DefaultAggregationStrategy.class.getName())) {
+                        if (DefaultAggregationStrategy.class.getName().equals(propertySet.getId())) {
                             Sheet.Set set = Sheet.createPropertiesSet();
                             sheet.put(set);
                             set.setName(propertySet.getId());
                             set.setDisplayName(propertySet.getName());
                             set.setShortDescription(propertySet.getDescription());
-
                             List<de.fub.maps.project.aggregator.xml.Property> properties = propertySet.getProperties();
                             for (final de.fub.maps.project.aggregator.xml.Property property : properties) {
-
-                                if (PROP_NAME_MAX_LOOKAHEAD.equals(property.getId())) {
+                                if (DefaultAggregationStrategy.PROP_NAME_MAX_LOOKAHEAD.equals(property.getId())) {
                                     set.put(new NodeProperty(property));
-                                } else if (PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
+                                } else if (DefaultAggregationStrategy.PROP_NAME_MAX_PATH_DIFFERENCE.equals(property.getId())) {
                                     set.put(new NodeProperty(property));
-                                } else if (PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
+                                } else if (DefaultAggregationStrategy.PROP_NAME_MAX_INIT_DISTANCE.equals(property.getId())) {
                                     set.put(new NodeProperty(property));
-                                } else if (PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
+                                } else if (DefaultAggregationStrategy.PROP_NAME_BASE_MERGEHANDLER_TYPE.equals(property.getId())) {
                                     ClassProperty classProperty = new MergeHandlerProperty(propertySection, property);
                                     set.put(classProperty);
-                                } else if (PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
+                                } else if (DefaultAggregationStrategy.PROP_NAME_TRACE_DISTANCE_TYPE.equals(property.getId())) {
                                     ClassProperty classProperty = new TractDistanceProperty(propertySection, property);
                                     set.put(classProperty);
                                 }
                             }
                         }
                     }
-                }
+                    IMergeHandler baseMergeHandler1 = strategy.getBaseMergeHandler();
+                    if (baseMergeHandler1 instanceof MergeHandler) {
+                        MergeHandler mergeHandler = (MergeHandler) baseMergeHandler1;
+                        PropertySet[] propertySets = mergeHandler.getNodeDelegate().getPropertySets();
+                        for (Node.PropertySet propertySet : propertySets) {
+                            Sheet.Set set = convertToSet(propertySet);
+                            sheet.put(set);
+                        }
+                    }
 
-//                IMergeHandler baseMergeHandler = strategy.getBaseMergeHandler();
-//                if (baseMergeHandler instanceof MergeHandler) {
-//                    MergeHandler mergeHandler = (MergeHandler) baseMergeHandler;
-//                    Node nodeDelegate = mergeHandler.getNodeDelegate();
-//                    PropertySet[] propertySets = nodeDelegate.getPropertySets();
-//                    for (PropertySet propertySet : propertySets) {
-//                        Sheet.Set set = convertToSet(propertySet);
-//                        sheet.put(set);
-//                    }
-//                }
-                ITraceDistance traceDist = strategy.getTraceDist();
-                if (traceDist instanceof TraceDistance) {
-                    TraceDistance traceDistance = (TraceDistance) traceDist;
-                    Node nodeDelegate1 = traceDistance.getNodeDelegate();
-                    PropertySet[] propertySets = nodeDelegate1.getPropertySets();
-                    for (PropertySet propertySet : propertySets) {
-                        Sheet.Set set = convertToSet(propertySet);
-                        sheet.put(set);
+                    ITraceDistance traceDist = strategy.getTraceDist();
+                    if (traceDist instanceof TraceDistance) {
+                        TraceDistance traceDistance = (TraceDistance) traceDist;
+                        Node.PropertySet[] propertySets = traceDistance.getNodeDelegate().getPropertySets();
+                        for (Node.PropertySet propertySet : propertySets) {
+                            Sheet.Set set = convertToSet(propertySet);
+                            sheet.put(set);
+                        }
                     }
                 }
             }
             return sheet;
         }
 
-        private Sheet.Set convertToSet(PropertySet propertySet) {
+        @SuppressWarnings("unchecked")
+        private Sheet.Set convertToSet(Node.PropertySet propertySet) {
             Sheet.Set set = Sheet.createPropertiesSet();
             set.setName(propertySet.getName());
             set.setDisplayName(propertySet.getDisplayName());
             set.setShortDescription(propertySet.getShortDescription());
-
-            for (Property<?> property : propertySet.getProperties()) {
+            for (Node.Property property : propertySet.getProperties()) {
                 set.put(property);
             }
             return set;
@@ -362,15 +355,16 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
 
             private final PropertySection propertySection;
             private final de.fub.maps.project.aggregator.xml.Property property;
+            private ClassWrapper wrapper;
 
             public TractDistanceProperty(PropertySection propertySection, de.fub.maps.project.aggregator.xml.Property property) {
                 super(property.getId(), property.getName(), property.getDescription(), TraceDistance.class);
                 this.propertySection = propertySection;
                 this.property = property;
+                wrapper = strategy.getTraceDist() != null
+                        ? new ClassWrapper(strategy.getTraceDist().getClass())
+                        : new ClassWrapper(TraceDistance.class);
             }
-            private ClassWrapper wrapper = strategy.getTraceDist() != null
-                    ? new ClassWrapper(strategy.getTraceDist().getClass())
-                    : null;
 
             @Override
             public ClassWrapper getValue() throws IllegalAccessException, InvocationTargetException {
@@ -378,20 +372,17 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
             }
 
             @Override
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings(value = "unchecked")
             public void setValue(ClassWrapper val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
                 if (strategy.getAggregator().getAggregatorState() != Aggregator.AggregatorState.RUNNING) {
                     if (val == null) {
                         throw new IllegalArgumentException("null is not a valid argument.");
-
                     } else if (wrapper == null || !val.getQualifiedName().equals(wrapper.getQualifiedName())) {
-
                         // only if there is a change proceed.
                         List<de.fub.maps.project.aggregator.xml.PropertySet> propertySets = propertySection.getPropertySet();
                         ClassWrapper oldValue = getValue();
                         wrapper = val;
                         int index = -1;
-
                         if (oldValue != null) {
                             ArrayList<de.fub.maps.project.aggregator.xml.PropertySet> copyList = new ArrayList<de.fub.maps.project.aggregator.xml.PropertySet>(propertySets);
                             // look for the associated propertySet for the old value
@@ -399,12 +390,11 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                                 index++;
                                 if (propertySet.getId().equals(oldValue.getQualifiedName())) {
                                     // remove the associated propertySet
-                                    LOG.info(MessageFormat.format("{0} removed: {1}", propertySet.getId(), propertySets.remove(propertySet)));//
+                                    LOG.info(MessageFormat.format("{0} removed: {1}", propertySet.getId(), propertySets.remove(propertySet))); //
                                     break;
                                 }
                             }
                         }
-
                         // create the respective TraceInstance and update the PropertySet
                         // in the property Set list
                         try {
@@ -419,6 +409,7 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                                     propertySets.add(traceDistance.getPropertySet());
                                 }
                             }
+                            LOG.log(Level.INFO, "property: {0}, hash: {1}", new Object[]{property.getName(), property.hashCode()});
                         } catch (DescriptorFactory.InstanceNotFountException ex) {
                             Exceptions.printStackTrace(ex);
                         }
@@ -431,12 +422,15 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
 
             private final de.fub.maps.project.aggregator.xml.Property property;
             private final PropertySection section;
-            private ClassWrapper wrapper = null; //strategy.getBaseMergeHandler() != null ? new ClassWrapper(strategy.getBaseMergeHandler().getClass()) : null;
+            private ClassWrapper wrapper;
 
             public MergeHandlerProperty(PropertySection propertySection, de.fub.maps.project.aggregator.xml.Property property) {
                 super(property.getId(), property.getName(), property.getDescription(), MergeHandler.class);
                 this.property = property;
                 this.section = propertySection;
+                wrapper = strategy.getBaseMergeHandler() != null
+                        ? new ClassWrapper(strategy.getBaseMergeHandler().getClass())
+                        : null;
             }
 
             @Override
@@ -467,20 +461,20 @@ public class DefaultAggregationStrategy extends de.fub.agg2graph.agg.strategy.De
                             if (mergeHandler != null) {
                                 strategy.setBaseMergeHandler(mergeHandler);
                                 property.setValue(val.getQualifiedName());
-
                                 if (index < 0 || index >= section.getPropertySet().size()) {
                                     section.getPropertySet().add(mergeHandler.getPropertySet());
                                 } else {
                                     section.getPropertySet().add(index, mergeHandler.getPropertySet());
                                 }
                             }
+                            LOG.log(Level.INFO, "property: {0}, hash: {1}", new Object[]{property.getName(), property.hashCode()});
                         } catch (DescriptorFactory.InstanceNotFountException ex) {
-                            Exceptions.printStackTrace(ex);
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
                         }
-
                     }
                 }
             }
         }
+
     }
 }

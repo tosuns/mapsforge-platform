@@ -104,7 +104,7 @@ public class DefaultTraceDistance extends de.fub.agg2graph.agg.strategy.DefaultT
                             setMinLengthFirstSegment(Integer.parseInt(property.getValue()));
                         }
                     }
-                } catch (Exception ex) {
+                } catch (NumberFormatException ex) {
                     LOG.log(Level.SEVERE, ex.getMessage(), ex);
                 }
             }
@@ -230,11 +230,7 @@ public class DefaultTraceDistance extends de.fub.agg2graph.agg.strategy.DefaultT
         @Override
         protected Sheet createSheet() {
             Sheet sheet = Sheet.createDefault();
-            PropertySet[] propertySets = sheet.toArray();
 
-            for (PropertySet set : propertySets) {
-                sheet.remove(set.getName());
-            }
             if (this.traceDistance != null) {
                 de.fub.maps.project.aggregator.xml.PropertySet propertySet = this.traceDistance.getPropertySet();
                 if (propertySet != null) {

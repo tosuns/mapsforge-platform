@@ -13,7 +13,7 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
-*****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.agg;
 
@@ -28,7 +28,7 @@ import java.util.List;
  */
 public interface IAggregationStrategy {
 
-    public void aggregate(GPSSegment segment);
+    public void aggregate(GPSSegment segment, boolean isAgg);
 
     public void setAggContainer(AggContainer aggContainer);
 
@@ -45,4 +45,11 @@ public interface IAggregationStrategy {
     public ITraceDistance getTraceDist();
 
     public List<ClassObjectEditor> getSettings();
+
+    //Martinus new Methods
+    public AggNode getLastNode();
+
+    public void setAddAllowed(boolean allowed);
+
+    public boolean getAddAllowed();
 }

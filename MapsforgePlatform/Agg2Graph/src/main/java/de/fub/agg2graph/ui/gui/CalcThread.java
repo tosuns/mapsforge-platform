@@ -134,15 +134,13 @@ public class CalcThread extends Thread {
             // use clean data if cleaning step has been performed
             if (stepStorage.levelReached >= 1) {
                 for (GPSSegment cleanSegment : stepStorage.cleanSegmentList) {
-                    System.out.println(String.format("adding segment no. %d",
-                            ++counter));
-                    stepStorage.getAggContainer().addSegment(cleanSegment);
+                    System.out.println(String.format("adding segment no. %d", ++counter));
+                    stepStorage.getAggContainer().addSegment(cleanSegment, false);
                 }
             } else {
                 for (GPSSegment inputSegment : stepStorage.inputSegmentList) {
-                    System.out.println(String.format("adding segment no. %d",
-                            ++counter));
-                    stepStorage.getAggContainer().addSegment(inputSegment);
+                    System.out.println(String.format("adding segment no. %d", ++counter));
+                    stepStorage.getAggContainer().addSegment(inputSegment, false);
                 }
             }
             repaintEverything();
@@ -176,8 +174,7 @@ public class CalcThread extends Thread {
                         % levels.size());
             }
         });
-        System.out.println(MiniProfiler.print(String.format("after step %s",
-                task)));
+        System.out.println(MiniProfiler.print(String.format("after step %s", task)));
         parent.setLoading(false);
     }
     private static final Logger LOG = Logger.getLogger(CalcThread.class.getName());

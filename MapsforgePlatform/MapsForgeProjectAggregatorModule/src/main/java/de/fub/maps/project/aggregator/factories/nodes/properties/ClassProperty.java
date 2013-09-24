@@ -15,7 +15,6 @@
  */
 package de.fub.maps.project.aggregator.factories.nodes.properties;
 
-import de.fub.maps.project.aggregator.factories.nodes.properties.InterfacePropertyEditorSupport;
 import java.beans.PropertyEditor;
 import org.openide.nodes.PropertySupport;
 

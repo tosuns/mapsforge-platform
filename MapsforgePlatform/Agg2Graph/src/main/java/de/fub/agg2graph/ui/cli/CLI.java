@@ -124,7 +124,7 @@ public class CLI {
                 } else if ("clean".equals(t.name)) {
                     stepStorage
                             .setCleaningRamerDouglasPeuckerFilter(new RamerDouglasPeuckerFilter(
-                            0));
+                                            0));
                     stepStorage.setGpsCleaner(new GPSCleaner());
                     parseParameters(t.name, keyValueMap);
                 } else if ("agg".equals(t.name)) {
@@ -188,8 +188,7 @@ public class CLI {
                         for (GPSSegment cleanSegment : cleanSegments) {
                             logger.info(String.format("adding segment no. %d",
                                     ++counter));
-                            stepStorage.getAggContainer().addSegment(
-                                    cleanSegment);
+                            stepStorage.getAggContainer().addSegment(cleanSegment, false);
                         }
                         importHistory.wasImported(inputFile);
                     }
@@ -288,7 +287,7 @@ public class CLI {
 
         stepStorage
                 .setCleaningRamerDouglasPeuckerFilter(new RamerDouglasPeuckerFilter(
-                0));
+                                0));
         stepStorage.setGpsCleaner(new GPSCleaner());
 
         cli.makeAgg(null);
@@ -308,13 +307,13 @@ public class CLI {
             for (ClassObjectEditor classObjectEditor : objects) {
                 sb.append(
                         String.format("\t%s (%s)", classObjectEditor
-                        .getObject().getClass().getSimpleName(),
-                        classObjectEditor.getDescription())).append(
-                        "\n");
+                                .getObject().getClass().getSimpleName(),
+                                classObjectEditor.getDescription())).append(
+                                "\n");
                 for (EditableObject o : classObjectEditor.getEditableObjects()) {
                     sb.append(
                             String.format("\t\t%s: %s: %s", o.name,
-                            o.getTypeString(), o.value.toString()))
+                                    o.getTypeString(), o.value.toString()))
                             .append("\n");
                 }
             }

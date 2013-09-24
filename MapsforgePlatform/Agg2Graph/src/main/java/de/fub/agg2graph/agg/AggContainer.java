@@ -1,18 +1,20 @@
-/*******************************************************************************
-   Copyright 2013 Johannes Mitlmeier
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-******************************************************************************/
+/**
+ * *****************************************************************************
+ * Copyright 2013 Johannes Mitlmeier
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ * ****************************************************************************
+ */
 package de.fub.agg2graph.agg;
 
 import de.fub.agg2graph.agg.tiling.CachingStrategyFactory;
@@ -99,11 +101,13 @@ public class AggContainer {
      */
     public void addFile(File gpxFile) {
         List<GPSSegment> segments = GPXReader.getSegments(gpxFile);
-        if (segments == null) {
-            return;
-        }
-        for (GPSSegment segment : segments) {
-            addSegment(segment);
+        if (segments != null) {
+            if (!segments.isEmpty()) {
+                addSegment(segments.get(0), true);
+                for (int index = 1; index < segments.size(); index++) {
+                    addSegment(segments.get(index), false);
+                }
+            }
         }
     }
 
@@ -111,9 +115,10 @@ public class AggContainer {
      * This method merges a {@link GPSSegment} into the container.
      *
      * @param segment
+     * @param isAgg
      */
-    public void addSegment(GPSSegment segment) {
-        getAggregationStrategy().aggregate(segment);
+    public void addSegment(GPSSegment segment, boolean isAgg) {
+        getAggregationStrategy().aggregate(segment, isAgg);
     }
 
     public void addNode(AggNode node) {
@@ -488,14 +493,19 @@ public class AggContainer {
         }
         // find already existing connection with same endpoints
         AggConnection existingConn = findConn(from, to);
+
         if (existingConn != null) {
             // add nodes
-            if (ShallowAggNode.class.isInstance(existingConn.getFrom())
-                    && !ShallowAggNode.class.isInstance(from)) {
+            if (ShallowAggNode.class
+                    .isInstance(existingConn.getFrom())
+                    && !ShallowAggNode.class
+                    .isInstance(from)) {
                 existingConn.fillFrom(from);
             }
-            if (ShallowAggNode.class.isInstance(existingConn.getTo())
-                    && !ShallowAggNode.class.isInstance(to)) {
+            if (ShallowAggNode.class
+                    .isInstance(existingConn.getTo())
+                    && !ShallowAggNode.class
+                    .isInstance(to)) {
                 existingConn.fillTo(to);
             }
             return existingConn;

@@ -81,7 +81,7 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
     }
 
     @Override
-    public void aggregate(GPSSegment segment) {
+    public void aggregate(GPSSegment segment, boolean isAgg) {
         logger.setLevel(Level.OFF); // Level.ALL);
 
         // reset all attributes
@@ -120,11 +120,11 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
             // no progress? (should not be necessary)
             if (lastParsedCurrentPoints.size() > 2
                     && lastParsedCurrentPoints.get(
-                    lastParsedCurrentPoints.size() - 1).equals(
-                    currentPoint)
+                            lastParsedCurrentPoints.size() - 1).equals(
+                            currentPoint)
                     && lastParsedCurrentPoints.get(
-                    lastParsedCurrentPoints.size() - 2).equals(
-                    currentPoint)) {
+                            lastParsedCurrentPoints.size() - 2).equals(
+                            currentPoint)) {
                 i++;
                 continue;
             }
@@ -207,9 +207,9 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
 
                     logger.log(Level.FINE,
                             String.format(
-                            "best path found: %s, value: %.8f\ncomsuming %d GPS points: %s",
-                            bestPath, bestDifference, bestPathLength,
-                            segment.subList(i, i + bestPathLength)));
+                                    "best path found: %s, value: %.8f\ncomsuming %d GPS points: %s",
+                                    bestPath, bestDifference, bestPathLength,
+                                    segment.subList(i, i + bestPathLength)));
                     mergeHandler.addAggNodes(bestPath);
                     mergeHandler.addGPSPoints(segment.subList(i, i
                             + bestPathLength));
