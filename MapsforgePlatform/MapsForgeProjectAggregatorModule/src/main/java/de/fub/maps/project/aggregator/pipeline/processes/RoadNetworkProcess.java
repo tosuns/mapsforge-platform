@@ -94,10 +94,10 @@ public class RoadNetworkProcess extends AbstractAggregationProcess<AggContainer,
     private static final String PROP_NAME_OBJECT_MERGER_INSTANCE = "road.network.process.object.merger.instance";
     private static final String PROP_NAME_TYPE_CLASSIFIER_INSTANCE = "road.network.process.type.classifier.instance";
     private RoadNetwork roadNetwork = null;
-    private IntersectionLayer intersectionLayer = new IntersectionLayer();
-    private RoadNetworkLayer primaryRoadNetworkLayer = new PrimaryRoadNetworkLayer();
-    private RoadNetworkLayer secondaryRoadNetworkLayer = new SecondaryRoadNetworkLayer();
-    private RoadNetworkLayer teritaryRoadNetworkLayer = new TertiaryRoadNetworkLayer();
+    private final IntersectionLayer intersectionLayer = new IntersectionLayer();
+    private final RoadNetworkLayer primaryRoadNetworkLayer = new PrimaryRoadNetworkLayer();
+    private final RoadNetworkLayer secondaryRoadNetworkLayer = new SecondaryRoadNetworkLayer();
+    private final RoadNetworkLayer teritaryRoadNetworkLayer = new TertiaryRoadNetworkLayer();
     private RoadObjectMerger roadObjectMerger = null;
     private RoadAggregationFilter roadAggregationFilter = null;
     private RoadNetworkFilter roadNetworkFilter = null;

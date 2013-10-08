@@ -11,6 +11,7 @@ import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.structs.ILocation;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -244,7 +245,7 @@ public class FrechetMatchAttractionMergeStrategy extends
                 // aggregation
                 if (getAddAllowed()) {
                     AggNode node = new AggNode(currentPoint, aggContainer);
-                    node.setID("A-" + currentPoint.getID());
+                    node.setID(MessageFormat.format("A-{0}", currentPoint.getID()));
                     node.setK(1);
                     addNodeToAgg(aggContainer, node);
                     lastNode = node;

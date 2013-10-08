@@ -107,8 +107,7 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
             return;
         }
 
-        BoundedQueue<ILocation> lastParsedCurrentPoints = new BoundedQueue<ILocation>(
-                5);
+        BoundedQueue<ILocation> lastParsedCurrentPoints = new BoundedQueue<ILocation>(5);
         int i = 0;
         while (i < segment.size()) {
             // step 1: find starting point
