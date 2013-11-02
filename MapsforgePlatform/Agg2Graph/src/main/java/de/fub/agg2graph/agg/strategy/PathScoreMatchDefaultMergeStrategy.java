@@ -22,7 +22,7 @@ import de.fub.agg2graph.structs.GPSCalc;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.GPSSegment;
 import de.fub.agg2graph.structs.ILocation;
-import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,9 +34,9 @@ public class PathScoreMatchDefaultMergeStrategy extends
     MyStatistic statistic;
     int counter = 1;
 
-    private int maxLookahead = 5;
-    private double maxPathDifference = 200;
-    private double maxInitDistance = 30;//12.5
+    private int maxLookahead = 7;
+    private double maxPathDifference = 1000;
+    private double maxInitDistance = 150;//12.5
 
     List<AggNode> lastNodes = new ArrayList<AggNode>();
     List<GPSSegment> lastNewNodes = new ArrayList<GPSSegment>();
@@ -119,19 +119,18 @@ public class PathScoreMatchDefaultMergeStrategy extends
                 || aggContainer.getCachingStrategy().getNodeCount() == 0
                 || isAgg) {
             int i = 0;
+            clear();
             while (i < segment.size()) {
                 GPSPoint pointI = segment.get(i);
                 AggNode node = new AggNode(pointI, aggContainer);
                 node.setK(pointI.getK());
                 node.setRelevant(pointI.isRelevant());
-                node.setID("A-" + pointI.getID());
+                node.setID(MessageFormat.format("A-{0}", pointI.getID()));
                 addNodeToAgg(aggContainer, node);
                 lastNode = node;
                 i++;
             }
             lastNodes.add(lastNode);
-            statistic.setAggLength(GPSCalc.traceLengthMeter(segment));
-            statistic.setAggPoints(segment.size());
             return;
         }
 
@@ -140,9 +139,6 @@ public class PathScoreMatchDefaultMergeStrategy extends
 
         int i = 0;
 
-        statistic.setTraceLength(GPSCalc.traceLengthMeter(segment));
-        statistic.setTracePoints(segment.size());
-        long matchStart = System.currentTimeMillis();
         while (i < segment.size()) {
             // step 1: find starting point
             // get close points, within 10 meters (merge candidates)
@@ -167,7 +163,7 @@ public class PathScoreMatchDefaultMergeStrategy extends
             // get all close points, but none that are already in the current
             // match (because we would kinda search backwards)
             nearPoints = aggContainer.getCachingStrategy().getCloseNodes(
-                    currentPoint, getMaxInitDistance());
+                    currentPoint, maxInitDistance);
             if (mergeHandler != null) {
                 List<AggNode> nodes = mergeHandler.getAggNodes();
                 for (int j = 0; j < nodes.size() - 1; j++) {
@@ -184,7 +180,8 @@ public class PathScoreMatchDefaultMergeStrategy extends
                 state = State.NO_MATCH;
             } else {
                 // there is candidates for a match start
-                List<List<AggNode>> paths = getPathsByDepth(nearPoints, 1, getMaxLookahead());
+                List<List<AggNode>> paths = getPathsByDepth(nearPoints, 1,
+                        maxLookahead);
 
                 /* Tinus - Filtering Paths */
                 for (List<AggNode> path : paths) {
@@ -198,8 +195,7 @@ public class PathScoreMatchDefaultMergeStrategy extends
                 int bestPathLength = 0;
 
                 for (List<AggNode> path : paths) {
-                    Object[] returnValues = traceDistance.getPathDifference(
-                            path, segment, i, mergeHandler);
+                    Object[] returnValues = traceDistance.getPathDifference(path, segment, i, mergeHandler);
                     difference = (Double) returnValues[0];
                     length = (int) Math.round(Double.valueOf(returnValues[1]
                             .toString()));
@@ -216,7 +212,7 @@ public class PathScoreMatchDefaultMergeStrategy extends
                 }
 
                 // do we have a successful match?
-                if (bestDifference >= getMaxPathDifference() || bestPath == null) {
+                if (bestDifference >= maxPathDifference || bestPath == null) {
                     isMatch = false;
                 } else if (bestPath.size() <= 1 && bestPathLength <= 1) {
                     isMatch = false;
@@ -245,18 +241,14 @@ public class PathScoreMatchDefaultMergeStrategy extends
                 // if there is no close points or no valid match, add it to the
                 // aggregation
 
-                if (getAddAllowed()) {
-                    AggNode node = new AggNode(currentPoint, aggContainer);
-                    node.setID("A-" + currentPoint.getID());
-                    node.setK(1);
-                    addNodeToAgg(aggContainer, node);
-                    lastNode = node;
-                }
+                AggNode node = new AggNode(currentPoint, aggContainer);
+                node.setID("A-" + currentPoint.getID());
+                node.setK(1);
+                addNodeToAgg(aggContainer, node);
+                lastNode = node;
                 i++;
             }
         }
-        long matchEnd = System.currentTimeMillis();
-        statistic.setRuntimeMatch(matchEnd - matchStart);
 
         // New Segment
         if (getAddAllowed() && lastNode != null) {
@@ -281,74 +273,14 @@ public class PathScoreMatchDefaultMergeStrategy extends
         }
 
         // step 2 and 3 of 3: ghost points, merge everything
-        System.out.println(counter + ". MATCHES : " + matches.size());
-        System.out.println("New Segment : " + getAddAllowed());
-        statistic.resetMatchedAggLength();
-        statistic.resetMatchedAggPoints();
-        statistic.resetMatchedTraceLength();
-        statistic.resetMatchedTracePoints();
+        System.out.println(MessageFormat.format("{0}. MATCHES : {1}", counter, matches.size()));
+        System.out.println(MessageFormat.format("New Segment : {0}", getAddAllowed()));
 
-        long mergeStart = System.currentTimeMillis();
         for (IMergeHandler match : matches) {
-            statistic.setMatchedAggLength(GPSCalc.traceLengthMeter(match
-                    .getAggNodes()));
-            statistic.setMatchedAggPoints(match.getAggNodes().size());
-            statistic.setMatchedTraceLength(GPSCalc.traceLengthMeter(match
-                    .getGpsPoints()));
-            statistic.setMatchedTracePoints(match
-                    .getGpsPoints().size());
             if (!match.isEmpty()) {
                 match.mergePoints();
             }
         }
-        long mergeEnd = System.currentTimeMillis();
-        statistic.setRuntimeMerge(mergeEnd - mergeStart);
-
-        Runtime runtime = Runtime.getRuntime();
-        // Run the garbage collector
-        runtime.gc();
-
-        // Calculate the used memory
-        long memory = runtime.totalMemory() - runtime.freeMemory();
-        statistic.setMemoryUsed(bytesToMegabytes(memory));
-
-        for (GPSSegment lastNewNode : lastNewNodes) {
-            statistic.setNewAggLength(GPSCalc.traceLengthMeter(lastNewNode));
-            statistic.setNewAggPoints(lastNewNode.size());
-        }
-        /**
-         * Save new Map
-         */
-//		try {
-//			List<GPSSegment> segments = new ArrayList<GPSSegment>();
-//			// Original Map
-//			for (AggNode last : lastNodes) {
-//				segments.add(SerializeAgg.getSegmentFromLastNode(last));
-//			}
-//
-//			// Extension
-//			if (lastNewNodes.size() > 0 && getAddAllowed())
-//				segments.addAll(lastNewNodes);
-//
-//			GPXWriter.writeSegments(new File(new String("agg2graph/test/input/map 2.0a/"
-//					+ "map" + counter++ + ".gpx")), segments);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
-        /**
-         * Statistic record
-         */
-        try {
-            statistic.writefile();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        statistic.resetAll();
-        lastNodes.clear();
-        lastNewNodes.clear();
     }
 
     private static void filterPath(List<AggNode> path) {
@@ -381,10 +313,10 @@ public class PathScoreMatchDefaultMergeStrategy extends
          * connect to previous node lastNode is the last non-matched node or the
          * outNode of the last match
          */
-//		 aggContainer.connect(lastNode, mergeHandler.getInNode());
-//		 mergeHandler.setBeforeNode(lastNode);
+        aggContainer.connect(lastNode, mergeHandler.getInNode());
+        mergeHandler.setBeforeNode(lastNode);
         // remember outgoing node (for later connection)
-//		 lastNode = mergeHandler.getOutNode();
+        lastNode = mergeHandler.getOutNode();
     }
 
     /*

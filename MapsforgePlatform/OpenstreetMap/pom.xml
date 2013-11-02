@@ -38,11 +38,6 @@
             <name>matsim</name>
             <url>http://matsim.org/m2repo/</url>
         </repository>
-        <!--        <repository>
-            <id>Yakumo</id>
-            <name>Yakumo-releases</name>
-            <url>http://localhost:8080/artifactory/libs-release-local/</url>
-        </repository>-->
         <repository>
             <id>my-local-repo</id>
             <url>file://${basedir}/LibFolder</url>
@@ -72,7 +67,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-                <version>3.8</version>
+                <version>3.11</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>

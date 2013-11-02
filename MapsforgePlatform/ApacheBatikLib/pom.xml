@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-annotations-common</artifactId>
-            <version>RELEASE73</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>batik</groupId>
@@ -74,7 +74,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-                <version>3.8</version>
+                <version>3.11</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>

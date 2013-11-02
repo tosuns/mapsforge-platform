@@ -26,6 +26,8 @@ import de.fub.agg2graph.structs.ILocation;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A connection between two {@link AggNode}s. The connection can have
@@ -41,12 +43,6 @@ public class AggConnection extends AbstractEdge<AggNode> implements Comparable<A
     private AggContainer aggContainer;
     private float weight = 1;
     private double avgDist = 0;
-
-    /**
-     * Invisible {@link AggConnection}s might be used to hide them before
-     * generating a road network.
-     */
-    private boolean visible = true;
 
     /**
      * Constructor with given {@link AbstractLocation} and distance
@@ -214,7 +210,9 @@ public class AggConnection extends AbstractEdge<AggNode> implements Comparable<A
 
     public void setAvgDist(double avgDist) {
         this.avgDist = avgDist;
+        LOG.log(Level.INFO, "{0} avgDistance: {1}", new Object[]{toString(), avgDist});
     }
+    private static final Logger LOG = Logger.getLogger(AggConnection.class.getName());
 
     /**
      * Change the AggNode the connection originates from. The old from node is

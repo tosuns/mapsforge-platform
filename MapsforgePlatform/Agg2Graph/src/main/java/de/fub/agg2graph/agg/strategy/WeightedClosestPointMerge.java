@@ -10,6 +10,7 @@
  */
 package de.fub.agg2graph.agg.strategy;
 
+import de.fub.agg2graph.agg.AggCleaner;
 import de.fub.agg2graph.agg.AggConnection;
 import de.fub.agg2graph.agg.AggContainer;
 import de.fub.agg2graph.agg.AggNode;
@@ -45,7 +46,7 @@ public class WeightedClosestPointMerge implements IMergeHandler {
     private List<AggNode> aggNodes = null;
     private List<GPSPoint> gpsPoints = null;
     private int maxLookahead = 10;
-    private double minContinuationAngle = 180;//45
+    private double minContinuationAngle = 45;
     // helper stuff
     private Map<AggConnection, List<PointGhostPointPair>> newNodesPerConn;
     private List<PointGhostPointPair> pointGhostPointPairs;
@@ -56,10 +57,10 @@ public class WeightedClosestPointMerge implements IMergeHandler {
     private RenderingOptions roMatchGPS;
     // cleaning stuff
     private final RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(0, 50);
-//	private static AggCleaner cleaner = new AggCleaner().enableDefault();
-    private double maxPointGhostDist = 50; //10 meters
+    private static AggCleaner cleaner = new AggCleaner().enableDefault();
+    private double maxPointGhostDist = 40; //10 meters
 
-    private double distance = 50;
+    private double distance = 40;
     private AggNode beforeNode;
 
     public WeightedClosestPointMerge() {
@@ -393,27 +394,27 @@ public class WeightedClosestPointMerge implements IMergeHandler {
         for (AggNode node : changedAggPoints) {
             node.refreshWeight();
         }
-//
+
 //		// add turns
-//		List<AggNode> turnNodes = new ArrayList<AggNode>();
-//		turnNodes.addAll(changedAggPoints);
-//		if (turnNodes.size() > 1) {
-//			turnNodes.remove(0);
-//			turnNodes.remove(turnNodes.size() - 1);
-//		}
-//		turnNodes.add(0, inNode);
-//		turnNodes.add(0, beforeNode);
-//		turnNodes.add(outNode);
-//		// AggNode node;
-//		for (int i = 2; i < changedAggPoints.size(); i++) {
-//			changedAggPoints.get(i - 1).addTurn(changedAggPoints.get(i - 2),
-//					changedAggPoints.get(i - 0));
-//		}
-//
-//		// clean like in the GPSCleaner
-//		cleaner.clean(changedAggPoints);
-//		// simplify
-//		rdpf.simplifyAgg(changedAggPoints, aggContainer);
+        List<AggNode> turnNodes = new ArrayList<AggNode>();
+        turnNodes.addAll(changedAggPoints);
+        if (turnNodes.size() > 1) {
+            turnNodes.remove(0);
+            turnNodes.remove(turnNodes.size() - 1);
+        }
+        turnNodes.add(0, inNode);
+        turnNodes.add(0, beforeNode);
+        turnNodes.add(outNode);
+        // AggNode node;
+        for (int i = 2; i < changedAggPoints.size(); i++) {
+            changedAggPoints.get(i - 1).addTurn(changedAggPoints.get(i - 2),
+                    changedAggPoints.get(i - 0));
+        }
+
+        // clean like in the GPSCleaner
+        cleaner.clean(changedAggPoints);
+        // simplify
+        rdpf.simplifyAgg(changedAggPoints, aggContainer);
     }
 
     private void mergePointPair(AggNode aggNode, GPSPoint gpsPoint) {
@@ -506,6 +507,6 @@ public class WeightedClosestPointMerge implements IMergeHandler {
 
     @Override
     public List<PointGhostPointPair> getPointGhostPointPairs() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 }

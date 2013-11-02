@@ -33,9 +33,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>Yakumo</id>
-            <name>Yakumo-releases</name>
-            <url>http://localhost:8080/artifactory/libs-release-local/</url>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/LibFolder</url>
         </repository>
     </repositories>
 
@@ -43,7 +42,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-annotations-common</artifactId>
-            <version>RELEASE73</version>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>com.itextpdf</groupId>
@@ -79,7 +78,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-                <version>3.8</version>
+                <version>3.11</version>
                 <extensions>true</extensions>
                 <configuration>
                     <publicPackages>

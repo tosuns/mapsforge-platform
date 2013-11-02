@@ -61,10 +61,8 @@ public class DefaultIntersectionParser implements IIntersectionParser {
         Set<AggNode> candidates = new HashSet<AggNode>();
         Set<AggNode> nodes = agg.getCachingStrategy().getLoadedNodes();
         for (AggNode node : nodes) {
-            if (!node.isVisible()) {
-                continue;
-            }
-            if (node.isAggIntersection() || node.isEndNode()) {
+            if (node.isVisible()
+                    && (node.isAggIntersection() || node.isEndNode())) {
                 candidates.add(node);
             }
         }
@@ -77,8 +75,8 @@ public class DefaultIntersectionParser implements IIntersectionParser {
         for (AggNode candidate : candidates) {
             Intersection intersection = new Intersection(candidate);
             logger.info(MessageFormat.format("intersection found: {0}", intersection));
-            // intersection.out = candidate.getVisibleOut();
-            // intersection.in = candidate.getVisibleIn();
+//            intersection.out = candidate.getVisibleOut();
+//            intersection.in = candidate.getVisibleIn();
             roadNetwork.getIntersections().add(intersection);
         }
     }
@@ -86,7 +84,7 @@ public class DefaultIntersectionParser implements IIntersectionParser {
     private void makeRoads() {
         // parse roads
         Iterator<Intersection> it = roadNetwork.getIntersections().iterator();
-        List<Intersection> newIntersections = new ArrayList<Intersection>(10);
+        List<Intersection> intersections = new ArrayList<Intersection>(10);
         while (it.hasNext()) {
             Intersection startIntersection = it.next();
             // every outgoing road
@@ -98,16 +96,19 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                 HashSet<AggConnection> set = new HashSet<AggConnection>();
                 // follow the road to the next intersection
                 while (currentConn.getTo().getIntersection() == null) {
+
+                    // add current connection to road path
                     road.getPath().add(currentConn);
+
+                    // determine current connection representation an intersection
                     if (currentConn.getTo().getVisibleOut() == null
-                            || currentConn.getTo().getVisibleOut().size() > 1
-                            || currentConn.getTo().getVisibleOut().isEmpty()) {
+                            || currentConn.getTo().getVisibleOut().size() != 1) {
 
                         Intersection newIntersection = new Intersection(currentConn.getTo());
                         newIntersection.in.add(road);
-                        newIntersections.add(newIntersection);
+                        intersections.add(newIntersection);
                         break;
-                    } else if (set.contains(currentConn)) {
+                    } else if (set.contains(currentConn)) { // check whether whether a cycle occurred during traversal
                         IEdge<AggNode> node = null;
 
                         if (!road.getPath().isEmpty()) {
@@ -120,33 +121,27 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                         // create a intersection
                         Intersection newIntersection = new Intersection(node.getTo());
                         newIntersection.in.add(road);
-                        newIntersections.add(newIntersection);
+                        intersections.add(newIntersection);
+                        // because a cycle occurred, a possible intersection must be forcfully
+                        // removed
+                        currentConn.getTo().setIntersection(null);
                         break;
                     } else {
                         if (currentConn.getTo().getVisibleOut().size() != 1) {
+                            // This case sould never occure.
+                            // There is only one, otherwise  it would have been an intersection itself
                             logger.severe("Error not exactly one element in set!");
                         }
 
-                        // check whether there is a cycle
-                        // and if so break loop
-                        if (set.contains(currentConn)) {
-                            // attempt to make the condition
-                            currentConn.getTo().setIntersection(null);
-                            break;
-                        }
                         set.add(currentConn);
-                        currentConn = currentConn.getTo().getVisibleOut()
-                                .iterator().next();
-                        // there is only one,
-                        // otherwise
-                        // it would
-                        // have been an intersection
-                        // itself
+                        // get next connection.
+                        currentConn = currentConn.getTo().getVisibleOut().iterator().next();
+
                     }
                 }
                 set.clear();
 
-                /// add road to road network only when there is valid end intersection
+                /// add road to road network only when there is a valid end intersection
                 if (currentConn.getTo().getIntersection() != null) {
                     road.getPath().add(currentConn);
                     Intersection endIntersection = currentConn.getTo()
@@ -157,6 +152,6 @@ public class DefaultIntersectionParser implements IIntersectionParser {
                 }
             }
         }
-        roadNetwork.getIntersections().addAll(newIntersections);
+        roadNetwork.getIntersections().addAll(intersections);
     }
 }

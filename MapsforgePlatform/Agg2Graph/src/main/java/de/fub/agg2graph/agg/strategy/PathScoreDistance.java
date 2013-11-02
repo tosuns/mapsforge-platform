@@ -6,7 +6,7 @@
  * available at http://www.gnu.org/licenses/agpl-3.0.html
  *
  * Contributors: Johannes Mitlmeier - initial API and implementation
- *****************************************************************************
+ * ****************************************************************************
  */
 package de.fub.agg2graph.agg.strategy;
 
@@ -29,11 +29,11 @@ public class PathScoreDistance implements ITraceDistance {
             .getLogger("agg2graph.agg.default.dist");
     private double aggReflectionFactor = 4;
     private int maxOutliners = 10;
-    private double maxDistance = 30;//7.5
-    private int maxLookahead = 5;
-    private double maxPathDifference = 20;//10
+    private double maxDistance = 60;//7.5
+    private int maxLookahead = 10;
+    private double maxPathDifference = 100;//10
     private int minLengthFirstSegment = 1;
-    private double maxAngle = 60;
+    private double maxAngle = 37;
 
     /**
      * Compute the difference of a path to the aggregation. This measure only
@@ -52,8 +52,6 @@ public class PathScoreDistance implements ITraceDistance {
             List<GPSPoint> tracePoints, int startIndex, IMergeHandler dmh) {
         double bestValue = Double.MAX_VALUE;
         double bestValueLength = 0;
-//		List<AggNode> internalPath = new ArrayList<AggNode>();
-//		internalPath.addAll(aggPath);
 
         for (int i = startIndex; i < Math.min(startIndex + 20,
                 tracePoints.size()); i++) {

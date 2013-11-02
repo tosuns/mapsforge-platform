@@ -101,10 +101,11 @@ public class AggContainer {
      */
     public void addFile(File gpxFile) {
         List<GPSSegment> segments = GPXReader.getSegments(gpxFile);
-        if (segments != null) {
-            if (!segments.isEmpty()) {
-                addSegment(segments.get(0), true);
-                for (int index = 1; index < segments.size(); index++) {
+        if (segments != null && !segments.isEmpty()) {
+            for (int index = 0; index < segments.size(); index++) {
+                if (index < segments.size() - 1) {
+                    addSegment(segments.get(index), true);
+                } else {
                     addSegment(segments.get(index), false);
                 }
             }

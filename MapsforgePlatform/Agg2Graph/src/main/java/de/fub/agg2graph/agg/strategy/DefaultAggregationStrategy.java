@@ -99,7 +99,7 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
             clear(); // we have to clear the previouse last node to avoid unwanted connection from the previouse added segment.
             while (i < segment.size()) {
                 AggNode node = new AggNode(segment.get(i), aggContainer);
-                node.setID("A-" + segment.get(i).getID());
+                node.setID(MessageFormat.format("A-{0}", segment.get(i).getID()));
                 addNodeToAgg(aggContainer, node);
                 lastNode = node;
                 i++;
@@ -187,8 +187,7 @@ public class DefaultAggregationStrategy extends AbstractAggregationStrategy {
                 // do we have a successful match?
                 if (bestDifference >= maxPathDifference || bestPath == null) {
                     // i++;
-                    logger.log(Level.FINE,
-                            "Best path not good enough (anymore)");
+                    logger.log(Level.FINE, "Best path not good enough (anymore)");
                     isMatch = false;
                 } else if (bestPath.size() <= 1 && bestPathLength <= 1) {
                     isMatch = false;

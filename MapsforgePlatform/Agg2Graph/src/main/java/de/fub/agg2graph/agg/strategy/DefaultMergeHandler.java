@@ -58,7 +58,7 @@ public class DefaultMergeHandler implements IMergeHandler {
     private AggContainer aggContainer;
     private RenderingOptions roMatchGPS;
     // cleaning stuff
-    private RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(0, 125);
+    private final RamerDouglasPeuckerFilter rdpf = new RamerDouglasPeuckerFilter(0, 125);
     private static AggCleaner cleaner = new AggCleaner().enableDefault();
     private double maxPointGhostDist = 40; // meters
     private double distance = 0;
@@ -432,33 +432,25 @@ public class DefaultMergeHandler implements IMergeHandler {
     public void mergePoints() {
 //        showDebugInfo();
 
-        List<AggConnection> changedAggConnections = new ArrayList<AggConnection>(
-                10);
+        List<AggConnection> changedAggConnections = new ArrayList<AggConnection>(100);
         List<AggConnection> newAggConnections;
         // add nodes
         AggNode lastNode = null;
         AggConnection conn = null;
         for (AggNode node : getAggNodes()) {
-            if (lastNode == null) {
-                lastNode = node;
-                continue;
-            }
-            conn = lastNode.getConnectionTo(node);
-            if (conn == null) {
-                continue;
-            }
-            conn.tryToFill();
-            List<AggNode> aggNodeList = new ArrayList<AggNode>();
-            if (newNodesPerConn.get(conn) != null) {
-                for (PointGhostPointPair pair : newNodesPerConn.get(conn)) {
-                    aggNodeList.add(pair.getAggNode());
+            if (lastNode != null && (conn = lastNode.getConnectionTo(node)) != null) {
+                conn.tryToFill();
+                List<AggNode> aggNodeList = new ArrayList<AggNode>(100);
+                if (newNodesPerConn.get(conn) != null) {
+                    for (PointGhostPointPair pair : newNodesPerConn.get(conn)) {
+                        aggNodeList.add(pair.getAggNode());
+                    }
+                    newAggConnections = aggContainer.insertNodesOrdered(conn.getFrom(), conn.getTo(), aggNodeList);
+                    changedAggConnections.addAll(newAggConnections);
+                } else {
+                    // edge without
+                    changedAggConnections.add(conn);
                 }
-                newAggConnections = aggContainer.insertNodesOrdered(
-                        conn.getFrom(), conn.getTo(), aggNodeList);
-                changedAggConnections.addAll(newAggConnections);
-            } else {
-                // edge without
-                changedAggConnections.add(conn);
             }
             lastNode = node;
         }
@@ -471,14 +463,13 @@ public class DefaultMergeHandler implements IMergeHandler {
         List<AggNode> changedAggPoints = AggConnection.listToPoints(changedAggConnections);
         // update distance and weights
         for (AggConnection loopConn : changedAggConnections) {
-            if (loopConn == null) {
-                continue;
+            if (loopConn != null) {
+
+                float oldWeight = loopConn.getWeight();
+                double oldAvgDist = loopConn.getAvgDist();
+                loopConn.setAvgDist(((oldWeight - 1) * oldAvgDist + distance) / oldWeight);
+                loopConn.setWeight(oldWeight + 1);
             }
-            float oldWeight = loopConn.getWeight();
-            double oldAvgDist = loopConn.getAvgDist();
-            loopConn.setAvgDist(((oldWeight - 1) * oldAvgDist + distance)
-                    / oldWeight);
-            loopConn.setWeight(oldWeight + 1);
         }
         for (AggNode node : changedAggPoints) {
             node.refreshWeight();

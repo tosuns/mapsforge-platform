@@ -319,6 +319,17 @@ MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/icons/gp
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx.xsd -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xsd/gpx11.xsd -text
 MapsforgePlatform/GpxFileTypeModule/src/main/resources/de/fub/gpxmodule/xslt/gpx10to11Transformer.xsl -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/_maven.repositories -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0-javadoc.jar -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0-javadoc.jar.sha1 -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0-sources.jar -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0-sources.jar.sha1 -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0.jar -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0.jar.lastUpdated -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0.jar.sha1 -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0.pom -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0.pom.lastUpdated -text
+MapsforgePlatform/ITextLib/LibFolder/com/itextpdf/itextpdf/5.4.0/itextpdf-5.4.0.pom.sha1 -text
 MapsforgePlatform/ITextLib/nb-configuration.xml -text
 MapsforgePlatform/ITextLib/pom.xml -text
 MapsforgePlatform/ITextLib/src/main/nbm/manifest.mf -text

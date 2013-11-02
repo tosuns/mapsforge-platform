@@ -16,7 +16,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--<netbeans.version>RELEASE73-BETA2</netbeans.version>-->
     </properties>
 
     <repositories>
@@ -203,13 +202,6 @@
             <artifactId>org-netbeans-api-xml</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.6.2</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>-->
         <dependency>
             <groupId>de.fub</groupId>
             <artifactId>openstreetmap</artifactId>
@@ -237,8 +229,9 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>nbm-maven-plugin</artifactId>
-                <extensions>true</extensions>
+                <artifactId>nbm-maven-plugin</artifactId> 
+                <version>3.11</version>
+                <extensions>true</extensions>               
                 <configuration>
                     <publicPackages>
                         <publicPackage>de.fub.maps.project</publicPackage>

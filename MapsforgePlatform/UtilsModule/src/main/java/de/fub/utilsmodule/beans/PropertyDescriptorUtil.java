@@ -32,10 +32,10 @@ public class PropertyDescriptorUtil {
         if (clazz.getName().equals(Boolean.class.getName())) {
             instance = (T) Boolean.valueOf(property.getValue());
         } else if (clazz.getName().equals(Double.class.getName())) {
-            String replaceAll = property.getValue().replaceAll("[^0-9]", "");
+            String replaceAll = property.getValue().replaceAll("\\,", "");
             instance = (T) Double.valueOf(replaceAll);
         } else if (clazz.getName().equals(Float.class.getName())) {
-            String replaceAll = property.getValue().replaceAll("[^0-9]", "");
+            String replaceAll = property.getValue().replaceAll("\\,", "");
             instance = (T) Float.valueOf(replaceAll);
         } else if (clazz.getName().equals(Integer.class.getName())) {
             String replaceAll = property.getValue().replaceAll("[^0-9]", "");

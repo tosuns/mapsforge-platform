@@ -35,11 +35,7 @@
             <name>Central Repository</name>
             <url>http://repo.maven.apache.org/maven2/</url>
         </repository>
-        <!--        <repository>
-            <id>Yakumo</id>
-            <name>Yakumo-releases</name>
-            <url>http://yakumo:8081/artifactory/repo/</url>
-        </repository>-->
+
     </repositories>
 
     <build>
@@ -48,12 +44,11 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.11</version>
                     <extensions>true</extensions>
                     <configuration>
                         <brandingToken>${brandingToken}</brandingToken>
                         <cluster>${brandingToken}</cluster>
-                        <useOSGiDependencies>true</useOSGiDependencies>
                         <etcConfFile>app.conf</etcConfFile>
                         <!--<additionalArguments>-J-Xmx512m</additionalArguments>-->
                     </configuration>
@@ -106,7 +101,7 @@
   </modules>
 
     <properties>
-        <netbeans.version>RELEASE731</netbeans.version>
+        <netbeans.version>RELEASE74</netbeans.version>
         <brandingToken>mapsplatform</brandingToken>
         <netbeans.run.params.ide/>
     </properties>

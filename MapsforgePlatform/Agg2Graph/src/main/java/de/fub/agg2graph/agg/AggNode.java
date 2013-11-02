@@ -22,6 +22,7 @@ import de.fub.agg2graph.agg.tiling.Tile;
 import de.fub.agg2graph.roadgen.Intersection;
 import de.fub.agg2graph.structs.GPSPoint;
 import de.fub.agg2graph.structs.ILocation;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -47,11 +48,6 @@ public class AggNode extends GPSPoint {
 
     private double weight = 2;
     private final Map<String, Integer> turnMap = new HashMap<String, Integer>();
-    /**
-     * Invisible {@link AggNode}s might be used to hide them before generating a
-     * road network.
-     */
-    private boolean visible = true;
 
     public AggNode(double lat, double lon, AggContainer aggContainer) {
         init(null, lat, lon, aggContainer);
@@ -103,16 +99,6 @@ public class AggNode extends GPSPoint {
     }
 
     @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    @Override
     public String getID() {
         return ID;
     }
@@ -143,7 +129,7 @@ public class AggNode extends GPSPoint {
 
     public void addTurn(AggNode before, AggNode after) {
         // keep it tracked
-        String key = before.getID() + "#" + after.getID();
+        String key = MessageFormat.format("{0}#{1}", before.getID(), after.getID());
         // System.out.println("adding turn " + key);
         int counter = 0;
         if (turnMap.containsKey(key)) {
@@ -199,8 +185,8 @@ public class AggNode extends GPSPoint {
     }
 
     public Set<AggConnection> getVisibleIn() {
-        if (in == null) {
-            return in;
+        if (getIn() == null) {
+            return getIn();
         }
         Set<AggConnection> resultSet = new HashSet<AggConnection>();
         for (AggConnection element : getIn()) {
@@ -241,15 +227,14 @@ public class AggNode extends GPSPoint {
     @Override
     public String toString() {
         if (ID != null) {
-            return "{" + ID + "}";
+            return MessageFormat.format("{0}", ID);
         }
-        return "AggNode [lat=" + getLat() + ", lon=" + getLon() + "]";
+        return MessageFormat.format("AggNode [lat={0}, lon={1}]", getLat(), getLon());
     }
 
     @Override
     public String toDebugString() {
-        return "AggNode [ID=" + ID + ", lat=" + getLat() + ", lon=" + getLon()
-                + "]";
+        return MessageFormat.format("AggNode [ID={0}, lat={1}, lon={2}]", ID, getLat(), getLon());
     }
 
     @Override
@@ -287,8 +272,7 @@ public class AggNode extends GPSPoint {
 
     @Override
     public int hashCode() {
-        return (String.valueOf(getID()) + ":" + Arrays.toString(getLatLon()))
-                .hashCode();
+        return (MessageFormat.format("{0}:{1}", getID(), Arrays.toString(getLatLon()))).hashCode();
     }
 
     @Override
@@ -319,14 +303,16 @@ public class AggNode extends GPSPoint {
     }
 
     public String getInternalID() {
-        return String.valueOf(getLat()) + ":" + String.valueOf(getLon()) + ":"
-                + ID;
+        return MessageFormat.format("{0}:{1}:{2}", getLat(), getLon(), ID);
     }
 
     /**
      * Update latitude and longitude values. This method takes care of making
      * the {@link ICachingStrategy} aware of the move because the {@link Tile}
      * this AggNode belongs to might change.
+     *
+     * @param lat
+     * @param lon
      */
     @Override
     public void setLatLon(double lat, double lon) {
@@ -347,6 +333,9 @@ public class AggNode extends GPSPoint {
      * Update x and y values. This method takes care of making the
      * {@link ICachingStrategy} aware of the move because the {@link Tile} this
      * AggNode belongs to might change.
+     *
+     * @param x
+     * @param y
      */
     @Override
     public void setXY(double x, double y) {
@@ -402,7 +391,7 @@ public class AggNode extends GPSPoint {
      * @return
      */
     public boolean isEndNode() {
-        return getVisibleOut().size() == 0 ^ getVisibleIn().size() == 0;
+        return getVisibleOut().isEmpty() ^ getVisibleIn().isEmpty();
     }
 
     public Intersection getIntersection() {
@@ -420,11 +409,11 @@ public class AggNode extends GPSPoint {
 
     // TODO Martinus
     public boolean isSource() {
-        return in.size() == 0 && out.size() > 0;
+        return in.isEmpty() && out.size() > 0;
     }
 
     public boolean isSink() {
-        return in.size() > 0 && out.size() == 0;
+        return in.size() > 0 && out.isEmpty();
     }
 
     public boolean isRegular() {
@@ -432,6 +421,6 @@ public class AggNode extends GPSPoint {
     }
 
     public boolean isEmpty() {
-        return in.size() == 0 && out.size() == 0;
+        return in.isEmpty() && out.isEmpty();
     }
 }

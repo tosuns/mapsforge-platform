@@ -34,10 +34,10 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
 public class AbstractLocation implements ILocation, Hideable, Comparable<AbstractLocation> {
 
     private static final Logger LOG = Logger.getLogger(AbstractLocation.class.getName());
+    private final double EPSILON = 10e-6;
     protected String ID;
     protected boolean visible = true;
     protected double[] latlon = new double[]{Double.MAX_VALUE, Double.MAX_VALUE};
-    private final double EPSILON = 10e-6;
     protected double[] xy = new double[]{Double.MAX_VALUE, Double.MAX_VALUE};
     protected double elevation;				// point's elevation
     protected int k = 1;

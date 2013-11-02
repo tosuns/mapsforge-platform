@@ -135,15 +135,17 @@ public class DefaultRoadObjectMerger implements IRoadObjectMerger {
 
         for (Intersection i : roadNetwork.getIntersections()) {
             for (Road r1 : i.out) {
-                // is there a road in the backwards direction?
-                Set<Road> backward = r1.getTo().out;
-                Iterator<Road> backwardIt = backward.iterator();
-                while (backwardIt.hasNext()) {
-                    Road r2 = backwardIt.next();
-                    logger.info(r1.toString());
-                    logger.info(r2.toString());
-                    if (r2.getTo().equals(r1.getFrom())) {
-                        mergeableRoads.add(new Road[]{r1, r2});
+                if (r1.getTo() != null) {
+                    // is there a road in the backwards direction?
+                    Set<Road> backward = r1.getTo().out;
+                    Iterator<Road> backwardIt = backward.iterator();
+                    while (backwardIt.hasNext()) {
+                        Road r2 = backwardIt.next();
+                        logger.info(r1.toString());
+                        logger.info(r2.toString());
+                        if (r2.getTo().equals(r1.getFrom())) {
+                            mergeableRoads.add(new Road[]{r1, r2});
+                        }
                     }
                 }
             }

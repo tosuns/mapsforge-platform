@@ -33,7 +33,7 @@ public class NodeProperty extends PropertySupport.ReadWrite<Object> {
 
     @SuppressWarnings("unchecked")
     public NodeProperty(PropertyDescriptor property) {
-        super(property.getName(), getClassOf(property), property.getName(), property.getDescription());
+        super(property.getId(), getClassOf(property), property.getName(), property.getDescription());
         this.property = property;
         initValue();
     }
@@ -55,9 +55,9 @@ public class NodeProperty extends PropertySupport.ReadWrite<Object> {
     @Override
     public void setValue(Object val) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         value = val;
-        if (val != null && !val.equals(property.getValue())) {
+        if (val != null && !String.valueOf(val).equals(property.getValue())) {
             property.setValue(String.valueOf(val));
-        } else {
+        } else if (val == null) {
             property.setValue(null);
         }
     }

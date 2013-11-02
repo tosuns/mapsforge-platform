@@ -61,7 +61,7 @@ public class DefaultAggFilter implements IAggFilter {
                 .getLoadedConnections();
         // loop edges, remove
         for (AggConnection conn : connections) {
-            conn.setVisible(conn.getWeight() >= minEdgeWeight);
+            conn.setVisible(conn.getWeight() >= getMinEdgeWeight());
             if (!conn.isVisible()) {
                 logger.fine(MessageFormat.format("hiding connection: {0}", conn));
                 AggNode from = conn.getFrom();

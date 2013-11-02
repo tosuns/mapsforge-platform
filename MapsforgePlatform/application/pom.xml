@@ -319,11 +319,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-                <configuration>
+                <version>3.11</version>
+<!--                <configuration>
                     <installerOsSolaris>false</installerOsSolaris>
                     <installerOsMacosx>false</installerOsMacosx>
                     <installerOsLinux>false</installerOsLinux>
-                </configuration>
+                </configuration>-->
             </plugin>
             <!-- Permits NbModuleSuite to be run in integration-test phase: -->
             <plugin>
@@ -334,7 +335,6 @@
                     <systemPropertyVariables>
                         <all.clusters>${all.clusters}</all.clusters>
                         <branding.token>${brandingToken}</branding.token>
-
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

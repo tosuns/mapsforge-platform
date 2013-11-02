@@ -44,7 +44,7 @@ import org.openide.util.lookup.ServiceProvider;
     "CLT_DefaultRoadTypeClassifier_Property_MinWeightPrimary_Description=No description available",
     "CLT_DefaultRoadTypeClassifier_Property_MinWidthPrimary_Name=Min Width Primary",
     "CLT_DefaultRoadTypeClassifier_Property_MinWidthPrimary_Description=No description available",
-    "CLT_DefaultRoadTypeClassifier_Property_MinWeightSecondary_Name=Min Weight Seconfary",
+    "CLT_DefaultRoadTypeClassifier_Property_MinWeightSecondary_Name=Min Weight Secondary",
     "CLT_DefaultRoadTypeClassifier_Property_MinWeightSecondary_Description=No description available",
     "CLT_DefaultRoadTypeClassifier_Property_MinWidthSecondary_Name=Min Width Secondary",
     "CLT_DefaultRoadTypeClassifier_Property_MinWidthSecondary_Description=No description available"
@@ -78,7 +78,7 @@ public class DefaultRoadTypeClassifier extends de.fub.agg2graph.roadgen.DefaultR
                         } else if (PROP_NAME_MIN_WIDTH_SECONDARY.equals(property.getId())) {
                             setMinWidthSecondary(Double.parseDouble(property.getValue()));
                         }
-                    } catch (Throwable e) {
+                    } catch (NumberFormatException e) {
                         LOG.log(Level.SEVERE, e.getMessage(), e);
                     }
                 }
