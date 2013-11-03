@@ -887,8 +887,9 @@ MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/open
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/OpenstreetMapDTD.dtd -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/OpenstreetMapDTD.xsd -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/OsmTest.xml -text
-MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/downloadIcon.png -text
 MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/gpxo.png -text
+MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/ui/Bundle.properties -text
+MapsforgePlatform/OpenstreemapSevice/src/main/resources/de/fub/maps/project/openstreetmap/ui/downloadIcon.png -text
 MapsforgePlatform/OpenstreemapSevice/src/test/java/de/fub/mapsforgeplatform/openstreetmap/xml/osm/OsmTest.java -text
 MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/_maven.repositories -text
 MapsforgePlatform/OpenstreetMap/LibFolder/org/openstreetmap/jmapviewer/0.1-20130210/jmapviewer-0.1-20130210-sources.jar -text

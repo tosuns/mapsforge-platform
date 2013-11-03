@@ -96,9 +96,9 @@
         <module>ApacheBatikLib</module>
         <module>MapsForgeSnapShotModule</module>
         <module>MapsforgeGpxAnalysisModule</module>
-    <module>LibJSIModule</module>
-    <module>LibApacheLog4J</module>
-  </modules>
+        <module>LibJSIModule</module>
+        <module>LibApacheLog4J</module>
+    </modules>
 
     <properties>
         <netbeans.version>RELEASE74</netbeans.version>
