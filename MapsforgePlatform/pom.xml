@@ -101,7 +101,7 @@
     </modules>
 
     <properties>
-        <netbeans.version>RELEASE74</netbeans.version>
+        <netbeans.version>RELEASE73</netbeans.version>
         <brandingToken>mapsplatform</brandingToken>
         <netbeans.run.params.ide/>
     </properties>

@@ -26,8 +26,8 @@ import javax.swing.event.MouseInputListener;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.input.PanMouseInputListener;
 import org.jdesktop.swingx.input.ZoomMouseWheelListenerCursor;
-import org.jdesktop.swingx.mapviewer.DefaultTileFactory;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.mapviewer.TileFactory;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
@@ -54,7 +54,7 @@ public class MapViewer extends JXMapViewer {
     }
 
     private void init() {
-        DefaultTileFactory defaultTileFactory = new OSMTileFactory();
+        TileFactory defaultTileFactory = new OSMTileFactory();
         setTileFactory(defaultTileFactory);
         // Add interactions
         MouseInputListener mia = new PanMouseInputListener(MapViewer.this);
@@ -62,21 +62,7 @@ public class MapViewer extends JXMapViewer {
         addMouseMotionListener(mia);
         addMouseWheelListener(new ZoomMouseWheelListenerCursor(MapViewer.this));
         waypointPainter = new WaypointPainter<WaypointMarker>();
-        waypointPainter.setRenderer(new WaypointRenderer<WaypointMarker>() {
-
-            @Override
-            public void paintWaypoint(Graphics2D g, JXMapViewer map, WaypointMarker waypoint) {
-                Point2D point = map.getTileFactory().geoToPixel(waypoint.getPosition(), map.getZoom());
-                if (waypoint.isVisible()) {
-                    int circleRadius = 5;
-                    int circleDiameter = circleRadius * 2;
-                    g.setColor(waypoint.isSelected() ? waypoint.getSelectedColor() : waypoint.getColor());
-                    g.fillOval((int) point.getX() - circleDiameter, (int) point.getY() - circleDiameter, circleDiameter, circleDiameter);
-                    g.setColor(Color.black);
-                    g.drawOval((int) point.getX() - circleDiameter, (int) point.getY() - circleDiameter, circleDiameter, circleDiameter);
-                }
-            }
-        });
+        waypointPainter.setRenderer(new CustomWaypointRenderer());
         painters.addPainter(waypointPainter);
         super.setOverlayPainter(painters);
     }
@@ -122,4 +108,20 @@ public class MapViewer extends JXMapViewer {
         repaint();
     }
 
+    private static class CustomWaypointRenderer implements WaypointRenderer<WaypointMarker> {
+
+        @Override
+        public void paintWaypoint(Graphics2D g, JXMapViewer map, WaypointMarker waypoint) {
+            Point2D point = map.getTileFactory().geoToPixel(waypoint.getPosition(), map.getZoom());
+            if (waypoint.isVisible()) {
+                int circleRadius = 5;
+                int circleDiameter = circleRadius * 2;
+                g.setColor(waypoint.isSelected() ? waypoint.getSelectedColor() : waypoint.getColor());
+                g.fillOval((int) point.getX() - circleDiameter, (int) point.getY() - circleDiameter, circleDiameter, circleDiameter);
+                g.setColor(Color.black);
+                g.drawOval((int) point.getX() - circleDiameter, (int) point.getY() - circleDiameter, circleDiameter, circleDiameter);
+            }
+        }
+
+    }
 }

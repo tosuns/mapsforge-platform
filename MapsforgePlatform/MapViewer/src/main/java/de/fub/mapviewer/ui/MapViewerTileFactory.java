@@ -42,11 +42,7 @@ public class MapViewerTileFactory extends DefaultTileFactory implements Comparab
     @Override
     public int compareTo(MapViewerTileFactory factory) {
         int result = 1;
-        if (getName() == null) {
-            result = 1;
-        } else if (factory.getName() == null) {
-            result = 1;
-        } else {
+        if (getName() != null && factory.getName() != null) {
             result = getName().compareTo(factory.getName());
         }
         return result;
